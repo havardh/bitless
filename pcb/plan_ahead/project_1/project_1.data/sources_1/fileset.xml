@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DARoots Version="1" Minor="7">
+	<FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
+		<Config>
+			<Option Name="DesignMode" Val="PinPlanning"/>
+		</Config>
+	</FileSet>
+</DARoots>
+
