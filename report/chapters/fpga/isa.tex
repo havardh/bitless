@@ -1,36 +1,48 @@
 \section{ISA}
 
 \subsection{First Draft}
-It was decided to use a processor architecture with 16-bit instruction words and 32 general purpose registers.
-The instructions are divided in three different classes, load/store instructions, arithmetic instructions
-and miscellaneous instructions. All instructions have a common group field in the two most significant bits,
-which is used to select between one of four instruction groups, as shown in table \ref{tab:group_fmt}.
+It was decided to use a processor architecture with 16-bit instruction words
+and 32 general purpose registers. This because of the decision made to have our
+sample sizes set to 8-bit words. The instructions are divided in three
+different classes; load/store instructions, arithmetic instructions, and
+miscellaneous instructions.
 
-It was decided to use four condition flags, listed in table \ref{tab:condition_flags}. These are stored in
-a dedicated status and control register.
+All instructions have a common group field in the
+two most significant bits, which is used to select between one of four
+instruction groups, as shown in table \ref{tab:group_fmt}.
+
+For our ALU operations, it was decided to use the standard four condition flags,
+listed in table \ref{tab:condition_flags}. These are stored in a dedicated
+status and control register.
 
 \input{figures/fpga/isa-group-format}
 \input{figures/fpga/isa-condition-flags}
 
 \subsubsection{Load/store instructions}
-The format of load/store instructions is illustrated in figure \ref{fig:ls_instr_format}. The possible
-instructions are listed in table \ref{tab:ls_instrs}.
+The format of our load/store instructions is illustrated in figure
+\ref{fig:ls_instr_format}, and the instructions we considered for this format
+are listed in table \ref{tab:ls_instrs}.
 
 \input{figures/fpga/isa-load-store-format}
 \input{figures/fpga/isa-load-store-instruction}
 
 \subsubsection{Arithmetic instructions}
-The format of the arithmetic instructions is illustrated in figure \ref{fig:arith_instr_format}. The Implemented
-instructions are listed in table \ref{tab:arith_instrs}. In order to support other variants of the same instructions,
-such as add-with-carry or multiply-and-accumulate, an option field has been added. The operations are implemented such
-that the result of an operation is written back to the first operand register, $ra = ra~op~rb$.
+The format of the arithmetic instructions is illustrated in figure
+\ref{fig:arith_instr_format}.
+Implemented instructions are listed in table \ref{tab:arith_instrs}. In order to
+support other variants of the same instructions, such as add-with-carry or
+multiply-and-accumulate, an option field has been added for purposes of for
+example being able to write add-with-carry into the basic add command. The
+operations are implemented such that the result of an operation is written back
+to the first operand register, $ra = ra~op~rb$.
 
 \input{figures/fpga/isa-arithmetic-instruction}
 \input{figures/fpga/isa-arithmetic-implemented}
 
 \subsubsection{Miscellaneous instructions}
-The format of the miscellaneous instructions is illustrated in figure \ref{fig:misc_instr_format}. The
-implemented instructions are listed in table \ref{tab:misc_instrs}.
+The format of the miscellaneous instructions is illustrated in figure
+\ref{fig:misc_instr_format}.
+The implemented instructions are listed in table \ref{tab:misc_instrs}.
 
 \input{figures/fpga/isa-misc-instruction}
 \input{figures/fpga/isa-misc-implemented}
@@ -38,27 +50,31 @@ implemented instructions are listed in table \ref{tab:misc_instrs}.
 \FloatBarrier
 \subsection{Second Draft}
 
-Due to the requirements of running an FFT on the processor, floating point instructions for doing additions,
-multiplications and subtractions were added. In addition, some instructions in the arithmetic group changed
-format, and immediate forms were added for some functions. Some new data movement instructions were added,
-especially due to the addition of a separate memory area for storing constants, and their format was changed.
+Due to the requirements of running an FFT on the processor, floating point
+instructions for doing additions, multiplications and subtractions were added.
+In addition, some instructions in the arithmetic group changed format, and
+immediate forms were added for some functions. Some new data movement
+instructions were added, because of the addition of a separate memory area for
+storing constants, and the format of said data movement instructions were
+changed.
 
 \subsection{Register-based instructions}
 
-The group previously named arithmetic operations now contains most of the implemented instructions, including
-load/store instructions. They all have in common that they have at least one register as operand. The format
-of the instructions is illustrated in figure \ref{fig:regbased_instrs_format}. The implemented functions can be
-found in table \ref{tab:regbased_instrs}.
+The instruction group previously named arithmetic operations now contain most of
+the implemented instructions, including load/store instructions. They all have
+at least one register as operand in common. The format of these mentioned
+instructions are illustrated in figure \ref{fig:regbased_instrs_format}. The
+implemented functions can be found in table \ref{tab:regbased_instrs}.
 
 \begin{figure}[h]
 	\centering
 	\begin{bytefield}[endianness=big,bitwidth=0.05\linewidth]{16}
-		\bitheader{0-15} \\
-		\bitbox{2}{Group} &
-		\bitbox{2}{Funct} &
-		\bitbox{2}{Opt}   &
-		\bitbox{5}{Reg A} &
-		\bitbox{5}{Reg B/Imm} 
+		\bitheader{0-15}	\\
+		\bitbox{2}{Group}	&
+		\bitbox{2}{Funct}	&
+		\bitbox{2}{Opt}		&
+		\bitbox{5}{Reg A}	&
+		\bitbox{5}{Reg B/Imm}
 	\end{bytefield}
 
 	\caption{Register-based instruction format}
@@ -66,10 +82,10 @@ found in table \ref{tab:regbased_instrs}.
 \end{figure}
 
 \begin{table}[h]
-    \centering
-    \begin{tabular}{|l l l l l|}
-        \hline
-        \textbf{Funct} & \textbf{Opt}  & \textbf{Mnemonic} & \textbf{Instruction} & \textbf{Operation} \\
+	\centering
+	\begin{tabular}{|l l l l l|}
+		\hline
+		\textbf{Funct} & \textbf{Opt}  & \textbf{Mnemonic} & \textbf{Instruction} & \textbf{Operation} \\
 	\hline
 	\multicolumn{5}{|c|}{Group \texttt{0b00}} \\
 	\hline
@@ -111,15 +127,15 @@ found in table \ref{tab:regbased_instrs}.
 		& \texttt{0b10} & \texttt{ldc \$ra, [\$rb]} & Load from constant buffer & $\$ra \leftarrow [\$rb]$ \\
 		& \texttt{0b11} & \texttt{stb \$ra, [\$rb]} & Store to output & $[\$rb] \leftarrow \$ra$ \\
 	\hline
-    \end{tabular}
-
-    \caption{Register-based instruction list}
-    \label{tab:regbased_instrs}
+	\end{tabular}
+	\caption{Register-based instruction list}
+	\label{tab:regbased_instrs}
 \end{table}
 
 \subsection{Load immediate instruction}
-The load immediate instruction is used to load an immediate constant into a register. The format of the instruction can
-be found in figure \ref{fig:ldi_format}. The value is loaded into register \texttt{\$ri}.
+The load immediate instruction is used to load an immediate constant into a
+register. The format of the instruction can be found in figure
+\ref{fig:ldi_format}. The value is loaded into register \texttt{\$ri}.
 
 \begin{figure}[h]
 	\centering
@@ -135,9 +151,12 @@ be found in figure \ref{fig:ldi_format}. The value is loaded into register \text
 
 
 \subsection{Branch instruction}
-The branch instruction checks the condition flags and jumps accordingly. Using the four defined condition flags,
-many different conditions can be checked for. The format of the instructions is illustrated in figure \ref{fig:new_branch_format}.
-List of the encoding of the flags field is coming later.
+The branch instruction checks the condition flags and jumps accordingly. Using
+the four defined condition flags, it is planned to use the four bits as a
+numeric code, so that $2^4$ different conditions can be checked for.
+The format of the instructions is illustrated in figure
+\ref{fig:new_branch_format}.
+List for the encoding of the flags field is coming later.
 
 \begin{figure}[h]
 	\centering
@@ -155,12 +174,14 @@ List of the encoding of the flags field is coming later.
 
 \subsubsection{Special registers}
 
-Due to the limited space in instruction words, only two registers at most can be specified in an instruction.
-Some instructions, such as the load immediate and load constant instructions do not specify any registers,
-only an immediate offset constant.
+Due to the limited space in instruction words, only two registers at most can be
+specified in an instruction. Some instructions, such as the load immediate and
+load constant instructions do not specify any registers, only an immediate
+offset constant.
 
-The list of defined special registers can be found in table \ref{tab:specregs}. The register number for these
-registers have not yet been determined.
+The list of defined special registers can be found in table \ref{tab:specregs}.
+It has not yet been determined which numerical identites (register numbers)
+these registers should have.
 
 \begin{table}[h]
 	\centering
@@ -177,4 +198,3 @@ registers have not yet been determined.
 	\caption{List of special registers}
 	\label{tab:specregs}
 \end{table}
-
