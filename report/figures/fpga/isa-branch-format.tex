@@ -1,0 +1,13 @@
+\begin{figure}[h]
+	\centering
+	\begin{bytefield}[endianness=big,bitwidth=0.05\linewidth]{16}
+		\bitheader{0-15} \\
+		\bitbox{2}{Group} &
+		\bitbox{4}{Flags} &
+		\bitbox{11}{Target}
+	\end{bytefield}
+
+	\caption{Branch instruction format}
+	\label{fig:new_branch_format}
+\end{figure}
+

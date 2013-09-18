@@ -1,0 +1,14 @@
+\begin{figure}[h]
+	\centering
+	\begin{bytefield}[endianness=big,bitwidth=0.05\linewidth]{16}
+		\bitheader{0-15}	\\
+		\bitbox{2}{Group}	&
+		\bitbox{2}{Funct}	&
+		\bitbox{2}{Opt}		&
+		\bitbox{5}{Reg A}	&
+		\bitbox{5}{Reg B/Imm}
+	\end{bytefield}
+
+	\caption{Register-based instruction format}
+	\label{fig:regbased_instrs_format}
+\end{figure}
