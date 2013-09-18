@@ -69,6 +69,9 @@ Text in section
 Text in subsection
 ```
 
+To prevent figures and tables from floating over into the next section or subsection,
+insert a `\FloatBarrier` command before the `\section` or `\subsection` commands.
+
 Figures
 -------
 All figures is put in the a directory like `figures/<chap>/<figure-name>.tex`, where `<chap>` 
