@@ -28,6 +28,7 @@ LINUXCS	   ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
 # /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
 
 LIB=/Users/havard/Documents/programmering/c/TDT4295/sw/libs
+DIR=/Users/havard/Documents/programmering/c/TDT4295/sw
 #/Users/havard/Documents/Silabs
 
 RMDIRS	   := rm -rf
@@ -117,7 +118,8 @@ INCLUDEPATHS += \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
 -I$(LIB)/kits/EFM32GG_STK3700/config \
--I$(LIB)/emdrv/gpiointerrupt/inc
+-I$(LIB)/emdrv/gpiointerrupt/inc \
+-I$(DIR)/controllers/main/inc
 
 ####################################################################
 # Files								   #
@@ -138,6 +140,7 @@ $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+$(DIR)/controllers/main/src/MainController.c \
 $(PROJECTNAME).c
 
 s_SRC +=
@@ -145,11 +148,14 @@ s_SRC +=
 S_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/GCC/startup_efm32gg.S
 
+
+
 ####################################################################
 # Rules								   #
 ####################################################################
 
 C_FILES = $(notdir $(C_SRC) )
+
 S_FILES = $(notdir $(S_SRC) $(s_SRC) )
 #make list of source paths, sort also removes duplicates
 C_PATHS = $(sort $(dir $(C_SRC) ) )
@@ -166,6 +172,9 @@ vpath %.s $(S_PATHS)
 vpath %.S $(S_PATHS)
 
 # Default build is debug build
+#dbg: 
+#	@echo $(C_FILES)
+
 all:	  debug
 
 debug:	  CFLAGS += -DDEBUG -O0 -g3
