@@ -10,8 +10,8 @@ entity toplevel is
 	-- and stored in a .ucf file. This must be done sometime later.
 
 	port (
-		clk : in std_logic; -- "Small cycle" clock, i.e. processor core clock
-		sample_clk : in std_logic; -- "Large cycle" clock, i.e. sample clock
+		clk 			: in std_logic; -- "Small cycle" clock, i.e. processor core clock
+		sample_clk  : in std_logic; -- "Large cycle" clock, i.e. sample clock
 
 		-- EBI interface lines:
 		ebi_address : in std_logic_vector(27 downto 0);	-- EBI address lines
