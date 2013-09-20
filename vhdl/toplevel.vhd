@@ -38,6 +38,9 @@ architecture behaviour of toplevel is
 			write_en	: in std_logic
 		);
 	end component;
+	
+	
+	
 begin
 
 	-- Create a predefined number of pipelines
