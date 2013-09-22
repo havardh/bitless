@@ -1,31 +1,32 @@
 -- Pipeline module
 
 library ieee;
-use ieee.std_logic_1164.ALL;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 library work;
 use work.core_constants.all;
+use work.internal_bus.all;
 
 entity pipeline is
 	generic (
-		address_width	: natural := 28;
-		data_width		: natural := 16;
-		num_cores		: natural := 4
+		num_cores		 : natural := 4;
+		pipeline_number : unsigned
 	);
 
 	port (
-		clk			: in std_logic;			-- Small cycle clock
-		sample_clk	: in std_logic;	-- Large cucle clock
+		clk			: in std_logic; -- Small cycle clock
+		sample_clk	: in std_logic; -- Large cucle clock
 
-		-- Connections to the EBI bus interface:
-		address	: in std_logic_vector(address_width - 1 downto 0);
-		data		: in std_logic_vector(data_width - 1 downto 0);
-		write_en	: in std_logic
+		-- Connections to the internal bus interface:
+		int_address : in internal_address;
+		int_data    : in internal_data;
+		int_re      : in std_logic; -- Read enable
+		int_we      : in std_logic  -- Write enable
 	);
 end entity;
 
 architecture behaviour of pipeline is
-	-- Components
 	
 	component ringbuffer is
 		generic(
@@ -48,30 +49,6 @@ architecture behaviour of pipeline is
 		);
 	end component;
 
-	signal test_signal : std_logic;
 begin
-	input_buffer: ringbuffer
-		generic map (
-			data_width => data_width,
-			address_width => 12 -- should be at least log2(buffer_size)
-		)
-		port map (
-			clk => clk,
-			sample_clk => sample_clk,
-			data_in => (others => '0'),
-			address_in => (others => '0'),
-			address_out => (others => '0'),
-			write_en => '0',
-			roaddress => (others => '0'),
-			mode => NORMAL_MODE
-		);
 
-	-- Instantiations
-
-	process(clk)
-	begin
-		if rising_edge(clk) then
-			test_signal <= '1';
-		end if;
-	end process;
 end behaviour;

@@ -5,5 +5,5 @@
 package core_constants is
 	type ringbuffer_mode is (NORMAL_MODE, RING_MODE);
 	
-	constant NUMBER_OF_PIPELINES : natural := 4;
+	constant NUMBER_OF_PIPELINES : integer := 4;
 end core_constants;
