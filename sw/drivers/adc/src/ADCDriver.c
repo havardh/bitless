@@ -1,5 +1,4 @@
 #include "ADCDriver.h"
-#include "ADCController.h"
 
 void init(ADCConfig *config);
 void initSingle(ADCConfig *config);
