@@ -9,20 +9,22 @@ ifndef SILENCE
 	SILENCE = @
 endif
 
+DEVICE = EFM32GG990F1024
+
 #--- Inputs ----#
 COMPONENT_NAME = all
 CPPUTEST_HOME = ../libs/cpputest
 
 CPPUTEST_USE_EXTENSIONS = Y
 CPP_PLATFORM = GCC
-CPPUTEST_CPPFLAGS = -x c++
+CPPUTEST_CPPFLAGS = -x c++ -D$(DEVICE)
 CFLAGS += --std=c99
 
 SRC_DIRS = \
   .\
-  ../controllers/**/src\
-  ../drivers/**/src\
   ../libs/math/src\
+	./test-doubles/drivers/**\
+	./test-doubles/libs/**\
   src\
 
 
@@ -31,6 +33,10 @@ TEST_SRC_DIRS = \
 
 INCLUDE_DIRS =\
   ../**/**/inc\
+	../**/**/src\
+  ../**/inc\
+	./test-doubles/**/**\
+	../libs/mocks/inc\
   $(CPPUTEST_HOME)/include\
 
 include $(CPPUTEST_HOME)/build/MakefileWorker.mk
