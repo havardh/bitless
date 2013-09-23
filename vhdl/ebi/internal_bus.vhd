@@ -7,7 +7,7 @@ use ieee.std_logic_1164.all;
 package internal_bus is
 
 	-- Address type for the internal bus. If you are changing this, remember to change the header
-	-- file in sw/ebi_interface.h. Assumes 27 bit EBI bus addresses.
+	-- file in sw/ebi_interface.h. Assumes 28 bit EBI bus addresses.
 	type internal_address is
 		record
 			pipeline : std_logic_vector(1  downto 0); -- Number of the pipeline to address
