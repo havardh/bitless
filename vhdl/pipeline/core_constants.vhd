@@ -23,6 +23,10 @@ package core_constants is
 		ALU_ADD,
 		ALU_AND,
 		ALU_OR,
-		ALU_XOR
+		ALU_XOR,
+		ALU_NAND,
+		ALU_NOR,
+		ALU_MOVE,
+		ALU_MOVE_NEGATIVE
 	);
 end core_constants;
