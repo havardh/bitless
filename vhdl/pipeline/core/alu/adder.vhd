@@ -2,11 +2,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library work;
+use work.core_constants.all;
+
 entity adder is
 	port (
 		a, b : in std_logic_vector(15 downto 0);
 		result : out std_logic_vector(15 downto 0);
-		carry, overflow, zero : out std_logic
+		flags  : out alu_flags
 	);
 end adder;
 
@@ -50,7 +53,7 @@ begin
 			c4 => carries(1),
 			c8 => carries(2),
 			c12 => carries(3),
-			c16 => carry
+			c16 => flags.carry
 		);
 
 	generate_adders:

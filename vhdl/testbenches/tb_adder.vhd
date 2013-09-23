@@ -2,6 +2,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library work;
+use work.core_constants.all;
+
 ENTITY tb_adder IS
 END tb_adder;
 
@@ -10,7 +13,7 @@ architecture behaviour of tb_adder is
 		port (
 			a, b : in std_logic_vector(15 downto 0);
 			result : out std_logic_vector(15 downto 0);
-			carry, overflow, zero : out std_logic
+			flags : out alu_flags
 		);
 	end component;
 
@@ -18,16 +21,14 @@ architecture behaviour of tb_adder is
 	signal a, b : std_logic_vector(15 downto 0) := (others => '0');
 	-- Outputs:
 	signal result : std_logic_vector(15 downto 0);
-	signal carry, overflow, zero : std_logic;
+	signal flags : alu_flags;
 begin
 	uut: adder
 		port map(
 			a => a,
 			b => b,
 			result => result,
-			carry => carry,
-			overflow => overflow,
-			zero => zero
+			flags => flags
 		);
 
 	stimulus_process: process
@@ -43,7 +44,7 @@ begin
 		b <= x"0001";
 		wait for 10 ns;
 		assert result = x"0000" report "Result of 0xffff + 1 is not 0!";
-		assert carry = '1' report "Result of 0xffff + 1 does not give carry!";
+		assert flags.carry = '1' report "Result of 0xffff + 1 does not give carry!";
 
 		wait;
 	end process;
