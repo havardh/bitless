@@ -12,12 +12,12 @@ entity core is
 		inpt_address_width 		: natural := 12;
 		outpt_address_width		: natural := 12;
 		inpt_data_width 			: natural := 32;
-		outpt_data_width 			: natural := 32;
+		outpt_data_width 			: natural := 32
 	);
 	-- Ports
 	port(
 		clk 				: in std_logic;
-		sample_clk 		: in std_logic;
+		sample_clk 		: in std_logic
  	);
 end entity;
 
