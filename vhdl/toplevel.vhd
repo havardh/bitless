@@ -27,17 +27,19 @@ end entity;
 architecture behaviour of toplevel is
 	component pipeline is
 		generic (
-			num_cores		 : natural := 4;
-			pipeline_number : unsigned
+			num_cores : natural := 4
 		);
 
 		port (
 			clk			: in std_logic; -- Small cycle clock
 			sample_clk	: in std_logic; -- Large cucle clock
 
+			-- Address of the pipeline, two bit number:
+			pipeline_address : in std_logic_vector(1 downto 0);
+
 			-- Connections to the internal bus interface:
 			int_address : in internal_address;
-			int_data    : in internal_data;
+			int_data    : inout internal_data;
 			int_re      : in std_logic; -- Read enable
 			int_we      : in std_logic  -- Write enable
 		);
@@ -66,20 +68,18 @@ begin
 		);
 
 	-- Create a predefined number of pipelines
---	generate_pipelines:
---	for pl in 0 to NUMBER_OF_PIPELINES - 1 generate
---		pipeline_x: pipeline
---			generic map (
---				pipeline_number => to_unsigned(pl, 1)
---			)
---			port map (
---				clk => clk,
---				sample_clk => sample_clk,
---				int_address => internal_bus_address,
---				int_data => internal_bus_data,
---				int_re => internal_bus_read,
---				int_we => internal_bus_write
---			);
---	end generate generate_pipelines;
+	generate_pipelines:
+	for pl in 0 to NUMBER_OF_PIPELINES - 1 generate
+		pipeline_x: pipeline
+			port map (
+				clk => clk,
+				sample_clk => sample_clk,
+				pipeline_address => make_pipeline_address(pl),
+				int_address => internal_bus_address,
+				int_data => internal_bus_data,
+				int_re => internal_bus_read,
+				int_we => internal_bus_write
+			);
+	end generate generate_pipelines;
 
 end behaviour;

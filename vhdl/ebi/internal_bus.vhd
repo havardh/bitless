@@ -38,4 +38,27 @@ package internal_bus is
 		);
 	end component;
 
+	-- Converts an integer to a pipeline address:
+	function make_pipeline_address(number : integer) return std_logic_vector;
+
 end internal_bus;
+
+package body internal_bus is
+	-- Converts an integer to a pipeline address:
+	function make_pipeline_address(number : integer) return std_logic_vector is
+	begin
+		case number is
+			when 0 =>
+				return b"00";
+			when 1 =>
+				return b"01";
+			when 2 =>
+				return b"10";
+			when 3 =>
+				return b"11";
+			when others =>
+				return "-";
+		end case;
+	end make_pipeline_address;
+
+end package body;
