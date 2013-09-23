@@ -1,4 +1,4 @@
-
+#include "stdlib.h"
 
 #define SPY1(returnType, functionName, type, arg)								\
 	static type functionName##_##arg;															\
@@ -109,7 +109,7 @@
 	{																																			\
 		functionName##CallCount++;																					\
 	 functionName##_##arg1 = arg1;																				\
-	 functionName##_##arg2 = arg2;																				\
+	 functionName##_##arg2 =arg2;								\
 	 }
 
 #define H_SPY2_V(functionName, type1, arg1, type2, arg2)								\

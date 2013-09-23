@@ -27,10 +27,10 @@ TEST(ADCController, shouldHaveInitFunction) {
 TEST(ADCController, shouldDelegateToDriver) {
 	
 	ADCConfig config = {
-		/*.channel =*/ //1,
+		/*.channel =*/ CH5,
 		/*.resolution =*/ 12,
 		/*.rate =*/ 44100, // 44.1 kHz
-		/*.mode =*/ 0
+		/*.mode =*/ SingleConvertion
 	};
 
 	ADCController_Init( &config );

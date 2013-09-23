@@ -4,14 +4,19 @@
 #include <stdint.h>
 
 typedef enum {
-	ADCMode_SingleConvertion
+	VDDDiv3,
+  CH5
+} ADCChannel;
+
+typedef enum {
+	SingleConvertion
 } ADCModes;
 
 typedef struct {
-//	uint8_t channel;
+	ADCChannel channel;
 	uint8_t resolution;
 	uint16_t rate;
-	uint8_t mode;
+	ADCModes mode;
 } ADCConfig;
 
 #endif /* _ADCCONFIG_H_ */

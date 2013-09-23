@@ -49,7 +49,7 @@ TEST(ADCDriver, shouldUseADC0) {
 
 }
 
-TEST(ADCDriver, shouldPassConfigToADC) {
+IGNORE_TEST(ADCDriver, shouldPassConfigToADC) {
 
 	ADC_PrescaleCalc_SetReturn(10);
 	ADC_TimebaseCalc_SetReturn(10);
@@ -64,7 +64,7 @@ TEST(ADCDriver, shouldPassConfigToADC) {
 
 TEST(ADCDriver, shouldSupportSingleConvertion) {
 
-	C.mode = ADCMode_SingleConvertion;
+	C.mode = SingleConvertion;
 	
 	ADCDriver_Init( &C );
 
@@ -74,7 +74,7 @@ TEST(ADCDriver, shouldSupportSingleConvertion) {
 
 TEST(ADCDriver, shouldSetResolution) {
 	
-	C.mode = ADCMode_SingleConvertion;
+	C.mode = SingleConvertion;
 	C.resolution = 8;
 	
 	ADCDriver_Init( &C );
@@ -83,10 +83,24 @@ TEST(ADCDriver, shouldSetResolution) {
 	CHECK_EQUAL( adcRes8Bit, init->resolution );
 }
 
+TEST(ADCDriver, shouldSetChannel) {
+	
+	C.mode = SingleConvertion;
+	C.channel = CH5;
+	
+	ADCDriver_Init( &C );
+
+	const ADC_InitSingle_TypeDef *init = ADC_InitSingle_Getinit();
+	CHECK_EQUAL( adcSingleInpCh5, init->input );
+}
+
+
+
 static const ADC_InitSingle_TypeDef *initSpy;
 
 TEST_GROUP(ADCDriver_InitSingle_Defaults) {
 	void setup() {
+		C.channel = VDDDiv3;
 		ADCDriver_Init( &C );
 		initSpy = ADC_InitSingle_Getinit();
 	}

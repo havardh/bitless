@@ -9,15 +9,13 @@ ifndef SILENCE
 	SILENCE = @
 endif
 
-DEVICE = EFM32GG990F1024
-
 #--- Inputs ----#
 COMPONENT_NAME = all
 CPPUTEST_HOME = ../libs/cpputest
 
 CPPUTEST_USE_EXTENSIONS = Y
 CPP_PLATFORM = GCC
-CPPUTEST_CPPFLAGS = -x c++ -D$(DEVICE)
+CPPUTEST_CPPFLAGS = -x c++ 
 CFLAGS += --std=c99
 
 SRC_DIRS = \
@@ -32,10 +30,10 @@ TEST_SRC_DIRS = \
 	./**/**\
 
 INCLUDE_DIRS =\
+	./test-doubles/**/**\
   ../**/**/inc\
 	../**/**/src\
   ../**/inc\
-	./test-doubles/**/**\
 	../libs/mocks/inc\
   $(CPPUTEST_HOME)/include\
 

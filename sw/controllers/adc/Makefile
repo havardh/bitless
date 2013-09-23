@@ -119,19 +119,24 @@ INCLUDEPATHS += \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_DK3700/config \
+-I$(LIB)/kits/EFM32GG_DK3750/config \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
--I$(DIR)/controllers/main/inc
+-I$(DIR)/drivers/adc/inc \
+-I$(DIR)/types/inc \
+-I$(DIR)/controllers/adc/inc
 
 ####################################################################
 # Files								   #
 ####################################################################
 
+# $(LIB)/kits/common/bsp/bsp_stk.c \
+# $(LIB)/kits/common/bsp/bsp_stk_leds.c \
+
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
 $(LIB)/kits/common/bsp/bsp_bcc.c \
-$(LIB)/kits/common/bsp/bsp_stk.c \
-$(LIB)/kits/common/bsp/bsp_stk_leds.c \
+$(LIB)/kits/common/bsp/bsp_dk_3201.c \
+$(LIB)/kits/common/bsp/bsp_dk_leds.c \
 $(LIB)/kits/common/bsp/bsp_trace.c \
 $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_cmu.c \
@@ -140,10 +145,12 @@ $(LIB)/emlib/src/em_emu.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_system.c \
+$(LIB)/emlib/src/em_adc.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-$(DIR)/controllers/main/src/MainController.c \
-$(PROJECTNAME).c
+$(DIR)/controllers/adc/src/ADCController.c \
+$(DIR)/drivers/adc/src/ADCDriver.c \
+demo/$(PROJECTNAME).c
 
 s_SRC +=
 

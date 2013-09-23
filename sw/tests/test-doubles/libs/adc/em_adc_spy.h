@@ -15,7 +15,7 @@ typedef struct {
   uint8_t prescale;
 } ADC_Init_TypeDef;
 
-extern ADC_Init_TypeDef ADC_INIT_DEFAULT;
+#define ADC_INIT_DEFAULT { 1,1 }
 
 typedef enum
 {
@@ -34,6 +34,7 @@ typedef enum
 
 typedef enum
 {
+	adcSingleInpCh5,
   adcSingleInpVDDDiv3
 } ADC_SingleInput_TypeDef;
 
@@ -44,7 +45,12 @@ typedef struct {
   ADC_SingleInput_TypeDef input;
 } ADC_InitSingle_TypeDef;
 
-extern ADC_InitSingle_TypeDef ADC_INITSINGLE_DEFAULT;
+#define ADC_INITSINGLE_DEFAULT { \
+		adcAcqTime32,								 \
+			adcRef1V25,								 \
+			adcRes8Bit,								 \
+			adcSingleInpVDDDiv3,			 \
+			} 
 
 H_SPY2_V(ADC_Init, ADC_TypeDef, adc, const ADC_Init_TypeDef*, init)
 H_SPY2_V(ADC_InitSingle, ADC_TypeDef, adc, const ADC_InitSingle_TypeDef*, init)
