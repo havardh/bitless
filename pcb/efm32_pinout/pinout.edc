@@ -278,8 +278,9 @@
 			<enabled>1</enabled>
 			<locationValue>0</locationValue>
 			<signalsWithEnableInvertedFromDefault>
-				<count>0</count>
+				<count>1</count>
 				<item_version>0</item_version>
+				<item>SWO</item>
 			</signalsWithEnableInvertedFromDefault>
 			<customKeyValueStore>
 				<count>0</count>
@@ -318,13 +319,14 @@
 		<item class_id_reference="2" object_id="_13">
 			<uniqueModuleId>EFM32GG990F1024@EBI</uniqueModuleId>
 			<enabled>1</enabled>
-			<locationValue>0</locationValue>
+			<locationValue>1</locationValue>
 			<signalsWithEnableInvertedFromDefault>
-				<count>15</count>
+				<count>16</count>
 				<item_version>0</item_version>
 				<item>A25</item>
 				<item>A26</item>
 				<item>A27</item>
+				<item>ALE</item>
 				<item>ARDY</item>
 				<item>BL0</item>
 				<item>BL1</item>
