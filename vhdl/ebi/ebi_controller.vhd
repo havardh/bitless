@@ -13,7 +13,7 @@ entity ebi_controller is
 		clk : in std_logic;
 
 		-- EBI inputs:
-		ebi_address      : in std_logic_vector(27 downto 0);
+		ebi_address      : in std_logic_vector(24 downto 0);
 		ebi_data         : inout std_logic_vector(15 downto 0);
 		ebi_cs           : in std_logic;
 		ebi_read_enable  : in std_logic;
@@ -49,9 +49,9 @@ begin
 				when idle =>
 					-- Only latch the addresses when they have been properly set up by the MCU:
 					if ebi_read_enable = '0' or ebi_write_enable = '0' then
-						int_address.pipeline <= ebi_address(27 downto 26);
-						int_address.device <= ebi_address(25 downto 21);
-						int_address.address <= ebi_address(20 downto 0);
+						int_address.pipeline <= ebi_address(24 downto 23);
+						int_address.device <= ebi_address(22 downto 18);
+						int_address.address <= ebi_address(17 downto 0);
 					end if;
 
 					if ebi_read_enable = '0' and ebi_cs = '0' then
@@ -62,6 +62,7 @@ begin
 						int_write_enable <= '1';
 						current_state <= write_state;
 					end if;
+
 				when read_state =>
 					if int_read_enable = '1' then
 						ebi_data <= int_data; -- Set the EBI data to the data read from the internal bus.
@@ -70,6 +71,7 @@ begin
 					if ebi_read_enable = '1' then -- Switch to idle when the transaction is finished.
 						current_state <= idle;
 					end if;
+
 				when write_state =>
 					if int_write_enable = '1' then
 						int_write_enable <= '0';

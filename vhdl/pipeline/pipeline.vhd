@@ -29,7 +29,6 @@ entity pipeline is
 end entity;
 
 architecture behaviour of pipeline is
-
 begin
 
 	process(clk)
@@ -40,5 +39,7 @@ begin
 			end if;
 		end if;
 	end process;
+
+	
 
 end behaviour;

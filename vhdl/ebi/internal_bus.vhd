@@ -12,7 +12,7 @@ package internal_bus is
 		record
 			pipeline : std_logic_vector(1  downto 0); -- Number of the pipeline to address
 			device   : std_logic_vector(4  downto 0); -- Number of the device in the pipeline to address
-			address  : std_logic_vector(20 downto 0); -- Address of the byte to address in the device
+			address  : std_logic_vector(17 downto 0); -- Address of the byte to address in the device
 		end record;
 
 	-- Data type for the internal bus.
@@ -24,7 +24,7 @@ package internal_bus is
 			clk : in std_logic;
 
 			-- EBI inputs:
-			ebi_address      : in std_logic_vector(27 downto 0);
+			ebi_address      : in std_logic_vector(24 downto 0);
 			ebi_data         : inout std_logic_vector(15 downto 0);
 			ebi_cs           : in std_logic;
 			ebi_read_enable  : in std_logic;
@@ -57,7 +57,7 @@ package body internal_bus is
 			when 3 =>
 				return b"11";
 			when others =>
-				return "-";
+				return "--";
 		end case;
 	end make_pipeline_address;
 
