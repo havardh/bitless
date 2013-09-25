@@ -16,7 +16,7 @@ entity toplevel is
 		sample_clk  : in std_logic; -- "Large cycle" clock, i.e. sample clock
 
 		-- EBI interface lines:
-		ebi_address : in    std_logic_vector(27 downto 0);	-- EBI address lines
+		ebi_address : in    std_logic_vector(24 downto 0);	-- EBI address lines
 		ebi_data		: inout std_logic_vector(15 downto 0); -- EBI data lines
 		ebi_re		: in    std_logic;	-- EBI read enable (active low)
 		ebi_we		: in    std_logic;	-- EBI write enable (active low)
