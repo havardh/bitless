@@ -72,7 +72,7 @@ begin
 			);
 	end generate;
 
-	update_flags: process(result_register)
+	update_flags: process(result_register, carries)
 	begin
 		flags.negative <= '0';
 		flags.overflow <= '0';
