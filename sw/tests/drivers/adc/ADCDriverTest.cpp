@@ -4,6 +4,7 @@
 
 static ADCConfig C;
 
+
 TEST_GROUP(ADCDriver) {
 	void setup() {}
 	void teardown() {}
@@ -62,9 +63,19 @@ IGNORE_TEST(ADCDriver, shouldPassConfigToADC) {
 	
 }
 
-TEST(ADCDriver, shouldSupportSingleConvertion) {
+IGNORE_TEST(ADCDriver, shouldSetDefaultParameters) {
 
-	C.mode = SingleConvertion;
+	ADCDriver_Init( &C );
+
+	const ADC_Init_TypeDef *init = ADC_Init_Getinit();
+	CHECK_EQUAL( adcWarmupKeepADCWarm, init->warmUpMode );
+	CHECK_EQUAL( true, init->tailgate );
+
+}
+
+TEST(ADCDriver, shouldSupportSingleConversion) {
+
+	C.mode = SingleConversion;
 	
 	ADCDriver_Init( &C );
 
@@ -74,7 +85,7 @@ TEST(ADCDriver, shouldSupportSingleConvertion) {
 
 TEST(ADCDriver, shouldSetResolution) {
 	
-	C.mode = SingleConvertion;
+	C.mode = SingleConversion;
 	C.resolution = 8;
 	
 	ADCDriver_Init( &C );
@@ -85,7 +96,7 @@ TEST(ADCDriver, shouldSetResolution) {
 
 TEST(ADCDriver, shouldSetChannel) {
 	
-	C.mode = SingleConvertion;
+	C.mode = SingleConversion;
 	C.channel = CH5;
 	
 	ADCDriver_Init( &C );
@@ -100,6 +111,7 @@ static const ADC_InitSingle_TypeDef *initSpy;
 
 TEST_GROUP(ADCDriver_InitSingle_Defaults) {
 	void setup() {
+		C.mode = SingleConversion;
 		C.channel = VDDDiv3;
 		ADCDriver_Init( &C );
 		initSpy = ADC_InitSingle_Getinit();
@@ -124,5 +136,44 @@ TEST(ADCDriver_InitSingle_Defaults, acqTimeShouldDefaultTo32) {
 	CHECK_EQUAL( adcAcqTime32, initSpy->acqTime );
 	
 }
+
+TEST_GROUP(ADCDriver_InitScan) {
+	void setup() {
+		C.mode = ScanConversion;
+	}
+	void teardown() {}
+};
+
+TEST(ADCDriver_InitScan, shouldSupportScanConversion) {
+
+	ADCDriver_Init( &C );
+
+	CHECK( ADC_InitScan_Called() );
+
+}
+
+TEST(ADCDriver_InitScan, shouldSetDefaultParameters) {
+	
+	ADCDriver_Init( &C );
+
+	const ADC_InitScan_TypeDef *init = ADC_InitScan_Getinit();
+	CHECK_EQUAL( adcPRSSELCh0, init->prsSel );
+	CHECK_EQUAL( true, init->prsEnable );
+	CHECK_EQUAL( adcRefVDD, init->reference );
+	
+}
+
+TEST(ADCDriver_InitScan, shouldSetResolution) {
+	
+	C.resolution = 8;
+
+	ADCDriver_Init( &C );
+	
+	const ADC_InitScan_TypeDef *init = ADC_InitScan_Getinit();
+	CHECK_EQUAL( adcRes8Bit, init->resolution );
+	
+}
+
+
 
 #include "ADCDriver.c"

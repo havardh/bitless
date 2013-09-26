@@ -30,7 +30,7 @@ TEST(ADCController, shouldDelegateToDriver) {
 		/*.channel =*/ CH5,
 		/*.resolution =*/ 12,
 		/*.rate =*/ 44100, // 44.1 kHz
-		/*.mode =*/ SingleConvertion
+		/*.mode =*/ SingleConversion
 	};
 
 	ADCController_Init( &config );

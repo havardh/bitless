@@ -1,7 +1,8 @@
 #include "ADCDriver.h"
 
-void init(ADCConfig *config);
-void initSingle(ADCConfig *config);
+void init(const ADCConfig *config);
+void initSingle(const ADCConfig *config);
+void initScan();
 
 void setResolution(ADC_InitSingle_TypeDef *init, uint8_t resolution);
 void setInput(ADC_InitSingle_TypeDef *init, ADCChannel channel);
@@ -9,20 +10,27 @@ void setInput(ADC_InitSingle_TypeDef *init, ADCChannel channel);
 void ADCDriver_Init(ADCConfig *config) 
 {
 	init(config);
-	initSingle(config);	
+
+	if (config->mode == SingleConversion) {
+		initSingle(config);	
+	} else {
+		initScan();
+	}
 }
 
-void init(ADCConfig *config) 
+void init(const ADCConfig *config) 
 {
 	ADC_Init_TypeDef initADC = ADC_INIT_DEFAULT;
 
 	initADC.timebase = ADC_TimebaseCalc(0);
 	initADC.prescale = ADC_PrescaleCalc(config->rate, 0);
+	initADC.warmUpMode = adcWarmupKeepADCWarm;
+	initADC.tailgate = true;
 
 	ADC_Init(ADC0, &initADC);
 }
 
-void initSingle(ADCConfig *config)
+void initSingle(const ADCConfig *config)
 {
 	ADC_InitSingle_TypeDef singleInit = ADC_INITSINGLE_DEFAULT;
 
@@ -35,6 +43,18 @@ void initSingle(ADCConfig *config)
 
 	ADC_InitSingle(ADC0, &singleInit);
 
+}
+
+void initScan()
+{
+	ADC_InitScan_TypeDef scanInit = ADC_INITSCAN_DEFAULT;
+
+	scanInit.prsSel = adcPRSSELCh0;
+	scanInit.prsEnable = true;
+	scanInit.reference = adcRefVDD;
+	scanInit.resolution = adcRes8Bit;
+
+	ADC_InitScan( ADC0, &scanInit );
 }
 
 void setResolution(ADC_InitSingle_TypeDef *init, uint8_t resolution) 

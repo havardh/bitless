@@ -3,13 +3,24 @@
 
 #include <stdint.h>
 
+// ADC_SCANCTRL_INPUTMASK_CH7
 typedef enum {
-	VDDDiv3,
-  CH5
+  /*CH0 = 1,
+  CH1 = 2,
+  CH2 = 4,
+  CH3 = 8,
+  CH4 = 16,*/
+  CH5 = 32,/*
+  CH6 = 64,
+  CH7 = 128,*/
+	VDDDiv3 = 256
+
 } ADCChannel;
 
 typedef enum {
-	SingleConvertion
+	SingleConversion,
+	ScanConversion
+
 } ADCModes;
 
 typedef struct {

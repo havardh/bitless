@@ -10,21 +10,29 @@ typedef struct {
 
 extern ADC_TypeDef ADC0;
 
+typedef enum {
+	adcWarmupKeepADCWarm
+} ADC_Warmup_TypeDef;
+
 typedef struct {
+  ADC_Warmup_TypeDef warmUpMode;
   uint8_t timebase;
   uint8_t prescale;
+  bool tailgate;
 } ADC_Init_TypeDef;
 
-#define ADC_INIT_DEFAULT { 1,1 }
+#define ADC_INIT_DEFAULT { adcWarmupKeepADCWarm, 1, 1, false }
 
 typedef enum
 {
-  adcRes8Bit
+  adcRes8Bit,
+	adcRes12Bit
 } ADC_Res_TypeDef;
 
 typedef enum
 {
-  adcRef1V25
+  adcRef1V25,
+	adcRefVDD
 } ADC_Ref_TypeDef;
 
 typedef enum
@@ -45,15 +53,25 @@ typedef struct {
   ADC_SingleInput_TypeDef input;
 } ADC_InitSingle_TypeDef;
 
-#define ADC_INITSINGLE_DEFAULT { \
-		adcAcqTime32,								 \
-			adcRef1V25,								 \
-			adcRes8Bit,								 \
-			adcSingleInpVDDDiv3,			 \
-			} 
+typedef enum {
+	adcPRSSELCh0
+} ADC_PRSSEL_TypeDef;
+
+typedef struct {
+	ADC_PRSSEL_TypeDef prsSel;
+	bool prsEnable;
+	ADC_Ref_TypeDef reference;
+	ADC_Res_TypeDef resolution;
+	uint32_t input;
+} ADC_InitScan_TypeDef;
+
+#define ADC_INITSINGLE_DEFAULT { adcAcqTime32, adcRef1V25, adcRes8Bit, adcSingleInpVDDDiv3 }
+
+#define ADC_INITSCAN_DEFAULT { adcPRSSELCh0, true, adcRefVDD, adcRes8Bit, 0 } 
 
 H_SPY2_V(ADC_Init, ADC_TypeDef, adc, const ADC_Init_TypeDef*, init)
 H_SPY2_V(ADC_InitSingle, ADC_TypeDef, adc, const ADC_InitSingle_TypeDef*, init)
+H_SPY2_V(ADC_InitScan, ADC_TypeDef, adc, const ADC_InitScan_TypeDef*, init)
 
 H_SPY2(uint8_t, ADC_PrescaleCalc, uint32_t, adcFreq, uint32_t, hfperFreq)
 H_SPY1(uint8_t, ADC_TimebaseCalc, uint32_t, hfperFreq)
