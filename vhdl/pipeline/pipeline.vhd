@@ -15,7 +15,8 @@ entity pipeline is
 
 	port (
 		clk			: in std_logic; -- Small cycle clock
-		sample_clk	: in std_logic; -- Large cucle clock
+		sample_clk	: in std_logic; -- Large cycle clock
+		memory_clk  : in std_logic; -- Memory clock
 
 		-- Address of the pipeline, two bit number:
 		pipeline_address : in std_logic_vector(1 downto 0);
@@ -78,46 +79,107 @@ architecture behaviour of pipeline is
 			clk : in std_logic;
 			address_in   : in  std_logic_vector(address_width - 1 downto 0); -- Write address
 			address_out  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
-			data_in      : in  std_logic_vector(31 downto 0); -- Lower 16 bits is the first word, upper is the second.
+			data_in      : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
 			data_out     : out std_logic_vector(31 downto 0); -- Same as above.
 			write_enable : in std_logic
 		);
 	end component;
 
+	component constant_arbiter is
+		generic (
+			pipeline_cores      : natural := 4;
+			const_address_width : natural := 16
+		);
+		port (
+			clk              : in std_logic;
+			request          : in  std_logic_vector(pipeline_cores - 1 downto 0);
+			acknowledge      : out std_logic_vector(pipeline_cores - 1 downto 0)
+		);
+	end component;
+
+	-- Pipeline control register:
+	type pipeline_control_register is record
+			enabled : std_logic;
+			num_cores : std_logic_vector(4 downto 0);
+		end record;
+	signal pipeline_control : pipeline_control_register;
+
+	-- Core status and control register:
 	type core_status_register is record
 			deadline_missed : std_logic;
 			enabled : std_logic;
 			instruction_we : std_logic;
 		end record;
 	type core_control_block is array(0 to num_cores - 1) of core_status_register;
-
 	signal core_control : core_control_block;
 
-	-- Write enable signal for the constant memory:
+	-- Signals connected to the constant memory modules:
 	signal constant_write_enable : std_logic;
-	signal constant_data_in, constant_data_out : std_logic_vector(31 downto 0);
+	signal constant_data_in : std_logic_vector(15 downto 0);
+	signal constant_data_out : std_logic_vector(31 downto 0);
+	signal constant_request, constant_acknowledge : std_logic_vector(NUM_CORES - 1 downto 0);
+
+	-- Signals from the internal bus to the instruction memories of the cores:
+	type core_instr_address_array is array(NUM_CORES - 1 downto 0) of std_logic_vector(15 downto 0);
+	signal core_instr_address : core_instr_address_array;
+	type core_instr_we_array is array(NUM_CORES - 1 downto 0) of std_logic;
+	signal core_instr_write_enable : core_instr_we_array;
 begin
-	
-	read_process: process(int_re)
+	pipeline_control.enabled <= '1';
+	pipeline_control.num_cores <= std_logic_vector(to_unsigned(NUM_CORES, 5));
+
+	-- TODO: The below process is just to make things synthesize and a suggestion for memory mapping.
+	internal_bus_process: process(clk, int_re, int_we)
 	begin
-		if rising_edge(int_re) then
-			int_data_out <= constant_data_out(15 downto 0);
+		if rising_edge(clk) then
+
+			-- Internal bus read:
+			if int_re = '1' then
+				if int_address.pipeline = pipeline_address then
+					case to_integer(unsigned(int_address.device)) is
+						when 0 =>
+							int_data_out(15) <= pipeline_control.enabled;
+							int_data_out(14 downto 5) <= (others => '0');
+							int_data_out(4 downto 0) <= pipeline_control.num_cores;
+						when 1 => -- Input buffer
+						when 2 => -- Output buffer
+						when 3 => -- Constant memory
+							int_data_out <= constant_data_out(15 downto 0);
+						when others => -- Cores and stuff?
+					end case;
+				end if;
+			end if;
+
+			-- Internal bus write:
+			if int_we = '1' then
+				if int_address.pipeline = pipeline_address then
+					case to_integer(unsigned(int_address.device)) is
+						when 0 =>
+							-- Pipeline contrl register is read-only?
+						when 1 => -- Input buffer
+						when 2 => -- Ouput buffer
+						when 3 => -- Constant memory
+							constant_data_in <= int_data_in;
+							constant_write_enable <= '1';
+						when others =>
+							core_instr_address(to_integer(unsigned(int_address.device) - 1)) <= int_address.address(15 downto 0);
+							core_instr_write_enable(to_integer(unsigned(int_address.device) - 1)) <= '1';
+					end case;
+				end if;
+			else
+				for i in 0 to NUM_CORES - 1 loop
+					core_instr_write_enable(i) <= '0';
+				end loop;
+				constant_write_enable <= '0';
+			end if;
 		end if;
 	end process;
 
-	write_process: process(int_we)
-	begin
-		if rising_edge(int_we) then
-			constant_data_in <= x"0000" & int_data_in;
-		end if;
-	end process;
-
-	constant_write_enable <= int_we;
-
+	-- Instantiate the constant memory:
 	constant_memory: memory
 		generic map(size => 1024, address_width => 16)
 		port map(
-			clk => clk,
+			clk => memory_clk,
 			address_in => int_address.address(15 downto 0),
 			address_out => int_address.address(15 downto 0),
 			data_in => constant_data_in,
@@ -125,16 +187,34 @@ begin
 			write_enable => constant_write_enable
 		);
 
---	generate_cores:
---	for i in 0 to NUM_CORES - 1 generate
---		core_x: core port map (
---			clk => clk,
---			reset => sample_clk,
---			deadline_missed => core_control(i).deadline_missed,
---			instr_address => int_address.address(9 downto 0),
---			instr_data => int_data,
---			instr_write_enable => core_control(i).instruction_we,
---		);
---	end generate;
+	-- Instantiate the constant memory arbiter. The EBI does not go through this
+	-- module, but instead gets direct access to the constant memory.
+	const_arbiter: constant_arbiter
+		generic map(pipeline_cores => NUM_CORES)
+		port map(
+			clk => clk,
+			request => constant_request,
+			acknowledge => constant_acknowledge
+		);
+
+	-- Generate the pipeline cores and instruction memories:
+	generate_cores:
+	for i in 0 to NUM_CORES - 1 generate
+		core_x: core
+			generic map (instr_address_width => 16)
+			port map (
+				clk => clk,
+				reset => sample_clk,
+				deadline_missed => core_control(i).deadline_missed,
+				constant_request => constant_request(i),
+				constant_acknowledge => constant_acknowledge(i),
+				instr_address => core_instr_address(i),
+				instr_data => int_data_in,
+				instr_write_enable => core_instr_write_enable(i),
+				constant_data => constant_data_out,
+				input_data => (others => '0'),
+				output_read_data => (others => '0')
+			);
+	end generate;
 
 end behaviour;

@@ -22,7 +22,7 @@ entity memory is
 		clk : in std_logic;
 		address_in   : in  std_logic_vector(address_width - 1 downto 0); -- Write address
 		address_out  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
-		data_in      : in  std_logic_vector(31 downto 0); -- Lower 16 bits is the first word, upper is the second.
+		data_in      : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
 		data_out     : out std_logic_vector(31 downto 0); -- Same as above.
 		write_enable : in std_logic
 	);
@@ -38,7 +38,7 @@ begin
 	begin
 		if rising_edge(clk) then
 			if write_enable = '1' then
-				memory(to_integer(unsigned(address_in))) <= data_in(15 downto 0);
+				memory(to_integer(unsigned(address_in))) <= data_in;
 			end if;
 			data_out <= memory(to_integer(unsigned(address_out) + 1)) & memory(to_integer(unsigned(address_out)));
 		end if;
