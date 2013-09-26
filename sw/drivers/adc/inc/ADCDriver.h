@@ -8,6 +8,6 @@
 #include "ADCConfig.h"
 #include "ADCController.h"
 
-void ADCDriver_Init(ADCConfig *config);
+void ADCDriver_Init(const ADCConfig *config);
 
 #endif /* _ADCDRIVER_H_ */

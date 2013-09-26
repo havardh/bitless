@@ -161,11 +161,12 @@ $(LIB)/emlib/src/em_rtc.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
+$(DIR)/controllers/adc/src/ADCController.c \
+$(DIR)/drivers/adc/src/ADCDriver.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 
-#$(DIR)/controllers/adc/src/ADCController.c \
-#$(DIR)/drivers/adc/src/ADCDriver.c \
+
 
 s_SRC +=
 
