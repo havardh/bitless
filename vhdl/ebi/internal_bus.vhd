@@ -32,7 +32,8 @@ package internal_bus is
 
 			-- Internal bus master outputs:
 			int_address      : out internal_address;
-			int_data         : inout internal_data;
+			int_data_out     : out std_logic_vector(15 downto 0);
+			int_data_in      : in  std_logic_vector(15 downto 0);
 			int_write_enable : inout std_logic;
 			int_read_enable  : inout std_logic
 		);
@@ -44,6 +45,7 @@ package internal_bus is
 end internal_bus;
 
 package body internal_bus is
+
 	-- Converts an integer to a pipeline address:
 	function make_pipeline_address(number : integer) return std_logic_vector is
 	begin

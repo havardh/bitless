@@ -21,9 +21,10 @@ entity ebi_controller is
 
 		-- Internal bus master outputs:
 		int_address      : out internal_address;
-		int_data         : inout std_logic_vector(15 downto 0);
-		int_write_enable : inout std_logic; -- inout allows reading back the value of the signal
-		int_read_enable  : inout std_logic
+		int_data_out     : out internal_data;
+		int_data_in      : in  internal_data;
+		int_write_enable : out std_logic;
+		int_read_enable  : out std_logic
 	);
 end ebi_controller;
 
@@ -35,8 +36,13 @@ architecture Behavioral of ebi_controller is
 
 	type state is (idle, read_state, write_state);
 	signal current_state : state := idle;
+
+	signal re_value, we_value : std_logic := '0';
 begin
-	process(clk)
+	int_write_enable <= we_value;
+	int_read_enable <= re_value;
+
+	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs)
 		-- Some notes:
 		-- * One clock cycle should be enough to read or write data on the
 		-- internal bus. The internal bus slaves should probably latch the
@@ -55,26 +61,24 @@ begin
 					end if;
 
 					if ebi_read_enable = '0' and ebi_cs = '0' then
-						int_read_enable <= '1';
+						re_value <= '1';
 						current_state <= read_state;
 					elsif ebi_write_enable = '0' and ebi_cs = '0' then
-						int_data <= ebi_data;
-						int_write_enable <= '1';
+						int_data_out <= ebi_data;
+						we_value <= '1';
 						current_state <= write_state;
 					end if;
-
 				when read_state =>
-					if int_read_enable = '1' then
-						ebi_data <= int_data; -- Set the EBI data to the data read from the internal bus.
-						int_read_enable <= '0';
+					if re_value = '1' then
+						ebi_data <= int_data_in; -- Set the EBI data to the data read from the internal bus.
+						re_value <= '0';
 					end if;
 					if ebi_read_enable = '1' then -- Switch to idle when the transaction is finished.
 						current_state <= idle;
 					end if;
-
 				when write_state =>
-					if int_write_enable = '1' then
-						int_write_enable <= '0';
+					if we_value = '1' then
+						we_value <= '0';
 					end if;
 					if ebi_write_enable = '1' then -- Switch to idle when the transaction is finished.
 						current_state <= idle;
