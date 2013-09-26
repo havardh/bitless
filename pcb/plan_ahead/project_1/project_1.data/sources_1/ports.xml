@@ -47,6 +47,7 @@
 		<Port Id="EBI_CSn" Dir="IN"/>
 		<Port Id="EBI_WEn" Dir="IN"/>
 		<Port Id="GLOBAL_CLK" Dir="IN"/>
+		<Port Id="EBI_REn" Dir="IN"/>
 	</Ifc>
 	<Ifc Id="GPIO">
 	</Ifc>

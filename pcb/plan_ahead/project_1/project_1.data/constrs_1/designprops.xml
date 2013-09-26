@@ -64,6 +64,7 @@
 		<Port Name="EBI_CSn" OffChipTerm="NONE"/>
 		<Port Name="EBI_WEn" OffChipTerm="NONE"/>
 		<Port Name="GLOBAL_CLK" OffChipTerm="NONE"/>
+		<Port Name="EBI_REn" OffChipTerm="NONE"/>
 	</PortProps>
 </Compat>
 
