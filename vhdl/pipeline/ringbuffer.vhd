@@ -10,17 +10,18 @@ use work.core_constants.all;
 
 entity ringbuffer is
 	generic(
-		data_width		: natural := 16;		-- Width of a buffer word
-		address_width	: natural := 12;		-- Width of the address inputs
+		data_width		: natural := 32;		-- Width of a buffer word
+		address_width	: natural := 16;		-- Width of the address inputs
 		buffer_size		: natural := 4096;	-- Size of the buffer, in words
 		window_size		: natural := 2048		-- Size of the ring buffer window, in words
 	);
 	port(
 		clk 			: in std_logic; -- Main clock ("small cycle" clock)
+		memclk		: in std_logic; -- Memory clock
 		sample_clk	: in std_logic; -- Sample clock ("large cycle" clock)
 
 		-- Data and address I/O for using the buffer as output buffer:
-		data_in		: in std_logic_vector(data_width - 1 downto 0);			-- Data input
+		data_in		: in std_logic_vector(15 downto 0);			-- Data input
 		data_out		: out std_logic_vector(data_width - 1 downto 0);		-- Data output
 		address_out : in std_logic_vector(address_width - 1 downto 0);		-- Address for output data
 		address_in	: in std_logic_vector(address_width - 1 downto 0);		-- Address for input data
@@ -35,22 +36,34 @@ entity ringbuffer is
 end ringbuffer;
 
 architecture behaviour of ringbuffer is
-	subtype buffer_word is std_logic_vector(data_width - 1 downto 0);
-	type buffer_memory_array is array (0 to buffer_size) of buffer_word;
+	type memory_array is array(buffer_size / 2 downto 0) of std_logic_vector(15 downto 0);
+	signal memory : memory_array;
 
 	signal rw_window_base : std_logic_vector(address_width - 1 downto 0) := (others => '0');
 	signal ro_window_base : std_logic_vector(address_width - 1 downto 0) := (others => '0');
-	signal memory_array : buffer_memory_array;
 begin
-	update_process: process(write_en, memory_array)
+	-- Switch the buffer pointers according to the buffer mode:
+	buffer_switch: process(sample_clk, mode)
 	begin
-		if rising_edge(write_en) then
-			memory_array(to_integer(unsigned(address_in) + unsigned(rw_window_base))) <= data_in;
+		if rising_edge(sample_clk) then
+			case mode is
+				when NORMAL_MODE =>
+				when RING_MODE =>
+			end case;
 		end if;
-	end process update_process;
+	end process;
 
-	-- TODO: support updating window pointers and switching modes.
+	-- Update the memory, insert stuff here relating to the buffer windows and pointers:
+	memory_process: process(memclk, write_en)
+	begin
+		if rising_edge(memclk) then
+			if write_en = '1' then
+				memory(to_integer(unsigned(address_in))) <= data_in;
+			end if;
 
-	rodata_out <= memory_array(to_integer(unsigned(roaddress) + unsigned(ro_window_base)));
-	data_out <= memory_array(to_integer(unsigned(address_out) + unsigned(rw_window_base)));
+			data_out <= memory(to_integer(unsigned(address_out) + 1)) & memory(to_integer(unsigned(address_out)));
+			rodata_out <= memory(to_integer(unsigned(roaddress) + 1)) & memory(to_integer(unsigned(roaddress)));
+		end if;
+	end process;
+
 end behaviour;
