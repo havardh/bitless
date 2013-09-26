@@ -11,7 +11,7 @@ use unisim.vcomponents.all;
 
 -- This memory component is designed to be used with the buffers, the constant
 -- memory and the instruction memory in the cores. The word size for the memory
--- is 32 bits. Addresses are per 32 bit word.
+-- is 16 bits. Addresses are per 16 bit word.
 
 entity memory is
 	generic (
