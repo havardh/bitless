@@ -22,6 +22,9 @@
 		<Port Name="GPIO_BUS[13]" OffChipTerm="NONE"/>
 		<Port Name="GPIO_BUS[14]" OffChipTerm="NONE"/>
 		<Port Name="GPIO_BUS[15]" OffChipTerm="NONE"/>
+		<Port Name="CTRL_BUS[0]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="CTRL_BUS[1]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="CTRL_BUS[2]" OffChipTerm="FP_VTT_50"/>
 		<Port Name="EBI_A[0]" OffChipTerm="NONE"/>
 		<Port Name="EBI_A[1]" OffChipTerm="NONE"/>
 		<Port Name="EBI_A[2]" OffChipTerm="NONE"/>

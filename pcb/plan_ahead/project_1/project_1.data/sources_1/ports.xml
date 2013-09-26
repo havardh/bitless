@@ -51,9 +51,12 @@
 	</Ifc>
 	<Ifc Id="GPIO">
 	</Ifc>
+	<Ifc Id="CTRL_BUS">
+	</Ifc>
 	<Ifc Id="ROOT" Top="1">
 		<ChildIfc Id="EBI"/>
 		<ChildIfc Id="GPIO"/>
+		<ChildIfc Id="CTRL_BUS"/>
 		<Bus Id="GPIO_BUS">
 			<Port Id="0" Dir="IN"/>
 			<Port Id="1" Dir="IN"/>
@@ -71,6 +74,11 @@
 			<Port Id="13" Dir="IN"/>
 			<Port Id="14" Dir="IN"/>
 			<Port Id="15" Dir="IN"/>
+		</Bus>
+		<Bus Id="CTRL_BUS">
+			<Port Id="0" Dir="INOUT"/>
+			<Port Id="1" Dir="INOUT"/>
+			<Port Id="2" Dir="INOUT"/>
 		</Bus>
 	</Ifc>
 </Interface>
