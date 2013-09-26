@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<Compat Version="1" Minor="3">
+	<CompatParts>
+	</CompatParts>
+	<ConfigModes>
+		<Mode Id="JTAG"/>
+	</ConfigModes>
+	<PortProps>
+		<Port Name="GPIO_BUS[0]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[1]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[2]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[3]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[4]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[5]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[6]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[7]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[8]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[9]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[10]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[11]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[12]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[13]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[14]" OffChipTerm="NONE"/>
+		<Port Name="GPIO_BUS[15]" OffChipTerm="NONE"/>
+		<Port Name="CTRL_BUS[0]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="CTRL_BUS[1]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="CTRL_BUS[2]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="EBI_A[0]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[1]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[2]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[3]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[4]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[5]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[6]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[7]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[8]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[9]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[10]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[11]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[12]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[13]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[14]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[15]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[16]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[17]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[18]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[19]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[20]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[21]" OffChipTerm="NONE"/>
+		<Port Name="EBI_A[22]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[0]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[1]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[2]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[3]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[4]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[5]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[6]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[7]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[8]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[9]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[10]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[11]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[12]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[13]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[14]" OffChipTerm="NONE"/>
+		<Port Name="EBI_D[15]" OffChipTerm="NONE"/>
+		<Port Name="EBI_CSn" OffChipTerm="NONE"/>
+		<Port Name="EBI_WEn" OffChipTerm="NONE"/>
+		<Port Name="GLOBAL_CLK" OffChipTerm="NONE"/>
+		<Port Name="EBI_REn" OffChipTerm="NONE"/>
+	</PortProps>
+</Compat>
+

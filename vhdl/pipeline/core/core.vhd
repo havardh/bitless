@@ -15,8 +15,9 @@ entity core is
 	);
 
 	port(
-		clk   : in std_logic; -- Small cycle clock signal
-		reset : in std_logic; -- Reset signal, "large cycle" clock signal
+		clk    : in std_logic; -- Small cycle clock signal
+		memclk : in std_logic; -- Memory clock signal
+		reset  : in std_logic; -- Reset signal, "large cycle" clock signal
 
 		deadline_missed : out std_logic; -- Signal asserted if the processor is not idle on reset
 
@@ -47,12 +48,28 @@ entity core is
 end entity;
 
 architecture behaviour of core is
+
 	component alu is
 		port (
 			a, b, c : in std_logic_vector(15 downto 0);
 			result : out std_logic_vector(15 downto 0);
 			flags  : out alu_flags;
 			operation : in alu_operation
+		);
+	end component;
+
+	component memory is
+		generic (
+			size          : natural; -- Size of the memory in bytes
+			address_width : natural
+		);
+		port (
+			clk : in std_logic;
+			address_in   : in  std_logic_vector(address_width - 1 downto 0); -- Write address
+			address_out  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
+			data_in      : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
+			data_out     : out std_logic_vector(31 downto 0); -- Same as above.
+			write_enable : in std_logic
 		);
 	end component;
 
@@ -67,5 +84,17 @@ begin
 			deadline_missed <= '1';
 		end if;
 	end process;
+
+	-- Instruction memory:
+	instruction_memory: memory
+		generic map ( size => 1024, address_width => 16)
+		port map(
+			clk => memclk,
+			address_in => instr_address,
+			address_out => (others => '0'),
+			data_in => instr_data,
+			write_enable => instr_write_enable,
+			data_out => open
+		);
 
 end behaviour;
