@@ -24,6 +24,7 @@ void ADCDriver_Init(const ADCConfig *config)
 void init(const ADCConfig *config) 
 {
 	ADC_Init_TypeDef initADC = ADC_INIT_DEFAULT;
+	if (!config->rate) printf("");
 
 	initADC.warmUpMode = adcWarmupKeepADCWarm;
 	initADC.timebase = ADC_TimebaseCalc(0);

@@ -2,6 +2,7 @@
 #define _EM_ADC_H_
 
 #include <stdint.h>
+#include <string.h>
 #include "spy.h"
 
 typedef struct {
@@ -20,8 +21,6 @@ typedef struct {
   uint8_t prescale;
   bool tailgate;
 } ADC_Init_TypeDef;
-
-#define ADC_INIT_DEFAULT { adcWarmupKeepADCWarm, 1, 1, false }
 
 typedef enum
 {
@@ -66,12 +65,15 @@ typedef struct {
 } ADC_InitScan_TypeDef;
 
 #define ADC_INITSINGLE_DEFAULT { adcAcqTime32, adcRef1V25, adcRes8Bit, adcSingleInpVDDDiv3 }
-
 #define ADC_INITSCAN_DEFAULT { adcPRSSELCh0, true, adcRefVDD, adcRes8Bit, 0 } 
+#define ADC_INIT_DEFAULT { adcWarmupKeepADCWarm, 1, 1, false }
 
-H_SPY2_V(ADC_Init, ADC_TypeDef, adc, const ADC_Init_TypeDef*, init)
-H_SPY2_V(ADC_InitSingle, ADC_TypeDef, adc, const ADC_InitSingle_TypeDef*, init)
-H_SPY2_V(ADC_InitScan, ADC_TypeDef, adc, const ADC_InitScan_TypeDef*, init)
+#define ADC_SCANCTRL_INPUTMASK_CH6 1
+#define ADC_SCANCTRL_INPUTMASK_CH7 2
+
+H_SPY2_VP(ADC_Init, ADC_TypeDef, adc, ADC_Init_TypeDef, init)
+H_SPY2_VP(ADC_InitSingle, ADC_TypeDef, adc, ADC_InitSingle_TypeDef, init)
+H_SPY2_VP(ADC_InitScan, ADC_TypeDef, adc, ADC_InitScan_TypeDef, init)
 
 H_SPY2(uint8_t, ADC_PrescaleCalc, uint32_t, adcFreq, uint32_t, hfperFreq)
 H_SPY1(uint8_t, ADC_TimebaseCalc, uint32_t, hfperFreq)

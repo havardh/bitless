@@ -7,7 +7,10 @@ static ADCConfig C;
 
 TEST_GROUP(ADCDriver) {
 	void setup() {}
-	void teardown() {}
+	void teardown() {
+		ADC_Init_Freeinit();
+		ADC_InitSingle_Freeinit();
+	}
 };
 
 TEST(ADCDriver, shouldHaveInitFunction) {
@@ -20,8 +23,7 @@ TEST(ADCDriver, shouldUseADC_PrescaleCalc) {
 
 	ADCDriver_Init( &C );
 
-	CHECK_EQUAL( 44100, ADC_PrescaleCalc_GetadcFreq() );
-
+	CHECK_EQUAL( 4000000, ADC_PrescaleCalc_GetadcFreq() );
 }
 
 TEST(ADCDriver, shouldUseADC_TimebaseCalc) {
@@ -29,7 +31,6 @@ TEST(ADCDriver, shouldUseADC_TimebaseCalc) {
 	ADCDriver_Init( &C );
 
 	CHECK_EQUAL( 0, ADC_TimebaseCalc_GethfperFreq() );
-
 }
 
 TEST(ADCDriver, shouldCallInitOnADC) {
@@ -47,30 +48,27 @@ TEST(ADCDriver, shouldUseADC0) {
 
 	ADC_TypeDef adc = ADC_Init_Getadc();
 	CHECK_EQUAL( 100, adc.CTRL );
-
 }
 
-IGNORE_TEST(ADCDriver, shouldPassConfigToADC) {
+TEST(ADCDriver, shouldPassConfigToADC) {
 
-	ADC_PrescaleCalc_SetReturn(10);
-	ADC_TimebaseCalc_SetReturn(10);
+	ADC_PrescaleCalc_SetReturnValue(10);
+	ADC_TimebaseCalc_SetReturnValue(10);
 
 	ADCDriver_Init( &C );
 
 	const ADC_Init_TypeDef *init = ADC_Init_Getinit();
 	CHECK_EQUAL(10, init->timebase);
 	CHECK_EQUAL(10, init->prescale);
-	
 }
 
-IGNORE_TEST(ADCDriver, shouldSetDefaultParameters) {
+TEST(ADCDriver, shouldSetDefaultParameters) {
 
 	ADCDriver_Init( &C );
 
 	const ADC_Init_TypeDef *init = ADC_Init_Getinit();
 	CHECK_EQUAL( adcWarmupKeepADCWarm, init->warmUpMode );
 	CHECK_EQUAL( true, init->tailgate );
-
 }
 
 TEST(ADCDriver, shouldSupportSingleConversion) {
@@ -80,7 +78,6 @@ TEST(ADCDriver, shouldSupportSingleConversion) {
 	ADCDriver_Init( &C );
 
 	CHECK( ADC_InitSingle_Called() );
-
 }
 
 TEST(ADCDriver, shouldSetResolution) {
@@ -93,6 +90,7 @@ TEST(ADCDriver, shouldSetResolution) {
 	const ADC_InitSingle_TypeDef *init = ADC_InitSingle_Getinit();
 	CHECK_EQUAL( adcRes8Bit, init->resolution );
 }
+
 
 TEST(ADCDriver, shouldSetChannel) {
 	
@@ -116,7 +114,11 @@ TEST_GROUP(ADCDriver_InitSingle_Defaults) {
 		ADCDriver_Init( &C );
 		initSpy = ADC_InitSingle_Getinit();
 	}
-	void teardown() {}
+	void teardown() {
+		
+		ADC_Init_Freeinit();
+		ADC_InitSingle_Freeinit();
+	}
 };
 
 TEST(ADCDriver_InitSingle_Defaults, referenceShouldDefaultTo1V25) {
@@ -141,7 +143,10 @@ TEST_GROUP(ADCDriver_InitScan) {
 	void setup() {
 		C.mode = ScanConversion;
 	}
-	void teardown() {}
+	void teardown() {
+		ADC_Init_Freeinit();
+		ADC_InitScan_Freeinit();
+	}
 };
 
 TEST(ADCDriver_InitScan, shouldSupportScanConversion) {
@@ -165,12 +170,12 @@ TEST(ADCDriver_InitScan, shouldSetDefaultParameters) {
 
 TEST(ADCDriver_InitScan, shouldSetResolution) {
 	
-	C.resolution = 8;
+	C.resolution = 12;
 
 	ADCDriver_Init( &C );
 	
 	const ADC_InitScan_TypeDef *init = ADC_InitScan_Getinit();
-	CHECK_EQUAL( adcRes8Bit, init->resolution );
+	CHECK_EQUAL( adcRes12Bit, init->resolution );
 	
 }
 
