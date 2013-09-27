@@ -10,6 +10,8 @@
 #include "dmactrl.h"
 #include "rtcdrv.h"
 #include "ADCDriver.h"
+#include "DACDriver.h"
+#include "DMADriver.h"
 
 #define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
 #define SAMPLE_RATE     44100
@@ -28,6 +30,7 @@ static uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
 static DMA_CB_TypeDef cbInData;
 static DMA_CB_TypeDef cbOutData;
 
+
 static void preampDMAInCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
@@ -40,7 +43,7 @@ static void preampDMAOutCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
   DMA_RefreshPingPong(channel,primary,false,NULL,NULL,BUFFER_SIZE - 1,false);
-}
+	}
 
 void PendSV_Handler(void)
 {
@@ -83,19 +86,8 @@ static void setupADC( void )
 
 static void setupDAC( void ) 
 {
-	DAC_Init_TypeDef dacInit = DAC_INIT_DEFAULT;
-	dacInit.reference = dacRefVDD;
-	DAC_Init(DAC0, &dacInit);
-
-	DAC0->COMBDATA = 0x0;
-
-	DAC_InitChannel_TypeDef dacChInit = DAC_INITCHANNEL_DEFAULT;
-	dacChInit.enable = true;
-	dacChInit.prsSel = dacPRSSELCh0;
-	dacChInit.prsEnable = true;
-	DAC_InitChannel(DAC0, &dacChInit, 0);
-	DAC_InitChannel(DAC0, &dacChInit, 1);
-	
+	DACConfig config;
+	DACDriver_Init( &config );
 }
 
 static void setupDMA_ADC( void ) 
@@ -165,24 +157,11 @@ static void setupDMA_DAC( void )
 
 static void setupDMA( void ) 
 {
-	DMA_Init_TypeDef dmaInit;
-	dmaInit.hprot = 0;
-	dmaInit.controlBlock = dmaControlBlock;
-  DMA_Init(&dmaInit);
+	DMADriver_Init( );
 
 	setupDMA_ADC();
 	setupDMA_DAC();
 }
-
-
-
-/***************************************************************************//**
-																																							* @brief
-																																							*   Configure PRS usage for this application.
-																																							*
-																																							* @param[in] prsChannel
-																																							*   PRS channel to use.
-																																							*******************************************************************************/
 
 static void setupPRS( unsigned int channel ) 
 {
@@ -193,11 +172,6 @@ static void setupPRS( unsigned int channel )
 											PRS_CH_CTRL_SIGSEL_TIMER0OF,
 											prsEdgePos);
 }
-
-
-/*******************************************************************************
- **************************   GLOBAL FUNCTIONS   *******************************
- ******************************************************************************/
 
 void setupBSP( void ) 
 {
@@ -235,9 +209,7 @@ int main(void)
 
   setupPRS(PRS_CHANNEL);
 
-	//
 	setupDMA(); setupDAC(); setupADC();
-	//
 
   TIMER_TopSet(TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / SAMPLE_RATE);
   TIMER_Init(TIMER0, &timerInit);

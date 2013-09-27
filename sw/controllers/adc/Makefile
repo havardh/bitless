@@ -124,6 +124,8 @@ INCLUDEPATHS += \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
 -I$(DIR)/drivers/adc/inc \
+-I$(DIR)/drivers/dac/inc \
+-I$(DIR)/drivers/dma/inc \
 -I$(DIR)/types/inc \
 -I$(DIR)/controllers/adc/inc
 
@@ -163,6 +165,8 @@ $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
 $(DIR)/controllers/adc/src/ADCController.c \
 $(DIR)/drivers/adc/src/ADCDriver.c \
+$(DIR)/drivers/dac/src/DACDriver.c \
+$(DIR)/drivers/dma/src/DMADriver.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 
