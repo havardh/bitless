@@ -14,7 +14,6 @@ volatile bool preampProcessPrimary;
 
 uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
 uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
-
 uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
 uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
 
@@ -40,8 +39,8 @@ void DMADriver_Init()
 {
 	init();
 
-//setupADC();
-//setupDAC();
+	setupADC();
+	setupDAC();
 }
 
 static void init( void ) 
