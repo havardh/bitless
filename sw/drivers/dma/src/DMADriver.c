@@ -1,6 +1,6 @@
 #include "DMADriver.h"
 
-#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
+//#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
 #define SAMPLE_RATE     44100
 #define DMA_AUDIO_IN    0
 #define DMA_AUDIO_OUT   1
@@ -12,10 +12,12 @@ static void setupDAC( void );
 
 volatile bool preampProcessPrimary;
 
-uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
-uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
-uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
-uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
+/*
+extern uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
+extern uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
+extern uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
+extern uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
+*/
 
 static DMA_CB_TypeDef cbInData;
 static DMA_CB_TypeDef cbOutData;

@@ -115,6 +115,7 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
+-I./demo \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
@@ -169,6 +170,7 @@ $(DIR)/drivers/adc/src/ADCDriver.c \
 $(DIR)/drivers/dac/src/DACDriver.c \
 $(DIR)/drivers/dma/src/DMADriver.c \
 $(DIR)/drivers/prs/src/PRSDriver.c \
+./demo/fpga.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 

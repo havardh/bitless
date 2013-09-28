@@ -14,44 +14,6 @@
 #include "DMADriver.h"
 #include "PRSDriver.h"
 
-#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
-
-extern volatile bool preampProcessPrimary;
-
-extern uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
-extern uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
-extern uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
-extern uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
-
-void PendSV_Handler(void)
-{
-
-	uint16_t *inBuf;
-  uint32_t *outBuf;
-  int32_t right;
-  int32_t left;
-
-	if (preampProcessPrimary)
-		{
-			inBuf  = preampAudioInBuffer1;
-			outBuf = preampAudioOutBuffer1;
-		}
-  else
-		{
-			inBuf  = preampAudioInBuffer2;
-			outBuf = preampAudioOutBuffer2;
-		}
-
-	int i=0; 
-	for (; i<BUFFER_SIZE; i++) 
-		{
-			right = (int32_t) *inBuf++;
-			left = (int32_t) *inBuf++;
-			
-			*(outBuf++) = ((uint32_t) left << 16) | (uint32_t) right;
-		}
-
-}
 
 static void setupADC( void ) 
 {
@@ -113,7 +75,6 @@ int main(void)
   NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
 
 	setupPRS();
-
 	setupDMA(); setupDAC(); setupADC();
 
   TIMER_TopSet(TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / SAMPLE_RATE);
