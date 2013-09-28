@@ -12,9 +12,9 @@
 #include "ADCDriver.h"
 #include "DACDriver.h"
 #include "DMADriver.h"
+#include "PRSDriver.h"
 
 #define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
-#define PRS_CHANNEL     0
 
 extern volatile bool preampProcessPrimary;
 
@@ -64,7 +64,6 @@ static void setupADC( void )
 
 static void setupDAC( void ) 
 {
-	
 	DACConfig config;
 	DACDriver_Init( &config );
 }
@@ -74,14 +73,9 @@ static void setupDMA( void )
 	DMADriver_Init( );
 }
 
-static void setupPRS( unsigned int channel ) 
-{
-	PRS_LevelSet(0, 1 << (channel + _PRS_SWLEVEL_CH0LEVEL_SHIFT));
-
-	PRS_SourceSignalSet(channel,
-											PRS_CH_CTRL_SOURCESEL_TIMER0,
-											PRS_CH_CTRL_SIGSEL_TIMER0OF,
-											prsEdgePos);
+static void setupPRS( ) 
+{	
+	PRSDriver_Init();
 }
 
 void setupBSP( void ) 
@@ -118,7 +112,7 @@ int main(void)
   NVIC_SetPriority(DMA_IRQn, 0);
   NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
 
-  setupPRS(PRS_CHANNEL);
+	setupPRS();
 
 	setupDMA(); setupDAC(); setupADC();
 
