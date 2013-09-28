@@ -1,6 +1,6 @@
 #include "complex.h"
 
-complex addi(complex lhs, int8_t rhs)
+complex addi(complex lhs, int16_t rhs)
 {
   lhs.real += rhs;
   return lhs;
