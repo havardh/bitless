@@ -43,7 +43,7 @@ static void preampDMAOutCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
   DMA_RefreshPingPong(channel,primary,false,NULL,NULL,BUFFER_SIZE - 1,false);
-	}
+}
 
 void PendSV_Handler(void)
 {
@@ -86,6 +86,7 @@ static void setupADC( void )
 
 static void setupDAC( void ) 
 {
+	
 	DACConfig config;
 	DACDriver_Init( &config );
 }
