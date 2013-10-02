@@ -96,7 +96,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 
 [Document5]
-DocumentPath=MICROSD.PcbLib
+DocumentPath=..\libs\PowerConnector.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -112,7 +112,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 
 [Document6]
-DocumentPath=SR10S3V3_Footprint.PcbLib
+DocumentPath=MICROSD.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -128,7 +128,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 
 [Document7]
-DocumentPath=MICROSD.SchLib
+DocumentPath=SR10S3V3_Footprint.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -144,7 +144,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 
 [Document8]
-DocumentPath=SR10S3V3_Schematic.SchLib
+DocumentPath=MICROSD.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -160,6 +160,22 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 
 [Document9]
+DocumentPath=SR10S3V3_Schematic.SchLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+
+[Document10]
 DocumentPath=oscillation.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -175,7 +191,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document10]
+[Document11]
 DocumentPath=arm_power.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -191,7 +207,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document11]
+[Document12]
 DocumentPath=fpga_sheet.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -207,7 +223,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document12]
+[Document13]
 DocumentPath=uart_usb_bridge.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -223,7 +239,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document13]
+[Document14]
 DocumentPath=sram.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -239,7 +255,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document14]
+[Document15]
 DocumentPath=oscillation.Harness
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -255,7 +271,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document15]
+[Document16]
 DocumentPath=..\libs\Xilinx Spartan-6.IntLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -271,7 +287,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document16]
+[Document17]
 DocumentPath=user_interface.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -287,7 +303,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document17]
+[Document18]
 DocumentPath=..\libs\FTDI Communication.IntLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -303,8 +319,24 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document18]
+[Document19]
 DocumentPath=..\libs\Silicon Labs Energy Micro EFM32.IntLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+
+[Document20]
+DocumentPath=PowerConnector.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
