@@ -6,10 +6,10 @@
 
 #define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
 
-extern uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
-extern uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
-extern uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
-extern uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
+extern uint16_t *preampAudioInBuffer1;
+extern uint16_t *preampAudioInBuffer2;
+extern uint32_t *preampAudioOutBuffer1;
+extern uint32_t *preampAudioOutBuffer2;
 
 void FPGA_Init( void );
 

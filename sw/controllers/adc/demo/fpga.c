@@ -2,17 +2,17 @@
 
 extern volatile bool preampProcessPrimary;
 
-uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
-uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
-uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
-uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
+uint16_t *preampAudioInBuffer1;
+uint16_t *preampAudioInBuffer2;
+uint32_t *preampAudioOutBuffer1;
+uint32_t *preampAudioOutBuffer2;
 
 void FPGA_Init( void ) 
 { 
-	/*preampAudioInBuffer1 = (uint16_t*)malloc(sizeof(uint16_t) * BUFFER_SIZE * 2);
+	preampAudioInBuffer1 = (uint16_t*)malloc(sizeof(uint16_t) * BUFFER_SIZE * 2);
 	preampAudioInBuffer2 = (uint16_t*)malloc(sizeof(uint16_t) * BUFFER_SIZE * 2);
 	preampAudioOutBuffer1 = (uint16_t*)malloc(sizeof(uint32_t) * BUFFER_SIZE);
-	preampAudioOutBuffer2 = (uint16_t*)malloc(sizeof(uint32_t) * BUFFER_SIZE);*/
+	preampAudioOutBuffer2 = (uint16_t*)malloc(sizeof(uint32_t) * BUFFER_SIZE);
 }
 
 void PendSV_Handler(void)
