@@ -1,10 +1,15 @@
-Mini jacks
-	- Mangler footprint
-usb plug
-Krystaller
-Buttons
-Leds, motstander 0805
+Mini jacks (footprint)
+USB plug (footprint)
+Krystaller/klokkegeneratorer (lag footprint)
+Buttons (footprint)
+Leds 0805 (bytte)
+
+FPGA flash (footprint + plassér)
+
+Strømmålingsockets
 
 GPIO drevet power switch:
 	- Må forsøke å drive enable med 3.3v og source på 1.8 og måle output. Vi kan eventuelt legge en motstand i seriel med enable for å senke spenninga.
 	- Men den kan drive 3.3v med 3.3v enable så den fungere for sram, som er viktigeste bruksområde.
+
+Bytte sens-motstander
