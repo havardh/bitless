@@ -8,11 +8,17 @@ uint32_t *preampAudioOutBuffer1;
 uint32_t *preampAudioOutBuffer2;
 
 void FPGA_Init( void ) 
-{ 
+{ /*
 	preampAudioInBuffer1 = (uint16_t*)malloc(sizeof(uint16_t) * BUFFER_SIZE * 2);
 	preampAudioInBuffer2 = (uint16_t*)malloc(sizeof(uint16_t) * BUFFER_SIZE * 2);
 	preampAudioOutBuffer1 = (uint16_t*)malloc(sizeof(uint32_t) * BUFFER_SIZE);
 	preampAudioOutBuffer2 = (uint16_t*)malloc(sizeof(uint32_t) * BUFFER_SIZE);
+	*/
+	preampAudioInBuffer1 = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE) * 0);
+	preampAudioInBuffer2 = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE) * 1);
+	preampAudioOutBuffer1 = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE)* 2);
+	preampAudioOutBuffer2 = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE)* 3);
+
 }
 
 void PendSV_Handler(void)

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
+#define EXT_SRAM_BASE_ADDRESS ((volatile uint16_t*) 0x88000000)
 
 extern uint16_t *preampAudioInBuffer1;
 extern uint16_t *preampAudioInBuffer2;
