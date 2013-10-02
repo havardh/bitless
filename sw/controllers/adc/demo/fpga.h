@@ -11,5 +11,7 @@ extern uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
 extern uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
 extern uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
 
+void FPGA_Init( void );
+
 #endif /* _FPGA_H_ */
 

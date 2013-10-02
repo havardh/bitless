@@ -12,13 +12,6 @@ static void setupDAC( void );
 
 volatile bool preampProcessPrimary;
 
-/*
-extern uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
-extern uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
-extern uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
-extern uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
-*/
-
 static DMA_CB_TypeDef cbInData;
 static DMA_CB_TypeDef cbOutData;
 

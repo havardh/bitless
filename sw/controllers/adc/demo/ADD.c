@@ -71,6 +71,8 @@ int main(void)
 
 	setupClocks();
 
+	FPGA_Init();
+
   NVIC_SetPriority(DMA_IRQn, 0);
   NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
 
