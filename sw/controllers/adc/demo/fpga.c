@@ -2,18 +2,32 @@
 
 static bool bufferPrimary;
 
+int bufferSize;
+
 uint16_t *primaryAudioInBuffer;
 uint16_t *secondaryAudioInBuffer;
 uint32_t *primaryAudioOutBuffer;
 uint32_t *secondaryAudioOutBuffer;
 
-void FPGA_Init( void ) 
+void FPGA_Init( FPGAConfig *config ) 
 {
+	bufferSize = config->bufferSize;
+
 	// Allocate Space in SRAM
-  primaryAudioInBuffer    = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE) * 0);
-	secondaryAudioInBuffer  = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE) * 1);
-  primaryAudioOutBuffer   = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE) * 2);
-  secondaryAudioOutBuffer = EXT_SRAM_BASE_ADDRESS + ((sizeof(uint32_t) * BUFFER_SIZE) * 3);
+  primaryAudioInBuffer    = config->baseAddress + ((sizeof(uint32_t) * bufferSize) * 0);
+	secondaryAudioInBuffer  = config->baseAddress + ((sizeof(uint32_t) * bufferSize) * 1);
+  primaryAudioOutBuffer   = config->baseAddress + ((sizeof(uint32_t) * bufferSize) * 2);
+  secondaryAudioOutBuffer = config->baseAddress + ((sizeof(uint32_t) * bufferSize) * 3);
+}
+
+uint16_t* FPGA_GetAudioInBuffer( bool primary ) 
+{
+	if (primary) 
+	{
+		return FPGA_GetPrimaryAudioInBuffer();
+	} else {
+		return FPGA_GetSecondaryAudioInBuffer();
+	}
 }
 
 uint16_t* FPGA_GetPrimaryAudioInBuffer( void ) 
@@ -28,7 +42,17 @@ uint16_t* FPGA_GetSecondaryAudioInBuffer( void )
 
 int FPGA_GetAudioInBufferSize( void ) 
 {
-	return BUFFER_SIZE * 2;
+	return bufferSize * 2;
+}
+
+uint16_t* FPGA_GetAudioOutBuffer( bool primary ) 
+{
+	if (primary) 
+	{
+		return FPGA_GetPrimaryAudioOutBuffer();
+	} else {
+		return FPGA_GetSecondaryAudioOutBuffer();
+	}
 }
 
 uint32_t* FPGA_GetPrimaryAudioOutBuffer( void )
@@ -43,7 +67,7 @@ uint32_t* FPGA_GetSecondaryAudioOutBuffer( void )
 
 int FPGA_GetAudioOutBufferSize( void ) 
 {
-	return BUFFER_SIZE;
+	return bufferSize;
 }
 
 void FPGA_SetBufferPrimary( bool primary ) 
@@ -59,19 +83,11 @@ void PendSV_Handler(void)
   int32_t right;
   int32_t left;
 
-	if (bufferPrimary)
-		{
-			inBuf  = primaryAudioInBuffer;
-			outBuf = primaryAudioOutBuffer;
-		}
-  else
-		{
-			inBuf  = secondaryAudioInBuffer;
-			outBuf = secondaryAudioOutBuffer;
-		}
+	inBuf = FPGA_GetAudioInBuffer( bufferPrimary );
+	outBuf = FPGA_GetAudioOutBuffer( bufferPrimary );
 
 	int i=0; 
-	for (; i<BUFFER_SIZE; i++) 
+	for (; i<bufferSize; i++) 
 		{
 			right = (int32_t) *inBuf++;
 			left = (int32_t) *inBuf++;

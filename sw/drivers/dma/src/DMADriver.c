@@ -16,7 +16,9 @@ static DMA_CB_TypeDef cbOutData;
 static void preampDMAInCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
-  DMA_RefreshPingPong(channel,primary,false,NULL,NULL,(BUFFER_SIZE * 2) - 1,false);
+
+	int bufferSize = FPGA_GetAudioInBufferSize() - 1;
+  DMA_RefreshPingPong(channel,primary,false,NULL,NULL,bufferSize,false);
 
 	FPGA_SetBufferPrimary( primary );
 
@@ -26,7 +28,8 @@ static void preampDMAInCb(unsigned int channel, bool primary, void *user)
 static void preampDMAOutCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
-  DMA_RefreshPingPong(channel,primary,false,NULL,NULL,BUFFER_SIZE - 1,false);
+	int bufferSize = FPGA_GetAudioOutBufferSize() - 1;
+  DMA_RefreshPingPong(channel,primary,false,NULL,NULL,bufferSize,false);
 }
 
 

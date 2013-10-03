@@ -3,19 +3,15 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "FPGAConfig.h"
 
-#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
-
-// Start address of SRAM on DK3750 
-#define EXT_SRAM_BASE_ADDRESS ((volatile uint16_t*) 0x88000000)
-
-
-void FPGA_Init( void );
-
+void FPGA_Init( FPGAConfig *config );
+uint16_t* FPGA_GetAudioInBuffer( bool primary );
 uint16_t* FPGA_GetPrimaryAudioInBuffer( void );
 uint16_t* FPGA_GetSecondaryAudioInBuffer( void );
 int FPGA_GetAudioInBufferSize( void );
 
+uint16_t* FPGA_GetAudioOutBuffer( bool primary );
 uint32_t* FPGA_GetPrimaryAudioOutBuffer( void );
 uint32_t* FPGA_GetSecondaryAudioOutBuffer( void );
 int FPGA_GetAudioOutBufferSize( void );
