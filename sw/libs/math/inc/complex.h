@@ -8,7 +8,7 @@ typedef struct {
   float img;
 } complex;
  
-complex addi(complex lhs, int8_t rhs);
+complex addi(complex lhs, int16_t rhs);
 complex addc(complex lhs, complex rhs);
 complex mul(complex lhs, complex rhs);
 
