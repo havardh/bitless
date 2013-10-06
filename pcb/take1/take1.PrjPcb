@@ -368,22 +368,6 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 
 [Document22]
-DocumentPath=..\libs\PowerConnector.PcbLib
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-
-[Document23]
 DocumentPath=..\libs\PBL - Light Sources.SCHLIB
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -399,7 +383,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document24]
+[Document23]
 DocumentPath=..\libs\PBL - SMD Packages.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -415,7 +399,7 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document25]
+[Document24]
 DocumentPath=MICROUSB.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -431,8 +415,24 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 
-[Document26]
+[Document25]
 DocumentPath=PowerConnector.SchLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+
+[Document26]
+DocumentPath=..\libs\PowerConnector.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
