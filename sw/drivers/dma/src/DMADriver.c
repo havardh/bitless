@@ -17,10 +17,10 @@ static void preampDMAInCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
 
-	int bufferSize = FPGA_GetAudioInBufferSize() - 1;
+	int bufferSize = MEM_GetAudioInBufferSize() - 1;
   DMA_RefreshPingPong(channel,primary,false,NULL,NULL,bufferSize,false);
 
-	FPGA_SetBufferPrimary( primary );
+	MEM_SetBufferPrimary( primary );
 
   SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
 }
@@ -28,7 +28,7 @@ static void preampDMAInCb(unsigned int channel, bool primary, void *user)
 static void preampDMAOutCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
-	int bufferSize = FPGA_GetAudioOutBufferSize() - 1;
+	int bufferSize = (MEM_GetAudioOutBufferSize() / 2) - 1;
   DMA_RefreshPingPong(channel,primary,false,NULL,NULL,bufferSize,false);
 }
 
@@ -73,14 +73,14 @@ void setupADC( void )
 
 
 	void     *ADCScanData = (void *)((uint32_t) &(ADC0->SCANDATA));
-	uint16_t *priBuffer   = FPGA_GetPrimaryAudioInBuffer();
-	uint16_t *secBuffer   = FPGA_GetSecondaryAudioInBuffer();
-	int       bufferSize  = FPGA_GetAudioInBufferSize() - 1;
+	uint16_t *priBuffer   = MEM_GetPrimaryAudioInBuffer();
+	uint16_t *secBuffer   = MEM_GetSecondaryAudioInBuffer();
+	int       bufferSize  = MEM_GetAudioInBufferSize() - 1;
   DMA_ActivatePingPong(DMA_AUDIO_IN,false,
 											 priBuffer, ADCScanData, bufferSize,
 											 secBuffer, ADCScanData, bufferSize);
 	
-	FPGA_SetBufferPrimary( true );
+	MEM_SetBufferPrimary( true );
 
 }
 
@@ -105,9 +105,9 @@ void setupDAC( void )
 	DMA_CfgDescr(DMA_AUDIO_OUT, false, &descrCfg);
 
 	void     *DACCombData = (void *)((uint32_t) &(DAC0->COMBDATA));
-	uint16_t *priBuffer   = FPGA_GetPrimaryAudioOutBuffer();
-	uint16_t *secBuffer   = FPGA_GetSecondaryAudioOutBuffer();
-	int       bufferSize  = FPGA_GetAudioOutBufferSize() - 1;
+	uint16_t *priBuffer   = MEM_GetPrimaryAudioOutBuffer();
+	uint16_t *secBuffer   = MEM_GetSecondaryAudioOutBuffer();
+	int       bufferSize  = (MEM_GetAudioOutBufferSize() / 2) - 1;
 	DMA_ActivatePingPong(DMA_AUDIO_OUT, false,
 											 DACCombData, priBuffer, bufferSize,
 											 DACCombData, secBuffer, bufferSize);

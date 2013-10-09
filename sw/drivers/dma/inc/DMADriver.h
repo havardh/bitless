@@ -5,6 +5,7 @@
 #include "em_dma.h"
 #include "dmactrl.h"
 #include "DMAConfig.h"
+#include "MEMDriver.h"
 #include "fpga.h"
 
 //#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */

@@ -13,6 +13,7 @@
 #include "DACDriver.h"
 #include "DMADriver.h"
 #include "PRSDriver.h"
+#include "MEMDriver.h"
 
 
 #define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
@@ -69,7 +70,7 @@ void setupFPGA( void )
 	FPGAConfig config;
 
 	config.baseAddress = EXT_SRAM_BASE_ADDRESS;
-	config.bufferSize = BUFFER_SIZE;
+	config.bufferSize  = BUFFER_SIZE;
 
 	FPGA_Init( &config );
 }
@@ -84,8 +85,8 @@ int main(void)
   RTCDRV_Trigger(1000, NULL); EMU_EnterEM2(true);
 
 	setupClocks();
-
-	setupFPGA();
+  
+  MEM_Init();
 
   NVIC_SetPriority(DMA_IRQn, 0);
   NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
