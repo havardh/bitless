@@ -15,6 +15,11 @@
 #include "PRSDriver.h"
 
 
+#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
+
+// Start address of SRAM on DK3750 
+#define EXT_SRAM_BASE_ADDRESS ((volatile uint16_t*) 0x88000000)
+
 static void setupADC( void ) 
 {
 	ADCConfig config;
@@ -59,6 +64,15 @@ void setupClocks( void )
 	CMU_ClockEnable( cmuClock_TIMER0, true );
 }
 
+void setupFPGA( void ) 
+{
+	FPGAConfig config;
+
+	config.baseAddress = EXT_SRAM_BASE_ADDRESS;
+	config.bufferSize = BUFFER_SIZE;
+
+	FPGA_Init( &config );
+}
 
 int main(void)
 {
@@ -70,6 +84,8 @@ int main(void)
   RTCDRV_Trigger(1000, NULL); EMU_EnterEM2(true);
 
 	setupClocks();
+
+	setupFPGA();
 
   NVIC_SetPriority(DMA_IRQn, 0);
   NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);

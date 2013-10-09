@@ -3,13 +3,21 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "FPGAConfig.h"
 
-#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
+void FPGA_Init( FPGAConfig *config );
+uint16_t* FPGA_GetAudioInBuffer( bool primary );
+uint16_t* FPGA_GetPrimaryAudioInBuffer( void );
+uint16_t* FPGA_GetSecondaryAudioInBuffer( void );
+int FPGA_GetAudioInBufferSize( void );
 
-extern uint16_t preampAudioInBuffer1[BUFFER_SIZE * 2];
-extern uint16_t preampAudioInBuffer2[BUFFER_SIZE * 2];
-extern uint32_t preampAudioOutBuffer1[BUFFER_SIZE];
-extern uint32_t preampAudioOutBuffer2[BUFFER_SIZE];
+uint16_t* FPGA_GetAudioOutBuffer( bool primary );
+uint32_t* FPGA_GetPrimaryAudioOutBuffer( void );
+uint32_t* FPGA_GetSecondaryAudioOutBuffer( void );
+int FPGA_GetAudioOutBufferSize( void );
+
+void FPGA_SetBufferPrimary( bool primary );
+
 
 #endif /* _FPGA_H_ */
 
