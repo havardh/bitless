@@ -13,7 +13,7 @@
 #include "bsp_trace.h"
 #include "dmactrl.h"
 
-#define N 4
+#define N 32
 
 DMA_CB_TypeDef cbInLeft;
 DMA_CB_TypeDef cbInRight;
@@ -25,12 +25,12 @@ DMA_CB_TypeDef cbOutRight;
 #define DMA_CHANNEL_OUT_LEFT  2
 #define DMA_CHANNEL_OUT_RIGHT 3 
 
-volatile uint16_t source[2*N] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+volatile uint16_t source[2*N];
 
 volatile uint16_t left[N] = { 0, 0, 0, 0 };
 volatile uint16_t right[N] = { 0, 0, 0, 0 };
 
-volatile uint16_t destination[2*N] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+volatile uint16_t destination[2*N];
 
 volatile uint32_t msTicks; /* counts 1ms timeTicks */
 
@@ -199,7 +199,7 @@ bool test(void)
 {
 	for (int i=0; i<N; i++) {
 		if (left[i] != (2*i+1) || right[i] != (2*i+2)) {
-			//return false;
+			return false;
 		}
 	}
 
@@ -212,6 +212,13 @@ bool test(void)
 	return true;
 }
 
+void initSource( void ) 
+{
+  for (int i=0; i<2*N; i++) {
+    source[i] = i+1;
+  }
+}
+
 int main(void) 
 {
 	
@@ -221,6 +228,8 @@ int main(void)
 
 	BSP_LedsInit();
 	BSP_LedsSet(0);
+
+  initSource();
 
 	setupCMU();
 
@@ -242,7 +251,5 @@ int main(void)
 		}
 		Delay(1000);
 	}
-
-	
 
 }
