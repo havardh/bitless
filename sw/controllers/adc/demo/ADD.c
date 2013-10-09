@@ -14,6 +14,7 @@
 #include "DMADriver.h"
 #include "PRSDriver.h"
 #include "MEMDriver.h"
+#include "FPGADriver.h"
 
 
 #define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
@@ -70,9 +71,10 @@ void setupFPGA( void )
 	FPGAConfig config;
 
 	config.baseAddress = EXT_SRAM_BASE_ADDRESS;
+  config.numPipelines = 2;
 	config.bufferSize  = BUFFER_SIZE;
 
-	FPGA_Init( &config );
+  FPGADriver_Init( &config );
 }
 
 int main(void)
@@ -87,6 +89,8 @@ int main(void)
 	setupClocks();
   
   MEM_Init();
+  setupFPGA();
+
 
   NVIC_SetPriority(DMA_IRQn, 0);
   NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
