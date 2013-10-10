@@ -2,13 +2,24 @@
 
 //#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
 #define SAMPLE_RATE     44100
-#define DMA_AUDIO_IN    0
-#define DMA_AUDIO_OUT   1
+
+#define DMA_AUDIO_IN       0
+#define DMA_AUDIO_OUT      1
+#define DMA_FPGA_IN_LEFT   2
+#define DMA_FPGA_IN_RIGHT  3
+#define DMA_FPGA_OUT_LEFT  4
+#define DMA_FPGA_OUT_RIGHT 5
+
 #define PRS_CHANNEL     0
+
+void Delay(uint32_t dlyTicks);
 
 static void init( void );
 static void setupADC( void );
 static void setupDAC( void );
+
+static void setupFPGAIn( void );
+static void setupFPGAOut( void );
 
 static DMA_CB_TypeDef cbInData;
 static DMA_CB_TypeDef cbOutData;
@@ -37,8 +48,17 @@ void DMADriver_Init()
 {
 	init();
 
-	setupADC();
-	setupDAC();
+	//setupADC();
+	//setupDAC();
+
+	printf("Start Copy 1\n");
+  setupFPGAIn();
+	Delay(1000);
+	FPGADriver_CopyData();
+	Delay(1000);
+	printf("Start Copy 2\n");
+  setupFPGAOut();
+
 }
 
 static void init( void ) 
@@ -48,7 +68,6 @@ static void init( void )
 	dmaInit.controlBlock = dmaControlBlock;
   DMA_Init(&dmaInit);
 }
-
 
 void setupADC( void ) 
 {
@@ -70,7 +89,6 @@ void setupADC( void )
   descrCfg.hprot   = 0;
   DMA_CfgDescr(DMA_AUDIO_IN, true, &descrCfg);
   DMA_CfgDescr(DMA_AUDIO_IN, false, &descrCfg);
-
 
 	void     *ADCScanData = (void *)((uint32_t) &(ADC0->SCANDATA));
 	uint16_t *priBuffer   = MEM_GetPrimaryAudioInBuffer();
@@ -112,4 +130,71 @@ void setupDAC( void )
 											 DACCombData, priBuffer, bufferSize,
 											 DACCombData, secBuffer, bufferSize);
 
+}
+
+void setupFPGAIn( void ) 
+{
+  DMA_CfgChannel_TypeDef chnlCfg = {
+    .highPri   = false,
+    .enableInt = true,
+    .select    = 0,
+    .cb        = NULL
+  };
+  DMA_CfgChannel( DMA_FPGA_IN_LEFT,  &chnlCfg );
+  DMA_CfgChannel( DMA_FPGA_IN_RIGHT, &chnlCfg );
+
+  DMA_CfgDescr_TypeDef descrCfg = {
+    .dstInc = dmaDataInc2,
+    .srcInc = dmaDataInc4,
+    .size = dmaDataSize2,
+    .arbRate = dmaArbitrate1,
+    .hprot = 0
+  };
+  DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true, &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true, &descrCfg );
+
+  void *dst, *src; int n;
+  dst = FPGADriver_GetInBuffer(0);
+  src = MEM_GetPrimaryAudioInBuffer();
+  n = MEM_GetAudioInBufferSize() / 2;
+  DMA_ActivateAuto( DMA_FPGA_IN_LEFT, true, dst, src, n - 1);
+
+  dst = FPGADriver_GetInBuffer(1);
+  src = MEM_GetPrimaryAudioInBuffer() + sizeof(uint8_t);
+  n = MEM_GetAudioInBufferSize() / 2;
+  DMA_ActivateAuto( DMA_FPGA_IN_RIGHT, true, dst, src, n - 1);
+}
+
+void setupFPGAOut( void ) 
+{
+	
+  DMA_CfgChannel_TypeDef chnlCfg = {
+    .highPri   = false,
+    .enableInt = true,
+    .select    = 0,
+    .cb        = NULL
+  };
+  DMA_CfgChannel( DMA_FPGA_OUT_LEFT,  &chnlCfg );
+  DMA_CfgChannel( DMA_FPGA_OUT_RIGHT, &chnlCfg );
+
+  DMA_CfgDescr_TypeDef descrCfg = {
+    .dstInc = dmaDataInc4,
+    .srcInc = dmaDataInc2,
+    .size = dmaDataSize2,
+    .arbRate = dmaArbitrate1,
+    .hprot = 0
+  };
+  DMA_CfgDescr( DMA_FPGA_OUT_LEFT,  true, &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_OUT_RIGHT, true, &descrCfg );
+
+  void *dst, *src; int n;
+  dst = MEM_GetPrimaryAudioOutBuffer();
+  src = FPGADriver_GetOutBuffer(0);
+  n = MEM_GetAudioOutBufferSize();
+  DMA_ActivateAuto( DMA_FPGA_OUT_LEFT, true, dst, src, n - 1);
+
+  dst =  MEM_GetPrimaryAudioOutBuffer() + sizeof(uint8_t);
+  src = FPGADriver_GetOutBuffer(1);
+  n = MEM_GetAudioOutBufferSize();
+  DMA_ActivateAuto( DMA_FPGA_OUT_RIGHT, true, dst, src, n - 1); 
 }

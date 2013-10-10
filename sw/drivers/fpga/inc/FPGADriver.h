@@ -10,4 +10,7 @@ void FPGADriver_Init( FPGAConfig *config );
 uint16_t* FPGADriver_GetInBuffer(int pipeline);
 uint16_t* FPGADriver_GetOutBuffer(int pipeline);
 
+// Simulates the fpga
+void FPGADriver_CopyData( void );
+
 #endif /* _FPGADRIVER_H_ */

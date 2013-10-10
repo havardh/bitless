@@ -44,3 +44,11 @@ uint16_t* FPGADriver_GetOutBuffer( int pipeline )
 {
   return outBuffers[pipeline];
 }
+
+void FPGADriver_CopyData( void )
+{
+	for (int i=0; i<numPipelines; i++) 
+	{
+		memcpy(outBuffers[i], inBuffers[i], bufferSize*2);
+	}
+}
