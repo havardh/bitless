@@ -50,12 +50,20 @@ void setupDMA( void )
 
 void initialize( void ) 
 {
-	uint16_t *buffer = MEM_GetPrimaryAudioInBuffer();
+	uint16_t *primIN  = MEM_GetPrimaryAudioInBuffer();
+	uint16_t *primOUT = MEM_GetPrimaryAudioOutBuffer();
+	uint16_t *secIN   = MEM_GetSecondaryAudioInBuffer();
+	uint16_t *secOUT  = MEM_GetSecondaryAudioOutBuffer();
 
 	for (int i=0; i<64; i++) 
-	{
-		buffer[i] = i;
+	{	
+		primIN[i] = i;
+		secIN[i]  = i;
+
+		primOUT[i] = 0;
+		secOUT[i]  = 0;
 	}
+
 }
 
 bool testSplit( void ) 
@@ -76,12 +84,21 @@ bool testSplit( void )
 bool testMerge( void ) 
 {
 
-	uint16_t *output = MEM_GetPrimaryAudioOutBuffer();
+	uint16_t *primOUT = MEM_GetPrimaryAudioOutBuffer();
+	uint16_t *secOUT = MEM_GetSecondaryAudioOutBuffer();
 
 	for(int i=0; i<64; i++) 
 	{
-		if (output[i] != i) {
-			printf("output[%d] was %d expected to be %d\n", i, output[i], i);
+		if (primOUT[i] != i) {
+			printf("primOUT[%d] was %d expected to be %d\n", i, primOUT[i], i);
+			return false;
+		}
+	}
+
+	for(int i=0; i<64; i++) 
+	{
+		if (secOUT[i] != i) {
+			printf("secOUT[%d] was %d expected to be %d\n", i, secOUT[i], i);
 			return false;
 		}
 	}
@@ -106,8 +123,6 @@ int main( void )
   setupMEM();
 
 	initialize();
-	uint16_t* buffer = MEM_GetPrimaryAudioOutBuffer();
-	for(int i=0; i<64; i++) buffer[i] = 0;
 
 	setupDMA();
 
