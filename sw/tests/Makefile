@@ -15,14 +15,16 @@ CPPUTEST_HOME = ../libs/cpputest
 
 CPPUTEST_USE_EXTENSIONS = Y
 CPP_PLATFORM = GCC
-CPPUTEST_CPPFLAGS = -x c++
-CFLAGS += --std=c99
+CPPFLAGS += -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorNewMacros.h
+CPPUTEST_CPPFLAGS = -x c++ -g
+CFLAGS += --std=c99 -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorMallocMacros.h
 
 SRC_DIRS = \
   .\
-  ../controllers/**/src\
-  ../drivers/**/src\
+	../controllers/main/src\
   ../libs/math/src\
+	./test-doubles/drivers/**\
+	./test-doubles/libs/**\
   src\
 
 
@@ -30,7 +32,11 @@ TEST_SRC_DIRS = \
 	./**/**\
 
 INCLUDE_DIRS =\
+	./test-doubles/**/**\
   ../**/**/inc\
+	../**/**/src\
+  ../**/inc\
+	../libs/mocks/inc\
   $(CPPUTEST_HOME)/include\
 
 include $(CPPUTEST_HOME)/build/MakefileWorker.mk
