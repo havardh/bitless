@@ -23,13 +23,13 @@ complex coeffs[N] = {
  * Updates the fourier transform of a sample window of N samples.
  * Uses a sample cache to update the frequencies.
  */
-void sdft(uint8_t new_sample, complex *freq, complex *coefficients) 
+void sdft(uint16_t new_sample, complex *freq, complex *coefficients) 
 {
-  uint8_t old = get_old_sample();
+  uint16_t old = get_old_sample();
   insert_sample(new_sample);
 
-  int8_t delta = (int8_t)(new_sample - old);
-  for (uint8_t i=0; i<N; i++) {
+  int16_t delta = (int16_t)(new_sample - old);
+  for (uint16_t i=0; i<N; i++) {
     freq[i] = mul(addi(freq[i], delta), coefficients[i]);
   }
 
@@ -38,7 +38,7 @@ void sdft(uint8_t new_sample, complex *freq, complex *coefficients)
 /* 
  * Extracts a sample from the frequency domain
  */
-uint8_t isdft(complex *freq, complex *coefficients)
+uint16_t isdft(complex *freq, complex *coefficients)
 {
   complex sum = {0,0};
   
@@ -46,5 +46,5 @@ uint8_t isdft(complex *freq, complex *coefficients)
     sum = addc(mul(freq[i], coefficients[i]), sum);
   }
 
-  return uint8_t(sum.real / (float)N);
+  return (uint16_t)(sum.real / (float)N);
 }

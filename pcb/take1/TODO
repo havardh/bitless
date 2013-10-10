@@ -1,6 +1,12 @@
-EFM32GG990F1024
-- Verify capacitor values on ARM XTAL
-    - Assumed XTALs are:
-        32MHz: TXC - 7B-32.000MAAJ-T (18pF load capacitance)
-        32.768kHz: Any (12.5pF load capacitance)
+Krystaller/klokkegeneratorer (lag footprint)
+Leds 0805 (bytte)
 
+Strømmålingsockets
+
+GPIO drevet power switch:
+	- Må forsøke å drive enable med 3.3v og source på 1.8 og måle output. Vi kan eventuelt legge en motstand i seriel med enable for å senke spenninga.
+	- Men den kan drive 3.3v med 3.3v enable så den fungere for sram, som er viktigeste bruksområde.
+
+Bytte sens-motstander
+
+Dobbeltsjekk polaritet på 470uF caps i forhold til plassering og ledninger.

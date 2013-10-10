@@ -1,5 +1,52 @@
 # This file contains pin-definition made by PlanAhead.
 # The net field is a port in the toplevel module, and its association with a physical FPGA pin.
 
-NET "clk" LOC = V10;
+NET "fpga_clk" LOC = V10;
 NET "sample_clk" LOC = U10;
+
+# PlanAhead Generated physical constraints 
+
+NET "ebi_address[0]" LOC = L18;
+NET "ebi_address[1]" LOC = L17;
+NET "ebi_address[2]" LOC = K18;
+NET "ebi_address[3]" LOC = K17;
+NET "ebi_address[4]" LOC = J18;
+NET "ebi_address[5]" LOC = J16;
+NET "ebi_address[6]" LOC = H18;
+NET "ebi_address[7]" LOC = H17;
+NET "ebi_address[8]" LOC = L16;
+NET "ebi_address[9]" LOC = L15;
+NET "ebi_address[10]" LOC = K16;
+NET "ebi_address[11]" LOC = K15;
+NET "ebi_address[12]" LOC = L13;
+NET "ebi_address[13]" LOC = L12;
+NET "ebi_address[14]" LOC = K14;
+NET "ebi_address[15]" LOC = J13;
+NET "ebi_address[16]" LOC = G18;
+NET "ebi_address[17]" LOC = G16;
+NET "ebi_address[18]" LOC = H16;
+NET "ebi_address[19]" LOC = H15;
+NET "ebi_address[20]" LOC = H14;
+NET "ebi_address[21]" LOC = H13;
+NET "ebi_address[22]" LOC = F18;
+NET "ebi_address[23]" LOC = F17;
+NET "ebi_address[24]" LOC = K13;
+NET "ebi_cs" LOC = E16;
+NET "ebi_data[0]" LOC = M13;
+NET "ebi_data[1]" LOC = L14;
+NET "ebi_data[2]" LOC = N14;
+NET "ebi_data[3]" LOC = M14;
+NET "ebi_data[4]" LOC = U18;
+NET "ebi_data[5]" LOC = U17;
+NET "ebi_data[6]" LOC = T18;
+NET "ebi_data[7]" LOC = T17;
+NET "ebi_data[8]" LOC = N16;
+NET "ebi_data[9]" LOC = N15;
+NET "ebi_data[10]" LOC = P18;
+NET "ebi_data[11]" LOC = P17;
+NET "ebi_data[12]" LOC = N18;
+NET "ebi_data[13]" LOC = N17;
+NET "ebi_data[14]" LOC = M18;
+NET "ebi_data[15]" LOC = M16;
+NET "ebi_re" LOC = H12;
+NET "ebi_we" LOC = G13;

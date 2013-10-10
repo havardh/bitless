@@ -111,13 +111,15 @@ override LDFLAGS += -Xlinker -Map=$(LST_DIR)/$(PROJECTNAME).map -mcpu=cortex-m3 
 
 LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
+#-I$(LIB)/kits/EFM32GG_STK3700/config \
+
 INCLUDEPATHS += \
 -I. \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_STK3700/config \
+-I$(LIB)/kits/EFM32GG_DK3700/config \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(DIR)/controllers/main/inc
 

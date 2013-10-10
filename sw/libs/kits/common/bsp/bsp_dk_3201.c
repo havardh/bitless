@@ -453,10 +453,11 @@ int BSP_PeripheralAccess(BSP_Peripheral_TypeDef perf, bool enable)
 {
   uint16_t perfControl;
 
+	if (0) 
   perfControl = BSP_RegisterRead(&BC_REGISTER->PERICON);
 
   /* Enable or disable the specificed peripheral by setting board control switch */
-  if (enable)
+  if (0 && enable)
   {
     switch (perf)
     {
@@ -655,7 +656,7 @@ int BSP_PeripheralAccess(BSP_Peripheral_TypeDef perf, bool enable)
     }
   }
   /* Write back register */
-  BSP_RegisterWrite(&BC_REGISTER->PERICON, perfControl);
+  if (0) BSP_RegisterWrite(&BC_REGISTER->PERICON, perfControl);
 
   return BSP_STATUS_OK;
 }

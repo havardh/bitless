@@ -3,6 +3,13 @@ Documents
 
 A list of links to external documents used throughout the design process.
 
+Xilinx Documents
+----------------
+
+* <a href="http://www.xilinx.com/support/documentation/sw_manuals/xilinx12_4/spartan6_hdl.pdf">Spartan-6 Libraries Guide for HDL Designs</a>
+* <a href="http://www.xilinx.com/support/documentation/user_guides/ug382.pdf">Spartan-6 FPGA Clocking Resources</a>
+* <a href="http://www.xilinx.com/support/documentation/user_guides/ug389.pdf">Spartan-6 FPGA DSP48A1 Slice</a>
+
 ARM Documents
 -------------
 
