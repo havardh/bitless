@@ -22,6 +22,7 @@ package internal_bus is
 	component ebi_controller is
 		port (
 			clk : in std_logic;
+			reset : in std_logic;
 
 			-- EBI inputs:
 			ebi_address      : in std_logic_vector(24 downto 0);
@@ -32,8 +33,8 @@ package internal_bus is
 
 			-- Internal bus master outputs:
 			int_address      : out internal_address;
-			int_data_out     : out std_logic_vector(15 downto 0);
-			int_data_in      : in  std_logic_vector(15 downto 0);
+			int_data_out     : in  std_logic_vector(15 downto 0); -- OUT of FPGA
+			int_data_in      : out std_logic_vector(15 downto 0); -- IN to FPGA
 			int_write_enable : inout std_logic;
 			int_read_enable  : inout std_logic
 		);
