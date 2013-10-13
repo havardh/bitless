@@ -7,8 +7,11 @@ use ieee.std_logic_1164.all;
 
 package core_constants is
 	type ringbuffer_mode is (NORMAL_MODE, RING_MODE);
-	
-	constant NUMBER_OF_PIPELINES : integer := 4;
+
+	-- Total number of pipelines to generate:
+	constant NUMBER_OF_PIPELINES : integer := 2;
+	-- Total number of cores to generate:
+	constant NUMBER_OF_CORES : integer := 8;
 
 	type alu_flags is
 		record
