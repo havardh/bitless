@@ -15,16 +15,13 @@
 static DMA_CB_TypeDef cb;
 
 static uint16_t FROM_PRI[N];
-static uint16_t TO_PRI[N];
 static uint16_t FROM_SEC[N];
-static uint16_t TO_SEC[N];
 
-static void callback(unsigned int channel, bool primary, void *user)
-{
-	(void) channel;
-	(void) primary;
-	(void) user;
-}
+static uint16_t MID_PRI[N];
+static uint16_t MID_SEC[N];
+
+static uint16_t TO_PRI[N];
+static uint16_t TO_SEC[N];
 
 void init( void )
 {
@@ -41,16 +38,14 @@ void transfer ( void )
 	dmaInit.controlBlock = dmaControlBlock;
   DMA_Init(&dmaInit);
 
-	cb.cbFunc  = callback;
-	cb.userPtr = NULL;
-
 	DMA_CfgChannel_TypeDef chnlCfg = {
 		.highPri = true,
 		.enableInt = true,
-		.select = DMAREQ_TIMER0_UFOF,
+		.select = DMAREQ_TIMER1_UFOF,
 		.cb = &cb
 	};
 	DMA_CfgChannel(0, &chnlCfg);
+	DMA_CfgChannel(1, &chnlCfg);
 
 	DMA_CfgDescr_TypeDef descrCfg = {
 		.dstInc  = dmaDataInc2,
@@ -61,10 +56,16 @@ void transfer ( void )
 	};
 	DMA_CfgDescr(0, true, &descrCfg);
 	DMA_CfgDescr(0, false, &descrCfg);
+	DMA_CfgDescr(1, true, &descrCfg);
+	DMA_CfgDescr(1, false, &descrCfg);
 
 	DMA_ActivatePingPong(0, false, 
-											 &TO_PRI, &FROM_PRI, N-1,
-											 &TO_SEC, &FROM_SEC, N-1);
+											 &MID_PRI, &FROM_PRI, N-1,
+											 &MID_SEC, &FROM_SEC, N-1);
+
+	DMA_ActivatePingPong(1, false, 
+											 &TO_PRI, &MID_PRI, N-1,
+											 &TO_SEC, &MID_SEC, N-1);
 }
 
 void fake_transfer( void ) 
@@ -109,7 +110,7 @@ void setupCMU( void )
 
 	CMU_ClockEnable(cmuClock_HFPER, true);
 	CMU_ClockEnable(cmuClock_DMA, true);
-	CMU_ClockEnable(cmuClock_TIMER0, true);
+	CMU_ClockEnable(cmuClock_TIMER1, true);
 
 }
 
@@ -120,8 +121,8 @@ void setupTimer( void )
 	init.enable     = true;
 	init.dmaClrAct  = true;
 
-	TIMER_TopSet(TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 44100);
-	TIMER_Init(TIMER0, &init);
+	TIMER_TopSet(TIMER1, CMU_ClockFreqGet(cmuClock_HFPER) / 44100);
+	TIMER_Init(TIMER1, &init);
 	
 }
 
