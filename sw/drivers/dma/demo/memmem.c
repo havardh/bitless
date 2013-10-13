@@ -31,9 +31,6 @@
 DMA_CB_TypeDef cbADC;
 DMA_CB_TypeDef cbDAC;
 
-DMA_CB_TypeDef cbInData;
-DMA_CB_TypeDef cbOutData;
-
 volatile uint16_t source[2*N];
 
 volatile uint16_t sourceP[N];
@@ -71,6 +68,39 @@ static void adcCb(unsigned int channel, bool primary, void *user)
 }
 
 static void dacCb(unsigned int channel, bool primary, void *user)
+{
+	(void) user;
+	DMA_RefreshPingPong(channel, primary, false, NULL, NULL, N-1, false);
+}
+
+void transferInLeftComplete(unsigned int channel, bool primary, void *user)
+{
+	(void) channel;
+	(void) primary;
+	(void) user;
+
+  transferInLeftActive = false;
+}
+
+void transferInRightComplete(unsigned int channel, bool primary, void *user)
+{
+	(void) channel;
+	(void) primary;
+	(void) user;
+
+  transferInRightActive = false;
+}
+
+void transferOutLeftComplete(unsigned int channel, bool primary, void *user)
+{
+	(void) channel;
+	(void) primary;
+	(void) user;
+
+  transferOutLeftActive = false;
+}
+
+void transferOutRightComplete(unsigned int channel, bool primary, void *user)
 {
 	(void) user;
 	DMA_RefreshPingPong(channel, primary, false, NULL, NULL, N-1, false);
@@ -309,7 +339,7 @@ void setupDMAOutput( void )
   DMA_ActivatePingPong(DMA_CHANNEL_DAC, false,
                        (void*)((uint32_t) &DAC0->COMBDATA), sourceP, N - 1,
                        (void*)((uint32_t) &DAC0->COMBDATA), sourceS, N - 1);
-                       
+
 }
 
 /*
