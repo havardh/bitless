@@ -14,7 +14,7 @@ entity ebi_controller is
 		reset : in std_logic;
 
 		-- EBI inputs:
-		ebi_address      : in std_logic_vector(24 downto 0);
+		ebi_address      : in std_logic_vector(22 downto 0);
 		ebi_data         : inout std_logic_vector(15 downto 0);
 		ebi_cs           : in std_logic;
 		ebi_read_enable  : in std_logic;
@@ -63,9 +63,9 @@ begin
 					if ebi_cs = '0' then
 						-- Only latch the addresses when they have been properly set up by the MCU:
 						if ebi_read_enable = '0' or ebi_write_enable = '0' then
-							int_address.pipeline <= ebi_address(24 downto 23);
-							int_address.device <= ebi_address(22 downto 18);
-							int_address.address <= ebi_address(17 downto 0);
+							int_address.pipeline <= ebi_address(22 downto 21);
+							int_address.device <= ebi_address(20 downto 16);
+							int_address.address <= ebi_address(15 downto 0);
 						end if;
 
 						if ebi_read_enable = '0' then

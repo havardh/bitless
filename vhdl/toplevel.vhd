@@ -19,11 +19,15 @@ entity toplevel is
 		sample_clk  : in std_logic; -- "Large cycle" clock, i.e. sample clock
 
 		-- EBI interface lines:
-		ebi_address : in    std_logic_vector(24 downto 0);	-- EBI address lines
+		ebi_address : in    std_logic_vector(22 downto 0);	-- EBI address lines
 		ebi_data		: inout std_logic_vector(15 downto 0); -- EBI data lines
 		ebi_re		: in    std_logic;	-- EBI read enable (active low)
 		ebi_we		: in    std_logic;	-- EBI write enable (active low)
-		ebi_cs		: in    std_logic		-- EBI chip select (active low)
+		ebi_cs		: in    std_logic;	-- EBI chip select (active low)
+
+		-- Miscellaneous lines:
+		ctrl_bus		: inout std_logic_vector(2 downto 0);
+		gpio_bus		: in std_logic_vector(15 downto 0) -- Perhaps inout? Ask the PCB group.
 	);
 end entity;
 
