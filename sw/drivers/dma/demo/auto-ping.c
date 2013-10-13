@@ -38,14 +38,21 @@ void transfer ( void )
 	dmaInit.controlBlock = dmaControlBlock;
   DMA_Init(&dmaInit);
 
-	DMA_CfgChannel_TypeDef chnlCfg = {
+	DMA_CfgChannel_TypeDef chnlCfg1 = {
+		.highPri = true,
+		.enableInt = true,
+		.select = DMAREQ_TIMER0_UFOF,
+		.cb = &cb
+	};
+	DMA_CfgChannel(0, &chnlCfg1);
+
+	DMA_CfgChannel_TypeDef chnlCfg2 = {
 		.highPri = true,
 		.enableInt = true,
 		.select = DMAREQ_TIMER1_UFOF,
 		.cb = &cb
 	};
-	DMA_CfgChannel(0, &chnlCfg);
-	DMA_CfgChannel(1, &chnlCfg);
+	DMA_CfgChannel(1, &chnlCfg2);
 
 	DMA_CfgDescr_TypeDef descrCfg = {
 		.dstInc  = dmaDataInc2,
@@ -110,19 +117,25 @@ void setupCMU( void )
 
 	CMU_ClockEnable(cmuClock_HFPER, true);
 	CMU_ClockEnable(cmuClock_DMA, true);
+	CMU_ClockEnable(cmuClock_TIMER0, true);
 	CMU_ClockEnable(cmuClock_TIMER1, true);
 
 }
 
 void setupTimer( void ) 
 {
-	TIMER_Init_TypeDef init = TIMER_INIT_DEFAULT;
 
-	init.enable     = true;
-	init.dmaClrAct  = true;
+	TIMER_Init_TypeDef init1 = TIMER_INIT_DEFAULT;
+	init1.enable     = true;
+	init1.dmaClrAct  = true;
+	TIMER_TopSet(TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 44100);
+	TIMER_Init(TIMER0, &init1); 
 
+	TIMER_Init_TypeDef init2 = TIMER_INIT_DEFAULT;
+	init2.enable     = true;
+	init2.dmaClrAct  = true;
 	TIMER_TopSet(TIMER1, CMU_ClockFreqGet(cmuClock_HFPER) / 44100);
-	TIMER_Init(TIMER1, &init);
+	TIMER_Init(TIMER1, &init2); 
 	
 }
 
