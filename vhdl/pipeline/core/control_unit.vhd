@@ -42,6 +42,7 @@ entity control_unit is
 		reg_write_source 		: out  STD_LOGIC;
 		output_write_enable 	: out  STD_LOGIC;
 		read_from_const_mem 	: out STD_LOGIC;
+		branch_enable			: out STD_LOGIC;
 		pc_write_enable 		: out STD_LOGIC);
 end control_unit;
 
@@ -51,48 +52,94 @@ architecture Behavioral of control_unit is
 	type control_unit_state is (fetch, execute, stall);
 	
 	-- *************************** SIGNALS ************************************
-	signal group_code 	: STD_LOGIC_VECTOR (1 downto 0);
-	signal func 			: STD_LOGIC_VECTOR (1 downto 0);
-	signal opt 				: STD_LOGIC_VECTOR (1 downto 0);
-	signal state, next_state : control_unit_state;
+	signal group_code 			: STD_LOGIC_VECTOR (1 downto 0);
+	signal func 					: STD_LOGIC_VECTOR (1 downto 0);
+	signal opt 						: STD_LOGIC_VECTOR (1 downto 0);
+	signal state, next_state 	: control_unit_state;
 	
 	
 	-- ************************** CONSTANTS ***********************************
 	
 	-- ***  group_code ***
-	constant store_load 	: STD_LOGIC_VECTOR := "00";
-	constant arith1		: STD_LOGIC_VECTOR := "01";
-	constant arith2		: STD_LOGIC_VECTOR := "10";
-	constant misc			: STD_LOGIC_VECTOR := "11";
+	constant reg_based1 	: STD_LOGIC_VECTOR := "00";
+	constant reg_based2	: STD_LOGIC_VECTOR := "01";
+	constant load_imm		: STD_LOGIC_VECTOR := "10";
+	constant branch		: STD_LOGIC_VECTOR := "11";
 	
 	-- *** func ***
 	
-	-- store/load
-	constant load_imm 		: STD_LOGIC_VECTOR := "00";
-	constant load_input		: STD_LOGIC_VECTOR := "01";
-	constant load_output		: STD_LOGIC_VECTOR := "10";
-	constant store_output	: STD_LOGIC_VECTOR := "11";
+			-- register based
+			constant add 					: STD_LOGIC_VECTOR := "00";
+			constant sub_or_cmp			: STD_LOGIC_VECTOR := "01";
+			constant multi					: STD_LOGIC_VECTOR := "10";
+			constant shift					: STD_LOGIC_VECTOR := "11";
+			
+			-- register based 2
+			constant and_logic 			: STD_LOGIC_VECTOR := "00";
+			constant or_logic				: STD_LOGIC_VECTOR := "01";
+			constant move_or_typecast	: STD_LOGIC_VECTOR := "10";
+			constant load_or_store		: STD_LOGIC_VECTOR := "11"; 
+			
+	-- *** opt ***
 	
-	-- arith1
-	constant add 		: STD_LOGIC_VECTOR := "00";
-	constant sub_cmp	: STD_LOGIC_VECTOR := "01";
-	constant mul		: STD_LOGIC_VECTOR := "10";
-	constant moved		: STD_LOGIC_VECTOR := "11"; 
-	-- arith2
-	constant logic_and 	: STD_LOGIC_VECTOR := "00";
-	constant logic_or		: STD_LOGIC_VECTOR := "01";
-	constant logic_xor	: STD_LOGIC_VECTOR := "10";
-	constant logic_not	: STD_LOGIC_VECTOR := "11";
-	
-	
-	-- misc
-	constant branch 	: STD_LOGIC := '0';
-	constant shl_shr 	: STD_LOGIC := '1';
-	
-	-- opt
-	
+			-- ** register based **
+			
+				-- add
+				constant add_regs				: STD_LOGIC_VECTOR := "00";
+				constant add_imm				: STD_LOGIC_VECTOR := "01";
+				constant add_regs_fp			: STD_LOGIC_VECTOR := "10";
+				constant add_undefined		: STD_LOGIC_VECTOR := "11";
+				
+				-- sub_or_cmp
+				constant sub_regs				: STD_LOGIC_VECTOR := "00";
+				constant sub_regs_fp			: STD_LOGIC_VECTOR := "01";
+				constant cmp					: STD_LOGIC_VECTOR := "10";
+				constant sub_undefined		: STD_LOGIC_VECTOR := "11";	
+				
+				-- multi
+				constant multi_regs			: STD_LOGIC_VECTOR := "00";
+				constant multi_regs_fp		: STD_LOGIC_VECTOR := "01";
+				constant multi_acc_fp		: STD_LOGIC_VECTOR := "10";
+				constant multi_sub_fp		: STD_LOGIC_VECTOR := "11";
+				
+				-- shift
+				constant shift_left			: STD_LOGIC_VECTOR := "00";
+				constant shift_right			: STD_LOGIC_VECTOR := "01";
+				constant shift_undefined	: STD_LOGIC_VECTOR := "10";
+				constant shift_undefined2	: STD_LOGIC_VECTOR := "11";
+			
+			-- ** register based 2 **
+				
+				-- and_logic
+				constant and_and				: STD_LOGIC_VECTOR := "00";
+				constant and_nand				: STD_LOGIC_VECTOR := "01";
+				constant and_undefined		: STD_LOGIC_VECTOR := "10";
+				constant and_undefined2		: STD_LOGIC_VECTOR := "11";
+				
+				-- or_logic
+				constant or_or					: STD_LOGIC_VECTOR := "00";
+				constant or_nor				: STD_LOGIC_VECTOR := "01";
+				constant or_xor				: STD_LOGIC_VECTOR := "10";
+				constant or_undefined		: STD_LOGIC_VECTOR := "11";
+				
+				-- move_or_typecast
+				constant move_move			: STD_LOGIC_VECTOR := "00";
+				constant move_move_neg		: STD_LOGIC_VECTOR := "01";
+				constant typecast_to_fp		: STD_LOGIC_VECTOR := "10";
+				constant typecast_to_int	: STD_LOGIC_VECTOR := "11";
+				
+				-- load_or_store
+				constant load_input			: STD_LOGIC_VECTOR := "00";
+				constant load_output			: STD_LOGIC_VECTOR := "01";
+				constant load_const_buf		: STD_LOGIC_VECTOR := "10";
+				constant store_output		: STD_LOGIC_VECTOR := "11";
+			
 	-- special registers
 	constant default_reg		: STD_LOGIC_VECTOR := "0000"; -- TODO, check this
+	constant r0					: STD_LOGIC_VECTOR := "0000";
+	constant r1					: STD_LOGIC_VECTOR := "0001";
+	constant r2					: STD_LOGIC_VECTOR := "0010";
+	
 
 begin
 
@@ -105,10 +152,17 @@ begin
 				alu_op <= ALU_ADD; 
 			when execute | stall =>
 				case group_code is
-					when store_load =>
-					when arith1 =>
-					when arith2 =>
-					when misc =>
+				
+					when reg_based1 =>
+						case func is
+							when add =>
+						end case;
+						
+					when reg_based2 =>
+					
+					when load_imm =>
+					
+					when branch =>
 				end case;
 		end case; 
 			
