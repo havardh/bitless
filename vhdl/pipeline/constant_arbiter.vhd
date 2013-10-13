@@ -8,9 +8,10 @@ entity constant_arbiter is
 		const_address_width : natural := 16
 	);
 	port (
-		clk              : in std_logic;
-		request          : in  std_logic_vector(pipeline_cores - 1 downto 0);
-		acknowledge      : out std_logic_vector(pipeline_cores - 1 downto 0)
+		clk                   : in std_logic;
+		request               : in  std_logic_vector(pipeline_cores - 1 downto 0);
+		acknowledge           : out std_logic_vector(pipeline_cores - 1 downto 0);
+		constant_read_address : out std_logic_vector(15 downto 0)
 	);
 end constant_arbiter;
 

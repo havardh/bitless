@@ -15,15 +15,16 @@ entity core is
 	);
 
 	port(
-		clk    : in std_logic; -- Small cycle clock signal
-		memclk : in std_logic; -- Memory clock signal
-		reset  : in std_logic; -- Reset signal, "large cycle" clock signal
+		clk        : in std_logic; -- Small cycle clock signal
+		memclk     : in std_logic; -- Memory clock signal
+		sample_clk : in std_logic; -- Reset signal, "large cycle" clock signal
 
 		deadline_missed : out std_logic; -- Signal asserted if the processor is not idle on reset
 
 		-- Internal bus connections, used for reading and writing the instruction memory:
-		instr_address      : in std_logic_vector(instr_address_width - 1 downto 0);
-		instr_data         : in std_logic_vector(15 downto 0);
+		instr_address      : in std_logic_vector(15 downto 0);
+		instr_data_in      : in std_logic_vector(15 downto 0);
+		instr_data_out     : out std_logic_vector(15 downto 0);
 		instr_write_enable : in std_logic;
 
 		-- Connections to the constant memory controller:
@@ -65,22 +66,27 @@ architecture behaviour of core is
 		);
 		port (
 			clk : in std_logic;
-			address_in   : in  std_logic_vector(address_width - 1 downto 0); -- Write address
-			address_out  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
-			data_in      : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
-			data_out     : out std_logic_vector(31 downto 0); -- Same as above.
-			write_enable : in std_logic
+			write_address : in  std_logic_vector(address_width - 1 downto 0); -- Write address
+			read_address  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
+			write_data    : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
+			read_data     : out std_logic_vector(31 downto 0); -- Same as above.
+			write_enable  : in std_logic
 		);
 	end component;
 
 	-- Signal set to high while the processor is running:
 	signal running : std_logic := '1';
-begin
-	running <= not reset;
 
-	deadline: process(reset, running)
+	-- Instruction memory asignals:
+	signal instr_read_address, instr_write_address : std_logic_vector(15 downto 0);
+	signal instr_read_data : std_logic_vector(31 downto 0);
+	signal instr_write_data : std_logic_vector(15 downto 0);
+begin
+	running <= not sample_clk;
+
+	deadline: process(sample_clk, running)
 	begin
-		if rising_edge(reset) and running = '1' then
+		if rising_edge(sample_clk) and running = '1' then
 			deadline_missed <= '1';
 		end if;
 	end process;
@@ -90,11 +96,19 @@ begin
 		generic map ( size => 1024, address_width => 16)
 		port map(
 			clk => memclk,
-			address_in => instr_address,
-			address_out => (others => '0'),
-			data_in => instr_data,
+			write_address => instr_write_address,
+			read_address => instr_read_address,
+			write_data => instr_write_data,
 			write_enable => instr_write_enable,
-			data_out => open
+			read_data => instr_read_data
 		);
+
+	-- Instruction memory control signals:
+	instr_write_address <= instr_address;
+	instr_read_address <= instr_address when sample_clk = '1' else (others => '0');
+	instr_data_out <= instr_read_data(15 downto 0);
+	instr_write_data <= instr_data_in;
+
+	-- TODO: Replace the others clause above with the address requested by the processor core.
 
 end behaviour;
