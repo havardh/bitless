@@ -143,11 +143,12 @@ architecture Behavioral of control_unit is
 
 begin
 
+
 	update_state : process(clk)
 	begin
 		if rising_edge(clk) then
 			if reset = '1' then
-				-- TODO: RESET ALL
+				-- TODO: RESET ALL 
 			else 
 				state <= next_state;
 			end if;
@@ -194,7 +195,7 @@ begin
 							when shift =>
 								case opt is
 									when shift_lft =>
-									when shift_rht =>
+									when shift_rht => 
 									when shift_undefined =>
 									when shift_undefined2 =>
 								end case;
