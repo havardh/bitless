@@ -75,9 +75,10 @@ void MEM_SetBufferPrimary( bool primary )
   bufferPrimary = primary;
 }
 
+/*
 void PendSV_Handler(void)
 {
-
+	
 	uint16_t *inBuf  = MEM_GetAudioInBuffer( bufferPrimary );
 	uint32_t *outBuf = MEM_GetAudioOutBuffer( bufferPrimary );
 
@@ -88,5 +89,6 @@ void PendSV_Handler(void)
 			
 			*(outBuf++) = ((uint32_t) left << 16) | (uint32_t) right;
 		}
-
+	
 }
+*/

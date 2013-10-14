@@ -26,8 +26,9 @@ static uint16_t *bufferTwo;
 
 static DMA_CB_TypeDef cbInData;
 static DMA_CB_TypeDef cbOutData;
+static DMA_CB_TypeDef cbFpga;
 
-static void preampDMAInCb(unsigned int channel, bool primary, void *user)
+static void adcCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
 
@@ -39,11 +40,18 @@ static void preampDMAInCb(unsigned int channel, bool primary, void *user)
   SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
 }
 
-static void preampDMAOutCb(unsigned int channel, bool primary, void *user)
+static void dmaCb(unsigned int channel, bool primary, void *user)
 {
   (void) user;
 	int bufferSize = (MEM_GetAudioOutBufferSize() / 2) - 1;
   DMA_RefreshPingPong(channel,primary,false,NULL,NULL,bufferSize,false);
+}
+
+static void fpgaCb(unsigned int channel, bool primary, void *user)
+{
+	(void) user;
+	int bufferSize = MEM_GetAudioInBufferSize() / 2;
+	DMA_RefreshPingPong(channel,primary,false,NULL,NULL,bufferSize,false);
 }
 
 
@@ -51,19 +59,17 @@ void DMADriver_Init()
 {
 	init();
 
-	bufferOne = malloc(sizeof(uint16_t) * 64);
-	bufferTwo = malloc(sizeof(uint16_t) * 64);
+	//bufferOne = malloc(sizeof(uint16_t) * 64);
+	//bufferTwo = malloc(sizeof(uint16_t) * 64);
 
-	//setupADC();
-	//setupDAC();
+	setupDAC();
+	setupADC();
 
-	printf("Start Copy 1\n");
-  setupFPGAIn();
-	Delay(1000);
-	FPGADriver_CopyData();
-	Delay(1000);
-	printf("Start Copy 2\n");
-  setupFPGAOut();
+	//cbFpga.cbFunc = fpgaCb;
+	//cbFpga.userPtr = NULL;
+
+  //setupFPGAIn();
+  //setupFPGAOut();
 
 }
 
@@ -77,7 +83,7 @@ static void init( void )
 
 void setupADC( void ) 
 {
-	cbInData.cbFunc  = preampDMAInCb;
+	cbInData.cbFunc  = adcCb;
   cbInData.userPtr = NULL;
 
   DMA_CfgChannel_TypeDef chnlCfg;
@@ -110,7 +116,7 @@ void setupADC( void )
 
 void setupDAC( void )
 {
-	cbOutData.cbFunc = preampDMAOutCb;
+	cbOutData.cbFunc = dmaCb;
 	cbOutData.userPtr = NULL;
 
 	DMA_CfgChannel_TypeDef chnlCfg;
@@ -143,46 +149,40 @@ void setupFPGAIn( void )
   DMA_CfgChannel_TypeDef chnlCfg = {
     .highPri   = false,
     .enableInt = true,
-    .select    = 0,
-    .cb        = NULL
+    .select    = DMAREQ_TIMER0_UFOF,
+    .cb        = &fpgaCb
   };
   DMA_CfgChannel( DMA_FPGA_IN_LEFT,  &chnlCfg );
   DMA_CfgChannel( DMA_FPGA_IN_RIGHT, &chnlCfg );
-  DMA_CfgChannel( DMA_FPGA_IN_LEFT+4,  &chnlCfg );
-  DMA_CfgChannel( DMA_FPGA_IN_RIGHT+4, &chnlCfg );
 
   DMA_CfgDescr_TypeDef descrCfg = {
-    .dstInc = dmaDataInc2,
-    .srcInc = dmaDataInc4,
+    .dstInc = dmaDataInc4,
+    .srcInc = dmaDataInc2,
     .size = dmaDataSize2,
     .arbRate = dmaArbitrate1,
     .hprot = 0
   };
-  DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true, &descrCfg );
-  DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true, &descrCfg );
-  DMA_CfgDescr( DMA_FPGA_IN_LEFT+4,  true, &descrCfg );
-  DMA_CfgDescr( DMA_FPGA_IN_RIGHT+4, true, &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true,  &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_IN_LEFT,  false, &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true,  &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_IN_RIGHT, false, &descrCfg );
 
-  void *dst, *src; int n;
-  dst = FPGADriver_GetInBuffer(0);
-  src = MEM_GetPrimaryAudioInBuffer();
-  n = MEM_GetAudioInBufferSize() / 2;
-  DMA_ActivateAuto( DMA_FPGA_IN_LEFT, true, dst, src, n - 1);
+  void *dstPri, *srcPri, *dstSec, *srcSec;
+  int n = MEM_GetAudioInBufferSize() / 2;
 
-  dst = bufferOne; //FPGADriver_GetInBuffer(0);
-  src = MEM_GetSecondaryAudioInBuffer();
-  n = MEM_GetAudioInBufferSize() / 2;
-  DMA_ActivateAuto( DMA_FPGA_IN_LEFT+4, true, dst, src, n - 1);
+	// Setup copy to left channel
+  dstPri = FPGADriver_GetInBuffer(0);
+  srcSec = MEM_GetPrimaryAudioInBuffer();
+  dstPri = bufferOne; // This should be inside FPGA
+  srcSec = MEM_GetSecondaryAudioInBuffer();
+	DMA_ActivatePingPong(DMA_FPGA_IN_LEFT, false, dstPri, srcPri, n - 1, dstSec, srcSec, n - 1);
 
-  dst = FPGADriver_GetInBuffer(1);
-  src = MEM_GetPrimaryAudioInBuffer() + sizeof(uint8_t);
-  n = MEM_GetAudioInBufferSize() / 2;
-  DMA_ActivateAuto( DMA_FPGA_IN_RIGHT, true, dst, src, n - 1);
-
-  dst = bufferTwo; //FPGADriver_GetInBuffer(1);
-  src = MEM_GetSecondaryAudioInBuffer() + sizeof(uint8_t);
-  n = MEM_GetAudioInBufferSize() / 2;
-  DMA_ActivateAuto( DMA_FPGA_IN_RIGHT+4, true, dst, src, n - 1);
+	// Setup copy to right channel
+	dstPri = FPGADriver_GetInBuffer(1);
+  srcSec = MEM_GetPrimaryAudioInBuffer() + sizeof(uint16_t);
+  dstPri = bufferTwo; // This should be inside FPGA
+  srcSec = MEM_GetSecondaryAudioInBuffer() + sizeof(uint16_t);
+	DMA_ActivatePingPong(DMA_FPGA_IN_RIGHT, false, dstPri, srcPri, n - 1, dstSec, srcSec, n - 1);
 }
 
 void setupFPGAOut( void ) 
@@ -191,14 +191,11 @@ void setupFPGAOut( void )
   DMA_CfgChannel_TypeDef chnlCfg = {
     .highPri   = false,
     .enableInt = true,
-    .select    = 0,
-    .cb        = NULL
+    .select    = DMAREQ_TIMER0_UFOF,
+    .cb        = &fpgaCb
   };
   DMA_CfgChannel( DMA_FPGA_OUT_LEFT,  &chnlCfg );
   DMA_CfgChannel( DMA_FPGA_OUT_RIGHT, &chnlCfg );
-
-  DMA_CfgChannel( DMA_FPGA_OUT_LEFT+4,  &chnlCfg );
-  DMA_CfgChannel( DMA_FPGA_OUT_RIGHT+4, &chnlCfg );
 
   DMA_CfgDescr_TypeDef descrCfg = {
     .dstInc = dmaDataInc4,
@@ -208,30 +205,25 @@ void setupFPGAOut( void )
     .hprot = 0
   };
   DMA_CfgDescr( DMA_FPGA_OUT_LEFT,  true, &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_OUT_LEFT,  false, &descrCfg );
   DMA_CfgDescr( DMA_FPGA_OUT_RIGHT, true, &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_OUT_RIGHT, false, &descrCfg );
 
-  DMA_CfgDescr( DMA_FPGA_OUT_LEFT+4,  true, &descrCfg );
-  DMA_CfgDescr( DMA_FPGA_OUT_RIGHT+4, true, &descrCfg );
+  void *dstPri, *srcPri, *dstSec, *srcSec;
+  int n = MEM_GetAudioInBufferSize() / 2;
 
-  void *dst, *src; int n;
-  dst = MEM_GetPrimaryAudioOutBuffer();
-  src = FPGADriver_GetOutBuffer(0);
-  n = MEM_GetAudioOutBufferSize();
-  DMA_ActivateAuto( DMA_FPGA_OUT_LEFT, true, dst, src, n - 1);
+	// Setup copy from left channel
+  dstPri = MEM_GetPrimaryAudioOutBuffer();
+  srcPri = FPGADriver_GetInBuffer(0); // This should be OUT
+	dstSec = MEM_GetSecondaryAudioOutBuffer();
+	srcSec = bufferOne; // This should be inside FPGA
+	DMA_ActivatePingPong(DMA_FPGA_OUT_LEFT, false, dstPri, srcPri, n - 1, dstSec, srcSec, n - 1);
 
-  dst = MEM_GetSecondaryAudioOutBuffer();
-  src = bufferOne;
-  n = MEM_GetAudioOutBufferSize();
-  DMA_ActivateAuto( DMA_FPGA_OUT_LEFT+4, true, dst, src, n - 1);
-
-  dst =  MEM_GetPrimaryAudioOutBuffer() + sizeof(uint8_t);
-  src = FPGADriver_GetOutBuffer(1);
-  n = MEM_GetAudioOutBufferSize();
-  DMA_ActivateAuto( DMA_FPGA_OUT_RIGHT, true, dst, src, n - 1); 
-
-  dst =  MEM_GetSecondaryAudioOutBuffer() + sizeof(uint8_t);
-  src = bufferTwo;
-  n = MEM_GetAudioOutBufferSize();
-  DMA_ActivateAuto( DMA_FPGA_OUT_RIGHT+4, true, dst, src, n - 1); 
+	// Setup copy from right channel
+  dstPri = MEM_GetPrimaryAudioOutBuffer() + sizeof(uint16_t);
+  srcPri = FPGADriver_GetInBuffer(1); // This should be OUT
+	dstSec = MEM_GetSecondaryAudioOutBuffer() + sizeof(uint16_t);
+	srcSec = bufferTwo; // This should be inside FPGA
+	DMA_ActivatePingPong(DMA_FPGA_OUT_LEFT, false, dstPri, srcPri, n - 1, dstSec, srcSec, n - 1);
 
 }
