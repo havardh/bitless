@@ -21,14 +21,24 @@ entity ringbuffer is
 		sample_clk		: in std_logic; 		-- Sample clock ("large cycle" clock)
 
 		-- Data and address I/O for using the buffer as output buffer:
-		rw_data_in		: in std_logic_vector(15 downto 0);						-- B data input
-		rw_data_out		: out std_logic_vector(data_width - 1 downto 0);		-- B data output
-		rw_off_address	: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for B-buffer
-		write_en		: in std_logic;			-- Write enable for writing data from data_in to address address_in
+		b_data_in		: in std_logic_vector(15 downto 0);						-- B data input
+		b_data_out		: out std_logic_vector(data_width - 1 downto 0);		-- B data output
+		b_off_address	: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for B-buffer
+		b_re			: in std_logic;			-- Read enable for B
+		b_we			: in std_logic;			-- Write enable for writing data from data_in to address address_in
 
 		-- Data and address I/O for using the buffer as input buffer:
-		ro_data_out		: out std_logic_vector(data_width - 1 downto 0);		-- A data output
-		ro_off_address	: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for the A-buffer
+		a_data_out		: out std_logic_vector(data_width - 1 downto 0);		-- A data output
+		a_off_address	: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for the A-buffer
+		a_re			: in std_logic;			-- Read enable for A
+		
+		-- Data and address for the int bus:
+		int_data_in		: in std_logic_vector(15 downto 0);						-- B data input
+		int_data_out	: out std_logic_vector(data_width - 1 downto 0);		-- B data output
+		int_address		: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for B-buffer
+		int_re			: in std_logic;			-- Read enable for internal bus
+		int_we			: in std_logic;			-- Write enable for writing data from data_in to address address_in
+		
 
 		mode			: in ringbuffer_mode	-- Buffer mode
 	);
@@ -37,59 +47,56 @@ end ringbuffer;
 architecture behaviour of ringbuffer is
 	component adder is
 		port (
-			a, b 	: in std_logic_vector(15 downto 0);
-			result 	: out std_logic_vector(15 downto 0);
-			flags  	: out alu_flags
+			a, b 			: in std_logic_vector(15 downto 0);
+			result 			: out std_logic_vector(15 downto 0);
+			flags  			: out alu_flags
 		);
 	end component;
 	
 	type memory_array is array(buffer_size / 2 downto 0) of std_logic_vector(15 downto 0);
 	signal memory			: memory_array;
 	
-	signal ro_address	: std_logic_vector(address_width - 1 downto 0) := (others => '0');		--Actual read address as A-buffer.
-	signal rw_address	: std_logic_vector(address_width - 1 downto 0) := (others => '0');		--Actual read address as B-buffer.
-	--signal rw_write_address	: std_logic_vector(address_width - 1 downto 0) := (others => '0');		--Actual write address as B-buffer.
+	signal a_address		: std_logic_vector(address_width - 1 downto 0) := (others => '0');	--Actual address as A-buffer.
+	signal b_address		: std_logic_vector(address_width - 1 downto 0) := (others => '0');	--Actual address as B-buffer.
 	
-	signal ro_base_adder	: std_logic_vector(address_width - 1 downto 0);							--Incremented A-buffer base address.
-	signal rw_base_adder	: std_logic_vector(address_width - 1 downto 0);							--Incremented B-buffer base address.
+	signal a_base_address	: std_logic_vector(address_width - 1 downto 0) := (others => '0');	--A-buffer base address
+	signal b_base_address	: std_logic_vector(address_width - 1 downto 0) := (others => '0');	--B-buffer base address
 	
-	signal rw_window_base	: std_logic_vector(address_width - 1 downto 0) := (others => '0');
-	signal ro_window_base	: std_logic_vector(address_width - 1 downto 0) := (others => '0');
+	signal a_incremented	: std_logic_vector(address_width - 1 downto 0);						--Incremented A-buffer base address.
+	signal b_incremented	: std_logic_vector(address_width - 1 downto 0);						--Incremented B-buffer base address.
 
 begin
 	
 	--Calculating the actual A-buffer read address from base + offset
 	a_add : adder
 		port map(
-			a								=>	ro_window_base,
-			b								=>	ro_off_address,
-			result (buffer_size/2 downto 0)	=>	ro_address (buffer_size/2 downto 0)
+			a		=>	a_base_address,
+			b		=>	a_off_address,
+			result	=>	a_address
 		);
 		
 	--Calculating the actual B-buffer read address from base + offset
 	b_add : adder
 		port map(
-			a								=>	rw_window_base,
-			b								=>	rw_off_address,
-			result (buffer_size/2 downto 0)	=>	rw_address (buffer_size/2 downto 0)
+			a		=>	b_base_address,
+			b		=>	b_off_address,
+			result	=>	b_address
 		);
 	
 	
 	--Incrementing base addresses (for ring buffer mode)
 	a_base_inc : adder
 		port map(
-			a								=>	ro_window_base,
-			b(0)							=>	'1',
-			b(address_width - 1 downto 1)	=>	(others => '0'),
-			result (buffer_size/2 downto 0)	=>	ro_base_adder (buffer_size/2 downto 0)
+			a		=>	a_base_address,
+			b(0)	=>	'1',
+			result	=>	a_incremented
 		);
 		
 	b_base_inc : adder
 		port map(
-			a								=>	rw_window_base,
+			a								=>	b_base_address,
 			b(0)							=>	'1',
-			b(address_width - 1 downto 1)	=>	(others => '0'),
-			result (buffer_size/2 downto 0)	=>	rw_base_adder (buffer_size/2 downto 0)
+			result (buffer_size/2 downto 0)	=>	b_incremented (buffer_size/2 downto 0)
 		);
 	
 	-- Switch the buffer pointers according to the buffer mode:
@@ -98,25 +105,32 @@ begin
 		if rising_edge(sample_clk) then
 			case mode is
 				when NORMAL_MODE =>
-					rw_window_base	<= ro_window_base;
-					ro_window_base	<= rw_window_base;
+					b_base_address	<= a_base_address;
+					a_base_address	<= b_base_address;
 				when RING_MODE =>
-					rw_window_base	<= rw_base_adder;
-					ro_window_base	<= ro_base_adder;
+					b_base_address	<= b_incremented;
+					a_base_address	<= a_incremented;
 			end case;
 		end if;
 	end process;
 
 	-- Update the memory, insert stuff here relating to the buffer windows and pointers:
-	memory_process: process(memclk, write_en)
+	memory_process: process(memclk, b_we, int_we, a_re, b_re, int_re)
 	begin
 		if rising_edge(memclk) then
-			if write_en = '1' then
-				memory(to_integer(unsigned(rw_address))) <= rw_data_in;
+			if int_we = '1' then
+				memory(to_integer(unsigned(int_address))) <= int_data_in;
+			elsif b_we = '1' then
+				memory(to_integer(unsigned(b_address))) <= b_data_in;
 			end if;
 
-			rw_data_out <= memory(to_integer(unsigned(rw_address) + 1)) & memory(to_integer(unsigned(rw_address)));
-			ro_data_out <= memory(to_integer(unsigned(ro_address) + 1)) & memory(to_integer(unsigned(ro_address)));
+			if int_re = '1' then
+				int_data_out <= memory(to_integer(unsigned(int_address)));
+			elsif b_re = '1' then
+				b_data_out <= memory(to_integer(unsigned(b_address) + 1)) & memory(to_integer(unsigned(b_address)));
+			elsif a_re = '1' then
+				a_data_out <= memory(to_integer(unsigned(a_address) + 1)) & memory(to_integer(unsigned(a_address)));
+			end if;
 		end if;
 	end process;
 
