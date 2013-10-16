@@ -94,6 +94,7 @@ int test( void )
 			result |= 0b10;
 		}
 	}
+
 	return result;
  
 }
