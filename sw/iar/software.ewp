@@ -1914,6 +1914,9 @@
   </group>
   <group>
     <name>Drivers</name>
+    <file>
+      <name>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.c</name>
+    </file>
   </group>
   <group>
     <name>emlib</name>
@@ -1967,6 +1970,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\drivers\mem\src\MEMDriver.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\dma\demo\multiple.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\drivers\prs\src\PRSDriver.c</name>
