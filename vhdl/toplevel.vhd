@@ -82,7 +82,12 @@ begin
 	-- EBI controller clock gate, disable the EBI controller clock
 	-- when the chip select is disabled. This saves power, at least
 	-- in theory:
-	ebi_ctrl_clk <= system_clk when ebi_cs = '0' else '0';
+	ebi_ctrl_clock_gate: BUFGCE
+		port map (
+			I => system_clk,
+			O => ebi_ctrl_clk,
+			CE => not ebi_cs
+		);
 
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
