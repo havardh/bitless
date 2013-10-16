@@ -16,6 +16,7 @@ end clock_controller;
 
 architecture behaviour of clock_controller is
 	signal clkfb : std_logic;
+	signal clock_signal_0, clock_signal_1 : std_logic;
 begin
 	clock_pll: PLL_BASE
 		generic map (
@@ -26,11 +27,23 @@ begin
 		)
 		port map (
 			clkin => clk_in,
-			clkout0 => system_clock,
-			clkout1 => memory_clock,
+			clkout0 => clock_signal_0,
+			clkout1 => clock_signal_1,
 			clkfbout => clkfb,
 			clkfbin => clkfb,
 			rst => '0'
 		);
+
+	clock_buffer_0: BUFG
+		port map(
+			I => clock_signal_0,
+			O => system_clock
+		);
+	clock_buffer_1: BUFG
+		port map(
+			I => clock_signal_1,
+			O => memory_clock
+		);
+
 end behaviour;
 

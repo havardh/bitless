@@ -74,6 +74,26 @@ architecture behaviour of core is
 		);
 	end component;
 
+	component program_counter is
+		generic (
+			address_width : natural
+		);
+		port (
+			clk 			: in std_logic;
+			address_in	: in std_logic_vector(address_width - 1 downto 0);
+			address_out	: out std_logic_vector(address_width - 1 downto 0);
+			pc_wr_enb	: in std_logic
+		);
+	end component;
+
+	component adder is
+		port (
+			a, b : in std_logic_vector(15 downto 0);
+			result : out std_logic_vector(15 downto 0);
+			flags  : out alu_flags
+		);
+	end component;
+
 	-- Signal set to high while the processor is running:
 	signal running : std_logic := '1';
 
@@ -81,6 +101,9 @@ architecture behaviour of core is
 	signal instr_read_address, instr_write_address : std_logic_vector(15 downto 0);
 	signal instr_read_data : std_logic_vector(31 downto 0);
 	signal instr_write_data : std_logic_vector(15 downto 0);
+
+	-- Program counter value:
+	signal pc_value, pc_inc_value : std_logic_vector(15 downto 0);
 begin
 	running <= not sample_clk;
 
@@ -105,10 +128,28 @@ begin
 
 	-- Instruction memory control signals:
 	instr_write_address <= instr_address;
-	instr_read_address <= instr_address when sample_clk = '1' else (others => '0');
+	instr_read_address <= instr_address when sample_clk = '1' else pc_value;
+	-- TODO: Replace the others clause above with the address requested by the processor core.
 	instr_data_out <= instr_read_data(15 downto 0);
 	instr_write_data <= instr_data_in;
 
-	-- TODO: Replace the others clause above with the address requested by the processor core.
+	-- Program counter adder
+	pc_adder: adder
+		port map(
+			a => pc_value,
+			b => x"0001",
+			result => pc_inc_value,
+			flags => open
+		);
+
+	-- Program counter
+	pc: program_counter
+		generic map (address_width => 16)
+		port map(
+			clk => clk, -- may not be neccessary
+			address_in => pc_inc_value,
+			address_out => pc_value,
+			pc_wr_enb => '0'
+		);
 
 end behaviour;
