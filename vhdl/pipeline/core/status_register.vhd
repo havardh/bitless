@@ -49,10 +49,11 @@ constant flags_reset	: alu_flags := (others => '0');
 begin
 	process(reset, wr_en) --We're only interested in reacting to these two signals, clock notwithstanding
 	begin
-		if(reset = '0' and wr_en = '1') then
-			output <= input;
-		elsif(reset = '1') then
+		
+		if (reset = '1') then
 			output <= flags_reset;
+		elsif (falling_edge(clk) and wr_en = '1') then
+			output <= input;
 		else
 		end if;
 	end process;
