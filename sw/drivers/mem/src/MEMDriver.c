@@ -1,42 +1,22 @@
 #include "MEMDriver.h"
 
-static bool bufferPrimary;
 static int bufferSize;
 
-static uint16_t *primaryAudioInBuffer;
-static uint16_t *secondaryAudioInBuffer;
-static uint16_t *primaryAudioOutBuffer;
-static uint16_t *secondaryAudioOutBuffer;
+static uint16_t *audioInBuffer;
+static uint16_t *audioOutBuffer;
 
 void MEM_Init( void ) 
 {
   bufferSize = 64;
   
-  primaryAudioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
-	secondaryAudioInBuffer  = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
-  primaryAudioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
-  secondaryAudioOutBuffer = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
+  audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
+  audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
 
 }
 
-uint16_t* MEM_GetAudioInBuffer( bool primary ) 
-{
-	if (primary) 
-	{
-		return MEM_GetPrimaryAudioInBuffer();
-	} else {
-		return MEM_GetSecondaryAudioInBuffer();
-	}
-}
-
-uint16_t* MEM_GetPrimaryAudioInBuffer( void ) 
+uint16_t* MEM_GetAudioInBuffer( void ) 
 { 
-  return primaryAudioInBuffer;
-}
-
-uint16_t* MEM_GetSecondaryAudioInBuffer( void ) 
-{ 
-  return secondaryAudioInBuffer;
+  return audioInBuffer;
 }
 
 int MEM_GetAudioInBufferSize( void ) 
@@ -44,35 +24,14 @@ int MEM_GetAudioInBufferSize( void )
   return bufferSize;
 }
 
-uint16_t* MEM_GetAudioOutBuffer( bool primary ) 
+uint16_t* MEM_GetAudioOutBuffer( void ) 
 { 
-	if (primary) 
-	{
-		return MEM_GetPrimaryAudioOutBuffer();
-	} else {
-		return MEM_GetSecondaryAudioOutBuffer();
-	}
-}
-
-
-uint16_t* MEM_GetPrimaryAudioOutBuffer( void ) 
-{ 
-  return primaryAudioOutBuffer;
-}
-
-uint16_t* MEM_GetSecondaryAudioOutBuffer( void ) 
-{ 
-  return secondaryAudioOutBuffer;
+  return audioOutBuffer;
 }
 
 int MEM_GetAudioOutBufferSize( void ) 
 { 
   return bufferSize;
-}
-
-void MEM_SetBufferPrimary( bool primary ) 
-{ 
-  bufferPrimary = primary;
 }
 
 /*

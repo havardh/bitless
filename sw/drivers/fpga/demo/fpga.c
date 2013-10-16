@@ -22,10 +22,8 @@
 #define BUFFER_SIZE 64
 #define FPGA_BASE ((uint16_t*) 0x21000000)
 
-static uint16_t *inPrim;
-static uint16_t *inSec;
-static uint16_t *outPrim;
-static uint16_t *outSec;
+static uint16_t *in;
+static uint16_t *out;
 static uint16_t *fpgaZero;
 static uint16_t *fpgaOne;
 
@@ -60,15 +58,18 @@ void setupDMA( void )
 
 void setupCMU( void ) 
 {
+	CMU_ClockEnable( cmuClock_HFPER, true );
 	CMU_ClockEnable( cmuClock_DMA, true );
+	CMU_ClockEnable( cmuClock_ADC0, true );
+	CMU_ClockEnable( cmuClock_DAC0, true );
+	CMU_ClockEnable( cmuClock_PRS, true);
 	CMU_ClockEnable( cmuClock_TIMER0, true );
-
 }
 
 static void setupADC( void ) 
 {
 	ADCConfig config;
-	config.rate = 4000000;
+	config.rate = 7000000;
 	config.mode = ScanConversion;
 	ADCDriver_Init( &config );
 }
@@ -84,7 +85,7 @@ void setupTIMER( void )
 {
 	TIMER_Init_TypeDef init = TIMER_INIT_DEFAULT;
 
-	TIMER_TopSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 10 );
+	TIMER_TopSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 44100 );
 	TIMER_Init( TIMER0, &init );
 
 }
@@ -100,11 +101,8 @@ int test( void )
 	int result = 0;
 	for(int i=0; i<BUFFER_SIZE; i++) {
 
-		if (outPrim[i] != i) {
+		if (out[i] != i) {
 			result |= 1;
-		}
-		if (outSec[i] != i) {
-			result |= 2;
 		}
 
 		if (i < BUFFER_SIZE / 2) {
@@ -145,12 +143,9 @@ void test_and_display( void )
 void init( void ) 
 {
 
-	inPrim  = MEM_GetPrimaryAudioInBuffer();
-	inSec   = MEM_GetSecondaryAudioInBuffer();
-	outPrim = MEM_GetPrimaryAudioOutBuffer();
-	outSec  = MEM_GetSecondaryAudioOutBuffer();
-	memset(outPrim, 0, 64*2);
-	memset(outSec, 0, 64*2);
+	in  = MEM_GetAudioInBuffer();
+	out = MEM_GetAudioOutBuffer();
+	memset(out, 0, 64*2);
 
 	fpgaZero = FPGADriver_GetInBuffer(0);
 	fpgaOne  = FPGADriver_GetInBuffer(1);
@@ -158,17 +153,14 @@ void init( void )
 	memset(fpgaOne, 0, 64);
 
 	for (int i=0; i<BUFFER_SIZE; i++) {
-		inPrim[i] = i;
-		inSec[i] = i;
-		/*
-		if (i < BUFFER_SIZE/2) {
-			fpgaZero[i] = i;
-			fpgaOne[i] = i;
-			}*/
+		in[i] = i;
+
+		fpgaZero[i] = i;
+		fpgaOne[i] = i;
 	}
 }
 
-int main1( void ) 
+int main( void ) 
 {
 	setupMEM();
 	setupFPGA();
@@ -191,7 +183,9 @@ int main1( void )
 	BSP_LedsSet(0);
 
 	while(1) {
-		test_and_display();
+
+		//test_and_display();
+		BSP_LedToggle(0);
 		Delay(1000);
 		BSP_LedsSet(0);
 		Delay(500);
