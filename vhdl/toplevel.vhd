@@ -55,7 +55,8 @@ architecture behaviour of toplevel is
 		port(
 			clk_in       : in std_logic;  -- FPGA main clock input
 			system_clock : out std_logic; -- System clock output, used for the processor cores
-			memory_clock : out std_logic  -- Memory clock output, used for the memories
+			memory_clock : out std_logic; -- Memory clock output, used for the memories
+			dsp_clock    : out std_logic  -- DSP clock output, used for DSPs
 		);
 	end component;
 
@@ -77,7 +78,8 @@ begin
 		port map (
 			clk_in => fpga_clk,
 			system_clock => system_clk,
-			memory_clock => memory_clk
+			memory_clock => memory_clk,
+			dsp_clock => open
 		);
 	sample_clk <= ctrl_bus(0);
 
