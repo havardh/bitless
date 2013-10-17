@@ -21,10 +21,10 @@ entity register_file is
 
 		spec_reg		: out std_logic_vector(15 downto 0);
 		reg_1_data		: out std_logic_vector(15 downto 0);
-		reg_2_data		: out std_logic_vector(15 downto 0);
+		reg_2_data		: out std_logic_vector(15 downto 0)
 
 	);
-end register_file;
+end entity;
 
 architecture Behaviour of register_file is
 
