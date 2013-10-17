@@ -80,6 +80,7 @@ architecture behaviour of core is
 		);
 		port (
 			clk 			: in std_logic;
+			reset			: in std_logic;
 			address_in	: in std_logic_vector(address_width - 1 downto 0);
 			address_out	: out std_logic_vector(address_width - 1 downto 0);
 			pc_wr_enb	: in std_logic
@@ -147,6 +148,7 @@ begin
 		generic map (address_width => 16)
 		port map(
 			clk => clk, -- may not be neccessary
+			reset => '0',
 			address_in => pc_inc_value,
 			address_out => pc_value,
 			pc_wr_enb => '0'
