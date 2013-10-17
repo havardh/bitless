@@ -12,6 +12,7 @@ entity program_counter is
 	);
 	port (
 		clk 		: in std_logic;
+		reset		: in std_logic;
 		address_in	: in std_logic_vector(address_width - 1 downto 0);
 		address_out	: out std_logic_vector(address_width - 1 downto 0);
 		pc_wr_enb	: in std_logic
@@ -24,6 +25,12 @@ architecture behaviour of program_counter is
 	signal program_address : std_logic_vector(address_width -1 downto 0);
 
 begin
+	reset_pc : process (reset)
+	begin
+		if rising_edge (reset) then
+			program_address <= (others=> '0');
+		end if;
+	end process;
 	update_pc : process (clk, pc_wr_enb)
 	begin
 		if rising_edge(clk) then
