@@ -183,6 +183,7 @@ begin
 						when 3 => -- Constant memory
 							int_data_out <= constant_data_out(15 downto 0);
 						when others => -- Cores and stuff?
+							int_data_out <= core_instr_read_data(to_integer(unsigned(int_address.device) - 3));
 					end case;
 				end if;
 			end if;
