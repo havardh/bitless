@@ -16,7 +16,6 @@ entity toplevel is
 
 	port (
 		fpga_clk 	: in std_logic; -- FPGA clock, 60 MHz input clock
-		sample_clk  : in std_logic; -- "Large cycle" clock, i.e. sample clock
 
 		-- EBI interface lines:
 		ebi_address : in    std_logic_vector(22 downto 0);	-- EBI address lines
@@ -26,8 +25,10 @@ entity toplevel is
 		ebi_cs		: in    std_logic;	-- EBI chip select (active low)
 
 		-- Miscellaneous lines:
-		ctrl_bus		: inout std_logic_vector(2 downto 0);
-		gpio_bus		: in std_logic_vector(15 downto 0) -- Perhaps inout? Ask the PCB group.
+		ctrl_bus				: inout std_logic_vector(2 downto 0); -- Control bus connected to the MCU
+		led0, led1			: out std_logic; -- LEDs
+		button0, button1	: in std_logic;  -- Buttons
+		gpio_bus				: inout std_logic_vector(12 downto 0) -- GPIO bus, connected to a header
 	);
 end entity;
 
@@ -68,7 +69,7 @@ architecture behaviour of toplevel is
 	signal internal_pipeline_data_output : internal_pipeline_data_array;
 
 	-- Internal FPGA clocks:
-	signal system_clk, memory_clk : std_logic;
+	signal system_clk, memory_clk, sample_clk : std_logic;
 	signal ebi_ctrl_clk : std_logic;
 begin
 	-- Set up the clock controller:
@@ -78,6 +79,7 @@ begin
 			system_clock => system_clk,
 			memory_clock => memory_clk
 		);
+	sample_clk <= ctrl_bus(0);
 
 	-- EBI controller clock gate, disable the EBI controller clock
 	-- when the chip select is disabled. This saves power, at least
