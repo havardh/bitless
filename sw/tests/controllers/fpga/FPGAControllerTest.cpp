@@ -10,8 +10,8 @@
 #define FPGA_MEMORY             (PIPELINE_MEMORY * NUM_PIPELINES)
 
 
-FPGAConfig conf;
-uint16_t *input_program;
+static FPGAConfig conf;
+static uint16_t *input_program;
 
 TEST_GROUP(FPGAController) {
     void setup() {
