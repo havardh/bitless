@@ -20,27 +20,27 @@ entity memory is
 	);
 	port (
 		clk : in std_logic;
-		address_in   : in  std_logic_vector(address_width - 1 downto 0); -- Write address
-		address_out  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
-		data_in      : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
-		data_out     : out std_logic_vector(31 downto 0); -- Same as above.
-		write_enable : in std_logic
+		write_address : in  std_logic_vector(address_width - 1 downto 0); -- Write address
+		read_address  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
+		write_data    : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
+		read_data     : out std_logic_vector(31 downto 0); -- Same as above.
+		write_enable  : in std_logic
 	);
 end memory;
 
 architecture behaviour of memory is
 	subtype memory_word is std_logic_vector(15 downto 0);
 	type memory_array is array (size / 2 downto 0) of memory_word;
-	
+
 	signal memory : memory_array;
 begin
 	write_process: process(clk, write_enable)
 	begin
 		if rising_edge(clk) then
 			if write_enable = '1' then
-				memory(to_integer(unsigned(address_in))) <= data_in;
+				memory(to_integer(unsigned(write_address))) <= write_data;
 			end if;
-			data_out <= memory(to_integer(unsigned(address_out) + 1)) & memory(to_integer(unsigned(address_out)));
+			read_data <= memory(to_integer(unsigned(read_address) + 1)) & memory(to_integer(unsigned(read_address)));
 		end if;
 	end process;
 

@@ -11,9 +11,10 @@ use work.internal_bus.all;
 entity ebi_controller is
 	port (
 		clk : in std_logic;
+		reset : in std_logic;
 
 		-- EBI inputs:
-		ebi_address      : in std_logic_vector(24 downto 0);
+		ebi_address      : in std_logic_vector(22 downto 0);
 		ebi_data         : inout std_logic_vector(15 downto 0);
 		ebi_cs           : in std_logic;
 		ebi_read_enable  : in std_logic;
@@ -21,14 +22,14 @@ entity ebi_controller is
 
 		-- Internal bus master outputs:
 		int_address      : out internal_address;
-		int_data_out     : out internal_data;
-		int_data_in      : in  internal_data;
+		int_data_out     : in  internal_data; -- Data OUT of FPGA
+		int_data_in      : out internal_data; -- Data IN to FPGA
 		int_write_enable : out std_logic;
 		int_read_enable  : out std_logic
 	);
 end ebi_controller;
 
-architecture Behavioral of ebi_controller is
+architecture behaviour of ebi_controller is
 	-- For details of the signals used and their timing, look at
 	-- page 180 of the EFM32GG reference manual.
 
@@ -42,7 +43,7 @@ begin
 	int_write_enable <= we_value;
 	int_read_enable <= re_value;
 
-	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs)
+	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs, reset)
 		-- Some notes:
 		-- * One clock cycle should be enough to read or write data on the
 		-- internal bus. The internal bus slaves should probably latch the
@@ -50,27 +51,35 @@ begin
 		-- signals to be sure that the data has been set up correctly.
 		-- * The read and write enable signals are active low. 
 	begin
-		if rising_edge(clk) then
+		if rising_edge(reset) then
+			ebi_data <= (others => 'Z');
+			current_state <= idle;
+		end if;
+
+		if rising_edge(clk) and reset = '0' then
 			case current_state is
 				when idle =>
-					-- Only latch the addresses when they have been properly set up by the MCU:
-					if ebi_read_enable = '0' or ebi_write_enable = '0' then
-						int_address.pipeline <= ebi_address(24 downto 23);
-						int_address.device <= ebi_address(22 downto 18);
-						int_address.address <= ebi_address(17 downto 0);
-					end if;
+					ebi_data <= (others => 'Z');
+					if ebi_cs = '0' then
+						-- Only latch the addresses when they have been properly set up by the MCU:
+						if ebi_read_enable = '0' or ebi_write_enable = '0' then
+							int_address.pipeline <= ebi_address(22 downto 21);
+							int_address.device <= ebi_address(20 downto 16);
+							int_address.address <= ebi_address(15 downto 0);
+						end if;
 
-					if ebi_read_enable = '0' and ebi_cs = '0' then
-						re_value <= '1';
-						current_state <= read_state;
-					elsif ebi_write_enable = '0' and ebi_cs = '0' then
-						int_data_out <= ebi_data;
-						we_value <= '1';
-						current_state <= write_state;
+						if ebi_read_enable = '0' then
+							re_value <= '1';
+							current_state <= read_state;
+						elsif ebi_write_enable = '0' then
+							int_data_in <= ebi_data;
+							we_value <= '1';
+							current_state <= write_state;
+						end if;
 					end if;
 				when read_state =>
 					if re_value = '1' then
-						ebi_data <= int_data_in; -- Set the EBI data to the data read from the internal bus.
+						ebi_data <= int_data_out; -- Set the EBI data to the data read from the internal bus.
 						re_value <= '0';
 					end if;
 					if ebi_read_enable = '1' then -- Switch to idle when the transaction is finished.
@@ -86,5 +95,5 @@ begin
 			end case;
 		end if;
 	end process;
-end Behavioral;
+end behaviour;
 
