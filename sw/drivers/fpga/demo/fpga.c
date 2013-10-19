@@ -85,6 +85,8 @@ void setupTIMER( void )
 {
 	TIMER_Init_TypeDef init = TIMER_INIT_DEFAULT;
 
+	init.mode = timerModeUpDown;
+
 	TIMER_TopSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 44100 );
 	TIMER_Init( TIMER0, &init );
 
@@ -143,8 +145,8 @@ void test_and_display( void )
 void init( void ) 
 {
 
-	in  = MEM_GetAudioInBuffer();
-	out = MEM_GetAudioOutBuffer();
+	in  = MEM_GetAudioInBuffer(true);
+	out = MEM_GetAudioOutBuffer(true);
 	memset(out, 0, 64*2);
 
 	fpgaZero = FPGADriver_GetInBuffer(0);

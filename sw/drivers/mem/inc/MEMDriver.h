@@ -5,10 +5,10 @@
 #include <stdbool.h>
 
 void MEM_Init( void );
-uint16_t* MEM_GetAudioInBuffer( void );
+uint16_t* MEM_GetAudioInBuffer( bool primary );
 int MEM_GetAudioInBufferSize( void );
 
-uint16_t* MEM_GetAudioOutBuffer( void );
+uint16_t* MEM_GetAudioOutBuffer( bool primary );
 int MEM_GetAudioOutBufferSize( void );
 
 

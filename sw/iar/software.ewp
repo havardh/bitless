@@ -1954,6 +1954,9 @@
       <name>$PROJ_DIR$\..\libs\util\src\Blink.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\util\src\CircularBuffer.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\drivers\dac\src\DACDriver.c</name>
     </file>
     <file>
