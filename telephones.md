@@ -1,11 +1,11 @@
 Group Telephone Numbers
 =======================
 
-Kristian Klomsten Skordal - 91 58 42 77
-Sondre Lefsaker           - 47 65 68 37
-Christian Chavez          - (+47) 92 22 26 03
-Hanna Holler Kamperud     - 90 12 88 87
-Runar Bergheim Olsen      - 91 34 84 76
-Jakob Knutsen             - 95 86 04 36
-Terje Runde               - 992 34 693
-Olav Emil Eiksund         - 90 91 35 89
+- Kristian Klomsten Skordal - 91 58 42 77
+- Sondre Lefsaker           - 47 65 68 37
+- Christian Chavez          - (+47) 92 22 26 03
+- Hanna Holler Kamperud     - 90 12 88 87
+- Runar Bergheim Olsen      - 91 34 84 76
+- Jakob Knutsen             - 95 86 04 36
+- Terje Runde               - 992 34 693
+- Olav Emil Eiksund         - 90 91 35 89
