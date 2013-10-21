@@ -96,14 +96,14 @@ static void fpgaInRightCb(unsigned int channel, bool primary, void *user)
 static void fpgaOutLeftCb(unsigned int channel, bool primary, void *user)
 {
 	(void) user;
-	DMA_ActivateBasic(DMA_FPGA_OUT_LEFT, true, false, audioOutBuffer, FPGADriver_GetInBuffer(0), (bufferSize / 2) - 1);
+	DMA_ActivateBasic(DMA_FPGA_OUT_LEFT, true, false, (((uint16_t*)audioOutBuffer)+1), FPGADriver_GetInBuffer(0), (bufferSize / 2) - 1);	
 	called[channel]++;
 }
 
 static void fpgaOutRightCb(unsigned int channel, bool primary, void *user)
 {
 	(void) user;
-	DMA_ActivateBasic(DMA_FPGA_OUT_RIGHT, true, false, (((uint16_t*)audioOutBuffer)+1), FPGADriver_GetInBuffer(1), (bufferSize / 2) - 1);	
+	DMA_ActivateBasic(DMA_FPGA_OUT_RIGHT, true, false, audioOutBuffer, FPGADriver_GetInBuffer(1), (bufferSize / 2) - 1);	
 	called[channel]++;
 }
 
@@ -321,8 +321,8 @@ void setupFPGAOut( void )
   DMA_CfgDescr( DMA_FPGA_OUT_LEFT,  true,  &descrCfg );
   DMA_CfgDescr( DMA_FPGA_OUT_RIGHT, true,  &descrCfg );
 
-	DMA_ActivateBasic(DMA_FPGA_OUT_LEFT, true, false, audioOutBuffer, FPGADriver_GetInBuffer(0), (bufferSize / 2) - 1);
-	DMA_ActivateBasic(DMA_FPGA_OUT_RIGHT, true, false, (((uint16_t*)audioOutBuffer)+1), FPGADriver_GetInBuffer(1), (bufferSize / 2) - 1);	
+	DMA_ActivateBasic(DMA_FPGA_OUT_LEFT, true, false, (((uint16_t*)audioOutBuffer)+1), FPGADriver_GetInBuffer(0), (bufferSize / 2) - 1);
+	DMA_ActivateBasic(DMA_FPGA_OUT_RIGHT, true, false, audioOutBuffer, FPGADriver_GetInBuffer(1), (bufferSize / 2) - 1);
 
 }
 
