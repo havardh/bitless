@@ -125,7 +125,7 @@ void setupTIMER( void )
 
 	init.mode = timerModeUpDown;
 
-	TIMER_TopSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 44100 );
+	TIMER_TopSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 22050 );
 	TIMER_Init( TIMER0, &init );
 
 }
