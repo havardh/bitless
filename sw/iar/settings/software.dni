@@ -31,7 +31,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=-900118847
+Checksum=127191756
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -47,25 +47,25 @@ TracePortSize=0x00000004
 [Trace1]
 Enabled=0
 ShowSource=1
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[Aliases]
-Count=0
-SuppressDialog=0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=1
+Mode=0
 Graph=0
 Symbiont=0
 Exclusions=
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Count=0
+[Aliases]
+Count=0
+SuppressDialog=0
