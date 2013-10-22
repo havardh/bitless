@@ -63,12 +63,12 @@ begin
 						ebi_data <= (others => 'Z');
 						if ebi_cs = '0' then
 							if ebi_read_enable = '0' then
+								int_address <= make_internal_address(ebi_address);
 								re_value <= '1';
-								int_address <= ebi_address;
 								current_state <= read_state;
 							elsif ebi_write_enable = '0' then
+								int_address <= make_internal_address(ebi_address);
 								int_data_in <= ebi_data;
-								int_address <= ebi_address;
 								we_value <= '1';
 								current_state <= write_state;
 							end if;

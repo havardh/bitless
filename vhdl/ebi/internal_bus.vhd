@@ -43,6 +43,9 @@ package internal_bus is
 	-- Converts an integer to a pipeline address:
 	function make_pipeline_address(number : integer) return std_logic_vector;
 
+	-- Converts an EBI address to an internal address:
+	function make_internal_address(ebi_address : std_logic_vector(22 downto 0)) return internal_address;
+
 end internal_bus;
 
 package body internal_bus is
@@ -63,5 +66,14 @@ package body internal_bus is
 				return "--";
 		end case;
 	end make_pipeline_address;
+
+	function make_internal_address(ebi_address : std_logic_vector(22 downto 0)) return internal_address is
+		variable retval : internal_address;
+	begin
+		retval.pipeline := ebi_address(22 downto 21);
+		retval.device := ebi_address(20 downto 16);
+		retval.address := ebi_address(15 downto 0);
+		return retval;
+	end make_internal_address;
 
 end package body;
