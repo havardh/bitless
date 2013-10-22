@@ -21,9 +21,9 @@ entity ebi_controller is
 		ebi_write_enable : in std_logic;
 
 		-- Internal bus master outputs:
-		int_address      : out internal_address;
-		int_data_out     : in  internal_data; -- Data OUT of FPGA
-		int_data_in      : out internal_data; -- Data IN to FPGA
+		int_address      : out std_logic_vector(22 downto 0);
+		int_data_out     : in  std_logic_vector(15 downto 0); -- Data OUT of FPGA
+		int_data_in      : out std_logic_vector(15 downto 0); -- Data IN to FPGA
 		int_write_enable : out std_logic;
 		int_read_enable  : out std_logic
 	);
@@ -36,9 +36,9 @@ architecture behaviour of ebi_controller is
 	-- The code below uses a very simple state machine.
 
 	type state is (idle, read_state, write_state);
-	signal current_state : state := idle;
+	signal current_state : state;
 
-	signal re_value, we_value : std_logic := '0';
+	signal re_value, we_value : std_logic;
 begin
 	int_write_enable <= we_value;
 	int_read_enable <= re_value;
@@ -63,12 +63,12 @@ begin
 						ebi_data <= (others => 'Z');
 						if ebi_cs = '0' then
 							if ebi_read_enable = '0' then
-								int_address <= make_internal_address(ebi_address);
 								re_value <= '1';
+								int_address <= ebi_address;
 								current_state <= read_state;
 							elsif ebi_write_enable = '0' then
-								int_address <= make_internal_address(ebi_address);
 								int_data_in <= ebi_data;
+								int_address <= ebi_address;
 								we_value <= '1';
 								current_state <= write_state;
 							end if;
