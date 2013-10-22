@@ -51,48 +51,45 @@ begin
 		-- signals to be sure that the data has been set up correctly.
 		-- * The read and write enable signals are active low. 
 	begin
-		if rising_edge(reset) then
-			ebi_data <= (others => 'Z');
-			current_state <= idle;
-		end if;
-
-		if rising_edge(clk) and reset = '0' then
-			case current_state is
-				when idle =>
-					ebi_data <= (others => 'Z');
-					if ebi_cs = '0' then
-						-- Only latch the addresses when they have been properly set up by the MCU:
-						if ebi_read_enable = '0' or ebi_write_enable = '0' then
-							int_address.pipeline <= ebi_address(22 downto 21);
-							int_address.device <= ebi_address(20 downto 16);
-							int_address.address <= ebi_address(15 downto 0);
+		if rising_edge(clk) then
+			if reset = '1' then
+				ebi_data <= (others => 'Z');
+				we_value <= '0';
+				re_value <= '0';
+				current_state <= idle;
+			else
+				case current_state is
+					when idle =>
+						ebi_data <= (others => 'Z');
+						if ebi_cs = '0' then
+							if ebi_read_enable = '0' then
+								re_value <= '1';
+								int_address <= ebi_address;
+								current_state <= read_state;
+							elsif ebi_write_enable = '0' then
+								int_data_in <= ebi_data;
+								int_address <= ebi_address;
+								we_value <= '1';
+								current_state <= write_state;
+							end if;
 						end if;
-
-						if ebi_read_enable = '0' then
-							re_value <= '1';
-							current_state <= read_state;
-						elsif ebi_write_enable = '0' then
-							int_data_in <= ebi_data;
-							we_value <= '1';
-							current_state <= write_state;
+					when read_state =>
+						if re_value = '1' then
+							ebi_data <= int_data_out; -- Set the EBI data to the data read from the internal bus.
+							re_value <= '0';
 						end if;
-					end if;
-				when read_state =>
-					if re_value = '1' then
-						ebi_data <= int_data_out; -- Set the EBI data to the data read from the internal bus.
-						re_value <= '0';
-					end if;
-					if ebi_read_enable = '1' then -- Switch to idle when the transaction is finished.
-						current_state <= idle;
-					end if;
-				when write_state =>
-					if we_value = '1' then
-						we_value <= '0';
-					end if;
-					if ebi_write_enable = '1' then -- Switch to idle when the transaction is finished.
-						current_state <= idle;
-					end if;
-			end case;
+						if ebi_read_enable = '1' then -- Switch to idle when the transaction is finished.
+							current_state <= idle;
+						end if;
+					when write_state =>
+						if we_value = '1' then
+							we_value <= '0';
+						end if;
+						if ebi_write_enable = '1' then -- Switch to idle when the transaction is finished.
+							current_state <= idle;
+						end if;
+				end case;
+			end if;
 		end if;
 	end process;
 end behaviour;
