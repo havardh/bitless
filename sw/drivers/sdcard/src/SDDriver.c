@@ -9,16 +9,14 @@ void* (*GetOutputBuffer)(void);
 
 static void initFiles( SDConfig *config );
 
-
-
 void SDDriver_Init( SDConfig *config )
 {
 	bufferSize = config->bufferSize;
 	GetInputBuffer = config->GetInputBuffer;
 	GetOutputBuffer = config->GetOutputBuffer;
 
-  //BSP_PeripheralAccess(BSP_MICROSD, true);
-	//MICROSD_Init();
+  BSP_PeripheralAccess(BSP_MICROSD, true);
+	MICROSD_Init();
 	mount();
 
 	initFiles(config);

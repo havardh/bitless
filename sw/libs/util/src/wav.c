@@ -37,7 +37,7 @@ void WAV_Read(WAVFile *file, void *buffer, uint32_t bytesToRead)
 	
 	read(file->fno, buffer, bytesToRead, &bytesRead);
 
-	printf("Read: %d\n", bytesRead); 
+	//printf("Read: %d\n", bytesRead); 
 	
 	file->position += bytesRead;
 	
@@ -53,7 +53,7 @@ void WAV_Write(WAVFile *file, void *buffer, uint32_t bytesToWrite)
 	
 	write(file->fno, buffer, bytesToWrite, &bytesWritten);
 
-	printf("Wrote: %d\n", bytesWritten); 
+	//printf("Wrote: %d\n", bytesWritten); 
 
 	file->position += bytesWritten;
 
@@ -67,10 +67,10 @@ bool WAV_EOF(WAVFile *file)
 
 void WAV_Close(WAVFile *file)
 {
-	if ()
+	//if ()
 
 
-	printf("Length: %d\n", file->header->totallength);
+	//printf("Length: %d\n", file->header->totallength);
 	close(file->fno);
 }
 

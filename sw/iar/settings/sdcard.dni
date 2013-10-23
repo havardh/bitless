@@ -31,7 +31,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=1066471850
+Checksum=1187070615
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -52,7 +52,8 @@ mode=0
 [Breakpoints2]
 Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\read-file.c}.46.5" 0 0 1 "" 0 "" 0
 Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\read-file.c}.53.13" 0 0 1 "" 0 "" 0
-Count=2
+Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\libs\util\src\fatfs_file.c}.28.10" 0 0 1 "" 0 "" 0
+Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

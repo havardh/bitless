@@ -1,4 +1,5 @@
 #include "file.h"
+#include "ff.h"
 
 static FATFS fatfs;
 
@@ -24,17 +25,17 @@ void open(int fileindex, char *filename, FileMode mode)
 	case WRITE: flag = FA_WRITE;
 	}
 
-	f_open(&files[fileindex], filename, flag);
+	FRESULT res = f_open(&files[fileindex], filename, flag);
 }
 
 void read(int fileindex, void *buffer, uint32_t bytesToRead, uint32_t *bytesRead)
 {
-	f_read(&files[fileindex], buffer, bytesToRead, bytesRead);
+	f_read(&files[fileindex], buffer, bytesToRead, (UINT*)bytesRead);
 }
 
 void write(int fileindex, void *buffer, uint32_t bytesToWrite, uint32_t *bytesWritten)
 {
-	f_write(&files[fileindex], buffer, bytesToWrite, bytesWritten);
+	f_write(&files[fileindex], buffer, bytesToWrite, (UINT*)bytesWritten);
 }
 
 void close(int fileindex)

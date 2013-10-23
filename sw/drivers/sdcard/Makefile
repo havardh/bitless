@@ -156,6 +156,7 @@ $(LIB)/kits/common/drivers/rtcdrv.c \
 $(LIB)/fatfs/src/ff.c \
 $(LIB)/fatfs/src/diskio.c \
 $(LIB)/util/src/wav.c \
+$(LIB)/util/src/fatfs_file.c \
 $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_adc.c \
 $(LIB)/emlib/src/em_cmu.c \
