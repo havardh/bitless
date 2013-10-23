@@ -40,6 +40,14 @@ package internal_bus is
 		);
 	end component;
 
+	-- Toplevel processor control register:
+	type toplevel_control_register is
+		record
+			number_of_pipelines  : std_logic_vector(2 downto 0);
+			ebi_controller_reset : std_logic;
+			master_enable        : std_logic;
+		end record;
+
 	-- Converts an integer to a pipeline address:
 	function make_pipeline_address(number : integer) return std_logic_vector;
 

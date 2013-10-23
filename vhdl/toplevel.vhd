@@ -71,13 +71,19 @@ architecture behaviour of toplevel is
 
 	-- Internal FPGA clocks:
 	signal system_clk, memory_clk, sample_clk : std_logic;
+	signal gated_system_clk : std_logic;
 	signal ebi_ctrl_clk : std_logic;
+
+	-- Toplevel control register (TODO: insert pipeline number):
+	signal control_register : toplevel_control_register := (
+		number_of_pipelines => (others => '0'), ebi_controller_reset => '0',
+		master_enable => '1');
 begin
 	-- Set up the clock controller:
 	clk_ctrl: clock_controller
 		port map (
 			clk_in => fpga_clk,
-			system_clock => system_clk,
+			system_clock => gated_system_clk,
 			memory_clock => memory_clk,
 			dsp_clock => open
 		);
@@ -88,16 +94,24 @@ begin
 	-- in theory:
 	ebi_ctrl_clock_gate: BUFGCE
 		port map (
-			I => system_clk,
+			I => gated_system_clk,
 			O => ebi_ctrl_clk,
 			CE => not ebi_cs
+		);
+
+	-- FPGA clock gate:
+	fpga_clock_gate: BUFGCE
+		port map (
+			I => gated_system_clk,
+			O => system_clk,
+			CE => control_register.master_enable
 		);
 
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
 		port map (
 			clk => ebi_ctrl_clk,
-			reset => '0',
+			reset => control_register.ebi_controller_reset,
 			ebi_address => ebi_address,
 			ebi_data => ebi_data,
 			ebi_cs => ebi_cs,
