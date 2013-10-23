@@ -41,6 +41,7 @@ begin
 					regs(to_integer(unsigned(write_address)+1))<=data_in(31 downto 16);
 				when REG_LDI_WRITE =>
 					regs(1)<=data_in(15 downto 0);
+				when others => null;
 				end case;
 		end if;
 	end process;
