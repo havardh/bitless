@@ -21,6 +21,9 @@ package core_constants is
 			negative : std_logic;
 		end record;
 
+	-- Type to use for arrays of addresses:
+	type address_array is array(integer range <>) of std_logic_vector(15 downto 0);
+
 	-- ALU operation list
 	type alu_operation is (
 		ALU_ADD,

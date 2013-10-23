@@ -34,7 +34,7 @@ entity ringbuffer is
 		
 		-- Data and address for the int bus:
 		int_data_in		: in std_logic_vector(15 downto 0);						-- B data input
-		int_data_out	: out std_logic_vector(data_width - 1 downto 0);		-- B data output
+		int_data_out	: out std_logic_vector(15 downto 0);		-- B data output
 		int_address		: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for B-buffer
 		int_re			: in std_logic;			-- Read enable for internal bus
 		int_we			: in std_logic;			-- Write enable for writing data from data_in to address address_in
@@ -87,16 +87,16 @@ begin
 	--Incrementing base addresses (for ring buffer mode)
 	a_base_inc : adder
 		port map(
-			a		=>	a_base_address,
-			b(0)	=>	'1',
-			result	=>	a_incremented
+			a => a_base_address,
+			b => x"0001",
+			result => a_incremented
 		);
 		
 	b_base_inc : adder
 		port map(
-			a								=>	b_base_address,
-			b(0)							=>	'1',
-			result (buffer_size/2 downto 0)	=>	b_incremented (buffer_size/2 downto 0)
+			a	=>	b_base_address,
+			b	=>	x"0001",
+			result => b_incremented
 		);
 	
 	-- Switch the buffer pointers according to the buffer mode:
