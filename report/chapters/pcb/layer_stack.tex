@@ -1,0 +1,18 @@
+% !TEX root = ../../report.tex
+\section{Layer Stack}
+
+We had three primary voltage levels on the PCB -- 1.2V, 1.8V and 3.3V. To
+minimize resistance in the power distribution system, we decided to dedicate a
+layer on the PCB to be used as a shared power plane. Another plane was used for
+common ground and covered the whole PCB (excluding non-grounded through-holes).
+This setup with a shared ground and split power plane is common practice for
+modern PCB designs.
+
+As for the signal layers, the BGA packages we used only had a 0.8 mm pitch between
+its feet. This forced us to have more signal layers than we originally set out
+for, in order to fanout and escape the BGA packages. Using a QFP-like package
+could probably have saved us some cost, but using BGA gave us a valuable
+experience on modern PCB design.
+
+We settled upon a total of 8 layers on the PCB.
+\todo[inline]{continue; explain the layers and why there were 8 of them}

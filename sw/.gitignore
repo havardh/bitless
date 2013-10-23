@@ -3,3 +3,4 @@
 *.a
 exe
 lst
+all_tests
