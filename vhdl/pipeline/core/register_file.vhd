@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 library work;
 use work.core_constants.all;
@@ -33,14 +34,14 @@ begin
 	begin
 		if rising_edge(clk) then
 			case write_reg_enb is 
-				when REG_A_WRITE then
+				when REG_A_WRITE =>
 					regs(to_integer(unsigned(write_address)))<=data_in(15 downto 0);
-				when REG_AB_WRITE then
+				when REG_AB_WRITE =>
 					regs(to_integer(unsigned(write_address)))<=data_in(15 downto 0);
 					regs(to_integer(unsigned(write_address)+1))<=data_in(31 downto 16);
-				when REG_LDI_WRITE then
-					regs("00001")<=data_in(15 downto 0);
-			
+				when REG_LDI_WRITE =>
+					regs(1)<=data_in(15 downto 0);
+				end case;
 		end if;
 	end process;
 

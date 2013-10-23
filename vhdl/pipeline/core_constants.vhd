@@ -33,7 +33,7 @@ package core_constants is
 		ALU_MOVE_NEGATIVE
 	);
 
-	type resgister_write_enable is (
+	type register_write_enable is (
 		REG_A_WRITE,
 		REG_AB_WRITE,
 		REG_LDI_WRITE
