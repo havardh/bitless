@@ -1,0 +1,18 @@
+% !TEX root = ../../report.tex
+\section{Test plan}
+
+In order to ease the process of assembly after receiving the final PCB from 
+production, we set up a test plan detailing step by step what we are planning
+to do. The main idea of the plan is catch potential errors in the PCB design
+as early is possible so that if, and when, we run into a problem we can rule
+out as many sources as possible.
+
+\begin{enumerate}
+    \item Manually test important solder points using a multimeter. This include connections between the power source and regulators. Aswell as the connection from ociliators and clock generators and their source pins on the microcontroller \
+    and FPGA. After checking these points we can assume that the components will boot correctly.
+    \item After soldering the power supply we will need to check the provided voltage levels. This is an important point as sensitive components might be damaged if these are wrong. We are able to do this safely even after the major components are soldered as we have added headers allowing us to disconnect the power planes from the regulators. \todo[inline]{Is this last statement correct?}
+    \item  \todo[inline]{We should investigate JTag boundary scan as suggested by Gunnar}
+    \item After soldering the major components aswell as JTAG interfaces we should attempt to flash test programs. These programs will be provided by the FPGA and Software groups and will test both the respective component, GPIO aswell as the interconnection between the two.
+    \item After soldering the entire board we are going to test the more advanced user interfaces. This includes the UART over USB aswell as the audio input and output. Testing this will be done by a specially prepared program from the Software group.
+    \item Finally after the FPGA and Software group have completed, or atleast mostly completed, their design we need to start measuring the overall power usage of the board. Using these measurement we will evaluate and possibly attempting to power our board using the 5v provided by the USB connection, as mentioned in the power supply section. \todo[inline]{ref} 
+\end{enumerate}

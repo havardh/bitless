@@ -1,0 +1,18 @@
+\begin{figure}[h]
+	\centering
+	% TODO: Make the arrows in separate directions be separate arrows
+	\begin{tikzpicture}[shorten >= 1pt,node distance=2cm,on grid,auto]
+		\node[state,initial] (idle) {idle};
+		\node[state] (read) [above right=of idle] {read};
+		\node[state] (write) [below right=of idle] {write};
+		\path[->]
+			(idle) edge node {\small RE = 0} (read)
+			       edge node [swap] {\small EW = 0} (write)
+			(read) edge node {\small RE = 1} (idle)
+			(write) edge node [swap] {\small WE = 1} (idle);
+	\end{tikzpicture}
+	\caption{EBI controller state machine}
+	\label{fig:ebi_ctrl_fsm}
+\end{figure}
+
+
