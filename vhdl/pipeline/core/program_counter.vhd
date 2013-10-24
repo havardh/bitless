@@ -8,7 +8,7 @@ use work.core_constants.all;
 
 entity program_counter is
 	generic (
-		address_width	: natural := 16
+		address_width	: natural := 10
 	);
 	port (
 		clk 		: in std_logic;
@@ -20,7 +20,7 @@ entity program_counter is
 end program_counter;
 
 architecture behaviour of program_counter is
-	
+
 	signal program_address : std_logic_vector(address_width -1 downto 0);
 
 begin
@@ -30,7 +30,7 @@ begin
 			if pc_wr_enb = '1' then
 				program_address <= address_in;
 			end if;
-		end if;		
+		end if;
 	end process;
 
 	address_out <= program_address;
