@@ -15,22 +15,36 @@ only a fraction of the input power.
 Fortunately for us, the energy efficiency group of 2012 did a solid job on their
 power supply, using a switch-mode regulator that is able to output 3.3V from
 any input voltage ranging from 4.75V up to 18V with an efficiency of 83-90\%, see
-Appendix,\todo[inline]{add appendix sr10s3v3} so we copied most of their design except that we changed the current sensors, which will be explained below.
+Appendix,\todo[inline]{add appendix sr10s3v3} so we copied most of their design
+except that we changed the current sensors, which will be explained below.
 
 \subsection{The design}
 \subsubsection{Switch-mode and linear regulators}
-The design consists of a switch-mode regulator for 3.3V, a linear regulator for 1.2V and 1.8V, and two current sensors.\todo[inline]{insert schematic drawing of power supply or refer to it} The switch-mode gets an input voltage typically at 9V or 12V which is then transformed into 3.3V and kept stable with the help of some capacitors. This in turn supplies the 3.3V input for the linear voltage regulator that delivers both the 1.2V and the 1.8V output. Our original intention was to disable the 1.8V domain entirely, running the entire board at 1.2V and 3.3V, but as we opted for a larger FPGA the FPGA flash had to be powered with 1.8V. This setup delivers power at three different voltages and does so rather efficiently. Very little power goes to waste in the switch-mode regulator considering its efficiency as mentioned above, and the linear regulator is \todo[inline]{Power Dissipation  = (Vin  - Vout) X Iout.... finish later}
+The design consists of a switch-mode regulator for 3.3V, a linear regulator for
+1.2V and 1.8V, and two current sensors.\todo[inline]{insert schematic drawing of
+power supply or refer to it} The switch-mode gets an input voltage typically at
+9V or 12V which is then transformed into 3.3V and kept stable with the help of
+some capacitors. This in turn supplies the 3.3V input for the linear voltage
+regulator that delivers both the 1.2V and the 1.8V output. Our original
+intention was to disable the 1.8V domain entirely, running the entire board at
+1.2V and 3.3V, but as we opted for a larger FPGA the FPGA flash had to be
+powered with 1.8V. This setup delivers power at three different voltages and
+does so rather efficiently. Very little power goes to waste in the switch-mode
+regulator considering its efficiency as mentioned above, and the linear
+regulator is \todo[inline]{Power Dissipation  = (Vin  - Vout) X Iout.... finish
+later}
 
 \subsubsection{Current sensors}
 The main issue with the original design was that the current sensors were not
 sensitive enough for low voltages, which resulted in inaccurate measurements. To
 remedy this we simply changed the current sensor. Finding the right one took
-some research as most of the current sensors we could find were built for more power hungry systems and were not very delicate in terms
-of supply voltage and sensitivity. In general, measuring energy consumption at
-such small scales that we aimed for is difficult. In our case, we needed one
-that could run on 3.3V and sense currents of the same range. Most current
-sensors need at least 5V supply, or were not sensitive
-enough.\todo[inline]{verify or re-write. Add measurements once tested on a working board.}
+some research as most of the current sensors we could find were built for more
+power hungry systems and were not very delicate in terms of supply voltage and
+sensitivity. In general, measuring energy consumption at such small scales that
+we aimed for is difficult. In our case, we needed one that could run on 3.3V and
+sense currents of the same range. Most current sensors need at least 5V supply,
+or were not sensitive enough.\todo[inline]{verify or re-write. Add measurements
+once tested on a working board.}
 
 \subsubsection{Power by USB}
 A feature we added from last year's group was the ability to power the board
