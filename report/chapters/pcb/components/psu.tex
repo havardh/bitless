@@ -1,6 +1,6 @@
 % !TEX root = ../../report.tex
-\section{Power Supply}
-\subsection{Overview}
+\subsection{Power Supply}
+\subsubsection{Overview}
 Being on the energy efficiency group, maximum power utilization has been one of
 our highest priorities. Therefore, we had to make sure that as little power as
 possible went to waste during the transformation from whatever input we got to
@@ -18,8 +18,8 @@ any input voltage ranging from 4.75V up to 18V with an efficiency of 83-90\%, se
 Appendix,\todo[inline]{add appendix sr10s3v3} so we copied most of their design
 except that we changed the current sensors, which is explained in section~\ref{psu:current_sensors} - Current sensors.
 
-\subsection{The design}
-\subsubsection{Switch-mode and linear regulators}
+\subsubsection{The design}
+\paragraph{Switch-mode and linear regulators}
 The design consists of a switch-mode regulator for 3.3V, a linear regulator for
 1.2V and 1.8V, and two current sensors.\missingfigure{insert schematic drawing of
 power supply, or place a reference to where it is located} The switch-mode gets an input voltage typically at
@@ -34,7 +34,7 @@ regulator considering its efficiency as mentioned above, and the linear
 regulator is \todo[inline]{Power Dissipation  = (Vin  - Vout) X Iout.... finish
 later}
 
-\subsubsection{Current sensors} \label{psu:current_sensors}
+\paragraph{Current sensors} \label{psu:current_sensors}
 The main issue with the original design was that the current sensors were not
 sensitive enough for low voltages, which resulted in inaccurate measurements. To
 remedy this we simply changed the current sensor. Finding the right one took
@@ -45,7 +45,7 @@ sense currents of the same range. Most current sensors need at least 5V supply,
 or were not sensitive enough.\todo[inline]{verify or re-write. Add measurements
 once tested on a working board.}
 
-\subsubsection{Power by USB} \label{psu:usb}
+\paragraph{Power by USB} \label{psu:usb}
 A feature we added from last year's group was the ability to power the board
 from USB. The USB 1.x and 2.0 standard specification specifies that a constant
 power draw of 500mA at 5.0V $\pm$ 5\% can be provided. \todo[inline]{Add
