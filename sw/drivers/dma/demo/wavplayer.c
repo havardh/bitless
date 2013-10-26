@@ -9,6 +9,7 @@
 #include "em_common.h"
 #include "em_cmu.h"
 #include "em_emu.h"
+#include "em_adc.h"
 #include "em_dac.h"
 #include "em_prs.h"
 #include "em_timer.h"
@@ -18,8 +19,15 @@
 
 #include "SDConfig.h"
 #include "DACConfig.h"
+#include "ADCConfig.h"
 #include "DMAConfig.h"
+#include "FPGAConfig.h"
 #include "SDDriver.h"
+#include "DACDriver.h"
+#include "ADCDriver.h"
+#include "FPGADriver.h"
+
+#include "INTDriver.h"
 
 #include "ff.h"
 #include "microsd.h"
@@ -28,14 +36,14 @@
 
 #define WAV_FILENAME "sweet1.wav"
 
-#define SAMPLE_RATE 22050
+#define SAMPLE_RATE 11025
+#define FPGA_BASE ((uint16_t*) 0x21000000)
 
 static void* GetBuffer( void )
 {
 	void* buffer = (void*)MEM_GetAudioOutBuffer( true );
 
-
-	printf("GetBuffer Called: %p\n", buffer);
+	//printf("GetBuffer Called: %p\n", buffer);
 	
 	return buffer;
 }
@@ -49,9 +57,9 @@ static void setupSD(void)
 		.bufferSize      = 64
 	};
 	SDDriver_Init( &config );
-	printf("Reading first samples\n");
+		//printf("Reading first samples\n");
 	SDDriver_Read();
-	printf("Done Reading first samples\n");
+		//printf("Done Reading first samples\n");
 }
 
 static void setupBSP(void)
@@ -78,17 +86,24 @@ static void setupClocks(void)
 {
 	CMU_ClockEnable( cmuClock_HFPER, true );
 	CMU_ClockEnable( cmuClock_DAC0, true );
+	CMU_ClockEnable( cmuClock_ADC0, true );
 	CMU_ClockEnable( cmuClock_PRS, true );
 	CMU_ClockEnable( cmuClock_DMA, true );
 	CMU_ClockEnable( cmuClock_TIMER0, true );
 }
 
+void setupADC( void )
+{
+  ADCConfig config;
+  config.rate = 7000000;
+  config.mode = ScanConversion;
+  ADCDriver_Init( &config );
+}
+
 static void setupDMA(void)
 {
 	DMAConfig config = DMA_CONFIG_DEFAULT;
-	config.dacEnabled     = true;
-	//config.fpgaInEnabled  = true;
-	//config.fpgaOutEnabled = true;
+	config.mode = SD_TO_DAC;
 	DMADriver_Init( &config );
 }
 
@@ -97,9 +112,27 @@ static void setupMEM( void )
 	MEM_Init();
 }
 
-void PendSV_Handler(void)
+void read_samples(void)
 {
-	SDDriver_Read();
+  if (SDDriver_Read()) {
+		DMADriver_StopDAC();
+	}
+
+} 
+
+void setupINT( void )
+{
+	INTDriver_Init();
+	INTDriver_RegisterCallback(0, &read_samples);
+}
+
+void setupFPGA( void )
+{
+  FPGAConfig config;
+  config.baseAddress = FPGA_BASE;
+  config.numPipelines = 2;
+  config.bufferSize = 64;
+  FPGADriver_Init( &config );
 }
 
 int main(void) 
@@ -109,14 +142,17 @@ int main(void)
 	setupBSP();
 	
 	setupClocks();
-	printf("Initialization\n");
+	//printf("Initialization\n");
+	setupFPGA();
+	setupINT();
 	setupMEM();
 	setupPRS();
 	setupDAC();
+	//setupADC();
 	setupDMA();
-	printf("SD init\n");
+	//printf("SD init\n");
 	setupSD();
-	printf("Init done\n");
+	//printf("Init done\n");
 
 	TIMER_TopSet(TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / SAMPLE_RATE);
 	TIMER_Init( TIMER0, &timerInit );

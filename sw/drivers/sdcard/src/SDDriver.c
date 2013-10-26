@@ -18,7 +18,7 @@ void SDDriver_Init( SDConfig *config )
   BSP_PeripheralAccess(BSP_MICROSD, true);
 	MICROSD_Init();
 	mount();
-	printf("Mounted\n");
+	//printf("Mounted\n");
 	initFiles(config);
 }
 

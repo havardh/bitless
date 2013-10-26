@@ -26,6 +26,10 @@ static void initChannel(const DACConfig *config)
 	dacChInit.enable = true;
 	dacChInit.prsSel = dacPRSSELCh0;
 	dacChInit.prsEnable = true;
+	
 	DAC_InitChannel(DAC0, &dacChInit, 0);
 	DAC_InitChannel(DAC0, &dacChInit, 1);
+
+	DAC_Enable(DAC0, 0, true);
+	DAC_Enable(DAC0, 1, true);
 }

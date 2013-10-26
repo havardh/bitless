@@ -3,7 +3,18 @@
 
 #include <stdbool.h>
 
+typedef enum {
+
+	ADC_TO_DAC,
+	ADC_TO_SD,
+	SD_TO_DAC,
+	SD_TO_SD
+
+} Dataflow;
+
 typedef struct {
+
+	Dataflow mode;
 
 	bool adcEnabled;
 	bool dacEnabled;

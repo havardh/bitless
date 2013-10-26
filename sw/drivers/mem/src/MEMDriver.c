@@ -16,8 +16,8 @@ void MEM_Init( void )
   audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
   audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
 
-	memset(audioInBuffer, 0, 64*2);
-	memset(audioOutBuffer, 0, 64*2);
+	memset(audioInBuffer, 0, bufferSize*sizeof(uint16_t));
+	memset(audioOutBuffer, 0, bufferSize*sizeof(uint16_t));
 
   //uint16_t *InBufferSecondary    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
   //uint16_t *OutBufferSecondary   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
