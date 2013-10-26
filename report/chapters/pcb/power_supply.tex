@@ -3,11 +3,11 @@
 \subsection{Overview}
 Being on the energy efficiency group, maximum power utilization has been one of
 our highest priorities. Therefore, we had to make sure that as little power as
-possible goes to waste during the transformation from whatever input we get to
+possible went to waste during the transformation from whatever input we got to
 the voltage levels used on-board. Before deciding on a power supply design we
-looked at what the previous groups had done, especially the energy efficiency
+looked at what the previous groups had done, particularly the energy efficiency
 group of 2012, as they faced many of the same challenges as we have. Anything
-before 2012 had more or less been using the same power supply, which was
+before 2012 had more or less used the same power supply, which was
 designed to transform any excess power into heat. This is a very simple and
 effective design, but not very efficient in terms of power saving as it utilizes
 only a fraction of the input power.
@@ -16,13 +16,13 @@ Fortunately for us, the energy efficiency group of 2012 did a solid job on their
 power supply, using a switch-mode regulator that is able to output 3.3V from
 any input voltage ranging from 4.75V up to 18V with an efficiency of 83-90\%, see
 Appendix,\todo[inline]{add appendix sr10s3v3} so we copied most of their design
-except that we changed the current sensors, which will be explained below.
+except that we changed the current sensors, which is explained in section~\ref{psu:current_sensors} - Current sensors.
 
 \subsection{The design}
 \subsubsection{Switch-mode and linear regulators}
 The design consists of a switch-mode regulator for 3.3V, a linear regulator for
-1.2V and 1.8V, and two current sensors.\todo[inline]{insert schematic drawing of
-power supply or refer to it} The switch-mode gets an input voltage typically at
+1.2V and 1.8V, and two current sensors.\missingfigure{insert schematic drawing of
+power supply, or place a reference to where it is located} The switch-mode gets an input voltage typically at
 9V or 12V which is then transformed into 3.3V and kept stable with the help of
 some capacitors. This in turn supplies the 3.3V input for the linear voltage
 regulator that delivers both the 1.2V and the 1.8V output. Our original
@@ -34,21 +34,20 @@ regulator considering its efficiency as mentioned above, and the linear
 regulator is \todo[inline]{Power Dissipation  = (Vin  - Vout) X Iout.... finish
 later}
 
-\subsubsection{Current sensors}
+\subsubsection{Current sensors} \label{psu:current_sensors}
 The main issue with the original design was that the current sensors were not
 sensitive enough for low voltages, which resulted in inaccurate measurements. To
 remedy this we simply changed the current sensor. Finding the right one took
 some research as most of the current sensors we could find were built for more
 power hungry systems and were not very delicate in terms of supply voltage and
-sensitivity. In general, measuring energy consumption at such small scales that
-we aimed for is difficult. In our case, we needed one that could run on 3.3V and
+sensitivity. In general, measuring energy consumption at small scales \todo{insert something concrete here? ex: "such as 100uA"} can be challenging. In our case, we needed one that could run on 3.3V and
 sense currents of the same range. Most current sensors need at least 5V supply,
 or were not sensitive enough.\todo[inline]{verify or re-write. Add measurements
 once tested on a working board.}
 
-\subsubsection{Power by USB}
+\subsubsection{Power by USB} \label{psu:usb}
 A feature we added from last year's group was the ability to power the board
 from USB. The USB 1.x and 2.0 standard specification specifies that a constant
 power draw of 500mA at 5.0V $\pm$ 5\% can be provided. \todo[inline]{Add
 reference to the USB specification.} This should suffice for normal operation.
-\todo[inline]{Test in practice.}
+\todo[inline]{Test in practice. And also, what about changing to USB on the fly?}
