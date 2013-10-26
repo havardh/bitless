@@ -1,10 +1,20 @@
 % !TEX root = ../../report.tex
 \section{Assignment}
-As heat dissipation in processor designs increasingly becomes an issue, multiprocessing has been identified as an effective source for performance increase, without incurring the wrath of overheating.
 
-\subsection{Original Assignment Text}
+As heat dissipation in processor designs increasingly becomes an issue, multiprocessing has been identified as an effective source for performance increase, without incurring the wrath of overheating. Utilizing two or more cores in parallel to process data can be exploited to push performance beyond that of a highly clocked single processor doing all the work. Setting up such a system to take multiple instructions and multiple data (MIMD), the workflow is not limited to data level parallelization like a SIMD system would be. With this in mind, we settled on sound manipulation as the basis for our project, figuring that if we build an array of processors, every column can correspond to a particular filter, while every row is a different sound channel.
+\newline
 
-\subsubsection{Task: Construct a Multiple Program, Multiple Data}
+Bitless consists of an FPGA configured to realize said processor array, with I/O implemented by audio jack channels and various other peripherals like micro USB and microSD, which in turn are controlled by a Giant Gecko microprocessor. Everything has been placed on a custom designed PCB, and has been designed with a high level of energy efficiency in mind.
+\newline
+
+The processor design has been kept as general as possible in order to make it easy to implement, relying on instructions to produce different output for each column of cores.\todo{mention something about the fourier transform here}
+\newline
+
+\todo{mention something about the final performance of the system}
+
+\section{Original Assignment Text}
+
+\subsection{Task: Construct a Multiple Program, Multiple Data}
 The performance increase available from harvesting Instruction Level Parallelism (ILP) from the serial 
 instruction stream is limited because we have reached the maximum power consumption that can be 
 handled without expensive cooling solutions [1]. Consequently, there is a significant interest in 
@@ -24,17 +34,17 @@ a) Performance and b) Energy efficiency. The goal of group a) is to achieve maxi
 while group b) should try to balance performance and energy. The reports from both groups should 
 include an evaluation of prototype performance and energy consumption. 
 
-\subsubsection{Additional Requirements}
+\subsection{Additional Requirements}
 The unit must utilize an Energymicro micro controller and a Xilinx FPGA. The budget is 10.000 NOK, 
 which must cover components and PCB production. The unit design must adhere to the limits set by 
 the course staff at any given time. Deadlines are given in a separate time schedule.
 
-\subsubsection{Evaluation}
+\subsection{Evaluation}
 The project is evaluated based on the project report and an oral presentation of the work as well as a 
 prototype  demonstration.  One  grade  will  be  given  to  the  group  as  a  whole,  unless  there  are 
 significant variations in the amount of effort put into the project.
 
-\subsubsection{References}
+\subsection{References}
 
 \begin{enumerate}
 	\item Olukotun and Hammond; The Future of Microprocessors; ACM Queue; 2005 
