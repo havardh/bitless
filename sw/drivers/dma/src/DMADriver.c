@@ -66,6 +66,7 @@ static void dmaCbBasic(unsigned int channel, bool primary, void *user)
   (void) user;
 	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false, dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
 	called[channel]++;
+	SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
 }
 
 static void adcCbPingPong(unsigned int channel, bool primary, void *user)

@@ -18,13 +18,13 @@ void SDDriver_Init( SDConfig *config )
   BSP_PeripheralAccess(BSP_MICROSD, true);
 	MICROSD_Init();
 	mount();
-
+	printf("Mounted\n");
 	initFiles(config);
 }
 
 bool SDDriver_Read() 
 {
-	WAV_Read(srcFile, GetInputBuffer(), bufferSize);
+	WAV_Read(srcFile, (*GetInputBuffer)(), bufferSize);
 
 	return WAV_EOF(srcFile);
 }

@@ -5,13 +5,14 @@
 void WAV_Open(WAVFile *file, char *filename)
 {
 	file->header = (WAV_Header_TypeDef*)malloc(sizeof(WAV_Header_TypeDef));
-	
+ 	printf("Opening file: %s\n", filename);
 	open(file->fno, filename, file->mode);
 	file->position = 0;
 	file->eof = 0;
 	
 	//if (res == FR_OK) {
 	if (file->mode == READ) {
+		printf("Reading fileheader\n");
 		WAV_ReadHeader(file);
 	} else {
 		WAV_WriteHeader(file);
@@ -31,9 +32,9 @@ void WAV_WriteHeader(WAVFile *file)
 }
 
 
-void WAV_Read(WAVFile *file, void *buffer, uint32_t bytesToRead)
+void WAV_Read(WAVFile *file, void *buffer, uint16_t bytesToRead)
 {
-	uint32_t bytesRead;
+	uint16_t bytesRead;
 	
 	read(file->fno, buffer, bytesToRead, &bytesRead);
 
@@ -47,9 +48,9 @@ void WAV_Read(WAVFile *file, void *buffer, uint32_t bytesToRead)
 	
 }
 
-void WAV_Write(WAVFile *file, void *buffer, uint32_t bytesToWrite)
+void WAV_Write(WAVFile *file, void *buffer, uint16_t bytesToWrite)
 {
-	uint32_t bytesWritten;
+	uint16_t bytesWritten;
 	
 	write(file->fno, buffer, bytesToWrite, &bytesWritten);
 

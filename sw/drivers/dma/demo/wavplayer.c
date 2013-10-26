@@ -16,6 +16,9 @@
 #include "em_usart.h"
 #include "dmactrl.h"
 
+#include "SDConfig.h"
+#include "DACConfig.h"
+#include "DMAConfig.h"
 #include "SDDriver.h"
 
 #include "ff.h"
@@ -25,26 +28,33 @@
 
 #define WAV_FILENAME "sweet1.wav"
 
-#define SAMPLE_RATE 44100
+#define SAMPLE_RATE 22050
 
-void GetBuffer( void )
+static void* GetBuffer( void )
 {
-	return MEM_GetAudioOutBuffer( true );
+	void* buffer = (void*)MEM_GetAudioOutBuffer( true );
+
+
+	printf("GetBuffer Called: %p\n", buffer);
+	
+	return buffer;
 }
 
-void setupSD(void)
+static void setupSD(void)
 {
 	SDConfig config = {
 		.mode            = IN,
 		.inFile          = "sweet1.wav",
-		.GetOutputBuffer = GetBuffer,
+		.GetInputBuffer = &GetBuffer,
 		.bufferSize      = 64
 	};
 	SDDriver_Init( &config );
+	printf("Reading first samples\n");
 	SDDriver_Read();
+	printf("Done Reading first samples\n");
 }
 
-void setupBSP(void)
+static void setupBSP(void)
 {
 	BSP_Init( BSP_INIT_DEFAULT );
 	BSP_TraceProfilerSetup();
@@ -53,18 +63,18 @@ void setupBSP(void)
 	BSP_PeripheralAccess( BSP_AUDIO_OUT, true );
 }
 
-void setupDAC(void)
+static void setupDAC(void)
 {
 	DACConfig config;
 	DACDriver_Init( &config );
 }
 
-void setupPRS(void)
+static void setupPRS(void)
 {
 	PRSDriver_Init();
 }
 
-void setupClocks(void)
+static void setupClocks(void)
 {
 	CMU_ClockEnable( cmuClock_HFPER, true );
 	CMU_ClockEnable( cmuClock_DAC0, true );
@@ -73,37 +83,40 @@ void setupClocks(void)
 	CMU_ClockEnable( cmuClock_TIMER0, true );
 }
 
-void setupDMA(void)
+static void setupDMA(void)
 {
 	DMAConfig config = DMA_CONFIG_DEFAULT;
 	config.dacEnabled     = true;
-	config.fpgaInEnabled  = true;
-	config.fpgaOutEnabled = true;
+	//config.fpgaInEnabled  = true;
+	//config.fpgaOutEnabled = true;
 	DMADriver_Init( &config );
 }
 
-void setupMEM( void )
+static void setupMEM( void )
 {
 	MEM_Init();
+}
+
+void PendSV_Handler(void)
+{
+	SDDriver_Read();
 }
 
 int main(void) 
 {
 	TIMER_Init_TypeDef timerInit = TIMER_INIT_DEFAULT;
-
+		
 	setupBSP();
-
-	RTCDRV_Trigger( 1000, NULL ); EMU_EnterEM2( true );
 	
 	setupClocks();
-
+	printf("Initialization\n");
 	setupMEM();
 	setupPRS();
 	setupDAC();
 	setupDMA();
+	printf("SD init\n");
 	setupSD();
-
-	SWInt_RegisterCallback(1, SDDriver_Read);
+	printf("Init done\n");
 
 	TIMER_TopSet(TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / SAMPLE_RATE);
 	TIMER_Init( TIMER0, &timerInit );
