@@ -5,7 +5,7 @@ The microcontroller unit is a Giant Gecko by Energy Micro (EFM32GG990F1024) whic
 
 The MCU handles all I/O, effectively acting as the link between the FPGA and the peripherals. Sound input is either gathered from a file on the SD-card or as a stream from the audio-in jack on the board, and then passed on to the FPGA. In addition it controls the running program on the FPGA, providing an easy channel for changing FPGA behavior.\todo{review, rewrite}
 \subsection{FPGA}
-The FPGA is programmed with a MIMD architecture which enables task parallelism. While this is great for parallelism, it comes at the cost of a more complex process architecture, which in turn increases the size of each core. This limits the number of cores available on the FPGA, but we were able to fit ten\todo{update with final number} cores which is enough to apply the filters we want.\todo{review, rewrite}
+The FPGA is programmed with a MIMD architecture in mind to enable task parallelism. While this is great for performance, it comes at the cost of a more complex process architecture, which in turn increases the size of each core. This limits the number of cores available on the FPGA, but we were able to fit ten\todo{update with final number} cores which is enough to apply the filters we want.\todo{review, rewrite}
 \subsection{Memory}
 The MCU has an internal memory of 128KByte, which is not enough to work comfortably with audio files loaded from the SD-card, so a decision was made to add more memory on the board. In addition, if something were to go wrong with the audio-in channel and SD-card, having extra memory can work as a third option for storing input. When faced with the option of DRAM vs SRAM, SRAM came off as the chip of choice due to several reasons. While DRAM is cheaper than SRAM, we can stay comfortably within the budget buying SRAM, and unlike DRAM which is synchronous, SRAM is asynchronous, which means we do not have to worry about the propagation of signals according to the clock signal, making transfers easer. This was the main reason we chose SRAM. As an added bonus however, because DRAM needs to be refreshed on regular intervals, SRAM is more energy efficient.\todo{review, rewrite}
 \subsection{I/O}
@@ -15,6 +15,6 @@ USB \todo{review, rewrite}
 \subsubsection{Micro SD}
 SD-card \todo{review, rewrite}
 \subsubsection{Minijacks}
-We added two jack channels, one for input and one for output, as taking input from a recording og playback device is much easier if you can just plug it in rather than transferring data through a debugging interface, and the same goes for output.\todo{review, rewrite}
+We added two jack channels, one for input and one for output, as taking input from a recording og playback device is much easier if you can just plug it in rather than having to transfer data through a debugging interface, and the same goes for output.\todo{review, rewrite}
 \subsubsection{Buttons and LEDs}
-Because it's awesome.\todo{review, rewrite}
+What's there to say.. They're awesome.\todo{review, rewrite}
