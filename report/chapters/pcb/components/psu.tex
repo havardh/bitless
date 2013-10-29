@@ -59,13 +59,15 @@ reading.
 A feature we added from last year's group was the ability to power the board
 from USB. The USB 1.x and 2.0 standard specification specifies that a constant
 power draw of 500mA at 5.0V $\pm$ 5\% can be provided.
-\footnote{http://www.usb.org/developers/docs/usb_20_070113.zip}
-\todo[inline]{Add reference to the USB specification.} This should suffice for normal operation.
+\footnote{http://www.usb.org/developers/docs/usb\_20\_070113.zip}
+\todo[inline]{Add reference to the USB specification.} 
+This should suffice for normal operation.
 USB chargers will however in most cases provide support for current draws in
 the 1500mA to 2000mA range, using one of these we should definetly be able to
 power through the USB port.
 
-Even if we use the power socket as our primary power supply, parts of the board
-will still be powered through USB. This includes the UART-USB bridge and the 
-related TX and RX LEDs. By doing it this way all parts related to USB connectivity
-will be completely powered down when no USB cable is connected.
+Even when we use the normal power socket as our primary power supply, parts 
+of the board will still be powered through USB. This includes the UART-USB 
+bridge and the related TX and RX LEDs. By doing it this way all parts related 
+to USB connectivity will be completely powered down when no USB cable is 
+connected.
