@@ -48,6 +48,13 @@ sense currents of the same range. Most current sensors need at least 5V supply,
 or were not sensitive enough.\todo[inline]{verify or re-write. Add measurements
 once tested on a working board.}
 
+The output from the current sensors can be read by the ADC on the MCU, but by
+measuring the current of the board using the MCU we are skewing the results, as 
+we would expect that reading the ADC increases power consumption. We have 
+therefore added measuring sockets allowing us to read the current sensor output
+on an external device, such as a dev board, allowing us to make a more accurate
+reading.
+
 \paragraph{Power by USB} \label{psu:usb}
 A feature we added from last year's group was the ability to power the board
 from USB. The USB 1.x and 2.0 standard specification specifies that a constant
