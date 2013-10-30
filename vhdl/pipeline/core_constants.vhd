@@ -38,7 +38,7 @@ package core_constants is
 
 	type alu_result_select is (
 		ALU_ADD_SELECT,
-		ALU_MUL_SELECT,
+		ALU_LOG_SELECT,
 		ALU_FPU_SELECT
 	);
 
