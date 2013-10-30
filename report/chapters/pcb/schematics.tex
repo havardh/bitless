@@ -1,10 +1,26 @@
 % !TEX root = ../../report.tex
+
 \section{Schematics}
 
-The development tool used to design the PCB was Altium Designer 2013. Each sheet contains components relevant to what is routed in it, which means that large components that consist of several blocks, such as the FPGA and MCU, are spread out across different schematics. This has  been done because we found it more intuitive to have as many involved components as possible on the same sheet instead of connecting loads of cables across sheets. The schematics themselves can be viewed in Appendix~\ref{apx:schematics} \todo{review, rewrite}
+The development tool used to design the PCB was Altium Designer 2013. Each sheet
+contains components relevant to what is routed in it, which means that large
+components that consist of several blocks, such as the FPGA and MCU, are spread
+out across different schematics. This has been done because we found it more
+intuitive to have as many involved components as possible on the same sheet
+instead of connecting loads of cables across sheets. The schematics themselves
+can be viewed in Appendix~\ref{apx:schematics} \todo{review, rewrite}
 
-From early on we were strongly advised to make things as easy as possible for ourselves, which meant that whenever we found premade drawings or schematics of something we wanted to implement that had been tested and were known to work, we should copy it. So we did. Mostly we used schematics from datasheets, but we also looked at what the energy efficiency group of 2012 had done before us on their power supply, in addition to double checking this with the datasheets for the relevant components.
+From early on we were strongly advised to make things as easy as possible for
+ourselves, which meant that whenever we found premade drawings or schematics of
+something we wanted to implement that had been tested and were known to work, we
+should copy it. So we did. Mostly we used schematics from datasheets, but we
+also looked at what the energy efficiency group of 2012 had done before us on
+their power supply, in addition to double checking this with the datasheets for
+the relevant components.
 
-We also focused on adding backup solutions and debugging options in case something would fail due to PCB errors.\todo{rewrite, add more about being able to fall back on other protocols should one fail, and the mapping of unused pins..}
+We also focused on adding backup solutions and debugging options in case
+something would fail due to PCB errors.\todo{rewrite, add more about being able
+to fall back on other protocols should one fail, and the mapping of unused
+pins..}
 
 \input{chapters/pcb/schematics/programming}
