@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 typedef enum {
-    GG_STK3700, GG_DK3750
+    GG_STK3700, GG_DK3750, BITLESS
 } Board_t;
 
 typedef struct {

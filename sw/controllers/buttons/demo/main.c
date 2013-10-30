@@ -24,7 +24,7 @@ void switchLed(uint8_t pin) {
 void setupCallbacks(void) {
     uint8_t btns[2] = {9, 10};
     GPIOINT_IrqCallbackPtr_t ptrs[2] = {toggleLED, switchLed};
-    RegisterCallbacks(btns, ptrs, 2);
+    ButtonsController_RegisterCallbacks(btns, ptrs, 2);
 }
 
 int main(void) {
