@@ -1,13 +1,17 @@
 \section{Dataflow}
 
-When designing a energy efficient system, dataflow is of great importance. The software on the MCU tries to minimize the number of data stores and movements. 
+When designing a energy efficient system, dataflow is of great importance. The software 
+on the MCU tries to minimize the number of data stores and movements. 
 
 \subsection{Peripherals}
-The MCU facilitates audio I/O from ADC, DAC, SDCard and serial port interface to and from the FPGA. \todo{is serial audio I/O implemented}
+The MCU facilitates audio I/O from ADC, DAC, SDCard and serial port interface to and from 
+the FPGA. \todo{is serial audio I/O implemented}
 \input{figures/sw/sample-flow}
 
 \subsection{External Bus Interface}
-The MCU is connected to the FPGA and SRAM through the EBI. This leads to easy interfacing with these units as the EBI is memory mapped on the MCU. Communicating with the FPGA is done by reading and writing to memory. 
+The MCU is connected to the FPGA and SRAM through the EBI. This leads to easy interfacing 
+with these units as the EBI is memory mapped on the MCU. Communicating with the FPGA is 
+done by reading and writing to memory. 
 
 \todo{more about how the bus is implemented on the MCU}
 
@@ -28,5 +32,16 @@ written by the CPU directly to and from RAM.
 
 Both when reading from a WAV file and from the ADC, samples from the
 right and left channels are interleaved. The FPGA handles both channels in separat
-pipelines. This is the reason for using two DMA channels
+pipelines. On the input side the samples has to be deinterleaved and on output they
+are interleaved again. This is the reason for using two DMA channels for input and 
+two for ouput. 
+\missingfigure{Figure showing deinterleaving and interleaving}
+The samples are deinterleaved by letting two DMAs read from the same source and write to 
+the pipelines for correct channel. The first DMA copies the samples for the left samples,
+and start without a offset. The second DMA copies the samples for the right samples and 
+start with an offset of one sample. Both DMAs read only every other sample and writes them
+continuously to the FPGA input buffers. 
 
+The interleaving process on output side works in the same way. The DMA reading from the
+pipeline containing the left samples writes to the memory without a starting offset.
+The right channel DMA writes with a offset by one sample. 
