@@ -43,9 +43,10 @@ package core_constants is
 	);
 
 	type alu_flag_select is (
-		ADD_FLAGS,
-		MUL_FLAGS,
-		FPU_FLAGS
+		ADD_FLAGS_SEL,
+		MUL_FLAGS_SEL,
+		FPU_FLAGS_SEL,
+		LOG_FLAGS_SEL
 	);
 
 	type register_write_enable is (
