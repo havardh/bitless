@@ -1,0 +1,11 @@
+\section*{Abstract}
+As heat dissipation in processor designs increasingly becomes an issue, multiprocessing has been identified as an effective source for performance increase, without incurring the wrath of overheating. Utilizing two or more cores in parallel to process data can be exploited to push performance beyond that of a highly clocked single processor doing all the work. Setting up such a system to take multiple instructions and multiple data (MIMD), the workflow is not limited to data level parallelization like a SIMD system would be. With this in mind, we settled on sound manipulation as the basis for our project, figuring that if we build an array of processors, every column can correspond to a particular filter, while every row is a different sound channel.
+\newline
+
+Bitless consists of an FPGA configured to realize said processor array, with I/O implemented by audio jack channels and various other peripherals like micro USB and microSD, which in turn are controlled by a microcontroller unit (MCU). Everything has been placed on a custom designed PCB, and has been designed with a high level of energy efficiency in mind.
+\newline
+
+The processor design has been kept as general as possible in order to make it easy to implement, relying on instructions to produce different output for each column of cores.\todo{mention something about the fourier transform here}
+\newline
+
+\todo{mention something about the final performance of the system}

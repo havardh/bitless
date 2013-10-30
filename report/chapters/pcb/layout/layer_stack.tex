@@ -1,5 +1,5 @@
 % !TEX root = ../../report.tex
-\section{Layer Stack}
+\subsection{Layer Stack}
 
 We had three primary voltage levels on the PCB -- 1.2V, 1.8V and 3.3V. To
 minimize resistance in the power distribution system, we decided to dedicate a
@@ -14,5 +14,11 @@ for, in order to fanout and escape the BGA packages. Using a QFP-like package
 could probably have saved us some cost, but using BGA gave us a valuable
 experience on modern PCB design.
 
-We settled upon a total of 8 layers on the PCB.
-\todo[inline]{continue; explain the layers and why there were 8 of them}
+We settled upon a total of 8 layers on the PCB. Compared to previous years projects
+where mostly two signal and two power planes are used this is a significant increase.
+The main reason we had to do this is that we, as previously mentioned, are opting for
+BGA packages for our FPGA and microcontroller. Due to the ordering and pitch of the 
+feets on the BGA package it is hard, if not impossible, to fan-out correctly on a 
+two layer PCB. One added benefit from having 8 layers is that we were able to reduce
+the overall size of the board. In the end we ended up with a board measuring only
+120x150mm, which we figure is one of the smaller PCBs produced in this course.

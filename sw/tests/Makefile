@@ -29,7 +29,7 @@ SRC_DIRS = \
 
 
 TEST_SRC_DIRS = \
-	./**/**\
+	./libs/**\
 
 INCLUDE_DIRS =\
 	./test-doubles/**/**\
