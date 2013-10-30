@@ -36,6 +36,12 @@ package core_constants is
 		ALU_MOVE_NEGATIVE
 	);
 
+	type alu_result_select is (
+		ALU_ADD_SELECT,
+		ALU_MUL_SELECT,
+		ALU_FPU_SELECT
+	);
+
 	type register_write_enable is (
 		REG_A_WRITE,
 		REG_AB_WRITE,
