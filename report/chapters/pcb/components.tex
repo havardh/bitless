@@ -1,26 +1,30 @@
 % !TEX root = ../../report.tex
+
 \section{Components}
 
 The PCB group was eager to learn how modern PCB production is done, using the
 same tools and technologies as the industry. Thus, our choice of components was
-strongly driven by a smaller is better mindset. The use of BGA packages (for
-the MCU and FPGA) was already given from the resources we had available and the
-fact that Odd Rune Lykkebo had experience baking these.
+strongly driven by a smaller is better mindset. The use of BGA packages (for the
+MCU and FPGA) was already given from the resources we had available and the fact
+that Odd Rune Lykkebo had experience baking these.
 
 We used 0805 surface-mount components as much as possible, because they were the
-smallest packages we could comfortably solder. This caused a reduction in the need for through-hole drilling on the PCB, which not only lowered the production cost, but also gave us more area to work on as we could place components on both sides, consequently minimizing the board size.
-\newline
-\todo[inline]{malplaced list. Move or elaborate/explain}
-{\bf USB-UART}
-\begin{itemize}
-  \item FTDI FT232RL - USB-UART converter
-  \item 1x 4k7 and 1x 10k
-  \item 3x 100nF and 1x 4.7uF
-  \item USB3140-30-0170-1-C USB Micro B connector 
-\end{itemize}
+smallest packages we could comfortably solder. This caused a reduction in the
+need for through-hole drilling on the PCB, which not only lowered the production
+cost, but also gave us more area to work on as we could place components on both
+sides, consequently minimizing the board size.
 
+When picking components we did our best to get an overview of what the market
+looked like, and weighed the components against each other to find the one best
+suited for our needs. Supplementary components like capacitors and resistors
+were not given this thorough evaluation, as they were requirements of
+datasheets, but they had to follow the rules of minimum size 0805 and be surface
+mounted.
 
+\todo{add more components}
+
+\input{chapters/pcb/components/fpga}
+\input{chapters/pcb/components/sram}
 \input{chapters/pcb/components/psu}
-
+\input{chapters/pcb/components/usb_uart}
 \input{chapters/pcb/components/bus}
-	
