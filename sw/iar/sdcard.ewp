@@ -1991,6 +1991,9 @@
       <name>$PROJ_DIR$\..\drivers\dac\src\DACDriver.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\util\src\Delay.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\drivers\dma\src\DMADriver.c</name>
     </file>
     <file>
