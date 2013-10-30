@@ -74,13 +74,18 @@ architecture behaviour of alu is
 
 	--Logic signal
 	signal logic_result 	: std_logic_vector(15 downto 0);
+	signal logic_flags		: alu_flag_select;
 
 	--Result signals
 	signal result_1_mux_output : std_logic_vector(15 downto 0);
 	signal result_2_mux_output : std_logic_vector(15 downto 0);
 
 	--Control signals
-	signal sub_enable		: std_logic;
+	signal sub_enable			: std_logic;
+	signal alu_result_select_1  : alu_result_select;
+	signal alu_result_select_2	: std_logic;
+	signal alu_flag_select		: alu_flag_select;
+
 begin
 	add: adder
 		port map (
@@ -124,44 +129,92 @@ begin
 		end if;
 	end process adder_input_mux_a;
 
+	result_mux_1: process(alu_result_select_1)
+	begin
+		case alu_result_select is
+			when ALU_ADD_SELECT =>
+				result_1_mux_output <= adder_result;
+			when ALU_LOG_SELECT =>
+				result_1_mux_output <= logic_result;
+			when ALU_FPU_SELECT =>
+				result_1_mux_output <= cfpu_result_1;
+	end process result_mux_1;
 
+	result_mux_2: process(alu_result_select_2)
+	begin
+		if alu_result_select_2 = '1' =>
+			result_2_mux_output <= cfpu_result_2;
+		else =>
+			result_2_mux_output <= mul_result;
+	end process result_mux_2;
 
---	alu_process: process(operation)
---	begin
---		flags.negative <= '0';
---		flags.overflow <= '0';
---		flags.carry <= '0';
---		flags.zero <= '0';
---
-	--	case operation is
-	--		when ALU_ADD =>
-	--			result <= adder_result;
-	--			flags <= adder_flags;
-	--		when ALU_AND =>
-	--			result <= cpu_input_register_1 and cpu_input_register_2;
-	--			if (cpu_input_register_1 and cpu_input_register_2) = x"0000" then
-	--				flags.zero <= '1';
-	--			end if;
-	--		when ALU_NAND =>
-	--			result <= cpu_input_register_1 nand cpu_input_register_2;
-	--			if (cpu_input_register_1 nand cpu_input_register_2) = x"0000" then
-	--				flags.zero <= '1';
-	--			end if;
-	--		when ALU_OR =>
-	--			result <= cpu_input_register_1 or cpu_input_register_2;
-	--			if (cpu_input_register_1 or cpu_input_register_2) = x"0000" then
-	--				flags.zero <= '1';
-	--			end if;
-	--		when ALU_NOR =>
-	--			result <= cpu_input_register_1 nor cpu_input_register_2;
-	--			if (cpu_input_register_1 nor cpu_input_register_2) = x"0000" then
-	--				flags.zero <= '1';
-	--			end if;
-	--		when ALU_XOR =>
-	--			result <= cpu_input_register_1 xor cpu_input_register_2;
-	--			if (cpu_input_register_1 xor cpu_input_register_2) = x"0000" then
-	--				flags.zero <= '1';
-	--			end if;
+	flags_mux: process (alu_flag_select)
+	begin
+		case alu_flag_select is
+			when ADD_FLAGS_SEL =>
+				flags <= adder_flags;
+			when MUL_FLAGS_SEL =>
+				flags <= mul_flags;
+			when FPU_FLAGS_SEL =>
+				flags <= cfpu_flags;
+			when LOG_FLAGS_SEL =>
+				flags <= logic_flags;	
+	end process flags_mux;
+
+	--TODO, some kind of result mux concat thing
+
+	alu_process: process(operation)
+	begin
+		logic_flags.negative <= '0';
+		logic_flags.overflow <= '0';
+		logic_flags.carry <= '0';
+		logic_flags.zero <= '0';
+
+		case operation is
+			when ALU_ADD =>
+				alu_result_select_1 <= ALU_ADD_SELECT;
+				alu_result_select_2 <= '0';
+				alu_flag_select		<= ADD_FLAGS_SEL;
+			when ALU_AND =>
+				logic_result <= cpu_input_register_1 and cpu_input_register_2;
+				if (cpu_input_register_1 and cpu_input_register_2) = x"0000" then
+					logic_flags.zero <= '1';
+				end if;
+				alu_flag_select		<= LOG_FLAGS_SEL;
+				alu_result_select_1 <= ALU_LOG_SELECT;
+				alu_result_select_2 <= '0';
+			when ALU_NAND =>
+				logic_result <= cpu_input_register_1 nand cpu_input_register_2;
+				if (cpu_input_register_1 nand cpu_input_register_2) = x"0000" then
+					logic_flags.zero <= '1';
+				end if;
+				alu_flag_select		<= LOG_FLAGS_SEL;
+				alu_result_select_1 <= ALU_LOG_SELECT;
+				alu_result_select_2 <= '0';
+			when ALU_OR =>
+				logic_result <= cpu_input_register_1 or cpu_input_register_2;
+				if (cpu_input_register_1 or cpu_input_register_2) = x"0000" then
+					logic_flags.zero <= '1';
+				end if;
+				alu_flag_select		<= LOG_FLAGS_SEL;
+				alu_result_select_1 <= ALU_LOG_SELECT;
+				alu_result_select_2 <= '0';
+			when ALU_NOR =>
+				logic_result <= cpu_input_register_1 nor cpu_input_register_2;
+				if (cpu_input_register_1 nor cpu_input_register_2) = x"0000" then
+					logic_flags.zero <= '1';
+				end if;
+				alu_flag_select		<= LOG_FLAGS_SEL;
+				alu_result_select_1 <= ALU_LOG_SELECT;
+				alu_result_select_2 <= '0';
+			when ALU_XOR =>
+				logic_result <= cpu_input_register_1 xor cpu_input_register_2;
+				if (cpu_input_register_1 xor cpu_input_register_2) = x"0000" then
+					logic_flags.zero <= '1';
+				end if;
+				alu_flag_select		<= LOG_FLAGS_SEL;
+				alu_result_select_1 <= ALU_LOG_SELECT;
+				alu_result_select_2 <= '0';
 	--		when ALU_MOVE =>
 	--			result <= cpu_input_register_1;
 	--			if cpu_input_register_1 = x"0000" then
