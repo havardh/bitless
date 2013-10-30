@@ -1,0 +1,28 @@
+% !TEX root = ../../report.tex
+\subsection{Programming Interfaces}
+
+\subsubsection{FPGA programming}
+The FPGA can be programmed in numerous configurations, all of which has distinct
+features and capabilities described in the Spartan-6 FPGA Configuration User
+Guide. To prevent us from ruining the programmability, we decided to go for the
+simplest and less error-prone configuration; a JTAG interface directly to the
+chip.
+
+However, JTAG programming does not provide persistence -- the FPGA would
+have to be reprogrammed every time it powered up. This was not a very ideal
+solution, so we decided to add a FPGA configuration flash memory, from which
+the FPGA could read its initial configuration at startup. Xilinx provides
+schematics to daisy-chain the regular JTAG with a
+JTAG interface to the FPGA flash, making it easy to implement. Using this
+setup both the FPGA and the flash will be programmed simultaneously, and 
+unlike the FPGA the flash will retain the program when powered down. When
+powered up again the FPGA will look to the flash for its initial program.
+
+\subsubsection{MCU programming}
+Putting out programming headers for the Giant Gecko is a much simpler procedure.
+The 20-pin ARM debug pinout is well documented in application notes and is easy
+to set up.
+
+In addition to programming the MCU, the debug header allows us to trace running
+programs \todo{Håvard?} and make use of the energy profiler provided by 
+Energymicro.

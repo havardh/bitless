@@ -1,0 +1,18 @@
+% !TEX root = ../../report.tex
+\subsection{Bus interface}
+\subsubsection{Overview}
+
+While not strictly a component the databus is still an important part of
+our PCB design. The MCU navtively supports two bus interfaces, I2C and EBI,
+we opted for the latter. We did so because the I2C bus as a 
+serial bus has a more limited bandwith compared to the EBI bus which 
+supports 16 bit words. The need for speed stems from the requirement of
+streaming atleast two audiostreams  live between the MCU and FPGA.
+As an added bonus the EBI bus is compatable with SRAM chip interfaces 
+which proved usefull when including extra memory in our design.
+
+
+In addition to the EBI bus we have a special control bus with a width
+of 3 signals going between the MCU and FPGA. This bus is available for the
+software and FPGA group to use as needed, for instance for interrupts or
+other forms of synchronization and status signaling.
