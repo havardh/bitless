@@ -106,7 +106,7 @@ void FPGA_Init(FPGAConfig *config) {
 
 void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig *config) {
     pipeline->pos = pipelinePos;
-    pipeline->address = fpga.baseAddress + 0x400000 + pipelinePos * 0x100000;
+    pipeline->address = fpga.baseAddress + config->toplevelAddress + pipelinePos * config->pipelineAddressSize;
 
     pipeline->numCores = config->numCores;
     pipeline->cores = (FPGA_Core *) malloc(sizeof(FPGA_Core) * pipeline->numCores);
@@ -122,7 +122,7 @@ void FPGA_Core_New(FPGA_Core *core, uint32_t corePos, uint32_t pipelinePos, FPGA
     core->ctrlSize = config->ctrlSize;
 
     uint16_t *pipelineAddress = FPGA_GetPipeline(pipelinePos)->address;
-    uint16_t *coreAddress = (pipelineAddress + 0x20000 + 0x4000 * corePos);
+    uint16_t *coreAddress = (pipelineAddress + config->coreDeviceAddress + corePos * config->coreAddressSize);
     
     core->inputBuffer = coreAddress;
     core->imem = (coreAddress + core->bufferSize);

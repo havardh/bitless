@@ -13,7 +13,11 @@ TEST_GROUP(FPGAController) {
         conf.imemSize = CORE_IMEM_SIZE;
         conf.ctrlSize = CORE_CONTROL_SIZE;
         conf.baseAddress = (uint16_t *) malloc(sizeof(uint16_t) * FPGA_ADDRESS_SIZE);
-        
+        conf.toplevelAddress = TOPLEVEL_ADDRESS;
+        conf.pipelineAddressSize = PIPELINE_ADDRESS_SIZE;
+        conf.coreDeviceAddress = CORE_DEVICE_ADDRESS;
+        conf.coreAddressSize = CORE_ADDRESS_SIZE;
+
         FPGA_Init(&conf);
         
         input_program = (uint16_t *) malloc(sizeof(uint16_t) * CORE_IMEM_SIZE);

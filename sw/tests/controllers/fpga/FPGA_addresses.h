@@ -8,6 +8,10 @@
 #define CORE_CONTROL_SIZE       4096
 
 #define FPGA_ADDRESS_SIZE       0x800000
+#define TOPLEVEL_ADDRESS        0x400000
+#define PIPELINE_ADDRESS_SIZE   0x100000
+#define CORE_DEVICE_ADDRESS     0x20000
+#define CORE_ADDRESS_SIZE       0x4000
 
 // conf is defined in the tests
 #define PIPELINE0_START         (conf.baseAddress + 0x400000) // 1 00 0000 00 00000000000000
