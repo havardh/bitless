@@ -8,3 +8,8 @@
 *.out
 *.bbl
 *.pyg
+*.lof
+*.lol
+*.lot
+*.fdb_latexmk
+*.synctex.gz*
