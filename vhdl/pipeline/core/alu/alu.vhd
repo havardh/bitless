@@ -38,20 +38,20 @@ architecture behaviour of alu is
 			a, b 	: in std_logic_vector(15 downto 0);
 			clk 	: in std_logic;
 			result	: out std_logic_vector(15 downto 0);
-			flags	: out alu_flags;
+			flags	: out alu_flags
 		);
 	end component;
 
 	component FPU is
 		port(
 			a, b 		: in std_logic_vector(15 downto 0);
-			c, d 		: in --TODO, I have no idea
-			alu_op 		: in --TODO, I have no idea
+--			c, d 		: in --TODO, I have no idea
+--			alu_op 		: in --TODO, I have no idea
 			dsp_clk		: in std_logic;
 			cpu_clk 	: in std_logic;
 			result_1 	: out std_logic_vector(15 downto 0);
 			result_2 	: out std_logic_vector(15 downto 0);
-			flags 		: alu_flags;
+			flags 		: alu_flags
 		);
 	end component;
 
@@ -70,7 +70,7 @@ architecture behaviour of alu is
 	signal cfpu_flags 		: std_logic;
 	signal cd_cat			: std_logic_vector(31 downto 0); --TODO, I have no idea
 	signal C1,C2 			: std_logic_vector(15 downto 0); --TODO, I have no idea
-	signal cfpu_alu_op		: --TODO, I have no idea
+--	signal cfpu_alu_op		: --TODO, I have no idea
 
 	--Logic signal
 	signal logic_result 	: std_logic_vector(15 downto 0);
@@ -91,7 +91,7 @@ begin
 		port map (
 			a 		=> adder_input_a,
 			b 		=> cpu_input_register_2,
-			c 		=> sub_enable;
+			c 		=> sub_enable,
 			result 	=> adder_result,
 			flags 	=> adder_flags
 		);
@@ -100,7 +100,7 @@ begin
 		port map (
 			a 		=> cpu_input_register_1,
 			b 		=> cpu_input_register_2,
-			clk 	=> cpu_clk;,
+			clk 	=> cpu_clk,
 			result	=> mul_result,
 			flags 	=> mul_flags
 		);
@@ -122,7 +122,7 @@ begin
 
 	adder_input_mux_a: process(sub_enable)
 	begin
-		if sub_enable ='1' =>
+		if sub_enable = '1' then
 			adder_input_a <= not cpu_input_register_1;
 		else
 			adder_input_a <= cpu_input_register_1;
@@ -138,14 +138,16 @@ begin
 				result_1_mux_output <= logic_result;
 			when ALU_FPU_SELECT =>
 				result_1_mux_output <= cfpu_result_1;
+		end case;
 	end process result_mux_1;
 
 	result_mux_2: process(alu_result_select_2)
 	begin
-		if alu_result_select_2 = '1' =>
+		if alu_result_select_2 = '1' then
 			result_2_mux_output <= cfpu_result_2;
-		else =>
+		else
 			result_2_mux_output <= mul_result;
+		end if;
 	end process result_mux_2;
 
 	flags_mux: process (alu_flag_select)
@@ -158,7 +160,8 @@ begin
 			when FPU_FLAGS_SEL =>
 				flags <= cfpu_flags;
 			when LOG_FLAGS_SEL =>
-				flags <= logic_flags;	
+				flags <= logic_flags;
+		end case;
 	end process flags_mux;
 
 	--TODO, some kind of result mux concat thing
@@ -225,7 +228,7 @@ begin
 	--			if (not cpu_input_register_1) = x"0000" then
 	--				flags.zero <= '1';
 	--			end if;
-	--	end case;
---	end process alu_process;
+		end case;
+	end process alu_process;
 end behaviour;
 
