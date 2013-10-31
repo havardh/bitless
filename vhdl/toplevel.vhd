@@ -90,17 +90,6 @@ begin
 		);
 	sample_clk <= ctrl_bus(0);
 
-	-- EBI controller clock gate, disable the EBI controller clock
-	-- when the chip select is disabled. This saves power, at least
-	-- in theory:
-	ebi_cs_inv <= not ebi_cs;
-	ebi_ctrl_clock_gate: BUFGCE
-		port map (
-			I => gated_system_clk,
-			O => ebi_ctrl_clk,
-			CE => ebi_cs_inv
-		);
-
 	-- FPGA clock gate:
 	fpga_clock_gate: BUFGCE
 		port map (
@@ -109,10 +98,12 @@ begin
 			CE => control_register.master_enable
 		);
 
+	-- TODO: Switch gated_system_clk and system_clk, so the meaning is right
+
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
 		port map (
-			clk => ebi_ctrl_clk,
+			clk => gated_system_clk,
 			reset => control_register.ebi_controller_reset,
 			ebi_address => ebi_address,
 			ebi_data => ebi_data,

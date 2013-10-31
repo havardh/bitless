@@ -247,7 +247,7 @@ begin
 			-- Internal bus connections:
 			int_data_in => int_data_in,
 			int_data_out => input_buffer_data_out,
-			int_address => int_address.address,
+			int_address => b"00" & int_address.address,
 			int_re => input_buffer_read_enable,
 			int_we => input_buffer_write_enable
 		);
@@ -260,13 +260,13 @@ begin
 		generic map(size => 1024, address_width => 16)
 		port map(
 			clk => memory_clk,
-			write_address => int_address.address,
+			write_address => b"00" & int_address.address,
 			read_address => constant_read_address,
 			write_data => int_data_in,
 			read_data => constant_data_out,
 			write_enable => constant_write_enable
 		);
-	constant_read_address <= arbiter_read_address when sample_clk = '0' else int_address.address;
+	constant_read_address <= arbiter_read_address when sample_clk = '0' else b"00" & int_address.address;
 
 	-- Instantiate the constant memory arbiter. The EBI does not go through this
 	-- module, but instead gets direct access to the constant memory.

@@ -5,6 +5,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library unisim;
+use unisim.vcomponents.all;
+
 library work;
 use work.internal_bus.all;
 
@@ -33,10 +36,11 @@ architecture behaviour of ebi_controller is
 	-- For details of the signals used and their timing, look at
 	-- page 180 of the EFM32GG reference manual.
 
-	-- The code below uses a very simple state machine.
+	-- The code below uses a very simple state machine, where a
+	-- transaction is started on the falling edge of CS.
 
 	type state is (idle, read_state, write_state);
-	signal current_state : state := idle;
+	signal current_state : state;
 
 	signal re_value, we_value : std_logic := '0';
 begin
@@ -44,52 +48,50 @@ begin
 	int_read_enable <= re_value;
 
 	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs, reset)
-		-- Some notes:
-		-- * One clock cycle should be enough to read or write data on the
-		-- internal bus. The internal bus slaves should probably latch the
-		-- data on the bus on the falling edge of the read or write enable
-		-- signals to be sure that the data has been set up correctly.
-		-- * The read and write enable signals are active low. 
 	begin
-		if rising_edge(clk) then
-			if reset = '1' then
-				ebi_data <= (others => 'Z');
-				we_value <= '0';
-				re_value <= '0';
-				current_state <= idle;
-			else
-				case current_state is
-					when idle =>
-						ebi_data <= (others => 'Z');
-						if ebi_cs = '0' then
-							if ebi_read_enable = '0' then
-								int_address <= make_internal_address(ebi_address);
-								re_value <= '1';
-								current_state <= read_state;
-							elsif ebi_write_enable = '0' then
-								int_address <= make_internal_address(ebi_address);
-								int_data_in <= ebi_data;
-								we_value <= '1';
-								current_state <= write_state;
-							end if;
-						end if;
-					when read_state =>
-						if re_value = '1' then
-							ebi_data <= int_data_out; -- Set the EBI data to the data read from the internal bus.
-							re_value <= '0';
-						end if;
-						if ebi_read_enable = '1' then -- Switch to idle when the transaction is finished.
-							current_state <= idle;
-						end if;
-					when write_state =>
-						if we_value = '1' then
-							we_value <= '0';
-						end if;
-						if ebi_write_enable = '1' then -- Switch to idle when the transaction is finished.
-							current_state <= idle;
-						end if;
-				end case;
-			end if;
+		if reset = '1' then
+			current_state <= idle;
+			ebi_data <= (others => 'Z');
+			we_value <= '0';
+			re_value <= '0';
+		elsif rising_edge(clk) then
+			case current_state is
+				when idle =>
+					ebi_data <= (others => 'Z');
+					we_value <= '0';
+					re_value <= '0';
+
+					if ebi_read_enable = '0' and ebi_cs = '0' then
+						int_address <= make_internal_address(ebi_address);
+						current_state <= read_state;
+					elsif ebi_write_enable = '0' and ebi_cs = '0' then
+						int_address <= make_internal_address(ebi_address);
+						int_data_in <= ebi_data;
+						we_value <= '1';
+						current_state <= write_state;
+					end if;
+	
+				when read_state =>
+					-- The following causes one (system) cycle stall for reading:
+					if re_value = '1' then
+						ebi_data <= int_data_out;
+						re_value <= '0';
+					else
+						re_value <= '1';
+					end if;
+
+					if ebi_cs = '1' then -- Transaction finished
+						current_state <= idle;
+					end if;
+				when write_state =>
+					if we_value = '1' then
+						we_value <= '0';
+					end if;
+
+					if ebi_cs = '1' then -- Transaction finished
+						current_state <= idle;
+					end if;
+			end case;
 		end if;
 	end process;
 end behaviour;

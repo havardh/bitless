@@ -9,10 +9,11 @@ package internal_bus is
 	-- Address type for the internal bus. Assumes 23 bit EBI bus addresses.
 	type internal_address is
 		record
-			toplevel : std_logic;
-			pipeline : std_logic_vector(1 downto 0);
-			device   : std_logic_vector(3 downto 0);
-			address  : std_logic_vector(15 downto 0); -- Address of the byte to address in the device
+			toplevel : std_logic; -- Toplevel "selector"
+			pipeline : std_logic_vector(1 downto 0);  -- Pipeline number
+			device   : std_logic_vector(3 downto 0);  -- Pipeline device
+			coredev  : std_logic_vector(1 downto 0);  -- Core device
+			address  : std_logic_vector(13 downto 0); -- Address of the byte to address in the device
 		end record;
 
 	-- Data type for the internal bus.
@@ -96,7 +97,8 @@ package body internal_bus is
 		retval.toplevel := ebi_address(22);
 		retval.pipeline := ebi_address(21 downto 20);
 		retval.device := ebi_address(19 downto 16);
-		retval.address := ebi_address(15 downto 0);
+		retval.coredev := ebi_address(15 downto 14);
+		retval.address := ebi_address(13 downto 0);
 		return retval;
 	end make_internal_address;
 
