@@ -12,11 +12,14 @@ typedef struct {
     uint16_t *outputBuffer;
     uint32_t imemSize;
     uint16_t *imem;
+    uint32_t ctrlSize;
+    uint16_t *ctrlmem;
 } FPGA_Core;
 
 typedef struct {
     uint32_t pos;
     uint32_t numCores;
+    uint16_t *address;
     FPGA_Core *cores;
 } FPGA_Pipeline;
 
@@ -34,11 +37,13 @@ uint16_t* FPGA_GetBaseAddress();
 /* FPGA Pipeline methods */
 uint16_t* FPGAPipeline_GetInputBuffer(FPGA_Pipeline *pipeline);
 uint16_t* FPGAPipeline_GetOutputBuffer(FPGA_Pipeline *pipeline);
-FPGA_Core* FPGAPipline_GetCore(FPGA_Pipeline *pipeline, uint32_t core);
+FPGA_Core* FPGAPipeline_GetCore(FPGA_Pipeline *pipeline, uint32_t core);
 
 /* FPGA Core methods */
 void FPGACore_GetProgram(FPGA_Core *core, uint16_t *program);
 void FPGACore_SetProgram(FPGA_Core *core, uint16_t *program, uint32_t programSize);
+void FPGACore_GetControls(FPGA_Core *core, uint16_t *controls);
+void FPGACore_SetControls(FPGA_Core *core, uint16_t *controls, uint32_t controlSize);
 
 /* Setup and teardown */
 void FPGA_Init(FPGAConfig *config);

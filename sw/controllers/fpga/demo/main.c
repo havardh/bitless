@@ -1,13 +1,15 @@
 #include "FPGAController.h"
 #include "FPGAConfig.h"
 
+
 #define NUM_PIPELINES           2
 #define NUM_CORES               4
-#define CORE_BUFFER_SIZE        100
-#define CORE_IMEM_SIZE          200
+#define CORE_BUFFER_SIZE        4096
+#define CORE_IMEM_SIZE          4096
+#define CORE_CONTROL_SIZE       4096
 #define CORE_OFFSET             (CORE_BUFFER_SIZE + CORE_IMEM_SIZE)
 #define PIPELINE_MEMORY         (NUM_CORES * CORE_OFFSET + CORE_BUFFER_SIZE)
-#define FPGA_MEMORY             (PIPELINE_MEMORY * NUM_PIPELINES)
+#define FPGA_MEMORY             (PIPELINE_MEMORY * NUM_PIPELINES)   
 
 void initMemory() {
     uint16_t *program = (uint16_t *) malloc(sizeof(uint16_t) * CORE_IMEM_SIZE);
@@ -39,7 +41,7 @@ int main() {
     conf.numCores = NUM_CORES;
     conf.bufferSize = CORE_BUFFER_SIZE;
     conf.imemSize = CORE_IMEM_SIZE;
-    conf.baseAddress = (uint16_t *) malloc(sizeof(uint16_t) * FPGA_MEMORY);
+    conf.baseAddress = (uint16_t *) malloc(sizeof(uint16_t) * 0x800000);
 
     FPGA_Init(&conf);
 

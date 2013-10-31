@@ -1,15 +1,7 @@
 #include "CppUTest/CommandLineTestRunner.h"
 #include "FPGAController.h"
 #include "FPGADebug.h"
-
-#define NUM_PIPELINES           2
-#define NUM_CORES               4
-#define CORE_BUFFER_SIZE        100
-#define CORE_IMEM_SIZE          200
-#define CORE_OFFSET             (CORE_BUFFER_SIZE + CORE_IMEM_SIZE)
-#define PIPELINE_MEMORY         (NUM_CORES * CORE_OFFSET + CORE_BUFFER_SIZE)
-#define FPGA_MEMORY             (PIPELINE_MEMORY * NUM_PIPELINES)
-
+#include "FPGA_addresses.h"
 
 static FPGAConfig conf;
 static uint16_t *input_program;
@@ -22,7 +14,7 @@ TEST_GROUP(FPGADebug) {
         conf.numCores = NUM_CORES;
         conf.bufferSize = CORE_BUFFER_SIZE;
         conf.imemSize = CORE_IMEM_SIZE;
-        conf.baseAddress = (uint16_t *) malloc(sizeof(uint16_t) * FPGA_MEMORY);
+        conf.baseAddress = (uint16_t *) malloc(sizeof(uint16_t) * FPGA_ADDRESS_SIZE);
 
         FPGA_Init(&conf);
 
@@ -71,6 +63,5 @@ TEST(FPGADebug, should_set_and_get_core_outputBuffer) {
 
     free(c4_outputBuffer);
 }
-
 
 #include "FPGADebug.c"

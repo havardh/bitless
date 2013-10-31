@@ -2,35 +2,35 @@
 #include <assert.h>
 #include <stdio.h>
 
-static FPGA_Processor proc;
+static FPGA_Processor fpga;
 
 /*******************************************
 * FPGA Processor methods                   *
 *******************************************/
 
 uint16_t* FPGA_GetBaseAddress(void) {
-    return proc.baseAddress;
+    return fpga.baseAddress;
 }
 
 FPGA_Pipeline* FPGA_GetPipeline(uint32_t pipeline) {
-    if (pipeline < proc.numPipelines) {
-        return (proc.pipelines + pipeline);
+    if (pipeline < fpga.numPipelines) {
+        return &fpga.pipelines[pipeline];
     }
     return NULL;
 }
 
 FPGA_Core* FPGA_GetCore(uint32_t pipeline, uint32_t core) {
     FPGA_Pipeline *p = FPGA_GetPipeline(pipeline);
-    return FPGAPipline_GetCore(p, core);
+    return FPGAPipeline_GetCore(p, core);
 }
 
 /*******************************************
 * FPGA Pipeline methods                    *
 *******************************************/
 
-FPGA_Core* FPGAPipline_GetCore(FPGA_Pipeline *pipeline, uint32_t core) {
+FPGA_Core* FPGAPipeline_GetCore(FPGA_Pipeline *pipeline, uint32_t core) {
     if (pipeline != NULL && core < pipeline->numCores) {
-        return (pipeline->cores + core);
+        return &pipeline->cores[core];
     }
     return NULL;
 }
@@ -41,7 +41,7 @@ uint16_t* FPGAPipeline_GetInputBuffer(FPGA_Pipeline *pipeline) {
 }
 
 uint16_t* FPGAPipeline_GetOutputBuffer(FPGA_Pipeline *pipeline) {
-    FPGA_Core *core = FPGAPipline_GetCore(pipeline, pipeline->numCores - 1);
+    FPGA_Core *core = FPGAPipeline_GetCore(pipeline, pipeline->numCores - 1);
     return core->outputBuffer;   
 }
 
@@ -69,22 +69,44 @@ void FPGACore_SetProgram(FPGA_Core *core, uint16_t *program, uint32_t programSiz
     }
 }
 
+void FPGACore_GetControls(FPGA_Core *core, uint16_t *controls) {
+    for (uint32_t i = 0; i < core->ctrlSize; i++) {
+        controls[i] = core->ctrlmem[i];
+    }
+}
+
+void FPGACore_SetControls(FPGA_Core *core, uint16_t *controls, uint32_t controlSize) {
+    assert(controlSize <= core->ctrlSize);
+
+    for (uint32_t i = 0; i < controlSize; i++) {
+        core->ctrlmem[i] = controls[i];
+    }
+    /* Set all remaining controls to 0 */
+    if (controlSize < core->ctrlSize) {
+        for (uint32_t i = controlSize; i < core->ctrlSize; i++) {
+            core->ctrlmem[i] = 0;
+        }
+    }
+}
+
+
 /*******************************************
 * FPGA Setup and teardown                  *
 *******************************************/
 
 void FPGA_Init(FPGAConfig *config) {
-    proc.baseAddress = config->baseAddress;
+    fpga.baseAddress = config->baseAddress;
 
-    proc.numPipelines = config->numPipelines;
-    proc.pipelines = (FPGA_Pipeline *) malloc(sizeof(FPGA_Pipeline) * config->numPipelines);
-    for (uint32_t i = 0; i < proc.numPipelines; i++) {
-        FPGA_Pipeline_New(&proc.pipelines[i], i, config);
+    fpga.numPipelines = config->numPipelines;
+    fpga.pipelines = (FPGA_Pipeline *) malloc(sizeof(FPGA_Pipeline) * config->numPipelines);
+    for (uint32_t i = 0; i < fpga.numPipelines; i++) {
+        FPGA_Pipeline_New(&fpga.pipelines[i], i, config);
     }
 }
 
 void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig *config) {
     pipeline->pos = pipelinePos;
+    pipeline->address = fpga.baseAddress + 0x400000 + pipelinePos * 0x100000;
 
     pipeline->numCores = config->numCores;
     pipeline->cores = (FPGA_Core *) malloc(sizeof(FPGA_Core) * pipeline->numCores);
@@ -97,21 +119,22 @@ void FPGA_Core_New(FPGA_Core *core, uint32_t corePos, uint32_t pipelinePos, FPGA
     core->pos = corePos;
     core->bufferSize = config->bufferSize;
     core->imemSize = config->imemSize;
+    core->ctrlSize = config->ctrlSize;
 
-    uint32_t coreNum = corePos + pipelinePos * config->numCores;
-    uint16_t *core_base_address = (config->baseAddress + coreNum * 
-        (core->bufferSize + core->imemSize) + pipelinePos * core->bufferSize);
+    uint16_t *pipelineAddress = FPGA_GetPipeline(pipelinePos)->address;
+    uint16_t *coreAddress = (pipelineAddress + 0x20000 + 0x4000 * corePos);
     
-    core->inputBuffer =  core_base_address;
-    core->outputBuffer = (core_base_address + core->bufferSize + core->imemSize);
-    core->imem = (core_base_address + core->bufferSize);
+    core->inputBuffer = coreAddress;
+    core->imem = (coreAddress + core->bufferSize);
+    core->ctrlmem = (core->imem + core->imemSize);
+    core->outputBuffer = (core->ctrlmem + core->ctrlSize);
 }
 
 void FPGA_Destroy(void) {
-    for (uint32_t i = 0; i < proc.numPipelines; i++) {
+    for (uint32_t i = 0; i < fpga.numPipelines; i++) {
         FPGA_Pipeline *p = FPGA_GetPipeline(i);
         free(p->cores);
     }
-    free(proc.pipelines);
-    free(proc.baseAddress);
+    free(fpga.pipelines);
+    free(fpga.baseAddress);
 }
