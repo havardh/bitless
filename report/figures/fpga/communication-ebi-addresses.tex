@@ -2,9 +2,11 @@
 	\centering
 	\begin{bytefield}[endianness=big,bitwidth=0.04\linewidth]{23}
 		\bitheader{0-22}\\
+		\bitbox{1}{T} &
 		\bitbox{2}{\tiny Pipeline} &
-		\bitbox{5}{Device} &
-		\bitbox{16}{Address}
+		\bitbox{4}{Device} &
+		\bitbox{2}{\tiny Subdev} &
+		\bitbox{14}{Address}
 	\end{bytefield}
 	\caption{FPGA address format}
 	\label{fig:ebi_addresses}
