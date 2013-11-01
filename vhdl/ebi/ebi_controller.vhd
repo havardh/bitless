@@ -5,9 +5,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-library unisim;
-use unisim.vcomponents.all;
-
 library work;
 use work.internal_bus.all;
 
@@ -43,6 +40,7 @@ architecture behaviour of ebi_controller is
 	signal current_state : state;
 
 	signal re_value, we_value : std_logic := '0';
+	signal transaction_finished : std_logic := '0';
 begin
 	int_write_enable <= we_value;
 	int_read_enable <= re_value;
@@ -54,12 +52,14 @@ begin
 			ebi_data <= (others => 'Z');
 			we_value <= '0';
 			re_value <= '0';
+			transaction_finished <= '0';
 		elsif rising_edge(clk) then
 			case current_state is
 				when idle =>
 					ebi_data <= (others => 'Z');
 					we_value <= '0';
 					re_value <= '0';
+					transaction_finished <= '0';
 
 					if ebi_read_enable = '0' and ebi_cs = '0' then
 						int_address <= make_internal_address(ebi_address);
@@ -67,28 +67,31 @@ begin
 					elsif ebi_write_enable = '0' and ebi_cs = '0' then
 						int_address <= make_internal_address(ebi_address);
 						int_data_in <= ebi_data;
-						we_value <= '1';
 						current_state <= write_state;
 					end if;
 	
 				when read_state =>
-					-- The following causes one (system) cycle stall for reading:
 					if re_value = '1' then
 						ebi_data <= int_data_out;
 						re_value <= '0';
-					else
+						transaction_finished <= '1';
+					elsif transaction_finished = '0' then
 						re_value <= '1';
 					end if;
 
-					if ebi_cs = '1' then -- Transaction finished
+					if ebi_cs = '1' then
 						current_state <= idle;
 					end if;
+
 				when write_state =>
 					if we_value = '1' then
 						we_value <= '0';
+						transaction_finished <= '1';
+					elsif transaction_finished = '0' then
+						we_value <= '1';
 					end if;
 
-					if ebi_cs = '1' then -- Transaction finished
+					if ebi_cs = '1' then
 						current_state <= idle;
 					end if;
 			end case;

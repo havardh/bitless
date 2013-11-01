@@ -11,12 +11,11 @@ end tb_ebi_controller;
 architecture behavior of tb_ebi_controller is
 
 	-- Component Declaration for the Unit Under Test (UUT)
- 
 	component ebi_controller
 		port (
 			clk : in std_logic;
 			reset : in std_logic;
-			ebi_address : in std_logic_vector(24 downto 0);
+			ebi_address : in std_logic_vector(22 downto 0);
 			ebi_data : inout std_logic_vector(15 downto 0);
 			ebi_cs : in std_logic;
 			ebi_read_enable : in std_logic;
@@ -32,7 +31,7 @@ architecture behavior of tb_ebi_controller is
 	--Inputs
 	signal clk : std_logic := '0';
 	signal reset : std_logic := '0';
-	signal ebi_address : std_logic_vector(24 downto 0) := (others => '0');
+	signal ebi_address : std_logic_vector(22 downto 0) := (others => '0');
 	signal ebi_cs : std_logic := '1';
 	signal ebi_read_enable : std_logic := '1';
 	signal ebi_write_enable : std_logic := '1';
@@ -81,7 +80,7 @@ begin
 	process (int_read_enable)
 	begin
 		if rising_edge(int_read_enable) then
-			int_data_out <= x"beef";
+			int_data_out <= x"f00d";
 		end if;
 	end process;
 
@@ -96,41 +95,34 @@ begin
 		reset <= '1';
 		wait for clk_period * 4;
 		reset <= '0';
-		wait for clk_period * 4;
+		wait for clk_period * 10;
 
-		-- Test an EBI write transfer:
-		ebi_address <= b"01" & b"00100" & b"110110110110110010";
-		ebi_data <= x"1234";
+		-- Do a write transfer:
 		ebi_cs <= '0';
-		wait for clk_period * 4;
+		ebi_address <= b"0" & b"01" & b"1010" & b"00" & b"10100010100010";
+		ebi_data <= x"beef";
+		wait for clk_period * 2;
 
-		-- No changes to the internal bus here!
-		assert int_write_enable = '0' report "Internal bus write enable is asserted!";
-		assert int_read_enable = '0' report "Internal bus read enable is asserted!";
-
-		-- Do write:
 		ebi_write_enable <= '0';
-		wait for clk_period * 2;
-		assert int_data_in = ebi_data report "Internal data is not equal to EBI data";
-
-		wait for clk_period * 2;
+		wait for clk_period * 4;
 		ebi_write_enable <= '1';
-		wait for clk_period * 2;
-		ebi_cs <= '1'; -- Disable the chip select
-		wait for clk_period * 2;
+		wait for clk_period * 4;
+		
+		ebi_cs <= '1';
+		wait for clk_period * 8;
 
-		-- Try an EBI read transfer:
-		ebi_address <= b"10" & b"11011" & b"001001001001001101"; -- Simply the inverse of the above
+		-- Do a read transfer:
 		ebi_cs <= '0';
-		wait for clk_period * 4;
-
-		ebi_read_enable <= '0';	-- Do the read
+		ebi_address <= "0" & b"10" & b"0101" & b"11" & b"01011101011101";
 		wait for clk_period * 2;
-		assert int_data_out = ebi_data report "Internal data is not equal to EBI data";
-		ebi_read_enable <= '1';
-
-		ebi_cs <= '1'; -- Disable the EBI interface.
+		
+		ebi_read_enable <= '0';
 		wait for clk_period * 4;
+		ebi_read_enable <= '1';
+		wait for clk_period * 4;
+
+		ebi_cs <= '1';
+		wait for clk_period * 8;
 
 		wait;
 	end process;
