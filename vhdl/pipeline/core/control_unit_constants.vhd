@@ -6,19 +6,9 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
+use WORK.CORE_CONSTANTS.ALL;
 
 package control_unit_constants is
-
-
-		alu_op					: out alu_operation;
-		imm_select	 			: out  STD_LOGIC;
-		reg_b_wr					: out  STD_LOGIC;
-		reg_write_source 		: out  STD_LOGIC_VECTOR (1 downto 0);
-		output_write_enable 	: out  STD_LOGIC;
-		read_from_const_mem 	: out STD_LOGIC;
-		branch_enable			: out STD_LOGIC;
-		pc_write_enable 		: out STD_LOGIC);
-
 
   -- *********************** SIGNAL DOCUMENTATION **************************
 		-- || The clock.
