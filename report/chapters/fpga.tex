@@ -5,7 +5,7 @@ As this project requires us to implement a MIMD processor in VHDL, we realized
 our design by implementing it in VHDL, and running the final processing core on
 a Spartan-6 FieldProgrammableGateArray.
 \todo{Replace ``Spartan-6'' and FPGA with references/links?}
-\\
+
 Our MIMD processor design is based on pipelined cores connected sequentially in
 a pipeline of their own. Since the processor contains homogenous cores, each
 core can receive and run the same instructions. To realize this as an MIMD \todo{Fancy inline thingy explaining MultipleInstructionsMultipleData acronym}, the first core in
@@ -13,11 +13,11 @@ the sequential core-pipeline is the only one who can work with the data given to
 said pipeline by the EBI bus. The next core then works on the output of the
 first core, and as such each core in the pipeline works on its own data
 independently of the data any other core is currently working on.
-\\
+
 And as each of the processor cores have their own instruction memory, so that
 they can run each their own instructions, we have realized the ``Multiple
 Instruction'' \todo{Maybe add another fancy inline thingy here instead of qoutation marks?} part of the MIMD definition.
-\\
+
 This chapter is structured in the following manner; First, we describe the
 design of the processor core in more detail, and explain the reasoning behind
 the general design principles we followed. Second, we describe the
