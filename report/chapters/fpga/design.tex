@@ -24,22 +24,16 @@ resource management on the FPGA.
 Looking into which types of Fourier-transform algorithms we could use on an
 embedded device, in a manner as efficiently as possible, and yet real-time,
 we ended up looking at \todo{Should be some kind of reference here, no?}
-Sliding-Discrete-Fourier-Transforms (or more colloquially known as SD-FT's).
-
-%Need some kind of newline here just to get some "breathing space" for the reader between the above text, and below figure
-
 \missingfigure{Maybe insert a figure here showing how the SD-FT works on each sample at a time?}
+Sliding-Discrete-Fourier-Transforms (or more colloquially known as SD-FT's).
 
 This would enable us to receive a live stream of samples from an input device
 through a mini-jack on the PCB, or just from the DMA's of the MCU if the input
 was a file on a SD-card. And then transform this live stream of samples into
 the frequency domain.
 
-Since we now were able to work on each discrete sample while it was in the
-frequency domain, we were now able to perform things like basic high-pass and
-low-pass filters.
-
-The magic of our sound-effects could be put to work.
+When we then had samples transformed into the frequency domain, the magic
+of our sound-effects could be put to work.
 
 \FloatBarrier
 \subsection{Sequential processing cores?}\todo{Maybe find better subsection title?}
