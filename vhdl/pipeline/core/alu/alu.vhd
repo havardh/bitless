@@ -16,7 +16,8 @@ entity alu is
 		-- ALU input data:
 		cpu_input_register_1 	: in std_logic_vector(15 downto 0);
 		cpu_input_register_2 	: in std_logic_vector(15 downto 0);
-		cpu_input_const 		: in std_logic_vector(15 downto 0);
+		cpu_input_const 			: in std_logic_vector(15 downto 0);
+		cpu_input_const_w			: in std_logic;
 		-- ALU control:
 		operation 				: in alu_operation;
 		-- ALU result data:
@@ -82,7 +83,6 @@ architecture behaviour of alu is
 	--Control signals
 	signal sub_enable					: std_logic;
 	signal alu_result_select  		: alu_result_select;
-	signal cpu_input_constant_w	: std_logic;
 
 begin
 	add: adder
@@ -117,10 +117,10 @@ begin
 			flags 		=> cfpu_flags
 		);
 
-	constant_register_update: process(cpu_input_constant_w)
+	constant_register_update: process(cpu_input_const_w)
 	begin
 		if rising_edge(cpu_clk) then
-			if cpu_input_constant_w = '1' then
+			if cpu_input_const_w = '1' then
 				C1 <=	cpu_input_const(15 downto 0);
 				C2 <=	cpu_input_const(31 downto 16);
 			end if;
