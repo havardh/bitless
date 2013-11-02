@@ -24,12 +24,10 @@ LST_DIR = lst
 # Change path to the tools according to your system configuration
 # DO NOT add trailing whitespace chars, they do matter !
 WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2012q4
-LINUXCS	   ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
-# /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
+LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
 
-LIB=/Users/havard/Documents/programmering/c/TDT4295/sw/libs
-DIR=/Users/havard/Documents/programmering/c/TDT4295/sw
-#/Users/havard/Documents/Silabs
+LIB=./libs
+DIR=.
 
 RMDIRS	   := rm -rf
 RMFILES	   := rm -rf
