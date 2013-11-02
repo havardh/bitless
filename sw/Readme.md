@@ -27,12 +27,12 @@ Run `make` from the sw directory. This should create the file main.bin in the ex
 Deploying
 ------
 
-* Open the eACommander application. 
-* Connect to the board. 
+* Open the eACommander application.
+* Connect to the board.
 * Enter \<root\>/sw/exe/main.bin in the Binary File field on the flash tab.
 * Click Flash EFM32.
 
-Folder layout
+Directory Structure
 -------------
 
 <pre>
@@ -68,7 +68,7 @@ Folder layout
 |---tests/
 |   |---AllTests.cpp # testrunner
 |   |---Makefile     # makefile for all tests
-|   |---controllers/ 
+|   |---controllers/
 |   |   |---buttons/
 |   |   |   |---ButtonsControllerTest.cpp
 |   |---drivers/

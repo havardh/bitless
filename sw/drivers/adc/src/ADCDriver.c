@@ -1,9 +1,9 @@
 #include "ADCDriver.h"
 
 
-void init(const ADCConfig *config);
-void initSingle(const ADCConfig *config);
-void initScan();
+static void init(const ADCConfig *config);
+static void initSingle(const ADCConfig *config);
+static void initScan();
 
 void setResolution(ADC_InitSingle_TypeDef *init, uint8_t resolution);
 void setInput(ADC_InitSingle_TypeDef *init, ADCChannel channel);
@@ -21,7 +21,7 @@ void ADCDriver_Init(const ADCConfig *config)
 
 }
 
-void init(const ADCConfig *config) 
+static void init(const ADCConfig *config) 
 {
 	ADC_Init_TypeDef initADC = ADC_INIT_DEFAULT;
 	//if (!config->rate) printf("");

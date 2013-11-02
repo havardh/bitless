@@ -5,6 +5,21 @@
 \usepackage{float}
 \usepackage{placeins}
 \usepackage{todonotes}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{titlesec}
+\usepackage{listings}
+
+\usetikzlibrary{automata,positioning}
+
+%formatting rules to enable subsubsubsection---
+\setcounter{secnumdepth}{2}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+%end of formatting rules for subsubsubsection---
 
 % \usepackage{scrextend}
 % \usepackage{tabularx}
@@ -27,4 +42,3 @@
 % \usepackage[chapter]{minted}
 % \usepackage{amsmath,amssymb}
 % \usepackage[dottedtoc,floatperchapter]{classicthesis}
-% \usepackage{tikz}

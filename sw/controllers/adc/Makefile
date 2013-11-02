@@ -128,6 +128,9 @@ INCLUDEPATHS += \
 -I$(DIR)/drivers/dac/inc \
 -I$(DIR)/drivers/dma/inc \
 -I$(DIR)/drivers/prs/inc \
+-I$(DIR)/drivers/mem/inc \
+-I$(DIR)/drivers/fpga/inc \
+-I$(LIB)/util/inc \
 -I$(DIR)/types/inc \
 -I$(DIR)/controllers/adc/inc
 
@@ -170,6 +173,9 @@ $(DIR)/drivers/adc/src/ADCDriver.c \
 $(DIR)/drivers/dac/src/DACDriver.c \
 $(DIR)/drivers/dma/src/DMADriver.c \
 $(DIR)/drivers/prs/src/PRSDriver.c \
+$(DIR)/drivers/mem/src/MEMDriver.c \
+$(DIR)/drivers/fpga/src/FPGADriver.c \
+$(LIB)/util/src/Delay.c \
 ./demo/fpga.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c

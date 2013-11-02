@@ -2,15 +2,24 @@
 
 \input{config} % Insert style
 
-\title{Insert super cool project name here}
-\author{Insert super cool project group members' names here}
-\date{Insert final date here}
-
 \begin{document}
 
-\maketitle
+\input{./title}
+\input{./abstract}
+
+\tableofcontents
+\newpage
+\listoffigures
+\listoftables
+\lstlistoflistings
+
 \input{chapters/intro}
+\input{chapters/system_overview}
 \input{chapters/fpga}
+\input{chapters/mcu}
 \input{chapters/pcb}
+\input{chapters/discussion}
+\input{chapters/appendices}
+\input{chapters/references}
 
 \end{document}

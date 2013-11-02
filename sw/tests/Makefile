@@ -29,6 +29,7 @@ SRC_DIRS = \
 
 TEST_SRC_DIRS = \
 	./controllers/fpga\
+	./libs/**\
 
 INCLUDE_DIRS =\
 	./test-doubles/**/**\
