@@ -44,16 +44,21 @@ package internal_bus is
 	-- Toplevel processor control register:
 	type toplevel_control_register is
 		record
-			number_of_pipelines  : std_logic_vector(2 downto 0);
-			ebi_controller_reset : std_logic;
-			master_reset         : std_logic;
-			led0, led1           : std_logic;
-			button0, button1     : std_logic;
-			master_enable        : std_logic;
+			number_of_pipelines          : std_logic_vector(2 downto 0);
+			led0, led1, button0, button1 : std_logic;
+			blinkmode                    : std_logic;
+			stopmode                     : std_logic;
+			reset                        : std_logic;
+		end record;
+
+	-- Pipeline control register:
+	type pipeline_control_register is
+		record
+			num_cores : std_logic_vector(3 downto 0);
 		end record;
 
 	-- Processor core control register:
-	type core_status_register is
+	type core_control_register is
 		record
 			reset                   : std_logic;
 			running                 : std_logic;

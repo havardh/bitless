@@ -21,7 +21,7 @@ entity core is
 		memclk     : in std_logic; -- Memory clock signal
 		sample_clk : in std_logic; -- Reset signal, "large cycle" clock signal
 
-		deadline_missed : out std_logic; -- Signal asserted if the processor is not idle on reset
+		reset      : in std_logic; -- Resets the processor core
 
 		-- Internal bus connections, used for reading and writing the instruction memory:
 		instr_address      : in std_logic_vector(15 downto 0);
@@ -109,16 +109,20 @@ architecture behaviour of core is
 	signal pc_value, pc_inc_value, pc_next_value : std_logic_vector(15 downto 0);
 
 	-- Status register:
-	signal status_register : core_status_register;
+	signal control_register : core_control_register;
 begin
 
 	-- Status register stuff:
-	status_register.instruction_memory_size <= std_logic_vector(to_unsigned(log2(instr_memory_size), 5));
-	status_register.running <= not sample_clk;
-	watchdog: process(sample_clk, running, status_register)
+	control_register.instruction_memory_size <= std_logic_vector(to_unsigned(log2(instr_memory_size), 5));
+	control_register.running <= '1';
+
+	-- "Watchdog" process, updates the deadline missed flag:
+	watchdog: process(sample_clk, running, control_register)
 	begin
-		if rising_edge(sample_clk) and status_register.running = '1' then
-			status_register.deadline_missed <= '1';
+		if rising_edge(sample_clk) then
+			if control_register.running = '1' then
+				control_register.deadline_missed <= '1';
+			end if;
 		end if;
 	end process;
 
@@ -155,7 +159,7 @@ begin
 		generic map (address_width => 16)
 		port map(
 			clk => clk, -- may not be neccessary
-			reset => '0',
+			reset => control_register.reset,
 			address_in => pc_next_value,
 			address_out => pc_value,
 			pc_wr_enb => '0'
