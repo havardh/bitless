@@ -75,7 +75,7 @@ void FPGA_SetBufferPrimary( bool primary )
 	bufferPrimary = primary;
 }
 
-void PendSV_Handler(void)
+/*void PendSV_Handler(void)
 {
 
 	uint16_t *inBuf;
@@ -95,4 +95,4 @@ void PendSV_Handler(void)
 			*(outBuf++) = ((uint32_t) left << 16) | (uint32_t) right;
 		}
 
-}
+    }*/

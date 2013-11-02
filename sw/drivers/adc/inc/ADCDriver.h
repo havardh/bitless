@@ -6,7 +6,6 @@
 #include "em_adc.h"
 //-#endif // DEVICE
 #include "ADCConfig.h"
-#include "ADCController.h"
 
 void ADCDriver_Init(const ADCConfig *config);
 

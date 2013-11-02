@@ -21,6 +21,9 @@ package core_constants is
 			negative : std_logic;
 		end record;
 
+	-- Type to use for arrays of addresses:
+	type address_array is array(integer range <>) of std_logic_vector(15 downto 0);
+
 	-- ALU operation list
 	type alu_operation is (
 		ALU_ADD,
@@ -33,9 +36,23 @@ package core_constants is
 		ALU_MOVE_NEGATIVE
 	);
 
-	type resgister_write_enable is (
+	type alu_result_select is (
+		ALU_ADD_SELECT,
+		ALU_LOG_SELECT,
+		ALU_FPU_SELECT
+	);
+
+	type alu_flag_select is (
+		ADD_FLAGS_SEL,
+		MUL_FLAGS_SEL,
+		FPU_FLAGS_SEL,
+		LOG_FLAGS_SEL
+	);
+
+	type register_write_enable is (
 		REG_A_WRITE,
 		REG_AB_WRITE,
-		REG_LDI_WRITE
+		REG_LDI_WRITE,
+		REG_DONT_WRITE
 	);
 end core_constants;

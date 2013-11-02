@@ -1,10 +1,12 @@
 -- Toplevel processor core module
 
 library ieee;
-use ieee.std_logic_1164.ALL;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 library work;
 use work.core_constants.all;
+use work.internal_bus.all;
 
 entity core is
 	generic(
@@ -104,20 +106,25 @@ architecture behaviour of core is
 	signal instr_write_data : std_logic_vector(15 downto 0);
 
 	-- Program counter value:
-	signal pc_value, pc_inc_value : std_logic_vector(15 downto 0);
-begin
-	running <= not sample_clk;
+	signal pc_value, pc_inc_value, pc_next_value : std_logic_vector(15 downto 0);
 
-	deadline: process(sample_clk, running)
+	-- Status register:
+	signal status_register : core_status_register;
+begin
+
+	-- Status register stuff:
+	status_register.instruction_memory_size <= std_logic_vector(to_unsigned(log2(instr_memory_size), 5));
+	status_register.running <= not sample_clk;
+	watchdog: process(sample_clk, running, status_register)
 	begin
-		if rising_edge(sample_clk) and running = '1' then
-			deadline_missed <= '1';
+		if rising_edge(sample_clk) and status_register.running = '1' then
+			status_register.deadline_missed <= '1';
 		end if;
 	end process;
 
 	-- Instruction memory:
 	instruction_memory: memory
-		generic map ( size => 1024, address_width => 16)
+		generic map ( size => instr_memory_size, address_width => 16)
 		port map(
 			clk => memclk,
 			write_address => instr_write_address,
@@ -149,9 +156,11 @@ begin
 		port map(
 			clk => clk, -- may not be neccessary
 			reset => '0',
-			address_in => pc_inc_value,
+			address_in => pc_next_value,
 			address_out => pc_value,
 			pc_wr_enb => '0'
 		);
+
+	pc_next_value <= pc_inc_value;
 
 end behaviour;

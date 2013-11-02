@@ -2,6 +2,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library work;
+use work.core_constants.all;
+
 entity constant_arbiter is
 	generic (
 		pipeline_cores      : natural := 4;
@@ -11,6 +14,7 @@ entity constant_arbiter is
 		clk                   : in std_logic;
 		request               : in  std_logic_vector(pipeline_cores - 1 downto 0);
 		acknowledge           : out std_logic_vector(pipeline_cores - 1 downto 0);
+		constant_address      : in address_array(pipeline_cores - 1 downto 0);
 		constant_read_address : out std_logic_vector(15 downto 0)
 	);
 end constant_arbiter;

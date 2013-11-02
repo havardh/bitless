@@ -7,39 +7,54 @@
 #include "bsp.h"
 #include "bsp_trace.h"
 
-volatile uint32_t msTicks;
+volatile uint32_t msTicks; /* counts 1ms timeTicks */
 
-void Delay( uint32_t ticks );
+void Delay(uint32_t dlyTicks);
 
-void SysTick_Handler( void ) {
-
-    msTicks++;
-
+/**************************************************************************//**
+ * @brief SysTick_Handler
+ * Interrupt Service Routine for system tick counter
+ *****************************************************************************/
+void SysTick_Handler(void)
+{
+  msTicks++;       /* increment counter necessary in Delay()*/
 }
 
-void Delay( uint32_t ticks ) {
+/**************************************************************************//**
+ * @brief Delays number of msTick Systicks (typically 1 ms)
+ * @param dlyTicks Number of ticks to delay
+ *****************************************************************************/
+void Delay(uint32_t dlyTicks)
+{
+  uint32_t curTicks;
 
-    uint32_t curTicks;
-
-    curTicks = msTicks;
-    while ((msTicks - curTicks) < ticks) ;
-
+  curTicks = msTicks;
+  while ((msTicks - curTicks) < dlyTicks) ;
 }
 
-int main( void ) {
+/**************************************************************************//**
+ * @brief  Main function
+ *****************************************************************************/
+int main(void)
+{
+  /* Chip errata */
+  CHIP_Init();
 
-    CHIP_Init();
+  /* If first word of user data page is non-zero, enable eA Profiler trace */
+  BSP_TraceProfilerSetup();
 
-    if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while(1) ;
+  /* Setup SysTick Timer for 1 msec interrupts  */
+  if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while (1) ;
 
-    BSP_LedsInit();
-    BSP_LedSet(0);
+  /* Initialize LED driver */
+  BSP_LedsInit();
+  BSP_LedSet(0);
 
-    while (1) {
-        BSP_LedToggle(0);
-        Delay(200);
-        BSP_LedToggle(1);
-        Delay(500);
-    }
-
+  /* Infinite blink loop */
+  while (1)
+  {
+    BSP_LedToggle(0);
+    BSP_LedToggle(1);
+    Delay(1000);
+  }
 }
