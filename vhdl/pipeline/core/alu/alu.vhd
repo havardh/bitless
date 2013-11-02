@@ -48,8 +48,8 @@ architecture behaviour of alu is
 	component FPU is
 		port(
 			a, b 			: in std_logic_vector(15 downto 0);
---			c, d 			: in --TODO, I have no idea
---			alu_op 		: in --TODO, I have no idea
+			c, d 			: in std_logic_vector(15 downto 0);
+			alu_op 		: alu_operation;
 			dsp_clk		: in std_logic;
 			cpu_clk 		: in std_logic;
 			result_1 	: out std_logic_vector(15 downto 0);
@@ -71,9 +71,6 @@ architecture behaviour of alu is
 	signal cfpu_result_1 	: std_logic_vector(15 downto 0);
 	signal cfpu_result_2 	: std_logic_vector(15 downto 0);
 	signal cfpu_flags 		: alu_flags;
-
-	
---	signal cfpu_alu_op		: --TODO, I have no idea
 
 	--Logic signal
 	signal logic_result 	: std_logic_vector(15 downto 0);
@@ -112,7 +109,7 @@ begin
 			b 			=> cpu_input_register_2,
 			c 			=> C1,
 			d 			=> C2,
-			alu_op 		=> cfpu_alu_op,	
+			alu_op 		=> operation,	
 			dsp_clk		=> dsp_clk,	
 			cpu_clk 	=> cpu_clk,
 			result_1 	=> cfpu_result_1,
