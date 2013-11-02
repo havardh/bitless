@@ -39,14 +39,8 @@ package core_constants is
 	type alu_result_select is (
 		ALU_ADD_SELECT,
 		ALU_LOG_SELECT,
-		ALU_FPU_SELECT
-	);
-
-	type alu_flag_select is (
-		ADD_FLAGS_SEL,
-		MUL_FLAGS_SEL,
-		FPU_FLAGS_SEL,
-		LOG_FLAGS_SEL
+		ALU_FPU_SELECT,
+		ALU_MUL_SELECT
 	);
 
 	type register_write_enable is (

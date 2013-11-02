@@ -2,9 +2,12 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_SIGNED.ALL;
 
 library work;
 use work.core_constants.all;
+
 
 entity alu is
 	port (
@@ -44,11 +47,11 @@ architecture behaviour of alu is
 
 	component FPU is
 		port(
-			a, b 		: in std_logic_vector(15 downto 0);
---			c, d 		: in --TODO, I have no idea
+			a, b 			: in std_logic_vector(15 downto 0);
+--			c, d 			: in --TODO, I have no idea
 --			alu_op 		: in --TODO, I have no idea
 			dsp_clk		: in std_logic;
-			cpu_clk 	: in std_logic;
+			cpu_clk 		: in std_logic;
 			result_1 	: out std_logic_vector(15 downto 0);
 			result_2 	: out std_logic_vector(15 downto 0);
 			flags 		: alu_flags
@@ -67,24 +70,22 @@ architecture behaviour of alu is
 	--FPU signals
 	signal cfpu_result_1 	: std_logic_vector(15 downto 0);
 	signal cfpu_result_2 	: std_logic_vector(15 downto 0);
-	signal cfpu_flags 		: std_logic;
-	signal cd_cat			: std_logic_vector(31 downto 0); --TODO, I have no idea
-	signal C1,C2 			: std_logic_vector(15 downto 0); --TODO, I have no idea
+	signal cfpu_flags 		: alu_flags;
+
+	
 --	signal cfpu_alu_op		: --TODO, I have no idea
 
 	--Logic signal
 	signal logic_result 	: std_logic_vector(15 downto 0);
-	signal logic_flags		: alu_flag_select;
-
-	--Result signals
-	signal result_1_mux_output : std_logic_vector(15 downto 0);
-	signal result_2_mux_output : std_logic_vector(15 downto 0);
-
+	signal logic_flags		: alu_flags;
+	
+	--Constant registers
+	signal C1,C2 				: std_logic_vector(15 downto 0); 
+	
 	--Control signals
-	signal sub_enable			: std_logic;
-	signal alu_result_select_1  : alu_result_select;
-	signal alu_result_select_2	: std_logic;
-	signal alu_flag_select		: alu_flag_select;
+	signal sub_enable					: std_logic;
+	signal alu_result_select  		: alu_result_select;
+	signal cpu_input_constant_w	: std_logic;
 
 begin
 	add: adder
@@ -119,6 +120,15 @@ begin
 			flags 		=> cfpu_flags
 		);
 
+	constant_register_update: process(cpu_input_constant_w)
+	begin
+		if rising_edge(cpu_clk) then
+			if cpu_input_constant_w = '1' then
+				C1 <=	cpu_input_const(15 downto 0);
+				C2 <=	cpu_input_const(31 downto 16);
+			end if;
+		end if;
+	end process constant_register_update;
 
 	adder_input_mux_a: process(sub_enable)
 	begin
@@ -129,42 +139,24 @@ begin
 		end if;
 	end process adder_input_mux_a;
 
-	result_mux_1: process(alu_result_select_1)
+	
+	result_mux: process(alu_result_select)
 	begin
 		case alu_result_select is
 			when ALU_ADD_SELECT =>
-				result_1_mux_output <= adder_result;
-			when ALU_LOG_SELECT =>
-				result_1_mux_output <= logic_result;
-			when ALU_FPU_SELECT =>
-				result_1_mux_output <= cfpu_result_1;
-		end case;
-	end process result_mux_1;
-
-	result_mux_2: process(alu_result_select_2)
-	begin
-		if alu_result_select_2 = '1' then
-			result_2_mux_output <= cfpu_result_2;
-		else
-			result_2_mux_output <= mul_result;
-		end if;
-	end process result_mux_2;
-
-	flags_mux: process (alu_flag_select)
-	begin
-		case alu_flag_select is
-			when ADD_FLAGS_SEL =>
+				result <= sxt(adder_result, 32);
 				flags <= adder_flags;
-			when MUL_FLAGS_SEL =>
-				flags <= mul_flags;
-			when FPU_FLAGS_SEL =>
-				flags <= cfpu_flags;
-			when LOG_FLAGS_SEL =>
+			when ALU_LOG_SELECT =>
+				result <= sxt(logic_result, 32);
 				flags <= logic_flags;
+			when ALU_MUL_SELECT =>
+				result <= sxt(mul_result, 32);
+				flags <= mul_flags;
+			when ALU_FPU_SELECT =>
+				result<= cfpu_result_1&cfpu_result_2;
+				flags <= cfpu_flags;
 		end case;
-	end process flags_mux;
-
-	--TODO, some kind of result mux concat thing
+	end process result_mux;
 
 	alu_process: process(operation)
 	begin
@@ -175,59 +167,47 @@ begin
 
 		case operation is
 			when ALU_ADD =>
-				alu_result_select_1 <= ALU_ADD_SELECT;
-				alu_result_select_2 <= '0';
-				alu_flag_select		<= ADD_FLAGS_SEL;
+				alu_result_select <= ALU_ADD_SELECT;
 			when ALU_AND =>
 				logic_result <= cpu_input_register_1 and cpu_input_register_2;
 				if (cpu_input_register_1 and cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
-				alu_flag_select		<= LOG_FLAGS_SEL;
-				alu_result_select_1 <= ALU_LOG_SELECT;
-				alu_result_select_2 <= '0';
+				alu_result_select <= ALU_LOG_SELECT;
 			when ALU_NAND =>
 				logic_result <= cpu_input_register_1 nand cpu_input_register_2;
 				if (cpu_input_register_1 nand cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
-				alu_flag_select		<= LOG_FLAGS_SEL;
-				alu_result_select_1 <= ALU_LOG_SELECT;
-				alu_result_select_2 <= '0';
+				alu_result_select <= ALU_LOG_SELECT;
 			when ALU_OR =>
 				logic_result <= cpu_input_register_1 or cpu_input_register_2;
 				if (cpu_input_register_1 or cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
-				alu_flag_select		<= LOG_FLAGS_SEL;
-				alu_result_select_1 <= ALU_LOG_SELECT;
-				alu_result_select_2 <= '0';
+				alu_result_select <= ALU_LOG_SELECT;
 			when ALU_NOR =>
 				logic_result <= cpu_input_register_1 nor cpu_input_register_2;
 				if (cpu_input_register_1 nor cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
-				alu_flag_select		<= LOG_FLAGS_SEL;
-				alu_result_select_1 <= ALU_LOG_SELECT;
-				alu_result_select_2 <= '0';
+				alu_result_select <= ALU_LOG_SELECT;
 			when ALU_XOR =>
 				logic_result <= cpu_input_register_1 xor cpu_input_register_2;
 				if (cpu_input_register_1 xor cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
-				alu_flag_select		<= LOG_FLAGS_SEL;
-				alu_result_select_1 <= ALU_LOG_SELECT;
-				alu_result_select_2 <= '0';
-	--		when ALU_MOVE =>
-	--			result <= cpu_input_register_1;
-	--			if cpu_input_register_1 = x"0000" then
-	--				flags.zero <= '1';
-	--			end if;
-	--		when ALU_MOVE_NEGATIVE =>
-	--			result <= not cpu_input_register_1;
-	--			if (not cpu_input_register_1) = x"0000" then
-	--				flags.zero <= '1';
-	--			end if;
+				alu_result_select <= ALU_LOG_SELECT;
+			when ALU_MOVE =>
+			logic_result <= cpu_input_register_1;
+				if cpu_input_register_1 = x"0000" then
+				logic_flags.zero <= '1';
+				end if;
+			when ALU_MOVE_NEGATIVE =>
+				logic_result <= not cpu_input_register_1;
+				if (not cpu_input_register_1) = x"0000" then
+					logic_flags.zero <= '1';
+				end if;
 		end case;
 	end process alu_process;
 end behaviour;
