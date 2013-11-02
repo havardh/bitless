@@ -94,7 +94,7 @@ DEPFLAGS = -MMD -MP -MF $(@:.o=.d)
 #
 # Add -Wa,-ahld=$(LST_DIR)/$(@F:.o=.lst) to CFLAGS to produce assembly list files
 #
-override CFLAGS += -D$(DEVICE) -Wall -Wextra -mcpu=cortex-m3 -mthumb \
+override CFLAGS += -D$(DEVICE) -Wall -Wextra -mcpu=cortex-m3 -mthumb -std=c99\
 -mfix-cortex-m3-ldrd -ffunction-sections \
 -fdata-sections -fomit-frame-pointer -DDEBUG_EFM  \
 $(DEPFLAGS)
@@ -112,6 +112,7 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
+-I./inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
@@ -138,6 +139,7 @@ $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+src/EBI_test.c \
 demo/$(PROJECTNAME).c
 
 s_SRC +=
