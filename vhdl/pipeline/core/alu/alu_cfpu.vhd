@@ -17,8 +17,12 @@
 -- Additional Comments: 
 --
 ----------------------------------------------------------------------------------
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use IEEE.STD_LOGIC_ARITH.ALL;
+
+library work;
+use work.core_constants.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -90,9 +94,9 @@ begin
 			overflow	=> flags(0)
 		);
 	
-	work: process(operation, clk)
+	work: process(aluop_in)
 	begin
-		case op is
+		case aluop_in is
 			when fp_mul =>
 				mul_in_a	<=	a;
 				mul_in_b	<=	b;
