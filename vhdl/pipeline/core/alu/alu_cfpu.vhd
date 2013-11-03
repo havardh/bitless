@@ -94,41 +94,41 @@ begin
 	begin
 		case op is
 			when fp_mul =>
-				a		<=	mul_in_a;
-				b		<=	mul_in_b;
-				result	<=	mul_result;
+				mul_in_a	<=	a;
+				mul_in_b	<=	b;
+				result		<=	mul_result;
 				
 			when fp_add =>
-				a		<=	addsub_in_a;
-				b		<=	addsub_in_b;
-				result	<=	addsub_result;
-				addsub_op <= "000000";
+				addsub_in_a	<=	a;
+				addsub_in_b	<=	b;
+				result		<=	addsub_result;
+				addsub_op	<= "000000";
 				
 			when fp_sub =>
-				a		<=	addsub_in_a;
-				b		<=	addsub_in_b;
-				result	<=	addsub_result;
-				addsub_op <= "000001";
+				addsub_in_a	<=	a;
+				addsub_in_b	<=	b;
+				result		<=	addsub_result;
+				addsub_op	<= "000001";
 				
 			when fp_mac =>
-				mul_in_a	<=	b;
+				mul_in_a	<=	a;
 				mul_in_b	<=	b;
 				
 				addsub_in_a	<=	mul_result;
 				addsub_in_b	<=	c;
 				
-				addsub_op <= "000000";
-				result	<=	addsub_result;
+				addsub_op	<= "000000";
+				result		<=	addsub_result;
 				
 			when fp_mas =>
-				mul_in_a	<=	b;
+				mul_in_a	<=	a;
 				mul_in_b	<=	b;
 				
 				addsub_in_a	<=	mul_result;
 				addsub_in_b	<=	c;
 				
-				addsub_op <= "000001";
-				result	<=	addsub_result;
+				addsub_op	<= "000001";
+				result		<=	addsub_result;
 				
 		end case;
 	end process;

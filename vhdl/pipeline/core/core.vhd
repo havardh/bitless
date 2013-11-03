@@ -2,7 +2,7 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+	use ieee.numeric_std.all;
 
 library work;
 use work.core_constants.all;
@@ -10,7 +10,7 @@ use work.internal_bus.all;
 
 entity core is
 	generic(
-		address_width : natural := 16
+		address_width		: natural := 16
 	);
 
 	port(
@@ -19,7 +19,11 @@ entity core is
 		sample_clk			: in std_logic; -- Reset signal, "large cycle" clock signal
 
 		reset				: in std_logic; -- Resets the processor core
-
+		
+		-- Connection to instruction memory:
+		instruction_address	: out std_logic_vector(address_width - 1 downto 0);
+		instruction_data	: in std_logic_vector(31 downto 0);
+		
 		-- Connections to the constant memory controller:
 		constant_addr		: out std_logic_vector(address_width - 1 downto 0);
 		constant_data		: in  std_logic_vector(31 downto 0);
@@ -42,7 +46,7 @@ end entity;
 
 architecture behaviour of core is
 
-	--Stage 1 - PC
+--Stage 1 - PC
 	component adder is
 		port (
 			a, b	: in	std_logic_vector(15 downto 0);
@@ -50,12 +54,20 @@ architecture behaviour of core is
 			flags	: out	alu_flags
 		);
 	end component;
+	--Pipeline registers for stage 1
+	signal pc_reg			: std_logic_vector(15 downto 0);
+	signal pc_inc			: std_logic_vector(15 downto 0);
+	signal pc_we			: std_logic;
 	
-	--Stage 2 - Control unit and register file
+	signal branch_enable	: std_logic;
+	signal branch_val		: std_logic_vector(15 downto 0);
+	
+--Stage 2 - Control unit and register file
 	component control_unit is
 		port ( 	
 			clk					: in	std_logic;
 			reset				: in	std_logic;
+			
 			opt_code			: in	std_logic_vector (5 downto 0);
 			spec_reg_addr		: out	std_logic_vector (4 downto 0);
 			alu_op				: out	alu_operation;
@@ -71,10 +83,42 @@ architecture behaviour of core is
 	end component;
 	
 	component register_file
+		port(
+			clk				: in std_logic;
+
+			reg_1_address	: in std_logic_vector(4 downto 0);
+			reg_2_address	: in std_logic_vector(4 downto 0);
+			write_address	: in std_logic_vector(4 downto 0);
+
+			data_in			: in std_logic_vector(31 downto 0);
+
+			write_reg_enb	: in register_write_enable;
+
+			reg_1_data		: out std_logic_vector(15 downto 0);
+			reg_2_data		: out std_logic_vector(15 downto 0);
+		);
 	end component register_file;
-	--Stage 3 - Memory access
+	--Pipeline registers for stage 2
+	signal reg_out_data_1	: std_logic_vector(15 downto 0);
+	signal reg_out_data_2	: std_logic_vector(15 downto 0);
 	
-	--Stage 4 - ALU
+	signal spec_addr		: std_logic_vector( 4 downto 0);
+	signal reg_addr_1		: std_logic_vector( 4 downto 0);
+	signal reg_addr_2		: std_logic_vector( 4 downto 0);
+	signal alu_op			: alu_operation;
+	signal imm_slct			: std_logic;
+	signal reg_we			: std_logic;
+	signal reg_wb			: std_logic;
+	signal reg_w_src		: std_logic_vector(1 downto 0);
+	
+		
+--Stage 3 - Memory access
+	component forwarding_unit is
+	end component;
+	--Pipeline registers for stage 3
+		
+		
+--Stage 4 - ALU
 	component alu is
 		port (
 			-- CLK
@@ -91,76 +135,40 @@ architecture behaviour of core is
 			flags  					: out	alu_flags
 		);
 	end component;
+	--Pipeline registers for stage 4
+	
+	
+--Other
 
-
-	-- Signal set to high while the processor is running:
-	signal running : std_logic := '1';
-
-	-- Instruction memory asignals:
-	signal instr_read_address, instr_write_address : std_logic_vector(15 downto 0);
-	signal instr_read_data : std_logic_vector(31 downto 0);
-	signal instr_write_data : std_logic_vector(15 downto 0);
-
-	-- Program counter value:
-	signal pc_value, pc_inc_value, pc_next_value : std_logic_vector(15 downto 0);
-
-	-- Status register:
-	signal control_register : core_control_register;
 begin
-
-	-- Status register stuff:
-	control_register.instruction_memory_size <= std_logic_vector(to_unsigned(log2(instr_memory_size), 5));
-	control_register.running <= '1';
-
-	-- "Watchdog" process, updates the deadline missed flag:
-	watchdog: process(sample_clk, running, control_register)
+	
+	--Pipeline stage 1
+	pc_incrementer : adder
+	port map(
+		a		=> pc_reg,
+		b		=> '1',
+		result	=> pc_inc
+	);
+	
+	pc : process(clk)
 	begin
-		if rising_edge(sample_clk) then
-			if control_register.running = '1' then
-				control_register.deadline_missed <= '1';
+		if rising_edge(pc_we) then
+			if branch_enable = '1' then
+				pc_reg <= branch_val;
+			else
+				pr_reg <= pc_inc;
 			end if;
 		end if;
 	end process;
-
-	-- Instruction memory:
-	instruction_memory: memory
-		generic map ( size => instr_memory_size, address_width => 16)
-		port map(
-			clk => memclk,
-			write_address => instr_write_address,
-			read_address => instr_read_address,
-			write_data => instr_write_data,
-			write_enable => instr_write_enable,
-			read_data => instr_read_data
-		);
-
-	-- Instruction memory control signals:
-	instr_write_address <= instr_address;
-	instr_read_address <= instr_address when sample_clk = '1' else pc_value;
-	-- TODO: Replace the others clause above with the address requested by the processor core.
-	instr_data_out <= instr_read_data(15 downto 0);
-	instr_write_data <= instr_data_in;
-
-	-- Program counter adder
-	pc_adder: adder
-		port map(
-			a => pc_value,
-			b => x"0001",
-			result => pc_inc_value,
-			flags => open
-		);
-
-	-- Program counter
-	pc: program_counter
-		generic map (address_width => 16)
-		port map(
-			clk => clk, -- may not be neccessary
-			reset => control_register.reset,
-			address_in => pc_next_value,
-			address_out => pc_value,
-			pc_wr_enb => '0'
-		);
-
-	pc_next_value <= pc_inc_value;
+	
+	instruction_address <= pc_reg;
+	--Pipeline stage 2
+	control : control_unit
+	port map(
+		
+	--Pipeline stage 3
+	
+	--Pipeline stage 4
+	
 
 end behaviour;
