@@ -22,7 +22,7 @@ entity core is
 		
 		-- Connection to instruction memory:
 		instruction_address	: out std_logic_vector(address_width - 1 downto 0);
-		instruction_data	: in std_logic_vector(31 downto 0);
+		instruction_data	: in std_logic_vector(15 downto 0);
 		
 		-- Connections to the constant memory controller:
 		constant_addr		: out std_logic_vector(address_width - 1 downto 0);
@@ -31,7 +31,6 @@ entity core is
 		-- Connections to the input buffer:
 		input_read_addr		: out std_logic_vector(address_width - 1 downto 0);
 		input_read_data		: in  std_logic_vector(31 downto 0);
-		input_re			: out std_logic;
 
 		-- Connections to the output buffer:
 		output_write_addr	: out std_logic_vector(address_width - 1 downto 0);
@@ -40,7 +39,6 @@ entity core is
 		
 		output_read_address	: out std_logic_vector(address_width - 1 downto 0);
 		output_read_data	: in  std_logic_vector(31 downto 0);
-		output_re			: out std_logic
  	);
 end entity;
 
@@ -82,7 +80,7 @@ architecture behaviour of core is
 		);
 	end component;
 	
-	component register_file
+	component register_file is
 		port(
 			clk				: in std_logic;
 
@@ -105,6 +103,7 @@ architecture behaviour of core is
 	signal spec_addr		: std_logic_vector( 4 downto 0);
 	signal reg_addr_1		: std_logic_vector( 4 downto 0);
 	signal reg_addr_2		: std_logic_vector( 4 downto 0);
+	signal reg_write_addr	: std_logic_vector( 4 downto 0);
 	signal alu_op			: alu_operation;
 	signal imm_slct			: std_logic;
 	signal reg_we			: std_logic;
@@ -116,7 +115,7 @@ architecture behaviour of core is
 	component forwarding_unit is
 	end component;
 	--Pipeline registers for stage 3
-		
+		--TODO
 		
 --Stage 4 - ALU
 	component alu is
@@ -136,13 +135,13 @@ architecture behaviour of core is
 		);
 	end component;
 	--Pipeline registers for stage 4
-	
+		--TODO
 	
 --Other
 
 begin
 	
-	--Pipeline stage 1
+--Pipeline stage 1
 	pc_incrementer : adder
 	port map(
 		a		=> pc_reg,
@@ -154,7 +153,7 @@ begin
 	begin
 		if rising_edge(pc_we) then
 			if branch_enable = '1' then
-				pc_reg <= branch_val;
+				pc_reg <= branch_target;
 			else
 				pr_reg <= pc_inc;
 			end if;
@@ -162,13 +161,62 @@ begin
 	end process;
 	
 	instruction_address <= pc_reg;
-	--Pipeline stage 2
+--Pipeline stage 2
+	branch_target <= instruction_data(9 downto 0);
+	
 	control : control_unit
 	port map(
+		clk					=> clk,
+		reset				=> reset,
 		
-	--Pipeline stage 3
+		opt_code			=> instruction(15 downto 10),
+		spec_reg_addr		=> spec_addr,
+		imm_select	 		=> imm_slct,
+		reg_write_e			=> reg_we,
+		reg_b_wr			=> reg_wb,
+		reg_write_source 	=> reg_src,
+		output_write_enable => output_we,
+		read_from_const_mem => '-',
+		branch_enable		=> branch_enable,
+		pc_write_enable 	=> pc_we
+	);
 	
-	--Pipeline stage 4
+	regfile : register_file
+	port map(
+		clk				=> clk,
+
+		reg_1_address	=> instruction_data(9 downto 5),
+		reg_2_address	=> instruction_data(4 downto 0),
+		write_address	=> reg_write_addr,
+
+		data_in			=> stage_5_alu_mem_result,
+
+		write_reg_enb	=> reg_we,
+
+		reg_1_data		=> reg_out_data_1,
+		reg_2_data		=> reg_out_data_2
+	);
+	--TODO: Pipeline registerz for signals
 	
+--Pipeline stage 3
+	--TODO:
+		--mux reg_1
+		--mux reg_2
+		--talk to mem
+		--mux mem_result
+		--forwarding unit
+		--stage 3 pipeline regz
+		
+--Pipeline stage 4
+	--TODO:
+		--mux reg_1
+		--mux reg_2
+		--alu
+		--alu_result_mux
+		--forwarding unit
+		--stage 4 pipeline regsz
+
+--TOTO:
+	--connect the rest (stage 5)
 
 end behaviour;
