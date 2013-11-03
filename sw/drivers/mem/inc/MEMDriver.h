@@ -10,6 +10,6 @@ int MEM_GetAudioInBufferSize( void );
 
 uint16_t* MEM_GetAudioOutBuffer( bool primary );
 int MEM_GetAudioOutBufferSize( void );
-
+uint16_t* MEM_GetCurrentOutBuffer( void );
 
 #endif /* _MEMDRIVER_H_ */

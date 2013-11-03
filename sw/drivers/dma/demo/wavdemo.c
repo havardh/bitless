@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <limits.h>
 
-
+#include "MEMDriver.h"
 
 #include "em_device.h"
 #include "em_common.h"
@@ -147,21 +147,19 @@ void FillBufferFromSDcard(bool stereo, bool primary)
   /* Set buffer pointer correct ram buffer */
   if (primary)
 	{
-		buffer = ramBufferDacData0Stereo;
+		buffer = MEM_GetAudioInBuffer(true);
 	}
   else /* Alternate */
 	{
 		buffer = ramBufferDacData1Stereo;
 	}
 
-	f_read(&WAVfile, buffer, 4 * BUFFERSIZE, &bytes_read);
+	f_read(&WAVfile, buffer, 4 * MEM_GetAudioInBufferSize(), &bytes_read);
 	ByteCounter += bytes_read;
 
 	for (i = 0; i < 2 * BUFFERSIZE; i++)
   {
-		/* Adjust volume */
-		//buffer[i] = (buffer[i] * (int32_t) volumeAdjustFactor) / 100;
-		
+
 		/* Convert from signed to unsigned */
 		tmp = buffer[i] + 0x8000;
 		
@@ -175,52 +173,12 @@ void FillBufferFromSDcard(bool stereo, bool primary)
 
 void BasicTransferComplete(unsigned int channel, bool primary, void *user)
 {
-	DMA_ActivateAuto(1, true, &ramBufferDacData1Stereo, &ramBufferDacData0Stereo, BUFFERSIZE-1);
-	DMA_ActivateBasic(0, true, false, (void *) &(DAC0->COMBDATA), &ramBufferDacData1Stereo, BUFFERSIZE - 1);
+	DMA_ActivateAuto(1, true, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
+	DMA_ActivateBasic(0, true, false, (void *) &(DAC0->COMBDATA), MEM_GetAudioOutBuffer(true), MEM_GetAudioOutBufferSize() - 1);
 	FillBufferFromSDcard((bool) wavHeader.channels, true);
 }
 
 
-void PingPongTransferComplete(unsigned int channel, bool primary, void *user)
-{
-  (void) channel;              /* Unused parameter */
-  (void) user;                 /* Unused parameter */
-
-  FillBufferFromSDcard((bool) wavHeader.channels, primary);
-
-  if ( DMA->IF & DMA_IF_CH0DONE )           /* Did a DMA complete while   */
-		{                                         /* reading from the SD Card ? */
-			/* If FillBufferFromSDcard() takes too much time, we need to restart  */
-			/* the pingpong machinery. This results in an audible click, which is */
-			/* acceptable once in a while...                                      */
-			DMA->IFC = DMA_IFC_CH0DONE;
-			DMA_ActivatePingPong( 0,
-														false,
-														(void *) &(DAC0->COMBDATA),
-														(void *) &ramBufferDacData0Stereo,
-														BUFFERSIZE - 1,
-														(void *) &(DAC0->COMBDATA),
-														(void *) &ramBufferDacData1Stereo,
-														BUFFERSIZE - 1);
-			return;
-		}
-
-  /* Stop DMA if bytecounter is equal to datasize or larger */
-  bool stop = false;
-  if (ByteCounter >= wavHeader.bytes_in_data)
-		{
-			stop = true;
-		}
-
-  /* Refresh the DMA control structure */
-  DMA_RefreshPingPong(0,
-                      primary,
-                      false,
-                      NULL,
-                      NULL,
-                      BUFFERSIZE - 1,
-                      stop);
-}
 
 /**************************************************************************//**
 																																						 * @brief
@@ -279,63 +237,6 @@ void TIMER_setup(void)
 
   /* Write new topValue */
   TIMER_TopBufSet(TIMER0, timerTopValue);
-}
-
-void DMA_setup(void)
-{
-  /* DMA configuration structs */
-  DMA_Init_TypeDef       dmaInit;
-  DMA_CfgChannel_TypeDef chnlCfg;
-  DMA_CfgDescr_TypeDef   descrCfg;
-
-  /* Initializing the DMA */
-  dmaInit.hprot        = 0;
-  dmaInit.controlBlock = dmaControlBlock;
-  DMA_Init(&dmaInit);
-
-  /* Set the interrupt callback routine */
-  DMAcallBack.cbFunc = PingPongTransferComplete;
-
-  /* Callback doesn't need userpointer */
-  DMAcallBack.userPtr = NULL;
-
-  /* Setting up channel */
-  chnlCfg.highPri   = false; /* Can't use with peripherals */
-  chnlCfg.enableInt = true;  /* Interrupt needed when buffers are used */
-
-  /* channel 0 and 1 will need data at the same time,
-   * can use channel 0 as trigger */
-
-  chnlCfg.select = DMAREQ_DAC0_CH0;
-
-  chnlCfg.cb = &DMAcallBack;
-  DMA_CfgChannel(0, &chnlCfg);
-
-  /* Setting up channel descriptor */
-  /* Destination is DAC/USART register and doesn't move */
-  descrCfg.dstInc = dmaDataIncNone;
-
-  /* Transfer 32/16 bit each time to DAC_COMBDATA/USART_TXDOUBLE register*/
-  descrCfg.srcInc = dmaDataInc4;
-  descrCfg.size   = dmaDataSize4;
-
-  /* We have time to arbitrate again for each sample */
-  descrCfg.arbRate = dmaArbitrate1;
-  descrCfg.hprot   = 0;
-
-  /* Configure both primary and secondary descriptor alike */
-  DMA_CfgDescr(0, true, &descrCfg);
-  DMA_CfgDescr(0, false, &descrCfg);
-
-  /* Enabling PingPong Transfer*/
-  DMA_ActivatePingPong(0,
-                       false,
-                       (void *) &(DAC0->COMBDATA),
-                       (void *) &ramBufferDacData0Stereo,
-                       BUFFERSIZE - 1,
-                       (void *) &(DAC0->COMBDATA),
-                       (void *) &ramBufferDacData1Stereo,
-                       BUFFERSIZE - 1);
 }
 
 void setupDma(void)
@@ -462,6 +363,8 @@ int main(void)
   /* Read header and place in header struct */
   f_read(&WAVfile, &wavHeader, sizeof(wavHeader), &bytes_read);
 
+	MEM_Init();
+
   /* Start clocks */
   CMU_ClockEnable(cmuClock_DMA, true);
   CMU_ClockEnable(cmuClock_DAC0, true);
@@ -470,11 +373,9 @@ int main(void)
 
   /* Fill both primary and alternate RAM-buffer before start */
   FillBufferFromSDcard((bool) wavHeader.channels, true);
-  //FillBufferFromSDcard((bool) wavHeader.channels, false);
 
   /* Setup DMA and peripherals */
 	setupDma();
-  //DMA_setup();
   DMABasic_setup();
 
   DAC_setup();
