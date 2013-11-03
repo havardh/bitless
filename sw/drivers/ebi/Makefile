@@ -130,14 +130,16 @@ $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
 $(LIB)/kits/common/bsp/bsp_dk_3201.c \
 $(LIB)/kits/common/bsp/bsp_dk_leds.c \
 $(LIB)/kits/common/bsp/bsp_trace.c \
+$(LIB)/kits/common/drivers/retargetserial.c \
 $(LIB)/emlib/src/em_assert.c \
+$(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_cmu.c \
 $(LIB)/emlib/src/em_ebi.c \
 $(LIB)/emlib/src/em_emu.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
-$(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
+$(LIB)/emlib/src/em_leuart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 src/EBI_test.c \
 demo/$(PROJECTNAME).c
