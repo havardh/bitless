@@ -175,7 +175,7 @@ begin
 		);
 
 	megamux: process(constmem_read_data_a, constmem_read_data_b,
-		constmem_address_array, constmem_data_array)
+		constmem_address_array, constmem_data_array, control_register)
 	begin
 		for i in 0 to NUMBER_OF_CORES - 1 loop
 			if i = to_integer(unsigned(control_register.constcore_1)) then
