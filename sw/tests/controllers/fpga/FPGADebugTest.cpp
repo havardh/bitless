@@ -12,11 +12,8 @@ TEST_GROUP(FPGADebug) {
     void setup() {
         conf.numPipelines = NUM_PIPELINES;
         conf.numCores = NUM_CORES;
-        conf.bufferSize = CORE_BUFFER_SIZE;
-        conf.imemSize = CORE_IMEM_SIZE;
-        conf.ctrlSize = CORE_CONTROL_SIZE;
         conf.baseAddress = (uint16_t *) malloc(sizeof(uint16_t) * FPGA_ADDRESS_SIZE);
-        conf.toplevelAddress = TOPLEVEL_ADDRESS;
+        conf.toplevelAddress = TOPLEVEL_REGISTER;
         conf.pipelineAddressSize = PIPELINE_ADDRESS_SIZE;
         conf.coreDeviceAddress = CORE_DEVICE_ADDRESS;
         conf.coreDeviceSize = CORE_DEVICE_SIZE;
@@ -24,9 +21,9 @@ TEST_GROUP(FPGADebug) {
 
         FPGA_Init(&conf);
 
-        input_program = (uint16_t *) malloc(sizeof(uint16_t) * CORE_IMEM_SIZE);
-        core_input_buffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_BUFFER_SIZE);
-        core_output_buffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_BUFFER_SIZE);
+        input_program = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
+        core_input_buffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
+        core_output_buffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
     }
     void teardown() {
         FPGA_Destroy();
@@ -37,11 +34,11 @@ TEST_GROUP(FPGADebug) {
 };
 
 TEST(FPGADebug, should_set_and_get_core_inputBuffer) {
-    for (uint16_t i = 0; i < CORE_BUFFER_SIZE; i++) {
+    for (uint16_t i = 0; i < CORE_ADDRESS_SIZE; i++) {
         core_input_buffer[i] = i;
     }
 
-    uint16_t *c4_inputBuffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_BUFFER_SIZE);
+    uint16_t *c4_inputBuffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
 
     FPGA_Core *c4 = FPGA_GetCore(1, 0);
     FPGADebug_SetCoreInputBuffer(c4, core_input_buffer);
@@ -54,11 +51,11 @@ TEST(FPGADebug, should_set_and_get_core_inputBuffer) {
 }
 
 TEST(FPGADebug, should_set_and_get_core_outputBuffer) {
-    for (uint16_t i = 0; i < CORE_BUFFER_SIZE; i++) {
+    for (uint16_t i = 0; i < CORE_ADDRESS_SIZE; i++) {
         core_output_buffer[i] = i;
     }
 
-    uint16_t *c4_outputBuffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_BUFFER_SIZE);
+    uint16_t *c4_outputBuffer = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
 
     FPGA_Core *c4 = FPGA_GetCore(1, 0);
     FPGADebug_SetCoreOutputBuffer(c4, core_output_buffer);

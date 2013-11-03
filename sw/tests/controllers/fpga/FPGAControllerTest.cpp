@@ -1,4 +1,5 @@
 #include "CppUTest/CommandLineTestRunner.h"
+#include "CppUTestExt/MockSupport.h"
 #include "FPGAController.h"
 #include "FPGA_addresses.h"
 
@@ -9,11 +10,8 @@ TEST_GROUP(FPGAController) {
     void setup() {
         conf.numPipelines = NUM_PIPELINES;
         conf.numCores = NUM_CORES;
-        conf.bufferSize = CORE_BUFFER_SIZE;
-        conf.imemSize = CORE_IMEM_SIZE;
-        conf.ctrlSize = CORE_CONTROL_SIZE;
         conf.baseAddress = (uint16_t *) malloc(sizeof(uint16_t) * FPGA_ADDRESS_SIZE);
-        conf.toplevelAddress = TOPLEVEL_ADDRESS;
+        conf.toplevelAddress = TOPLEVEL_REGISTER;
         conf.pipelineAddressSize = PIPELINE_ADDRESS_SIZE;
         conf.coreDeviceAddress = CORE_DEVICE_ADDRESS;
         conf.coreDeviceSize = CORE_DEVICE_SIZE;
@@ -21,7 +19,7 @@ TEST_GROUP(FPGAController) {
 
         FPGA_Init(&conf);
         
-        input_program = (uint16_t *) malloc(sizeof(uint16_t) * CORE_IMEM_SIZE);
+        input_program = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
     }
     void teardown() {
         FPGA_Destroy();
@@ -157,55 +155,110 @@ TEST(FPGAController, core7_memory_addresses_is_right) {
 }
 
 TEST(FPGAController, should_set_and_get_core_programs) {
-    for (uint16_t i = 0; i < CORE_IMEM_SIZE; i++) {
+    for (uint16_t i = 0; i < CORE_ADDRESS_SIZE; i++) {
         input_program[i] = i;
     }
 
     FPGA_Core *c0 = FPGA_GetCore(0, 0);
     FPGA_Core *c7 = FPGA_GetCore(1, 3);
 
-    FPGACore_SetProgram(c0, input_program, CORE_IMEM_SIZE);
-    FPGACore_SetProgram(c7, input_program, CORE_IMEM_SIZE / 2);
+    FPGACore_SetProgram(c0, input_program, CORE_ADDRESS_SIZE);
+    FPGACore_SetProgram(c7, input_program, CORE_ADDRESS_SIZE / 2);
 
-    uint16_t *prog = (uint16_t *) malloc(sizeof(uint16_t) * CORE_IMEM_SIZE);
+    uint16_t *prog = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
     
     FPGACore_GetProgram(c0, prog);
     CHECK_EQUAL(prog[0], 0);
-    CHECK_EQUAL(prog[CORE_IMEM_SIZE-1], CORE_IMEM_SIZE-1);
-    CHECK_EQUAL(prog[CORE_IMEM_SIZE-1], input_program[CORE_IMEM_SIZE-1]);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], CORE_ADDRESS_SIZE-1);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], input_program[CORE_ADDRESS_SIZE-1]);
 
     FPGACore_GetProgram(c7, prog);
     CHECK_EQUAL(prog[0], 0);
-    CHECK_EQUAL(prog[CORE_IMEM_SIZE / 2 - 1], CORE_IMEM_SIZE / 2 - 1);
-    CHECK_EQUAL(prog[CORE_IMEM_SIZE-1], 0);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE / 2 - 1], CORE_ADDRESS_SIZE / 2 - 1);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], 0);
 
     free(prog);
 }
 
 TEST(FPGAController, should_set_and_get_core_control) {
-    for (uint16_t i = 0; i < CORE_CONTROL_SIZE; i++) {
+    for (uint16_t i = 0; i < CORE_ADDRESS_SIZE; i++) {
         input_program[i] = i;
     }
 
     FPGA_Core *c0 = FPGA_GetCore(0, 0);
     FPGA_Core *c7 = FPGA_GetCore(1, 3);
 
-    FPGACore_SetControls(c0, input_program, CORE_CONTROL_SIZE);
-    FPGACore_SetControls(c7, input_program, CORE_CONTROL_SIZE / 2);
+    FPGACore_SetControls(c0, input_program, CORE_ADDRESS_SIZE);
+    FPGACore_SetControls(c7, input_program, CORE_ADDRESS_SIZE / 2);
 
-    uint16_t *prog = (uint16_t *) malloc(sizeof(uint16_t) * CORE_CONTROL_SIZE);
+    uint16_t *prog = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
     
     FPGACore_GetControls(c0, prog);
     CHECK_EQUAL(prog[0], 0);
-    CHECK_EQUAL(prog[CORE_CONTROL_SIZE-1], CORE_CONTROL_SIZE-1);
-    CHECK_EQUAL(prog[CORE_CONTROL_SIZE-1], input_program[CORE_CONTROL_SIZE-1]);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], CORE_ADDRESS_SIZE-1);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], input_program[CORE_ADDRESS_SIZE-1]);
 
     FPGACore_GetControls(c7, prog);
     CHECK_EQUAL(prog[0], 0);
-    CHECK_EQUAL(prog[CORE_CONTROL_SIZE / 2 - 1], CORE_CONTROL_SIZE / 2 - 1);
-    CHECK_EQUAL(prog[CORE_CONTROL_SIZE-1], 0);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE / 2 - 1], CORE_ADDRESS_SIZE / 2 - 1);
+    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], 0);
 
     free(prog);
+}
+
+TEST(FPGAController, should_have_control_register) {
+    FPGA_ControlRegister reg = FPGA_GetControlRegister();
+
+    CHECK_EQUAL(false, reg.blinkMode);
+    CHECK_EQUAL(false, reg.LED0);
+    CHECK_EQUAL(false, reg.LED1);
+    CHECK_EQUAL(false, reg.BTN0);
+    CHECK_EQUAL(false, reg.BTN1);
+}
+
+TEST(FPGAController, can_set_fpga_leds) {
+    FPGA_ControlRegister reg;
+    reg.reset = false;
+    reg.blinkMode = false;
+    reg.LED0 = true;
+    reg.LED1 = true;
+    FPGA_SetControlRegister(reg);
+
+    FPGA_ControlRegister reg2 = FPGA_GetControlRegister();
+
+    CHECK_EQUAL(false, reg2.blinkMode);
+    CHECK_EQUAL(true,  reg2.LED0);
+    CHECK_EQUAL(true, reg2.LED1);
+
+
+    FPGA_SetLeds(false, false);
+    FPGA_ControlRegister reg3 = FPGA_GetControlRegister();
+
+    CHECK_EQUAL(false, reg3.blinkMode);
+    CHECK_EQUAL(false,  reg3.LED0);
+    CHECK_EQUAL(false, reg3.LED1);
+}
+
+TEST(FPGAController, can_set_fpga_blinkMode) {
+    FPGA_ControlRegister reg;
+    reg.reset = false;
+    reg.blinkMode = true;
+    reg.LED0 = false;
+    reg.LED1 = false;
+    FPGA_SetControlRegister(reg);
+
+    FPGA_ControlRegister reg2 = FPGA_GetControlRegister();
+
+    CHECK_EQUAL(true, reg2.blinkMode);
+    CHECK_EQUAL(false,  reg2.LED0);
+    CHECK_EQUAL(false, reg2.LED1);
+
+    FPGA_SetBlinkMode(true);
+    FPGA_ControlRegister reg3 = FPGA_GetControlRegister();
+
+    CHECK_EQUAL(true, reg3.blinkMode);
+    CHECK_EQUAL(false, reg3.LED0);
+    CHECK_EQUAL(false, reg3.LED1);
 }
 
 #include "FPGAController.c"

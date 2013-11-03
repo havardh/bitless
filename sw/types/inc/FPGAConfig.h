@@ -7,14 +7,9 @@ typedef struct {
     /* Number of cores in each pipeline */
     uint32_t numCores;
     /* Size of the input and output buffers on the FPGA */
-    uint32_t bufferSize;
-    /* Size of instruction memory for each core */
-    uint32_t imemSize;
-    /* Size of the input and output buffers on the FPGA */
-    uint32_t ctrlSize;
     /* ********************************************
     * FPGA base address, a 23 bit address space will look like this
-    * T   (1 bit): Always 1 when addressing the cores
+    * T   (1 bit): Always 0 when addressing the cores
     * P  (2 bits): Pipeline number
     * D  (4 bits): Device in pipeline, the cores starts at 2
     * C  (2 bits): Type of core memory (buffers, imem, control)
@@ -32,15 +27,12 @@ typedef struct {
     uint32_t coreDeviceAddress;
     /* The size for one core */
     uint32_t coreDeviceSize;
-    /* he address size of each core */
+    /* The address size for each of the core's different memories */
     uint32_t coreAddressSize;
 } FPGAConfig;
 
 #define DEFAULT_NUM_PIPELINES           2
 #define DEFAULT_NUM_CORES               4
-#define DEFAULT_CORE_BUFFER_SIZE        4096
-#define DEFAULT_CORE_IMEM_SIZE          4096
-#define DEFAULT_CORE_CTRL_SIZE          4096
 #define DEFAULT_TOPLEVEL_ADDRESS        0x400000
 #define DEFAULT_PIPELINE_ADDRESS_SIZE   0x100000
 #define DEFAULT_CORE_DEVICE_ADDRESS     0x20000
