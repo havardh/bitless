@@ -55,6 +55,7 @@ package internal_bus is
 	type pipeline_control_register is
 		record
 			num_cores : std_logic_vector(3 downto 0);
+			constcore_1, constcore_2 : std_logic_vector(3 downto 0);
 		end record;
 
 	-- Processor core control register:
