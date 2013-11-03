@@ -28,7 +28,8 @@ Sliding-Discrete-Fourier-Transforms (or more colloquially known as SD-FT's).
 
 %Need some kind of newline here just to get some "breathing space" for the reader between the above text, and below figure
 
-\missingfigure{Maybe insert a figure here showing how the SD-FT works on each sample at a time?}
+\missingfigure{Maybe insert a figure here showing how the SD-FT works on each
+sample at a time?}
 
 This would enable us to receive a live stream of samples from an input device
 through a mini-jack on the PCB, or just from the DMA's of the MCU if the input
@@ -42,25 +43,29 @@ low-pass filters.
 The magic of our sound-effects could be put to work.
 
 \FloatBarrier
-\subsection{Sequential processing cores?}\todo{Maybe find better subsection title?}
+\subsection{Sequential processing cores?}\todo{Maybe find better subsection
+title?}
 
 Not all of the known sound-effects require (or are even possible) with a
 Fourier-transform. Therefore it also became evident that for effects like say
 the ``Echo-effect'', we would need to do some post-processing after having
-performed the inverse-Fourier-transform of the \todo{Reference of some kind here?}
-SD-FT.
+performed the inverse-Fourier-transform of the \todo{Reference of some kind
+here?}
+SD-FT\footnote{This is discussed in more detail in section
+\ref{subsubsection:fpga-alu-ft}.}.
 
-So, so far this project required one processor-core to perform the SD-FT, and
+Thus, so far this project required one processor-core to perform the SD-FT, and
 then another to perform the actual sound-effect done with the samples in the
 frequency domain, another core for the inverse SD-FT, and finally one core for
-any possible \todo{Rephrase this better?}``Non-Fourier-Transform-Needed-Sound-
-Effect''.
+any possible \todo{Rephrase this better?}
+``Non-Fourier-Transform-Needed-Sound-Effect''.
 
 With that reasoning in mind, we would need at least four processing cores, and
 this for only one sound-channel. So for every sound-channel needed (stereo needs
 two), we would have to add another four processor cores onto the FPGA-chip.
 
-And since we did not want to be delinquents listening to the awesome \todo{reference to some beatles source here}
+And since we did not want to be delinquents listening to the awesome \todo{
+reference to some beatles source here}
 Bitless with only mono sound (one sound-channel), we knew from then on that we
 would need to implement at the very least eight processor cores in some form of
 pipeline or other.
@@ -80,10 +85,11 @@ This simplified our work in VHDL a lot, since we could then just focus on
 getting \emph{one} processor core functioning, instead of say one for the SD-FT,
 another for the actual sound-effects performed in the frequency domain, a third
 for the inverse-SD-FT, and then a fourth for the final ``post-processing''.
-(Which could in all likelyhood have more than quadrupled the work of the VHDL-
-aspect of this project).
+(Which could in all likelyhood have more than quadrupled the work of the
+VHDL-aspect of this project).
 
-Due to all of the members in the FPGA-group taking the course TDT4255 \emph{Computer Design}
+Due to all of the members in the FPGA-group taking the course TDT4255 \emph{
+Computer Design}
 it may come as no surprise to any reader familiar with the courses at IDI, NTNU,
 that this course was a big source of inspiration for the development of our
 processor-core.

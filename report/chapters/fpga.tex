@@ -8,16 +8,18 @@ our design through implementing it in VHDL, and running the final processor on a
 Our MIMD processor design is was realized throughpipelined cores connected
 sequentially in a pipeline of their own. Since the processor contains homogenous
 cores, each core can receive and run the same instructions. To realize this as
-an \todo{Fancy inline thingy explaining MultipleInstructionsMultipleData acronym}
-``MIMD'', the first core in the sequential core-pipeline is the only one which
+an \todo{Fancy inline thingy explaining MultipleInstructionsMultipleData acronym
+}``MIMD'', the first core in the sequential core-pipeline is the only one which
 can work with the data given to said pipeline by the EBI bus. The next core then
 works on the output of the first core, and in this fashion each core in the
 pipeline works on its own data independently of the data any other core is
-currently working on.
+currently working on\footnote{This is how we realize the ``Multiple Data'' part
+of the MIMD definition.}.
 
 And each of the processor cores has its own instruction memory, so that they can
-run each their own instructions, and that's how we have realized the \todo{Maybe add another fancy inline thingy here instead of qoutation marks?}
-``Multiple Instruction'' part of the MIMD definition.
+run each their own instructions, and that's how we have realized the \todo{Maybe
+add another fancy inline thingy here instead of qoutation marks?} ``Multiple
+Instruction'' part of the MIMD definition.
 \newpage
 \input{chapters/fpga/design}
 \input{chapters/fpga/pipelines}

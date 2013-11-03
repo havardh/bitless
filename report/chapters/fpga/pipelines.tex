@@ -1,24 +1,32 @@
 \FloatBarrier
-\section{Sequential processing-core pipeline}\label{section:sequential-pipeline}\todo{Feel free to switch out the title for something better}
+\section{Sequential processing-core pipeline}\label{section:sequential-pipeline}
+\todo{Feel free to switch out the title for something better}
 
 \FloatBarrier
-\subsection{Top-down architectural view}\todo{Maybe find better subsection title?}
+\subsection{Top-down architectural view}\todo{Maybe find better subsection
+title?}
 
-\missingfigure{We should have a figure of the pipeline here, we've got several in google docs, use/pretty up one of those should suffice to give an architectural overview}
+\missingfigure{We should have a figure of the pipeline here, we've got several
+in google docs, use/pretty up one of those should suffice to give an
+architectural overview}
 
 In the above figure, \todo[inline]{insert reference to above figure} we
 illustrate how the processor connects all the processing cores together on the
 FPGA.
 
-As you can see, we have each processor core connected to the \todo{Maybe insert reference?} EBI-bus, for debugging purposes.
+Though the \todo[inline]{reference to the same above figure} figure above shows
+that we've connected the \todo{Maybe insert EBI references?} EBI-bus to each
+processing core, during normal non-debugging runtime the cores only
+``communicate'' in the manner described in the next paragraph, and not through
+the EBI-bus. The EBI-bus is used only as inter-communication between the cores
+for debugging purposes.
 
 The manner in which the cores ``communicate'' with each other is instead by the
 two-stage ring-buffers between them. For each clockcycle belonging to the
 pipeline of processor cores, they switch which one of the ones preceding they
-read from, and which of the ones following they write to.
-
-\todo{This would fit better as a footnote?}(This is where the ``Multiple Data'' part of the ``MIMD'' definition is enacted
-in our processor.)
+read from, and which of the ones following they write to\footnote{This is where
+the ``Multiple Data'' part of the ``MIMD'' definition is enacted
+in our processor.}.
 
 \FloatBarrier
 \subsection{Start-up}
@@ -32,8 +40,3 @@ in our processor.)
 So the input of the FPGA goes to the first core in each ``core-pipeline'', where
 the first core works on the sample, before giving it over to the next core in
 said pipeline.
-
-\FloatBarrier
-\subsection{Debugging6}
-
-
