@@ -35,7 +35,12 @@ package core_constants is
 		ALU_NAND,
 		ALU_NOR,
 		ALU_MOVE,
-		ALU_MOVE_NEGATIVE
+		ALU_MOVE_NEGATIVE,
+		fp_mul,
+		fp_add,
+		fp_sub,
+		fp_mac,
+		fp_mas
 	);
 
 	type alu_result_select is (

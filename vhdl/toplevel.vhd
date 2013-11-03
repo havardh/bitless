@@ -83,7 +83,6 @@ architecture behaviour of toplevel is
 
 	-- Internal FPGA clocks:
 	signal system_clk, memory_clk, sample_clk : std_logic;
-	signal gated_system_clk : std_logic;
 	signal ebi_ctrl_clk : std_logic;
 
 	-- Inverted EBI CS signal:
@@ -104,14 +103,6 @@ begin
 			dsp_clock => open
 		);
 	sample_clk <= ctrl_bus(0);
-
-	-- FPGA system clock gate:
-	fpga_clock_gate: BUFGCE
-		port map (
-			I => system_clk,
-			O => gated_system_clk,
-			CE => control_register.stopmode
-		);
 
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
@@ -154,7 +145,6 @@ begin
 			if internal_bus_address.toplevel = '1' then
 					-- Write the writeable control register fields:
 					control_register.reset <= internal_bus_data_in(15);
-					control_register.stopmode <= internal_bus_data_in(14);
 					control_register.blinkmode <= internal_bus_data_in(13);
 					if control_register.blinkmode = '0' then -- LEDs only writeable if not in blink mode
 						control_register.led0 <= internal_bus_data_in(12);
@@ -166,15 +156,14 @@ begin
 		if rising_edge(internal_bus_read) then
 			if internal_bus_address.toplevel = '1' then
 				-- Read the control register:
-				internal_bus_data_out <= '0' &
-					control_register.stopmode &	-- Bit 14
+				internal_bus_data_out <= b"00" &
 					control_register.blinkmode &	-- Bit 13
 					control_register.led0 &			-- Bit 12
 					control_register.led1 &			-- Bit 11
 					control_register.button1 &		-- Bit 10
 					control_register.button0 &		-- Bit  9
 					b"000000" &
-					control_register.number_of_pipelines;
+					control_register.number_of_pipelines; -- LSB
 			else
 				internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)));
 			end if;
@@ -185,7 +174,7 @@ begin
 		for i in 0 to NUMBER_OF_PIPELINES - 1 generate
 			pipeline_x: pipeline
 				port map (
-					clk => gated_system_clk,
+					clk => system_clk,
 					sample_clk => sample_clk,
 					memory_clk => memory_clk,
 					pipeline_address => make_pipeline_address(i),

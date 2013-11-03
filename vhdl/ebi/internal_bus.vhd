@@ -47,7 +47,6 @@ package internal_bus is
 			number_of_pipelines          : std_logic_vector(2 downto 0);
 			led0, led1, button0, button1 : std_logic;
 			blinkmode                    : std_logic;
-			stopmode                     : std_logic;
 			reset                        : std_logic;
 		end record;
 
@@ -55,6 +54,7 @@ package internal_bus is
 	type pipeline_control_register is
 		record
 			num_cores : std_logic_vector(3 downto 0);
+			stopmode  : std_logic;
 			constcore_1, constcore_2 : std_logic_vector(3 downto 0);
 		end record;
 

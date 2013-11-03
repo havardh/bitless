@@ -16,7 +16,7 @@ entity alu is
 		-- ALU input data:
 		cpu_input_register_1 	: in std_logic_vector(15 downto 0);
 		cpu_input_register_2 	: in std_logic_vector(15 downto 0);
-		cpu_input_const 			: in std_logic_vector(15 downto 0);
+		cpu_input_const 			: in std_logic_vector(31 downto 0);
 		cpu_input_const_w			: in std_logic;
 		-- ALU control:
 		operation 				: in alu_operation;
@@ -40,9 +40,7 @@ architecture behaviour of alu is
 	component multiplier is
 		port (
 			a, b 	: in std_logic_vector(15 downto 0);
-			clk 	: in std_logic;
-			result	: out std_logic_vector(15 downto 0);
-			flags	: out alu_flags
+			p	: out std_logic_vector(15 downto 0)
 		);
 	end component;
 
@@ -51,7 +49,7 @@ architecture behaviour of alu is
 			a, b 			: in std_logic_vector(15 downto 0);
 			c, d 			: in std_logic_vector(15 downto 0);
 			alu_op 		: alu_operation;
-			dsp_clk		: in std_logic;
+			alu_clk		: in std_logic;
 			cpu_clk 		: in std_logic;
 			result_1 	: out std_logic_vector(15 downto 0);
 			result_2 	: out std_logic_vector(15 downto 0);
@@ -62,11 +60,10 @@ architecture behaviour of alu is
 	--Adder signals
 	signal adder_result : std_logic_vector(15 downto 0);
 	signal adder_flags 	: alu_flags;
-	signal adder_input_a	: std_logic_vector(15 downto 0);
+	signal adder_input_b	: std_logic_vector(15 downto 0);
 
 	--Multiplier signals
 	signal mul_result 	: std_logic_vector(15 downto 0);
-	signal mul_flags  	: alu_flags;
 
 	--FPU signals
 	signal cfpu_result_1 	: std_logic_vector(15 downto 0);
@@ -87,8 +84,8 @@ architecture behaviour of alu is
 begin
 	add: adder
 		port map (
-			a 		=> adder_input_a,
-			b 		=> cpu_input_register_2,
+			a 		=> cpu_input_register_1,
+			b 		=> adder_input_b,
 			c 		=> sub_enable,
 			result 	=> adder_result,
 			flags 	=> adder_flags
@@ -98,9 +95,7 @@ begin
 		port map (
 			a 		=> cpu_input_register_1,
 			b 		=> cpu_input_register_2,
-			clk 	=> cpu_clk,
-			result	=> mul_result,
-			flags 	=> mul_flags
+			p	=> mul_result
 		);
 
 	fpu_comp: FPU
@@ -110,8 +105,8 @@ begin
 			c 			=> C1,
 			d 			=> C2,
 			alu_op 		=> operation,	
-			dsp_clk		=> dsp_clk,	
-			cpu_clk 	=> cpu_clk,
+			alu_clk		=> dsp_clk,	
+			cpu_clk 		=> cpu_clk,
 			result_1 	=> cfpu_result_1,
 			result_2 	=> cfpu_result_2,
 			flags 		=> cfpu_flags
@@ -127,14 +122,14 @@ begin
 		end if;
 	end process constant_register_update;
 
-	adder_input_mux_a: process(sub_enable)
+	adder_input_mux_b: process(sub_enable)
 	begin
 		if sub_enable = '1' then
-			adder_input_a <= not cpu_input_register_1;
+			adder_input_b <= not cpu_input_register_2;
 		else
-			adder_input_a <= cpu_input_register_1;
+			adder_input_b <= cpu_input_register_2;
 		end if;
-	end process adder_input_mux_a;
+	end process adder_input_mux_b;
 
 	
 	result_mux: process(alu_result_select)
@@ -148,7 +143,6 @@ begin
 				flags <= logic_flags;
 			when ALU_MUL_SELECT =>
 				result <= sxt(mul_result, 32);
-				flags <= mul_flags;
 			when ALU_FPU_SELECT =>
 				result<= cfpu_result_1&cfpu_result_2;
 				flags <= cfpu_flags;
