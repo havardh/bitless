@@ -49,23 +49,21 @@ architecture behaviour of fpu is
 		port(
 			a				: in std_logic_vector(15 downto 0);
 			b				: in std_logic_vector(15 downto 0);
-			operation_nd	: in std_logic;
-			operation_rfd	: out std_logic;
 			clk				: in std_logic;
 			result			: out std_logic_vector(15 downto 0);
 			underflow		: out std_logic;
-			overflow		: out std_logic;
-			rdy				: out std_logic
+			overflow		: out std_logic
 		);
 	end component;
+	
 	component fp_addsub
 		port (
-			a			: in	std_logic_vector(15 downto 0);
-			b			: in	std_logic_vector(15 downto 0);
+			a				: in	std_logic_vector(15 downto 0);
+			b				: in	std_logic_vector(15 downto 0);
 			operation	: in	std_logic_vector(5 downto 0);
 			result		: out	std_logic_vector(15 downto 0);
 			underflow	: out	std_logic;
-			overflow	: out	std_logic
+			overflow		: out	std_logic
 		);
 	end component;
 	
@@ -74,14 +72,11 @@ architecture behaviour of fpu is
 begin
 	multiply: fp_multiply
 		port map(
-			a				=> mul_in_a,
-			b				=> mul_in_b,
+			a					=> mul_in_a,
+			b					=> mul_in_b,
 			result			=> mul_result,
 			underflow		=> flags(3),
-			overflow		=> flags(2),
-			operation_nd	=> '-',
-			operation_rfd	=> '-',
-			rdy				=> '-',
+			overflow			=> flags(2),
 			clk				=> cpu_clk
 		);
 	addsub: fp_addsub
@@ -116,23 +111,24 @@ begin
 				
 			when fp_mac =>
 				mul_in_a	<=	a;
-				mul_in_b	<=	b;
+				mul_in_b	<=	c;
 				
 				addsub_in_a	<=	mul_result;
-				addsub_in_b	<=	c;
+				addsub_in_b	<=	b;
 				
 				addsub_op	<= "000000";
 				result		<=	addsub_result;
 				
 			when fp_mas =>
 				mul_in_a	<=	a;
-				mul_in_b	<=	b;
+				mul_in_b	<=	c;
 				
-				addsub_in_a	<=	mul_result;
-				addsub_in_b	<=	c;
+				addsub_in_a	<=	b;
+				addsub_in_b	<=	mul_result;
 				
 				addsub_op	<= "000001";
 				result		<=	addsub_result;
+			when others =>	
 				
 		end case;
 	end process;
