@@ -17,6 +17,7 @@ static void init(const DACConfig *config)
 {
 	DAC_Init_TypeDef dacInit = DAC_INIT_DEFAULT;
 	dacInit.reference = dacRefVDD;
+	dacInit.prescale = DAC_PrescaleCalc(1000000, 0);
 	DAC_Init(DAC0, &dacInit);
 }
 

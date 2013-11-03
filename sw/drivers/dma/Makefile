@@ -120,7 +120,7 @@ INCLUDEPATHS += \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_DK3750/config \
+-I$(LIB)/kits//config \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
@@ -151,7 +151,7 @@ INCLUDEPATHS += \
 C_SRC +=	\
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
 $(LIB)/kits/common/bsp/bsp_bcc.c \
-$(LIB)/kits/common/bsp/bsp_dk_3201.c \
+$(LIB)/kits/common/bsp/bsp_dk_3200.c \
 $(LIB)/kits/common/bsp/bsp_dk_leds.c \
 $(LIB)/kits/common/bsp/bsp_trace.c \
 $(LIB)/kits/common/drivers/microsd.c \
@@ -178,13 +178,14 @@ $(DIR)/drivers/sdcard/src/SDDriver.c \
 $(DIR)/drivers/fpga/src/FPGADriver.c \
 $(DIR)/drivers/int/src/INTDriver.c \
 $(LIB)/util/src/CircularBuffer.c \
-$(LIB)/util/src/Delay.c \
+$(LIB)/util/src/sample_conversion.c \
 $(LIB)/util/src/Blink.c \
 $(LIB)/util/src/wav.c \
-$(LIB)/util/src/fatfs_file.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 
+# $(LIB)/util/src/fatfs_file.c \
+# $(LIB)/util/src/Delay.c \
 
 
 s_SRC +=
