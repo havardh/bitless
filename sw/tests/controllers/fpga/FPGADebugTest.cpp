@@ -19,6 +19,7 @@ TEST_GROUP(FPGADebug) {
         conf.toplevelAddress = TOPLEVEL_ADDRESS;
         conf.pipelineAddressSize = PIPELINE_ADDRESS_SIZE;
         conf.coreDeviceAddress = CORE_DEVICE_ADDRESS;
+        conf.coreDeviceSize = CORE_DEVICE_SIZE;
         conf.coreAddressSize = CORE_ADDRESS_SIZE;
 
         FPGA_Init(&conf);

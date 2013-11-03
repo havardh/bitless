@@ -122,12 +122,12 @@ void FPGA_Core_New(FPGA_Core *core, uint32_t corePos, uint32_t pipelinePos, FPGA
     core->ctrlSize = config->ctrlSize;
 
     uint16_t *pipelineAddress = FPGA_GetPipeline(pipelinePos)->address;
-    uint16_t *coreAddress = (pipelineAddress + config->coreDeviceAddress + corePos * config->coreAddressSize);
+    uint16_t *coreAddress = (pipelineAddress + config->coreDeviceAddress + corePos * config->coreDeviceSize);
     
-    core->inputBuffer = coreAddress;
-    core->imem = (coreAddress + core->bufferSize);
-    core->ctrlmem = (core->imem + core->imemSize);
-    core->outputBuffer = (core->ctrlmem + core->ctrlSize);
+    core->ctrlmem = coreAddress;
+    core->imem = (core->ctrlmem + config->coreAddressSize);
+    core->inputBuffer = (core->imem + config->coreAddressSize);
+    core->outputBuffer = (core->inputBuffer + config->coreAddressSize);
 }
 
 void FPGA_Destroy(void) {
