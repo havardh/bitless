@@ -107,11 +107,21 @@ architecture behaviour of pipeline is
 	signal constmem_read_data_a, constmem_read_data_b : std_logic_vector(31 downto 0);
 
 	-- Instruction memory signals:
-	type instr_write_enable_array is array(0 to NUMBER_OF_CORES - 1) of std_logic;
 	signal instr_read_address : address_array(0 to NUMBER_OF_CORES - 1);
 	signal instr_read_data : data_array_16(0 to NUMBER_OF_CORES - 1);
 	signal instr_write_address : std_logic_vector(15 downto 0);
-	signal instr_write_enable : instr_write_enable_array;
+	signal instr_write_enable : std_logic_vector(0 to NUMBER_OF_CORES - 1);
+
+	-- Input buffer signals:
+	signal input_read_address : address_array(0 to NUMBER_OF_CORES - 1);
+	signal input_read_data : data_array_32(0 to NUMBER_OF_CORES - 1);
+
+	-- Output buffer signals:
+	signal output_read_address : address_array(0 to NUMBER_OF_CORES - 1);
+	signal output_read_data : data_array_32(0 to NUMBER_OF_CORES - 1);
+	signal output_write_address : address_array(0 to NUMBER_OF_CORES - 1);
+	signal output_write_data : data_array_32(0 to NUMBER_OF_CORES - 1);
+	signal output_write_enable : std_logic_vector(0 to NUMBER_OF_CORES - 1);
 begin
 	control_register.num_cores <= std_logic_vector(to_unsigned(NUMBER_OF_CORES, 4));
 
@@ -224,14 +234,14 @@ begin
 				constant_data => constmem_data_array(i),
 				instruction_address => instr_read_address(i),
 				instruction_data => instr_read_data(i),
-				input_read_addr => open,
-				input_read_data => (others => '0'),
+				input_read_addr => input_read_address(i),
+				input_read_data => input_read_data(i),
 				input_re => open,
-				output_write_addr => open,
-				output_write_data => open,
-				output_we => open,
-				output_read_address => open,
-				output_read_data => (others => '0'),
+				output_write_addr => output_write_address(i),
+				output_write_data => output_write_data(i),
+				output_we => output_write_enable(i),
+				output_read_address => output_read_address(i),
+				output_read_data => output_read_data(i),
 				output_re => open
 			);
 	end generate;
