@@ -95,6 +95,42 @@ architecture behaviour of pipeline is
 		);
 	end component;
 
+	component ringbuffer is
+		generic(
+			data_width		: natural := 32;		-- Width of a buffer word
+			address_width	: natural := 16;		-- Width of the address inputs
+			buffer_size		: natural := 4096;	-- Size of the buffer, in words
+			window_size		: natural := 2048		-- Size of the ring buffer window, in words
+		);
+		port(
+			clk 			: in std_logic; 	-- Main clock ("small cycle" clock)
+			memclk			: in std_logic; -- Memory clock
+			sample_clk		: in std_logic; -- Sample clock ("large cycle" clock)
+
+			-- Data and address I/O for using the buffer as output buffer:
+			b_data_in		: in std_logic_vector(15 downto 0);						-- B data input
+			b_data_out		: out std_logic_vector(data_width - 1 downto 0);	-- B data output
+			b_off_address	: in std_logic_vector(address_width - 1 downto 0);	-- Address offset for B-buffer
+			b_re			: in std_logic;			-- Read enable for B
+			b_we			: in std_logic;			-- Write enable for writing data from data_in to address address_in
+
+			-- Data and address I/O for using the buffer as input buffer:
+			a_data_out		: out std_logic_vector(data_width - 1 downto 0);	-- A data output
+			a_off_address	: in std_logic_vector(address_width - 1 downto 0);	-- Address offset for the A-buffer
+			a_re			: in std_logic;			-- Read enable for A
+			
+			-- Data and address for the int bus:
+			int_data_in		: in std_logic_vector(15 downto 0);		-- B data input
+			int_data_out	: out std_logic_vector(15 downto 0);	-- B data output
+			int_address		: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for B-buffer
+			int_re			: in std_logic;	-- Read enable for internal bus
+			int_we			: in std_logic;	-- Write enable for writing data from data_in to address address_in
+			
+
+			mode			: in ringbuffer_mode	-- Buffer mode
+		);
+	end component;
+
 	-- Pipeline control register:
 	signal control_register : pipeline_control_register;
 
@@ -205,9 +241,50 @@ begin
 	generate_cores:
 	for i in 0 to NUMBER_OF_CORES - 1 generate
 		-- Input buffer:
-		--input_buffer:
+		input_buffer: ringbuffer
+			generic map(data_width => 32, address_width => 16)
+			port map(
+				clk => clk,
+				memclk => memory_clk,
+				sample_clk => sample_clk,
+				b_data_in => (others => '0'),
+				b_data_out => open,
+				b_off_address => (others => '0'),
+				b_re => '0',
+				b_we => '0',
+				a_data_out => open,
+				a_off_address => (others => '0'),
+				a_re => '0',
+				int_data_in => int_data_in,
+				int_data_out => open,
+				int_address => (others => '0'),
+				int_re => '0',
+				int_we => '0',
+				mode => RING_MODE
+			);
+
 		-- Output buffer:
-		--output_buffer:
+		output_buffer: ringbuffer
+			generic map(data_width => 32, address_width => 16)
+			port map(
+				clk => clk,
+				memclk => memory_clk,
+				sample_clk => sample_clk,
+				b_data_in => (others => '0'),
+				b_data_out => open,
+				b_off_address => (others => '0'),
+				b_re => '0',
+				b_we => '0',
+				a_data_out => open,
+				a_off_address => (others => '0'),
+				a_re => '0',
+				int_data_in => int_data_in,
+				int_data_out => open,
+				int_address => (others => '0'),
+				int_re => '0',
+				int_we => '0',
+				mode => RING_MODE
+			);
 
 		-- Instruction memory:
 		instruction_mem: instruction_memory
