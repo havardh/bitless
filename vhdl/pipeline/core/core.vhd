@@ -10,92 +10,88 @@ use work.internal_bus.all;
 
 entity core is
 	generic(
-		buffer_address_width : natural := 12;   -- Buffer address bus width
-		const_address_width  : natural := 12;   -- Constant memory address width (minimum log2(constant memory size)).
-		instr_memory_size    : natural := 1024; -- Instruction memory size
-		instr_address_width   : natural := 10    -- Instruction memory address width (minimum log2(instr_memory_size)).
+		address_width : natural := 16
 	);
 
 	port(
-		clk        : in std_logic; -- Small cycle clock signal
-		memclk     : in std_logic; -- Memory clock signal
-		sample_clk : in std_logic; -- Reset signal, "large cycle" clock signal
+		clk					: in std_logic; -- Small cycle clock signal
+		memclk				: in std_logic; -- Memory clock signal
+		sample_clk			: in std_logic; -- Reset signal, "large cycle" clock signal
 
-		reset      : in std_logic; -- Resets the processor core
-
-		-- Internal bus connections, used for reading and writing the instruction memory:
-		instr_address      : in std_logic_vector(15 downto 0);
-		instr_data_in      : in std_logic_vector(15 downto 0);
-		instr_data_out     : out std_logic_vector(15 downto 0);
-		instr_write_enable : in std_logic;
+		reset				: in std_logic; -- Resets the processor core
 
 		-- Connections to the constant memory controller:
-		constant_addr        : out std_logic_vector(const_address_width - 1 downto 0);
-		constant_data        : in  std_logic_vector(31 downto 0);
-		constant_request     : out std_logic;
-		constant_acknowledge : in  std_logic;
+		constant_addr		: out std_logic_vector(address_width - 1 downto 0);
+		constant_data		: in  std_logic_vector(31 downto 0);
 
 		-- Connections to the input buffer:
-		input_address     : out std_logic_vector(buffer_address_width - 1 downto 0);
-		input_data        : in  std_logic_vector(31 downto 0);
-		input_read_enable : out std_logic;
+		input_read_addr		: out std_logic_vector(address_width - 1 downto 0);
+		input_read_data		: in  std_logic_vector(31 downto 0);
+		input_re			: out std_logic;
 
 		-- Connections to the output buffer:
-		output_address      : out std_logic_vector(buffer_address_width - 1 downto 0);
-		output_data         : out std_logic_vector(31 downto 0);
-		output_write_enable : out std_logic;
-		output_read_address : out std_logic_vector(buffer_address_width - 1 downto 0);
-		output_read_data    : in  std_logic_vector(31 downto 0);
-		output_read_enable  : out std_logic
+		output_write_addr	: out std_logic_vector(address_width - 1 downto 0);
+		output_write_data	: out std_logic_vector(31 downto 0);
+		output_we			: out std_logic;
+		
+		output_read_address	: out std_logic_vector(address_width - 1 downto 0);
+		output_read_data	: in  std_logic_vector(31 downto 0);
+		output_re			: out std_logic
  	);
 end entity;
 
 architecture behaviour of core is
 
-	component alu is
-		port (
-			a, b, c : in std_logic_vector(15 downto 0);
-			result : out std_logic_vector(15 downto 0);
-			flags  : out alu_flags;
-			operation : in alu_operation
-		);
-	end component;
-
-	component memory is
-		generic (
-			size          : natural; -- Size of the memory in bytes
-			address_width : natural
-		);
-		port (
-			clk : in std_logic;
-			write_address : in  std_logic_vector(address_width - 1 downto 0); -- Write address
-			read_address  : in  std_logic_vector(address_width - 1 downto 0); -- Read address
-			write_data    : in  std_logic_vector(15 downto 0); -- Lower 16 bits is the first word, upper is the second.
-			read_data     : out std_logic_vector(31 downto 0); -- Same as above.
-			write_enable  : in std_logic
-		);
-	end component;
-
-	component program_counter is
-		generic (
-			address_width : natural
-		);
-		port (
-			clk 			: in std_logic;
-			reset			: in std_logic;
-			address_in	: in std_logic_vector(address_width - 1 downto 0);
-			address_out	: out std_logic_vector(address_width - 1 downto 0);
-			pc_wr_enb	: in std_logic
-		);
-	end component;
-
+	--Stage 1 - PC
 	component adder is
 		port (
-			a, b : in std_logic_vector(15 downto 0);
-			result : out std_logic_vector(15 downto 0);
-			flags  : out alu_flags
+			a, b	: in	std_logic_vector(15 downto 0);
+			result	: out	std_logic_vector(15 downto 0);
+			flags	: out	alu_flags
 		);
 	end component;
+	
+	--Stage 2 - Control unit and register file
+	component control_unit is
+		port ( 	
+			clk					: in	std_logic;
+			reset				: in	std_logic;
+			opt_code			: in	std_logic_vector (5 downto 0);
+			spec_reg_addr		: out	std_logic_vector (4 downto 0);
+			alu_op				: out	alu_operation;
+			imm_select	 		: out	std_logic;
+			reg_write_e			: out	std_logic;
+			reg_b_wr			: out	std_logic;
+			reg_write_source 	: out	std_logic_vector (1 downto 0);
+			output_write_enable : out	std_logic;
+			read_from_const_mem : out	std_logic;
+			branch_enable		: out	std_logic;
+			pc_write_enable 	: out	std_logic
+		);
+	end component;
+	
+	component register_file
+	end component register_file;
+	--Stage 3 - Memory access
+	
+	--Stage 4 - ALU
+	component alu is
+		port (
+			-- CLK
+			dsp_clk, cpu_clk 		: in	std_logic;
+			-- ALU input data:
+			cpu_input_register_1 	: in	std_logic_vector(15 downto 0);
+			cpu_input_register_2 	: in	std_logic_vector(15 downto 0);
+			cpu_input_const 		: in	std_logic_vector(15 downto 0);
+			cpu_input_const_w		: in	std_logic;
+			-- ALU control:
+			operation 				: in	alu_operation;
+			-- ALU result data:
+			result 					: out	std_logic_vector(31 downto 0);
+			flags  					: out	alu_flags
+		);
+	end component;
+
 
 	-- Signal set to high while the processor is running:
 	signal running : std_logic := '1';
