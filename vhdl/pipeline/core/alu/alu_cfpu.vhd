@@ -17,8 +17,12 @@
 -- Additional Comments: 
 --
 ----------------------------------------------------------------------------------
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use IEEE.STD_LOGIC_ARITH.ALL;
+
+library work;
+use work.core_constants.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -45,23 +49,21 @@ architecture behaviour of fpu is
 		port(
 			a				: in std_logic_vector(15 downto 0);
 			b				: in std_logic_vector(15 downto 0);
-			operation_nd	: in std_logic;
-			operation_rfd	: out std_logic;
 			clk				: in std_logic;
 			result			: out std_logic_vector(15 downto 0);
 			underflow		: out std_logic;
-			overflow		: out std_logic;
-			rdy				: out std_logic
+			overflow		: out std_logic
 		);
 	end component;
+	
 	component fp_addsub
 		port (
-			a			: in	std_logic_vector(15 downto 0);
-			b			: in	std_logic_vector(15 downto 0);
+			a				: in	std_logic_vector(15 downto 0);
+			b				: in	std_logic_vector(15 downto 0);
 			operation	: in	std_logic_vector(5 downto 0);
 			result		: out	std_logic_vector(15 downto 0);
 			underflow	: out	std_logic;
-			overflow	: out	std_logic
+			overflow		: out	std_logic
 		);
 	end component;
 	
@@ -70,14 +72,11 @@ architecture behaviour of fpu is
 begin
 	multiply: fp_multiply
 		port map(
-			a				=> mul_in_a,
-			b				=> mul_in_b,
+			a					=> mul_in_a,
+			b					=> mul_in_b,
 			result			=> mul_result,
 			underflow		=> flags(3),
-			overflow		=> flags(2),
-			operation_nd	=> '-',
-			operation_rfd	=> '-',
-			rdy				=> '-',
+			overflow			=> flags(2),
 			clk				=> cpu_clk
 		);
 	addsub: fp_addsub
@@ -90,45 +89,46 @@ begin
 			overflow	=> flags(0)
 		);
 	
-	work: process(operation, clk)
+	work: process(aluop_in)
 	begin
-		case op is
+		case aluop_in is
 			when fp_mul =>
-				a		<=	mul_in_a;
-				b		<=	mul_in_b;
-				result	<=	mul_result;
+				mul_in_a	<=	a;
+				mul_in_b	<=	b;
+				result		<=	mul_result;
 				
 			when fp_add =>
-				a		<=	addsub_in_a;
-				b		<=	addsub_in_b;
-				result	<=	addsub_result;
-				addsub_op <= "000000";
+				addsub_in_a	<=	a;
+				addsub_in_b	<=	b;
+				result		<=	addsub_result;
+				addsub_op	<= "000000";
 				
 			when fp_sub =>
-				a		<=	addsub_in_a;
-				b		<=	addsub_in_b;
-				result	<=	addsub_result;
-				addsub_op <= "000001";
+				addsub_in_a	<=	a;
+				addsub_in_b	<=	b;
+				result		<=	addsub_result;
+				addsub_op	<= "000001";
 				
 			when fp_mac =>
-				mul_in_a	<=	b;
-				mul_in_b	<=	b;
+				mul_in_a	<=	a;
+				mul_in_b	<=	c;
 				
 				addsub_in_a	<=	mul_result;
-				addsub_in_b	<=	c;
+				addsub_in_b	<=	b;
 				
-				addsub_op <= "000000";
-				result	<=	addsub_result;
+				addsub_op	<= "000000";
+				result		<=	addsub_result;
 				
 			when fp_mas =>
-				mul_in_a	<=	b;
-				mul_in_b	<=	b;
+				mul_in_a	<=	a;
+				mul_in_b	<=	c;
 				
-				addsub_in_a	<=	mul_result;
-				addsub_in_b	<=	c;
+				addsub_in_a	<=	b;
+				addsub_in_b	<=	mul_result;
 				
-				addsub_op <= "000001";
-				result	<=	addsub_result;
+				addsub_op	<= "000001";
+				result		<=	addsub_result;
+			when others =>	
 				
 		end case;
 	end process;
