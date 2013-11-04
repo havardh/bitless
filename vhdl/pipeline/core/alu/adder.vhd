@@ -8,7 +8,8 @@ use work.core_constants.all;
 
 entity adder is
 	port (
-		a, b : in std_logic_vector(15 downto 0);
+		a, b   : in  std_logic_vector(15 downto 0);
+		c      : in  std_logic;
 		result : out std_logic_vector(15 downto 0);
 		flags  : out alu_flags
 	);
@@ -40,7 +41,7 @@ architecture behaviour of adder is
 
 begin
 	result <= result_register;
-	carries(0) <= '0';
+	carries(0) <= c;
 
 	lcu: lookahead_carry_unit
 		port map(
