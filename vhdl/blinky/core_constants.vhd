@@ -58,16 +58,4 @@ package core_constants is
 		REG_LDI_WRITE,
 		REG_DONT_WRITE
 	);
-	
-	type mem_select is (
-		MEM_INPUT,
-		MEM_OUTPUT,
-		MEM_CONST
-	);
-	
-	type data_select is (
-		MUX_ALU,
-		MUX_MEM,
-		MUX_IMM
-	);
 end core_constants;

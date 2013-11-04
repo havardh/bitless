@@ -1,0 +1,21 @@
+# Design constraints
+
+NET "fpga_clk" LOC = L12;
+NET "gpio_bus[0]" LOC = B3;
+NET "gpio_bus[1]" LOC = A3;
+NET "gpio_bus[2]" LOC = B4;
+NET "gpio_bus[3]" LOC = A4;
+NET "gpio_bus[4]" LOC = C5;
+NET "gpio_bus[5]" LOC = A5;
+NET "gpio_bus[6]" LOC = B6;
+NET "gpio_bus[7]" LOC = A6;
+NET "gpio_bus[8]" LOC = C7;
+NET "gpio_bus[9]" LOC = A7;
+NET "gpio_bus[10]" LOC = D8;
+NET "gpio_bus[11]" LOC = C8;
+NET "led0" LOC = B2;
+NET "led1" LOC = A2;
+
+NET "fpga_clk" TNM_NET = fpga_clk;
+TIMESPEC TS_fpga_clk = PERIOD "fpga_clk" 16.666666666 ns HIGH 50%;
+
