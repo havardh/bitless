@@ -27,6 +27,15 @@ entity pipeline is
 end entity;
 
 architecture behaviour of pipeline is
+	component adder is
+		port (
+			a, b   : in  std_logic_vector(15 downto 0);
+			c      : in  std_logic;
+			result : out std_logic_vector(15 downto 0);
+			flags  : out alu_flags
+		);
+	end component;
+
 	component constant_memory is
 		generic (
 			size : natural -- Number of 16 bit words to store
@@ -67,7 +76,6 @@ architecture behaviour of pipeline is
 			-- Connections to the input buffer:
 			input_read_addr		: out std_logic_vector(address_width - 1 downto 0);
 			input_read_data		: in  std_logic_vector(31 downto 0);
-			input_re			: out std_logic;
 
 			-- Connections to the output buffer:
 			output_write_addr	: out std_logic_vector(address_width - 1 downto 0);
@@ -75,8 +83,7 @@ architecture behaviour of pipeline is
 			output_we			: out std_logic;
 			
 			output_read_address	: out std_logic_vector(address_width - 1 downto 0);
-			output_read_data	: in  std_logic_vector(31 downto 0);
-			output_re			: out std_logic
+			output_read_data	: in  std_logic_vector(31 downto 0)
 		);
 	end component;
 
@@ -97,35 +104,25 @@ architecture behaviour of pipeline is
 
 	component ringbuffer is
 		generic(
-			data_width		: natural := 32;		-- Width of a buffer word
-			address_width	: natural := 16;		-- Width of the address inputs
-			buffer_size		: natural := 4096;	-- Size of the buffer, in words
-			window_size		: natural := 2048		-- Size of the ring buffer window, in words
+			data_width		: natural := 32;   -- Width of a buffer word
+			address_width	: natural := 16;   -- Width of the address inputs
+			buffer_size		: natural := 1024; -- Size of the buffer, in words
+			window_size		: natural := 512   -- Size of the ring buffer window, in words
 		);
 		port(
-			clk 			: in std_logic; 	-- Main clock ("small cycle" clock)
-			memclk			: in std_logic; -- Memory clock
-			sample_clk		: in std_logic; -- Sample clock ("large cycle" clock)
+			clk 			: in std_logic; -- Main clock ("small cycle" clock)
+			memclk		: in std_logic; -- Memory clock
+			sample_clk	: in std_logic; -- Sample clock ("large cycle" clock)
 
 			-- Data and address I/O for using the buffer as output buffer:
-			b_data_in		: in std_logic_vector(15 downto 0);						-- B data input
-			b_data_out		: out std_logic_vector(data_width - 1 downto 0);	-- B data output
-			b_off_address	: in std_logic_vector(address_width - 1 downto 0);	-- Address offset for B-buffer
-			b_re			: in std_logic;			-- Read enable for B
-			b_we			: in std_logic;			-- Write enable for writing data from data_in to address address_in
+			b_data_in     : in  std_logic_vector(data_width - 1 downto 0);    -- B data input
+			b_data_out    : out std_logic_vector(data_width - 1 downto 0);    -- B data output
+			b_off_address : in  std_logic_vector(address_width - 1 downto 0); -- Address offset for B-buffer
+			b_we          : in  std_logic; -- Write enable for writing data from data_in to address address_in
 
 			-- Data and address I/O for using the buffer as input buffer:
-			a_data_out		: out std_logic_vector(data_width - 1 downto 0);	-- A data output
-			a_off_address	: in std_logic_vector(address_width - 1 downto 0);	-- Address offset for the A-buffer
-			a_re			: in std_logic;			-- Read enable for A
-			
-			-- Data and address for the int bus:
-			int_data_in		: in std_logic_vector(15 downto 0);		-- B data input
-			int_data_out	: out std_logic_vector(15 downto 0);	-- B data output
-			int_address		: in std_logic_vector(address_width - 1 downto 0);		-- Address offset for B-buffer
-			int_re			: in std_logic;	-- Read enable for internal bus
-			int_we			: in std_logic;	-- Write enable for writing data from data_in to address address_in
-			
+			a_data_out    : out std_logic_vector(data_width - 1 downto 0);    -- A data output
+			a_off_address : in  std_logic_vector(address_width - 1 downto 0); -- Address offset for the A-buffer
 
 			mode			: in ringbuffer_mode	-- Buffer mode
 		);
@@ -133,6 +130,12 @@ architecture behaviour of pipeline is
 
 	-- Pipeline control register:
 	signal control_register : pipeline_control_register;
+
+	-- Zero-extended internal bus address:
+	signal internal_dest_address : std_logic_vector(15 downto 0);
+	-- Zero-extended internal bus device:
+	signal internal_device : std_logic_vector(15 downto 0);
+	signal internal_core : std_logic_vector(15 downto 0);
 
 	-- Constant memory signals:
 	signal constmem_write_enable : std_logic := '0';
@@ -149,8 +152,10 @@ architecture behaviour of pipeline is
 	signal instr_write_enable : std_logic_vector(0 to NUMBER_OF_CORES - 1);
 
 	-- Input buffer signals:
-	signal input_read_address : address_array(0 to NUMBER_OF_CORES - 1);
-	signal input_read_data : data_array_32(0 to NUMBER_OF_CORES - 1);
+	signal input_read_address : address_array(-1 to NUMBER_OF_CORES);
+	signal input_read_data : data_array_32(-1 to NUMBER_OF_CORES);
+	signal input_write_data : std_logic_vector(31 downto 0);
+	signal input_write_enable : std_logic := '0';
 
 	-- Output buffer signals:
 	signal output_read_address : address_array(0 to NUMBER_OF_CORES - 1);
@@ -161,18 +166,42 @@ architecture behaviour of pipeline is
 begin
 	control_register.num_cores <= std_logic_vector(to_unsigned(NUMBER_OF_CORES, 4));
 
+	-- Zero-extended internal signals:
+	internal_dest_address <= b"00" & int_address.address;
+	internal_device <= b"000000000000" & int_address.device;
+
+	-- Adder getting the number of core being addressed over the internal bus:
+	core_address_adder: adder
+		port map(
+			a => internal_device,
+			b => not x"0004",
+			c => '1',
+			result => internal_core,
+			flags => open
+		);
+
 	-- Internal bus read process:
 	internal_bus_read: process(clk, int_re)
 	begin
 		if rising_edge(int_re) then
 			if int_address.toplevel = '0' and int_address.pipeline = pipeline_address then
 				case int_address.device is
-					when b"0000" =>
+					when x"0" =>
 						int_data_out <= control_register.constcore_1 & control_register.constcore_2 &
 							control_register.stopmode & b"000" & control_register.num_cores;
-					when b"0001" =>
+					when x"1" =>
+						-- Constant memory is write-only
+					when x"2" =>
+						-- Input buffer is write-only
+					when x"3" => -- Read the output buffer
+						int_data_out <= input_read_data(NUMBER_OF_CORES - 1)(15 downto 0);
 					when others =>
-						-- Read core memory
+						-- Read core memories
+						case int_address.coredev is
+							when b"00" =>
+								-- Read control register
+							when others =>
+						end case;
 				end case;
 			end if;
 		end if;
@@ -185,18 +214,28 @@ begin
 			if int_we = '1' then
 				if int_address.toplevel = '0' and int_address.pipeline = pipeline_address then
 					case int_address.device is
-						when b"0000" =>
+						when x"0" =>
 							control_register.constcore_1 <= int_data_in(15 downto 12);
 							control_register.constcore_2 <= int_data_in(11 downto 8);
 							control_register.stopmode <= int_data_in(7);
-						when b"0001" =>
+						when x"1" =>
 							constmem_write_enable <= '1';
+						when x"2" =>
+							input_write_enable <= '1';
+						when x"3" =>
+							-- Write the output buffer
 						when others =>
-							-- Write core memory
+							-- Write core memories
+							case int_address.coredev is
+								when b"00" =>
+									-- Write control register
+								when others =>
+							end case;
 					end case;
 				end if;
 			else
 				constmem_write_enable <= '0';
+				input_write_enable <= '0';
 				for i in 0 to NUMBER_OF_CORES - 1 loop
 					instr_write_enable(i) <= '0';
 				end loop;
@@ -205,13 +244,12 @@ begin
 	end process;
 
 	-- Instantiate the constant memory:
-	constmem_write_address <= b"00" & int_address.address;
 	const_mem: constant_memory
 		generic map(size => 1024)
 		port map(
 			clk => clk,
 			memclk => memory_clk,
-			write_address => constmem_write_address,
+			write_address => internal_dest_address,
 			write_data => int_data_in,
 			write_enable => constmem_write_enable,
 			read_address_a => constmem_read_address_a,
@@ -220,6 +258,7 @@ begin
 			read_data_b => constmem_read_data_b
 		);
 
+	-- Übermux controlling access to the constant memory:
 	megamux: process(constmem_read_data_a, constmem_read_data_b,
 		constmem_address_array, constmem_data_array, control_register)
 	begin
@@ -236,63 +275,34 @@ begin
 		end loop;
 	end process;
 
-	instr_write_address <= b"00" & int_address.address;
+	-- Instantiate the input buffer:
+	input_write_data <= x"0000" & int_data_in;
+	input_buffer: ringbuffer
+		port map(
+			clk => clk,
+			memclk => memory_clk,
+			sample_clk => sample_clk,
+			b_data_in => input_write_data,
+			b_data_out => open,
+			b_off_address => internal_dest_address,
+			b_we => input_write_enable,
+			a_data_out => input_read_data(-1),
+			a_off_address => input_read_address(-1),
+			mode => RING_MODE
+		);
+
+	-- Set up the output buffer signals:
+	input_read_address(NUMBER_OF_CORES - 1) <= internal_dest_address;
 
 	generate_cores:
 	for i in 0 to NUMBER_OF_CORES - 1 generate
-		-- Input buffer:
-		input_buffer: ringbuffer
-			generic map(data_width => 32, address_width => 16)
-			port map(
-				clk => clk,
-				memclk => memory_clk,
-				sample_clk => sample_clk,
-				b_data_in => (others => '0'),
-				b_data_out => open,
-				b_off_address => (others => '0'),
-				b_re => '0',
-				b_we => '0',
-				a_data_out => open,
-				a_off_address => (others => '0'),
-				a_re => '0',
-				int_data_in => int_data_in,
-				int_data_out => open,
-				int_address => (others => '0'),
-				int_re => '0',
-				int_we => '0',
-				mode => RING_MODE
-			);
-
-		-- Output buffer:
-		output_buffer: ringbuffer
-			generic map(data_width => 32, address_width => 16)
-			port map(
-				clk => clk,
-				memclk => memory_clk,
-				sample_clk => sample_clk,
-				b_data_in => (others => '0'),
-				b_data_out => open,
-				b_off_address => (others => '0'),
-				b_re => '0',
-				b_we => '0',
-				a_data_out => open,
-				a_off_address => (others => '0'),
-				a_re => '0',
-				int_data_in => int_data_in,
-				int_data_out => open,
-				int_address => (others => '0'),
-				int_re => '0',
-				int_we => '0',
-				mode => RING_MODE
-			);
-
 		-- Instruction memory:
 		instruction_mem: instruction_memory
 			generic map(size => 512)
 			port map(
 				clk => clk,
 				memclk => memory_clk,
-				write_address => instr_write_address,
+				write_address => internal_dest_address,
 				write_data => int_data_in,
 				write_enable => instr_write_enable(i),
 				read_address => instr_read_address(i),
@@ -311,15 +321,29 @@ begin
 				constant_data => constmem_data_array(i),
 				instruction_address => instr_read_address(i),
 				instruction_data => instr_read_data(i),
-				input_read_addr => input_read_address(i),
-				input_read_data => input_read_data(i),
-				input_re => open,
+				input_read_addr => input_read_address(i - 1),
+				input_read_data => input_read_data(i - 1),
 				output_write_addr => output_write_address(i),
 				output_write_data => output_write_data(i),
 				output_we => output_write_enable(i),
 				output_read_address => output_read_address(i),
-				output_read_data => output_read_data(i),
-				output_re => open
+				output_read_data => output_read_data(i)
+			);
+
+		-- Output buffer:
+		output_buffer: ringbuffer
+			generic map(data_width => 32, address_width => 16)
+			port map(
+				clk => clk,
+				memclk => memory_clk,
+				sample_clk => sample_clk,
+				b_data_in => output_write_data(i),
+				b_data_out => output_read_data(i),
+				b_off_address => output_write_address(i),
+				b_we => output_write_enable(i),
+				a_data_out => input_read_data(i),
+				a_off_address => input_read_address(i),
+				mode => RING_MODE
 			);
 	end generate;
 
