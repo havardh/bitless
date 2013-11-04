@@ -112,6 +112,7 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
+-Iinc/ \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
@@ -141,6 +142,7 @@ $(LIB)/emlib/src/em_pcnt.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+src/leds.c \
 demo/$(PROJECTNAME).c
 
 s_SRC +=
@@ -171,7 +173,7 @@ vpath %.S $(S_PATHS)
 # Default build is debug build
 all:	  debug
 
-debug:	  CFLAGS += -DDEBUG -O0 -g3
+debug:	  CFLAGS += -DDEBUG -O0 -g3 -std=c99
 debug:	  $(EXE_DIR)/$(PROJECTNAME).bin
 
 release:  CFLAGS += -DNDEBUG -O0 -g3
