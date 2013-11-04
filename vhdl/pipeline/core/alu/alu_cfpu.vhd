@@ -39,7 +39,7 @@ entity fpu is
 		a, b, c, d			: in	std_logic_vector(15 downto 0);
 		result, result_2	: out	std_logic_vector(15 downto 0);
 		aluop_in			: in	alu_operation;
-		flags				: out	std_logic_vector(3 downto 0);
+		flags				: out	alu_flags;
 		cpu_clk, alu_clk 	: in	std_logic
 	);
 end fpu;
@@ -75,8 +75,8 @@ begin
 			a					=> mul_in_a,
 			b					=> mul_in_b,
 			result			=> mul_result,
-			underflow		=> flags(3),
-			overflow			=> flags(2),
+			underflow		=> open,
+			overflow			=> flags.overflow,
 			clk				=> cpu_clk
 		);
 	addsub: fp_addsub
@@ -85,8 +85,8 @@ begin
 			b			=> addsub_in_b,
 			operation	=> addsub_op,
 			result		=> addsub_result,
-			underflow	=> flags(1),
-			overflow	=> flags(0)
+			underflow	=> open,
+			overflow	=> flags.overflow
 		);
 	
 	work: process(aluop_in)
