@@ -1,6 +1,9 @@
 #include "FPGAController.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdbool.h>
+
+#define BIT_HIGH(var,pos) ((var) & (1<<(pos)))
 
 static FPGA_Processor fpga;
 
@@ -10,6 +13,66 @@ static FPGA_Processor fpga;
 
 uint16_t* FPGA_GetBaseAddress(void) {
     return fpga.baseAddress;
+}
+
+FPGA_ControlRegister FPGA_GetControlRegister(void) {
+    uint16_t reg = *fpga.controlRegister;
+
+    FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
+    ctrlReg.blinkMode = BIT_HIGH(reg, 13);
+    ctrlReg.LED0      = BIT_HIGH(reg, 12);
+    ctrlReg.LED1      = BIT_HIGH(reg, 11);
+    ctrlReg.BTN0      = BIT_HIGH(reg, 10);
+    ctrlReg.BTN1      = BIT_HIGH(reg,  9);
+    ctrlReg.pipelines = 0x7 & reg; // Value of lower three bits
+
+    return ctrlReg;
+}
+
+void FPGA_SetControlRegister(FPGA_ControlRegister reg) {
+    uint32_t regVal = 0x0;
+
+    if (reg.reset)
+        regVal += CTRL_RESET_ADDR;
+
+    if (reg.blinkMode)
+        regVal += CTRL_BLINK_ADDR;
+
+    if (reg.LED0)
+        regVal += CTRL_LED0_ADDR;
+
+    if (reg.LED1)
+        regVal += CTRL_LED1_ADDR;
+
+    fpga.controlRegister[0] = (uint16_t) regVal;
+}
+
+void FPGA_Reset(void) {
+    FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
+    ctrlReg.reset = true;
+
+    FPGA_SetControlRegister(ctrlReg);
+}
+
+void FPGA_SetLeds(bool led0, bool led1) {
+    FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
+    ctrlReg.LED0 = led0;
+    ctrlReg.LED1 = led1;
+
+    FPGA_SetControlRegister(ctrlReg);
+}
+
+void FPGA_SetBlinkMode(bool blinkMode) {
+    FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
+    ctrlReg.blinkMode = blinkMode;
+
+    FPGA_SetControlRegister(ctrlReg);
+}
+
+uint32_t FPGA_GetButtonStatus(void) {
+    FPGA_ControlRegister ctrlReg = FPGA_GetControlRegister();
+
+    return (uint32_t) (0x1 & ctrlReg.BTN1) + (0x1 & ctrlReg.BTN0);
 }
 
 FPGA_Pipeline* FPGA_GetPipeline(uint32_t pipeline) {
@@ -56,8 +119,6 @@ void FPGACore_GetProgram(FPGA_Core *core, uint16_t *program) {
 }
 
 void FPGACore_SetProgram(FPGA_Core *core, uint16_t *program, uint32_t programSize) {
-    assert(programSize <= core->imemSize);
-
     for (uint32_t i = 0; i < programSize; i++) {
         core->imem[i] = program[i];
     }
@@ -76,8 +137,6 @@ void FPGACore_GetControls(FPGA_Core *core, uint16_t *controls) {
 }
 
 void FPGACore_SetControls(FPGA_Core *core, uint16_t *controls, uint32_t controlSize) {
-    assert(controlSize <= core->ctrlSize);
-
     for (uint32_t i = 0; i < controlSize; i++) {
         core->ctrlmem[i] = controls[i];
     }
@@ -89,13 +148,14 @@ void FPGACore_SetControls(FPGA_Core *core, uint16_t *controls, uint32_t controlS
     }
 }
 
-
 /*******************************************
 * FPGA Setup and teardown                  *
 *******************************************/
 
 void FPGA_Init(FPGAConfig *config) {
     fpga.baseAddress = config->baseAddress;
+    fpga.controlRegister = config->baseAddress + config->toplevelAddress;
+    FPGA_Reset();
 
     fpga.numPipelines = config->numPipelines;
     fpga.pipelines = (FPGA_Pipeline *) malloc(sizeof(FPGA_Pipeline) * config->numPipelines);
@@ -106,7 +166,7 @@ void FPGA_Init(FPGAConfig *config) {
 
 void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig *config) {
     pipeline->pos = pipelinePos;
-    pipeline->address = fpga.baseAddress + config->toplevelAddress + pipelinePos * config->pipelineAddressSize;
+    pipeline->address = fpga.baseAddress + pipelinePos * config->pipelineAddressSize;
 
     pipeline->numCores = config->numCores;
     pipeline->cores = (FPGA_Core *) malloc(sizeof(FPGA_Core) * pipeline->numCores);
@@ -117,17 +177,17 @@ void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig
 
 void FPGA_Core_New(FPGA_Core *core, uint32_t corePos, uint32_t pipelinePos, FPGAConfig *config) {
     core->pos = corePos;
-    core->bufferSize = config->bufferSize;
-    core->imemSize = config->imemSize;
-    core->ctrlSize = config->ctrlSize;
+    core->bufferSize = config->coreAddressSize;
+    core->imemSize = config->coreAddressSize;
+    core->ctrlSize = config->coreAddressSize;
 
     uint16_t *pipelineAddress = FPGA_GetPipeline(pipelinePos)->address;
-    uint16_t *coreAddress = (pipelineAddress + config->coreDeviceAddress + corePos * config->coreAddressSize);
+    uint16_t *coreAddress = (pipelineAddress + config->coreDeviceAddress + corePos * config->coreDeviceSize);
     
-    core->inputBuffer = coreAddress;
-    core->imem = (coreAddress + core->bufferSize);
-    core->ctrlmem = (core->imem + core->imemSize);
-    core->outputBuffer = (core->ctrlmem + core->ctrlSize);
+    core->ctrlmem = coreAddress;
+    core->imem = (core->ctrlmem + config->coreAddressSize);
+    core->inputBuffer = (core->imem + config->coreAddressSize);
+    core->outputBuffer = (core->inputBuffer + config->coreAddressSize);
 }
 
 void FPGA_Destroy(void) {
