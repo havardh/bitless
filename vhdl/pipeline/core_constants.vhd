@@ -29,6 +29,7 @@ package core_constants is
 	-- ALU operation list
 	type alu_operation is (
 		ALU_ADD,
+		ALU_MUL,
 		ALU_SUB,
 		ALU_AND,
 		ALU_OR,

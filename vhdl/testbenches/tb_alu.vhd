@@ -27,6 +27,9 @@
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+
+library work;
+use work.core_constants.all;
  
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -45,11 +48,11 @@ ARCHITECTURE behavior OF tb_alu IS
          cpu_clk : IN  std_logic;
          cpu_input_register_1 : IN  std_logic_vector(15 downto 0);
          cpu_input_register_2 : IN  std_logic_vector(15 downto 0);
-         cpu_input_const : IN  std_logic_vector(15 downto 0);
+         cpu_input_const : IN  std_logic_vector(31 downto 0);
          cpu_input_const_w : IN  std_logic;
-         operation : IN  std_logic;
+         operation : IN  alu_operation;
          result : OUT  std_logic_vector(31 downto 0);
-         flags : OUT  std_logic
+         flags : OUT  alu_flags
         );
     END COMPONENT;
     
@@ -59,13 +62,13 @@ ARCHITECTURE behavior OF tb_alu IS
    signal cpu_clk : std_logic := '0';
    signal cpu_input_register_1 : std_logic_vector(15 downto 0) := (others => '0');
    signal cpu_input_register_2 : std_logic_vector(15 downto 0) := (others => '0');
-   signal cpu_input_const : std_logic_vector(15 downto 0) := (others => '0');
+   signal cpu_input_const : std_logic_vector(31 downto 0) := (others => '0');
    signal cpu_input_const_w : std_logic := '0';
-   signal operation : std_logic := '0';
+   signal operation : alu_operation;
 
  	--Outputs
    signal result : std_logic_vector(31 downto 0);
-   signal flags : std_logic;
+   signal flags : alu_flags;
 
    -- Clock period definitions
    constant dsp_clk_period : time := 10 ns;
@@ -113,6 +116,54 @@ BEGIN
       wait for dsp_clk_period*10;
 
       -- insert stimulus here 
+		
+		operation 				 <= ALU_ADD;
+		cpu_input_register_1  <= "0000000000000001";
+      cpu_input_register_2  <= "0000000000000001";
+		wait for cpu_clk_period/2;
+		assert result = x"0002" report "Result of 1 + 1 is not 2!";
+		
+		operation 				 <= ALU_ADD;
+		cpu_input_register_1  <= "1111111111111111";
+      cpu_input_register_2  <= "0000000000000010";
+		wait for cpu_clk_period/2;
+		assert result = x"0001" report "Result of 1 + 1 is not 2!";
+		assert flags.overflow = '1' report "Overflow not"
+		
+		operation 				 <= ALU_SUB;
+		cpu_input_register_1  <= "1111111111111111";
+      cpu_input_register_2  <= "0000000000000010";
+		
+		wait for cpu_clk_period/2;
+		operation 				 <= ALU_SUB;
+		cpu_input_register_1  <= "0111111111111111";
+      cpu_input_register_2  <= "0000000000000010";
+		
+		wait for cpu_clk_period/2;
+		operation 				 <= ALU_OR;
+		cpu_input_register_1  <= "0101010101010101";
+      cpu_input_register_2  <= "1010101010101010";
+		
+		wait for cpu_clk_period/2;
+		operation 				 <= ALU_OR;
+		cpu_input_register_1  <= "0000000000001100";
+      cpu_input_register_2  <= "0000000000000110";
+		
+		wait for cpu_clk_period/2;
+		operation 				 <= ALU_MUL;
+		cpu_input_register_1  <= "0000000000000001";
+      cpu_input_register_2  <= "0000000000000001";
+		
+		wait for cpu_clk_period/2;
+		operation 				 <= ALU_MUL;
+		cpu_input_register_1  <= "0000000000000111";
+      cpu_input_register_2  <= "0000000000000101";
+		
+		wait for cpu_clk_period/2;
+		operation 				 <= ALU_MUL;
+		cpu_input_register_1  <= "1111111111111001";
+      cpu_input_register_2  <= "0000000000000101";
+		
 
       wait;
    end process;
