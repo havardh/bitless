@@ -1,3 +1,5 @@
+\FloatBarrier
+\newpage
 \subsection{ALU}\label{subsection:fpga-alu}
 \todo[inline]{ALU design and reasons why. -First revision finished?}
 
@@ -16,8 +18,8 @@ that the transform could be performed on each discrete sample within a single
 clockcycle of the sequential processing core pipeline.}.
 	\begin{enumerate}
 		\item The Fourier-transform we settled on could be performed with only
-addition, substraction, and shifting. Therefore hardware support implementation
-for these was also needed.
+addition, substraction, and shifting. Therefore hardware support for these
+operations also had to be implemented.
 	\end{enumerate}
 	\item Multiplication for the sound-effect manipulations on the transformed
 samples located in the frequency domain.
@@ -25,6 +27,7 @@ samples located in the frequency domain.
 \emph{For any reader potentially wondering, why division was left out, this is
 explained in section \ref{subsubsection:fpga-alu-div}.}
 
+\FloatBarrier
 \subsubsection{Fourier-transforms}\label{subsubsection:fpga-alu-ft}
 \todo[inline]{Need a way to refer to this subsubsection. I tried refering to it
 in the design.tex file. The resulting reference refers to the ALU subsection as
@@ -55,6 +58,7 @@ Fourier-transform, but we also managed to find pseudo-code describing how such a
 transform would function. The big downside to the SD-FT however was the
 necessity of floating-point to accomplish the implementation.
 
+\FloatBarrier
 \subsubsection{ALU input size}\todo{Better subsubsection title?}
 
 Due to the algorithmically heavy operations of the SD-FT being the
@@ -74,6 +78,7 @@ final result we ended up on was to have eight-bit datasamples. This had the
 consequence of reducing the maximum sound frequency from ca. 44 kilohertz down
 to \todo{This needs to be confirmed/edited.}11.
 
+\FloatBarrier
 \subsubsection{Leaving out division}\label{subsubsection:fpga-alu-div}
 
 The decision to not implement hardware support for division was done for several
