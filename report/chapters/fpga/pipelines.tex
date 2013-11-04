@@ -6,7 +6,7 @@
 \subsection{Top-down architectural view}\todo{Maybe find better subsection
 title?}
 
-\missingfigure{We should have a figure of the pipeline here, we've got several
+\missingfigure{We should have a figure of the pipeline here, we got several
 in google docs, use/pretty up one of those should suffice to give an
 architectural overview}
 
@@ -15,11 +15,10 @@ illustrate how the processor connects all the processing cores together on the
 FPGA.
 
 Though the \todo[inline]{reference to the same above figure} figure above shows
-that we've connected the \todo{Maybe insert EBI references?} EBI-bus to each
-processing core, during normal non-debugging runtime the cores only
-``communicate'' in the manner described in the next paragraph, and not through
-the EBI-bus. The EBI-bus is used only as inter-communication between the cores
-for debugging purposes.
+how we connected the EBI-bus \cite{efm_ebi} to each processing core, during
+normal non-debugging runtime the cores only ``communicate'' in the manner
+described below, and not through the EBI-bus. The EBI-bus is used only as a way
+for inter-communication between the cores when debugging.
 
 The manner in which the cores ``communicate'' with each other is instead by the
 two-stage ring-buffers between them. For each clockcycle belonging to the

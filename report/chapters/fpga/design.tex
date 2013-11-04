@@ -19,12 +19,12 @@ this revelation forced us to from a very early point to be concerned about
 resource management on the FPGA.
 
 \FloatBarrier
-\subsection{Heavy Fourier-transforms}\todo{Maybe find better subsection title?}
+\subsection{Fourier-transforms}\todo{Maybe find better subsection title?}
 
 Looking into which types of Fourier-transform algorithms we could use on an
 embedded device, in a manner as efficiently as possible, and yet real-time,
-we ended up looking at \todo{Should be some kind of reference here, no?}
-Sliding-Discrete-Fourier-Transforms (or more colloquially known as SD-FT's).
+we ended up looking at Sliding-Discrete-Fourier-Transforms\cite{SD-FT} (or more
+colloquially known as SD-FTs).
 
 %Need some kind of newline here just to get some "breathing space" for the reader between the above text, and below figure
 
@@ -32,7 +32,7 @@ Sliding-Discrete-Fourier-Transforms (or more colloquially known as SD-FT's).
 sample at a time?}
 
 This would enable us to receive a live stream of samples from an input device
-through a mini-jack on the PCB, or just from the DMA's of the MCU if the input
+through a mini-jack on the PCB, or just from the DMAs of the MCU if the input
 was a file on a SD-card. And then transform this live stream of samples into
 the frequency domain.
 
@@ -55,20 +55,22 @@ SD-FT\footnote{This is discussed in more detail in section
 \ref{subsubsection:fpga-alu-ft}.}.
 
 Thus, so far this project required one processor-core to perform the SD-FT, and
-then another to perform the actual sound-effect done with the samples in the
-frequency domain, another core for the inverse SD-FT, and finally one core for
-any possible \todo{Rephrase this better?}
-``Non-Fourier-Transform-Needed-Sound-Effect''.
+another to perform the actual sound-effect done with the samples in the
+frequency domain, a third core for the inverse SD-FT, and finally a fourth core
+for any possible sound-manipulation that does not need a Fourier-transform (that
+it doesn't need to manipulate the data samples when converted into the frequency
+domain).
 
 With that reasoning in mind, we would need at least four processing cores, and
 this for only one sound-channel. So for every sound-channel needed (stereo needs
 two), we would have to add another four processor cores onto the FPGA-chip.
 
-And since we did not want to be delinquents listening to the awesome \todo{
-reference to some beatles source here}
-Bitless with only mono sound (one sound-channel), we knew from then on that we
-would need to implement at the very least eight processor cores in some form of
-pipeline or other.
+It was decided early on to not settle for just one channel producing mono sound,
+but to instead settle for at least two, so that we could listen to the output
+on a stereo system while comparing to the original data sample. This led us then
+defined the design for the processor core further, as it would need to have
+at the very least eight processor cores implemented in some form of pipeline or
+other.
 
 \FloatBarrier
 \subsection{Processing cores, 1-on-1}\todo{Maybe find better subsection title?}
@@ -81,7 +83,7 @@ We decided on making all the cores homogenous, so that we could send the same
 instructions to any core, being safe in the knowledge that any core could
 perform said instructions.
 
-This simplified our work in VHDL a lot, since we could then just focus on
+This simplified our work in VHDL considerably, since we could then just focus on
 getting \emph{one} processor core functioning, instead of say one for the SD-FT,
 another for the actual sound-effects performed in the frequency domain, a third
 for the inverse-SD-FT, and then a fourth for the final ``post-processing''.
@@ -89,14 +91,9 @@ for the inverse-SD-FT, and then a fourth for the final ``post-processing''.
 VHDL-aspect of this project).
 
 Due to all of the members in the FPGA-group taking the course TDT4255 \emph{
-Computer Design}
-it may come as no surprise to any reader familiar with the courses at IDI, NTNU,
-that this course was a big source of inspiration for the development of our
-processor-core.
+Computer Design} it may come as no surprise to any reader familiar with the
+courses at IDI, NTNU, that this course was a big source of inspiration for the
+development of our processor-core.
 
-Both the \todo{Need reference to the book here} book and the programming
-exercises were by and large used for the sole purpose of designing a MIPS
-processor, which we then had to pipeline.
-
-We had already settled on a processor design having pipelined cores, so why not
-use the tried-and-proven performance boost of pipelined processor cores as well?
+Both the book\cite{tdt4255-book} and the \emph{Computer Design} subject were
+used as resources while developing the design of this MIPS pipelined processor.
