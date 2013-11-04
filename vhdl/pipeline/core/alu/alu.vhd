@@ -159,46 +159,59 @@ begin
 		case operation is
 			when ALU_ADD =>
 				alu_result_select <= ALU_ADD_SELECT;
+				sub_enable	<= '0';
+			when ALU_SUB =>
+				alu_result_select <= ALU_ADD_SELECT;
+				sub_enable	<= '1';
 			when ALU_AND =>
 				logic_result <= cpu_input_register_1 and cpu_input_register_2;
 				if (cpu_input_register_1 and cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
 				alu_result_select <= ALU_LOG_SELECT;
+				sub_enable	<= '0';
 			when ALU_NAND =>
 				logic_result <= cpu_input_register_1 nand cpu_input_register_2;
 				if (cpu_input_register_1 nand cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
 				alu_result_select <= ALU_LOG_SELECT;
+				sub_enable	<= '0';
 			when ALU_OR =>
 				logic_result <= cpu_input_register_1 or cpu_input_register_2;
 				if (cpu_input_register_1 or cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
 				alu_result_select <= ALU_LOG_SELECT;
+				sub_enable	<= '0';
 			when ALU_NOR =>
 				logic_result <= cpu_input_register_1 nor cpu_input_register_2;
 				if (cpu_input_register_1 nor cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
 				alu_result_select <= ALU_LOG_SELECT;
+				sub_enable	<= '0';
 			when ALU_XOR =>
 				logic_result <= cpu_input_register_1 xor cpu_input_register_2;
 				if (cpu_input_register_1 xor cpu_input_register_2) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
 				alu_result_select <= ALU_LOG_SELECT;
+				sub_enable	<= '0';
 			when ALU_MOVE =>
 			logic_result <= cpu_input_register_1;
 				if cpu_input_register_1 = x"0000" then
 				logic_flags.zero <= '1';
 				end if;
+				alu_result_select <= ALU_LOG_SELECT;
+				sub_enable	<= '0';
 			when ALU_MOVE_NEGATIVE =>
 				logic_result <= not cpu_input_register_1;
 				if (not cpu_input_register_1) = x"0000" then
 					logic_flags.zero <= '1';
 				end if;
+				alu_result_select <= ALU_LOG_SELECT;
+				sub_enable	<= '0';
 		end case;
 	end process alu_process;
 end behaviour;
