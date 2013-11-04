@@ -25,24 +25,11 @@ architecture behvaiour of blink_controller is
 		);
 	end component;
 
-	signal led0_value, led1_value, blink_clock : std_logic;
+	signal led0_value, led1_value : std_logic;
 	signal counter1, counter1_inc, counter2, counter2_inc : std_logic_vector(15 downto 0);
 begin
 	led0_blink <= led0_value;
 	led1_blink <= led1_value;
-
-	blinker: process(enable, blink_clock)
-	begin
-		if rising_edge(blink_clock) then
-			if reset = '1' then
-				led0_value <= '1';
-				led1_value <= '0';
-			else
-				led0_value <= led1_value;
-				led1_value <= led0_value;
-			end if;
-		end if;
-	end process;
 
 	counter: process(system_clk, enable)
 	begin
@@ -50,12 +37,15 @@ begin
 			if reset = '1' then
 				counter1 <= x"0000";
 				counter2 <= x"0000";
+				led0_value <= '0';
+				led1_value <= '1';
 			else				
 				if counter1 = x"0000" then
 					counter1 <= counter1_inc;
 					counter2 <= counter2_inc;
 				elsif counter2 = x"0200" then -- Gives a nice blink, but I was too lazy to calculate the frequency
-					blink_clock <= not blink_clock;
+					led0_value <= led1_value;
+					led1_value <= led0_value;
 					counter2 <= x"0000";
 				else
 					counter1 <= counter1_inc;

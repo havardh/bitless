@@ -92,7 +92,8 @@ architecture behaviour of toplevel is
 	signal blinking_led0, blinking_led1 : std_logic;
 
 	-- Toplevel control register:
-	signal control_register : toplevel_control_register;
+	signal control_register : toplevel_control_register := (reset => '0', led0 => '0', led1 => '0', blinkmode => '1',
+		number_of_pipelines => std_logic_vector(to_unsigned(NUMBER_OF_PIPELINES, 3)), button0 => '0', button1 => '0');
 begin
 	-- Set up the clock controller:
 	clk_ctrl: clock_controller

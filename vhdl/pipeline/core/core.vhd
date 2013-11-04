@@ -4,6 +4,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+
 library work;
 use work.core_constants.all;
 use work.internal_bus.all;
@@ -40,6 +41,7 @@ entity core is
 		output_read_addr	: out std_logic_vector(address_width - 1 downto 0);
 		output_read_data	: in  std_logic_vector(31 downto 0)
  	);
+
 end entity;
 	--NAMING SCHEME FOR SIGNALS AND COMPONENTS
 	--All signals that function as registers for another stage should be prefixed
