@@ -41,11 +41,11 @@ entity core is
 		output_read_data	: in  std_logic_vector(31 downto 0)
  	);
 end entity;
---NAMING SCHEME FOR SIGNALS AND COMPONENTS
---All signals that function as registers for another stage should be prefixed with
---the stage they will be used in. 
---Components are prefixed with the stage they are in, when no prefix might be ambigous.
---
+	--NAMING SCHEME FOR SIGNALS AND COMPONENTS
+	--All signals that function as registers for another stage should be prefixed
+	--with the stage they will be used in. Components are prefixed with the stage
+	--they are in when no prefix might be ambigous.
+	--
 architecture behaviour of core is
 
 --Stage 1 - PC
@@ -149,7 +149,6 @@ architecture behaviour of core is
 
 	--Pipeline registers for stage WB
 	
-	signal 
 	
 --Other
 
@@ -206,12 +205,13 @@ begin
 
 		write_reg_enb	=> wb_reg_we,
 
-		reg_1_data		=> mem_data_1,
+		reg_1_data		=> mem_reg_data_1,
 		reg_2_data		=> mem_reg_data_2
 	);
 	
 	--Pipeline registerz for signals
 	id_mem_pipeline_regz : process(clk)
+	begin
 		if rising_edge(clk) then
 			mem_alu_result_mux_control	<= id_alu_result_mux_control;
 			
@@ -224,12 +224,40 @@ begin
 	end process;
 	
 --Pipeline stage 3 MEM
-	--TODO:
-		--mux reg_1
-		--mux reg_2
-		--talk to mem
-		--mux mem_result
-		
+	mem_addr_mux : process(mem_addr_mux_control)
+	begin
+		if mem_addr_muc_control = '1' then
+			mem_addr <= mem_reg_data_1;
+		else
+			mem_addr <= wb_data;
+		end if;
+		constant_addr <= mem_addr;
+		input_read_addr <= mem_addr;
+		output_read_addr <= mem_addr;
+		output_write_addr <= mem_addr;
+	end process;
+	
+	
+	mem_output_data_mux : process(mem_output_data_mux_control)
+	begin
+		if mem_output_data_mux_control = '1' then
+			output_write_data <= mem_reg_data_2;
+		else
+			output_write_data <= mem_reg_addr_1 & mem_reg_addr_2;
+		end if;
+	end process;
+	
+	mem_input_data_mux : process(mem_input_data_mux_control)
+	begin
+		case mem_input_data_mux_control is
+			when const =>
+				ex_mem_data <= constant_data;
+			when input =>
+				ex_mem_data <= input_read_data;
+			when output =>
+				ex_mem_data <= output_read_data;
+		end case;
+	end process;
 	--Forwarding unit
 	ex_forwarding_unit : forwarding_unit
 	port map(
@@ -237,17 +265,17 @@ begin
 		reg_addr_1	=> ex_reg_1_addr,
 		reg_addr_2	=> ex_reg_2_addr,
 		reg_write	=> wb_reg_we,
-		forward_1	=> alu_input_1_mux_control,
-		forward_2	=> alu_input_2_mux_control
+		forward_1	=> mem_addr_mux_control,
+		forward_2	=> mem_output_data_mux_control
 	);
 	--stage 4 pipeline regz
 	mem_ex_pipeline_regz : process(clk)
+	begin
 		if rising_edge(clk) then
 			ex_register_1_data			<= mem_register_1_data;
 			ex_register_2_data			<= mem_register_2_data;
 			ex_alu_result_mux_control	<= mem_alu_result_mux_control;
 			
-			ex_mem_data		<= mem_result_mux_out;
 			ex_imm_data		<= mem_imm_data;
 			
 			ex_reg_1_addr	<= mem_reg_1_addr;
@@ -259,6 +287,7 @@ begin
 --Pipeline stage 4 EX
 	--ALU
 	alu_input_1_mux : process(alu_input_1_mux_control)
+	begin
 		if alu_input_1_mux_control = '0' then
 			alu_input_1_mux_out <= ex_register_1_data;
 		else
@@ -267,6 +296,7 @@ begin
 	end process;
 	
 	alu_input_2_mux : process(alu_input_2_mux_control)
+	begin
 		if alu_input_2_mux_control = '0' then
 			alu_input_2_mux_out <= ex_register_2_data;
 		else
@@ -277,7 +307,7 @@ begin
 	alu : alu
 	port map(
 		-- CLK
-		dsp_clk					=> _,
+		dsp_clk					=> '-',
 		cpu_clk 				=> clk,
 		-- ALU input data:
 		cpu_input_register_1	=> alu_input_1_mux_out,
@@ -292,7 +322,8 @@ begin
 	);
 	
 	alu_result_mux : process(ex_alu_result_mux_control)
-		case ex_alu_result_mux_control
+	begin
+		case ex_alu_result_mux_control is
 		when alu =>
 			alu_result_mux_out <= alu_result;
 		when mem =>
@@ -314,10 +345,11 @@ begin
 	);
 	--stage 4 pipeline regz
 	ex_wb_pipeline_regz : process(clk)
+	begin
 		if rising_edge(clk) then
 			wb_reg		<= ex_reg_1_addr;
 			wb_reg_we	<= ex_reg_we;
-			wb_flags	<= alu_flags
+			wb_flags	<= alu_flags;
 			wb_data		<= alu_result_mux_out;
 		end if;
 	end process;
