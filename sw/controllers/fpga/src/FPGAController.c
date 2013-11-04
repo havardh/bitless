@@ -24,7 +24,7 @@ FPGA_ControlRegister FPGA_GetControlRegister(void) {
     ctrlReg.LED1      = BIT_HIGH(reg, 11);
     ctrlReg.BTN0      = BIT_HIGH(reg, 10);
     ctrlReg.BTN1      = BIT_HIGH(reg,  9);
-    ctrlReg.pipelines = 0x8 & reg; // Value of lower three bits
+    ctrlReg.pipelines = 0x7 & reg; // Value of lower three bits
 
     return ctrlReg;
 }
