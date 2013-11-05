@@ -1,46 +1,46 @@
 \FloatBarrier
 \section{Design Planning}\label{section:fpga-design}
-\FloatBarrier
 \subsection{Design start}
 
-As soon as we had decided that our computer project was going to aim for some
-kind of a ``Sound-effect processor'', we started looking into how sound-effects
-were actually done.
+As soon as it became decided that our project was going to aim for producing
+some kind of ``sound-effect manipulating processor'', the group started looking
+into how sound-effects were actually accomplished.
 
-We quickly found out that for the most commonly known, as well as the more
-complicated effects, Fourier-transforms were crucially located at the base of
-``How to perform sound-effects'' on a computer in a successful manner.
+It quickly became apparent that for the most common, as well as the more
+complicated effects, Fourier-transforms were crucial to the sound-manipulation
+process. At least when sound manipulation was intended to run quickly enough,
+as well as successfully on a computer processor.
 
 This represented an (until now) unforeseen problem: Fourier-transforms are
-algorithmically heavy, meaning we would have to devote more of the FPGA into
-circuits which could handle something as intensive as a Fourier-transoform,
-especially if we wanted to perform these sound-effects in real-time. In effect,
-this revelation forced us to from a very early point to be concerned about
-resource management on the FPGA.
+algorithmically heavy in both time complexity and storage-space complexity,
+which has the consequence that we would have to devote more of the FPGA
+resources into circuits which could handle something as intensive as a
+Fourier-transform. Especially if we wanted to perform these sound-effects in
+real-time.
 
-\FloatBarrier
-\subsection{Fourier-transforms}\todo{Maybe find better subsection title?}
+In effect, this revelation forced us to from a very early point to be
+concerned about resource management on the FPGA.
+
+\subsection{Fourier-transforms}\label{subsection:fpga-design-ft}
 
 Looking into which types of Fourier-transform algorithms we could use on an
 embedded device, in a manner as efficiently as possible, and yet real-time,
 we ended up looking at Sliding-Discrete-Fourier-Transforms\cite{SD-FT} (or more
-colloquially known as SD-FTs).
-
-%Need some kind of newline here just to get some "breathing space" for the reader between the above text, and below figure
-
+colloquially known as SD-FTs\footnote{This is discussed in more detail in
+section \ref{subsubsection:fpga-alu-ft}.}).
 \missingfigure{Maybe insert a figure here showing how the SD-FT works on each
 sample at a time?}
 
-This would enable us to receive a live stream of samples from an input device
-through a mini-jack on the PCB, or just from the DMAs of the MCU if the input
-was a file on a SD-card. And then transform this live stream of samples into
-the frequency domain.
+This Fourier-transform would enable the FPGA to receive a live stream of
+data samples representing sound from an input device through a mini-jack on the
+PCB, or just from the DMAs of the MCU if the input was a file on a SD-card. And
+then transform this live stream of samples into the frequency domain.
 
-Since we now were able to work on each discrete sample while it was in the
-frequency domain, we were now able to perform things like basic high-pass and
-low-pass filters.
+Since we now were able to work on each discrete sample while it was converted
+into the frequency domain, we were now able to perform frequency based
+sound-manipulations, such as basic high-pass and low-pass filters.
 
-The magic of our sound-effects could be put to work.
+The sound-effect manipulations could now (in theory) be put to work.
 
 \FloatBarrier
 \subsection{Sequential processing cores?}\todo{Maybe find better subsection
@@ -48,52 +48,53 @@ title?}
 
 Not all of the known sound-effects require (or are even possible) with a
 Fourier-transform. Therefore it also became evident that for effects like say
-the ``Echo-effect'', we would need to do some post-processing after having
-performed the inverse-Fourier-transform of the \todo{Reference of some kind
-here?}
-SD-FT\footnote{This is discussed in more detail in section
-\ref{subsubsection:fpga-alu-ft}.}.
+the ``echo-effect'', we would need to do some post-processing after having
+performed the inverse-Fourier-transform of the SD-FT\footnote{Sliding-Discrete
+Fourier-transform, elaborated in the previous section
+\ref{subsection:fpga-design-ft}.}.
 
 Thus, so far this project required one processor-core to perform the SD-FT, and
 another to perform the actual sound-effect done with the samples in the
-frequency domain, a third core for the inverse SD-FT, and finally a fourth core
+frequency domain. A third core for the inverse SD-FT, and finally a fourth core
 for any possible sound-manipulation that does not need a Fourier-transform (that
-it doesn't need to manipulate the data samples when converted into the frequency
+does not need to manipulate the data samples when converted into the frequency
 domain).
 
 With that reasoning in mind, we would need at least four processing cores, and
-this for only one sound-channel. So for every sound-channel needed (stereo needs
-two), we would have to add another four processor cores onto the FPGA-chip.
+this for only one sound-channel. So for every additional sound-channel needed (
+stereo needs two), we would have to add another four processor cores onto the
+FPGA-chip.
 
 It was decided early on to not settle for just one channel producing mono sound,
 but to instead settle for at least two, so that we could listen to the output
-on a stereo system while comparing to the original data sample. This led us then
-defined the design for the processor core further, as it would need to have
-at the very least eight processor cores implemented in some form of pipeline or
-other.
+on a stereo system. This let us then define the design for the processor
+further, since it would need to have at the very least eight processor cores
+implemented in some form of pipeline or other.
 
-\FloatBarrier
 \subsection{Processing cores, 1-on-1}\todo{Maybe find better subsection title?}
 
 Knowing we would need a minimum of eight processor cores on our FPGA processor,
 and maybe more later down the line, we decided to start making things easier
 for ourselves.
 
-We decided on making all the cores homogenous, so that we could send the same
-instructions to any core, being safe in the knowledge that any core could
-perform said instructions.
+The decision was made to have all the cores homogenous, so that it would be
+possible to send the same instructions to any core, being safe in the knowledge
+that any core could perform said instructions.
 
-This simplified our work in VHDL considerably, since we could then just focus on
-getting \emph{one} processor core functioning, instead of say one for the SD-FT,
-another for the actual sound-effects performed in the frequency domain, a third
-for the inverse-SD-FT, and then a fourth for the final ``post-processing''.
-(Which could in all likelyhood have more than quadrupled the work of the
-VHDL-aspect of this project).
+This simplified the work in VHDL considerably, since we could then focus on
+getting just \emph{one} processor core functioning, instead of say one
+specifically for the SD-FT, another specifically tailored for the actual
+sound-effects performed in the frequency domain, a third for the inverse-SD-FT,
+and then the same as well for the fourth and final core performing the
+``post-processing''. This would have (in all likelyhood) more than quadrupled
+the amount of work required in VHDL for this project.
 
 Due to all of the members in the FPGA-group taking the course TDT4255 \emph{
 Computer Design} it may come as no surprise to any reader familiar with the
 courses at IDI, NTNU, that this course was a big source of inspiration for the
-development of our processor-core.
+development of our processor-core. Both the book\cite{tdt4255-book} and the
+\emph{Computer Design} course were used as resources while developing the design
+of this MIPS pipelined processor.
 
-Both the book\cite{tdt4255-book} and the \emph{Computer Design} subject were
-used as resources while developing the design of this MIPS pipelined processor.
+\subsection{Toplevel control register}\label{subsection:fpga-design-toplevel}
+
