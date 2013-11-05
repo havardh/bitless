@@ -41,6 +41,7 @@ void WAV_Read(WAVFile *file, void *buffer, uint16_t bytesToRead);
 void WAV_Write(WAVFile *file, void *buffer, uint16_t bytesToWrite);
 void WAV_Close(WAVFile *file);
 
+void WAV_CopyHeader(WAVFile *from, WAVFile *to);
 bool WAV_EOF(WAVFile *file);
 
 void WAV_ReadHeader(WAVFile *file);

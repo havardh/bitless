@@ -36,6 +36,11 @@ void write(int fileindex, void *buffer, uint16_t bytesToWrite, uint16_t *bytesWr
 	FRESULT res = f_write(&files[fileindex], buffer, bytesToWrite, (UINT*)bytesWritten);
 }
 
+void seek(int fileindex, int position) 
+{
+	FRESULT res = f_lseek(files[fileindex], position);
+}
+
 void close(int fileindex)
 {
 	FRESULT res = f_close(&files[fileindex]);
