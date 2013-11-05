@@ -59,13 +59,13 @@ package core_constants is
 		REG_DONT_WRITE
 	);
 	
-	type mem_select is (
+	type mem_source is (
 		MEM_INPUT,
 		MEM_OUTPUT,
 		MEM_CONST
 	);
 	
-	type data_select is (
+	type wb_source is (
 		MUX_ALU,
 		MUX_MEM,
 		MUX_IMM
