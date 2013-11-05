@@ -12,7 +12,7 @@
           
           
           
-        <Column0>227</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>235</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -29,7 +29,7 @@
     <Windows>
       
       
-    <Wnd1>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-15605-7031</Identity>
@@ -37,11 +37,11 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>sdcard</ExpandedNode><ExpandedNode>sdcard/Source</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>sdcard</ExpandedNode><ExpandedNode>sdcard/CMSIS</ExpandedNode><ExpandedNode>sdcard/Source</ExpandedNode><ExpandedNode>sdcard/bsp</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd1><Wnd3>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd2>
         <Tabs>
           <Tab>
             <Identity>TabID-28194-10480</Identity>
@@ -57,20 +57,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd2></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavplayer.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>156</YPos2><SelStart2>2996</SelStart2><SelEnd2>2996</SelEnd2></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\SRC\DMADriver.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>60</YPos2><SelStart2>1837</SelStart2><SelEnd2>1837</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\MEM\SRC\MEMDriver.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>259</SelStart2><SelEnd2>259</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\SRC\DMADriver.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>114</YPos2><SelStart2>3531</SelStart2><SelEnd2>3531</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\MEM\SRC\MEMDriver.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>500</SelStart2><SelEnd2>500</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\LIBS\UTIL\SRC\wav.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>0</SelStart2><SelEnd2>0</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavdemo.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>138</YPos2><SelStart2>4100</SelStart2><SelEnd2>4100</SelEnd2></Tab><ActiveTab>3</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00f24368><key>iaridepm.enu1</key></Toolbar-00f24368></Sizes></Row0><Row1><Sizes><Toolbar-1016aa60><key>debuggergui.enu1</key></Toolbar-1016aa60></Sizes></Row1><Row2><Sizes><Toolbar-1016a998><key>armjlink.enu1</key></Toolbar-1016a998></Sizes></Row2></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>442</Bottom><Right>318</Right><x>-2</x><y>-2</y><xscreen>265</xscreen><yscreen>509</yscreen><sizeHorzCX>207031</sizeHorzCX><sizeHorzCY>709902</sizeHorzCY><sizeVertCX>250000</sizeVertCX><sizeVertCY>619247</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>230</Bottom><Right>1282</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>232</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>323570</sizeHorzCY><sizeVertCX>207031</sizeVertCX><sizeVertCY>709902</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-031f3a70><key>iaridepm.enu1</key></Toolbar-031f3a70></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>434</Bottom><Right>326</Right><x>-2</x><y>-2</y><xscreen>210</xscreen><yscreen>225</yscreen><sizeHorzCX>205078</sizeHorzCX><sizeHorzCY>328467</sizeHorzCY><sizeVertCX>320313</sizeVertCX><sizeVertCY>636496</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>206</Bottom><Right>1026</Right><x>-2</x><y>-2</y><xscreen>1028</xscreen><yscreen>208</yscreen><sizeHorzCX>1003906</sizeHorzCX><sizeHorzCY>303650</sizeHorzCY><sizeVertCX>205078</sizeVertCX><sizeVertCY>328467</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

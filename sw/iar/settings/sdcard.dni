@@ -18,7 +18,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=-396884762
+Checksum=339855992
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -99,7 +99,7 @@ mode=0
 [Breakpoints2]
 Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\read-file.c}.46.5" 0 0 1 "" 0 "" 0
 Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\read-file.c}.53.13" 0 0 1 "" 0 "" 0
-Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\dma\demo\wavplayer.c}.151.2" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavplayer.c}.27.1" 0 0 1 "" 0 "" 0
 Count=3
 [Log file]
 LoggingEnabled=_ 0

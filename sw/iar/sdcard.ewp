@@ -1913,10 +1913,10 @@
   <group>
     <name>CMSIS</name>
     <file>
-      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\IAR\startup_efm32gg.s</name>
+      <name>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Source\IAR\startup_efm32gg.s</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\system_efm32gg.c</name>
+      <name>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Source\system_efm32gg.c</name>
     </file>
   </group>
   <group>
@@ -1991,13 +1991,7 @@
       <name>$PROJ_DIR$\..\drivers\dac\src\DACDriver.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\util\src\Delay.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\drivers\dma\src\DMADriver.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\drivers\fpga\src\FPGADriver.c</name>
@@ -2012,13 +2006,16 @@
       <name>$PROJ_DIR$\..\drivers\prs\src\PRSDriver.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\util\src\sample_conversion.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\dma\demo\wavplayer.c</name>
+      <name>$PROJ_DIR$\..\drivers\dma\demo\wavdemo.c</name>
     </file>
   </group>
 </project>
