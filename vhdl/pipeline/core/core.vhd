@@ -10,11 +10,11 @@ use work.internal_bus.all;
 
 entity core is
     generic(
-        instruct_addr_size  : natural := 16,
-        instruct_data_size  : natural := 16,
-        reg_addr_size       : natural := 5,
-        reg_data_size       : natural := 16,
-        memory_data_size    : natural := 32,
+        instruct_addr_size  : natural := 16;
+        instruct_data_size  : natural := 16;
+        reg_addr_size       : natural := 5;
+        reg_data_size       : natural := 16;
+        memory_data_size    : natural := 32;
         memory_addr_size    : natural := 16
 
     );
@@ -27,7 +27,7 @@ entity core is
         reset               : in std_logic; -- Resets the processor core
         
         -- Connection to instruction memory:
-        instruction_address : out std_logic_vector(instruct_addr_size - 1 downto 0);
+        instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
         instruction_data    : in std_logic_vector(instruct_data_size downto 0);
         
         -- Connections to the constant memory controller:
@@ -43,7 +43,7 @@ entity core is
         output_write_data   : out std_logic_vector(memory_data_size downto 0);
         output_we           : out std_logic;
         
-        output_read_address : out std_logic_vector(memory_addr_size - 1 downto 0);
+        output_read_addr    : out std_logic_vector(memory_addr_size - 1 downto 0);
         output_read_data    : in  std_logic_vector(memory_data_size downto 0)
     );
 end entity;
@@ -139,16 +139,16 @@ architecture behaviour of core is
         
     -- signals
         -- data signals
-        signal mem_reg_data_1_in    : std_logic_vector(reg_data_size-1 downto 0);
-        signal mem_reg_data_1_out   : std_logic_vector(reg_data_size-1 downto 0);
+        signal mem_reg_data_1       : std_logic_vector(reg_data_size-1 downto 0);
+        signal mem_reg_data_1       : std_logic_vector(reg_data_size-1 downto 0);
         signal mem_reg_data_1b      : std_logic_vector(reg_data_size-1 downto 0);
-        signal mem_reg_data_2_in    : std_logic_vector(reg_data_size-1 downto 0);
-        signal mem_reg_data_2_out   : std_logic_vector(reg_data_size-1 downto 0);
+        signal mem_fw_2             : std_logic_vector(reg_data_size-1 downto 0);
+        signal mem_fw_2             : std_logic_vector(reg_data_size-1 downto 0);
         signal mem_imm_value        : std_logic_vector(memory_data_size-1 downto 0);
         signal mem_mem_value        : std_logic_vector(memory_data_size-1 downto 0);
         -- addr signals
-        signal mem_reg_addr_1        : std_logic_vector( reg_addr_size-1 downto 0);
-        signal mem_reg_addr_2        : std_logic_vector( reg_addr_size-1 downto 0);
+        signal mem_reg_addr_1       : std_logic_vector( reg_addr_size-1 downto 0);
+        signal mem_reg_addr_2       : std_logic_vector( reg_addr_size-1 downto 0);
         
         -- control signals
         signal mem_alu_op           : alu_operation;
@@ -260,8 +260,8 @@ begin
         mem_source          => id_mem_slct,
         load_imm            => id_load_imm,
         output_write_enable => id_output_we,
-        add_imm     |       => id_add_imm;
-        load_const          => id_load_const;
+        add_imm				=> id_add_imm,
+        load_const          => id_load_const,
         branch_enable       => branch_enable
     );
     
@@ -279,30 +279,14 @@ begin
 
         reg_1_data      => mem_reg_data_1_in,
         reg_1b_data     => mem_reg_data_1b,
-        reg_2_data      => mem_reg_data_2_in,
-
+        reg_2_data      => mem_reg_data_2_in
     );
 
     --TODO: Pipeline registerz for signals
     -- signal mappings
-        id_imm_value <= sxt(instruction_data(13 downto 0), 32);
+    id_imm_value <= sxt(instruction_data(13 downto 0), 32);
 
-
-
-
---Pipeline: MEM
     
-
-    mem_forward_unit : forwarding_unit
-    port map (
-        wb_reg              => wb_reg_write_addr; 
-        reg_addr_1          => mem_reg_addr_1,
-        reg_addr_2          =< mem_reg_addr_2, 
-        reg_write           => wb_reg_we,
-        forward_1           => mem_forward_1,
-        forward_2           => mem_forward_2
-    );
-
     pipeline_id_mem_reg : process(clk)
     begin
         if rising_edge(clk) then
@@ -318,35 +302,33 @@ begin
             mem_load_imm    <= id_load_imm;
             mem_output_we   <= id_output_we;
             mem_add_imm     <= id_add_imm;
-            mem_load_const  <= id_load_const;
+            mem_load_const  <= id_load_const; 
+        end if;
+    end process;
+
+--Pipeline: MEM
+    mem_forward_unit : forwarding_unit
+    port map (
+        reg_we		        => wb_reg_we,
         
-         
-        end if;
-    end process;
+        wb_reg_1_addr       => wb_reg_1_addr,
+        wb_reg_2_addr       => wb_reg_2_addr,
+        reg_1_addr          => mem_reg_addr_1,
+        reg_1b_addr         => mem_reg_addr_1b,
+        reg_2_addr	        => mem_reg_addr_2,
+        
+        data_1_in           => mem_reg_data_1_in,
+        data_1b_in          => mem_reg_data_1b,
+        data_2_in           => mem_reg_data_2_in,
+        
+        data_1_out          => mem_fw_out_1,
+        data_1b_out         => mem_fw_out_1b,
+        data_2_out          => mem_fw_out_2,
+        
+        data_wb_in          => wb_data
+    );
 
-
-    mem_mux_reg1 : process(mem_reg_data_1_in, wb_data, mem_forward_1)
-    begin
-        if (mem_forward_1 = '1') then
-            mem_reg_data_1_out <= wb_data;
-        else
-            mem_reg_data_1_out <= mem_reg_data_1_in;
-        end if;
-
-    end process;
-
-    mem_mux_reg2 : process(mem_add_imm, mem_forward_2, wb_data, mem_reg_addr_2, mem_reg_data_2_in)
-    begin
-        if (mem_add_imm = '1') then
-            mem_reg_data_2_out <= mem_reg_addr_2;
-        else if (mem_forward_2 = '1') then
-            mem_reg_data_2_out <= wb_data;
-        else
-            mem_reg_data_2_out <= mem_reg_data_2_in;
-        end if;
-    end process;
-
-    mem_memory_mux : process(mem_mem_slct, input_read_data, constant_data, output_read_data)
+    mem_memselect_mux : process(mem_mem_slct, input_read_data, constant_data, output_read_data)
     begin
         case mem_mem_slct is
             when MEM_INPUT =>
@@ -359,46 +341,57 @@ begin
     end process;
 
     -- signal mapping
-    input_read_addr <= mem_reg_data_2_out;
-    output_read_address <= mem_reg_data_2_out;
-    output_write_addr <= mem_reg_data_2_out; 
-    constant_addr <= mem_reg_data_2_out;
+    input_read_addr <= mem_fw_2_out;
+    output_read_address <= mem_fw_2_out;
+    output_write_addr <= mem_fw_2_out; 
+    constant_addr <= mem_fw_2_out;
     
 -- Pipeline: EX
-    
 
     core_alu : alu
     port map (
-            -- CLK
-            dsp_clk                 => '-', 
-            cpu_clk                 => clk; 
-            -- ALU input data:
-            cpu_input_register_1    => ex_reg_data_1_out;
-            cpu_input_register_2    => ex_reg_data_2_out;
-            cpu_input_const         => ex_mem_value;
-            cpu_input_const_w       => ex_load_const;
-            -- ALU control:
-            operation               => ex_alu_op;
-            -- ALU result data:
-            result                  => ex_alu_result;
-            flags                   => ex_alu_flags;
+        -- CLK
+        dsp_clk                 => '-', 
+        cpu_clk                 => clk,
+        -- ALU input data:
+        cpu_input_register_1    => ex_fw_1_out,
+        cpu_input_register_2    => ex_fw_2_out,
+        cpu_input_const         => ex_mem_value,
+        cpu_input_const_w       => ex_load_const,
+        -- ALU control:
+        operation               => ex_alu_op,
+        -- ALU result data:
+        result                  => ex_alu_result,
+        flags                   => ex_alu_flags
     );
 
     ex_forwarding_unit : forwarding_unit
-        port map (
-            wb_reg              => wb_reg_write_addr; 
-            reg_addr_1          => ex_reg_addr_1,
-            reg_addr_2          =< ex_reg_addr_2, 
-            reg_write           => wb_reg_we,
-            forward_1           => ex_forward_1,
-            forward_2           => ex_forward_2
-        );    
+    port map (
+        reg_we		        => wb_reg_we,
+    
+        wb_reg_1_addr       => wb_reg_1_addr,
+        wb_reg_2_addr       => wb_reg_2_addr,
+        reg_1_addr          => ex_reg_addr_1,
+        reg_1b_addr         => ex_reg_addr_1b,
+        reg_2_addr	        => ex_reg_addr_2,
+        
+        data_1_in           => ex_reg_data_1,
+        data_1b_in          => ex_reg_data_1b,
+        data_2_in           => ex_reg_data_2,
+        
+        data_1_out          => ex_fw_out_1,
+        data_1b_out         => ex_fw_out_1b,
+        data_2_out          => ex_fw_out_2,
+        
+        data_wb_in          => wb_data
+    );    
 
     pipeline_mem_ex_reg : process(clk)
     begin
         if rising_edge(clk) then
-            ex_reg_data_1_in    <= mem_reg_data_1_out;  
-            ex_reg_data_2_in    <= mem_reg_data_2_out;
+            ex_reg_data_1       <= mem_fw_out_1;
+            ex_reg_data_1b      <= mem_fw_out_1b;
+            ex_reg_data_2       <= mem_fw_out_2;
             ex_imm_value        <= mem_imm_value;
             ex_mem_value        <= mem_mem_value;
             ex_reg_addr_1       <= mem_reg_addr_1;
@@ -409,7 +402,6 @@ begin
             ex_reg_wb_src       <= mem_reg_wb_src;
             ex_load_const       <= mem_load_const;
         end if;
-
     end process;
 
     ex_mux_reg1 : process(ex_reg_data_1_in, wb_data, ex_forward_1)
@@ -443,15 +435,6 @@ begin
         end case;
     end process;
 
-
-    --TODO:
-        --mux reg_1
-        --mux reg_2
-        --alu
-        --alu_result_mux
-        --forwarding unit
-        --stage reg_addr_size-1 pipeline regsz
-
 --Pipeline: WB
     pipeline_ex_wb_reg : process(clk)
     begin
@@ -461,7 +444,5 @@ begin
             wb_reg_write_addr   <= ex_reg_addr_1;
             wb_reg_we           <= ex_reg_we;
         end if;
-        
     end process;
-
 end behaviour;
