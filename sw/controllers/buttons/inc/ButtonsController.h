@@ -1,3 +1,6 @@
+#ifndef _BUTTONSCONTROLLER_H_
+#define _BUTTONSCONTROLLER_H_
+
 #include <stdint.h>
 #include "em_device.h"
 #include "em_chip.h"
@@ -20,3 +23,5 @@ void Bitless_GpioSetup(void);
 /* Register callback functions for buttons */
 void ButtonsController_RegisterCallbacks(uint8_t buttons[], GPIOINT_IrqCallbackPtr_t *callbackPtrs, uint8_t numButtons);
 void ButtonsController_SetCallback(uint8_t button, GPIOINT_IrqCallbackPtr_t callbackPtr);
+
+#endif /* _BUTTONSCONTROLLER_H_ */
