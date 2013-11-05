@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#include "bsp.h"
+#include "bsp_trace.h"
 #include "em_device.h"
 #include "em_common.h"
 #include "em_cmu.h"
@@ -42,17 +44,21 @@
 
 #define WAV_FILENAME "sweet1.wav"
 
-#define BUFFER_SIZE 64
+#define BUFFER_SIZE 512
 
-#define SAMPLE_RATE 44100
 #define FPGA_BASE ((uint16_t*) 0x21000000)
 
-static void* GetBuffer( void )
+static void* GetInBuffer( void )
 {
 	void* buffer = (void*)MEM_GetAudioInBuffer( true );
-
-	//printf("GetBuffer Called: %p\n", buffer);
 	
+	return buffer;
+}
+
+static void* GetOutBuffer( void )
+{
+	void *buffer (void*)MEM_GetAudioOutBuffer( true );
+
 	return buffer;
 }
 
@@ -61,13 +67,11 @@ static void setupSD(void)
 	SDConfig config = {
 		.mode            = IN,
 		.inFile          = "sweet1.wav",
-		.GetInputBuffer = &GetBuffer,
+		.GetInputBuffer  = &GetInBuffer,
 		.bufferSize      = BUFFER_SIZE
 	};
 	SDDriver_Init( &config );
-		//printf("Reading first samples\n");
 	SDDriver_Read();
-		//printf("Done Reading first samples\n");
 }
 
 static void setupBSP(void)
@@ -75,10 +79,10 @@ static void setupBSP(void)
 	BSP_Init( BSP_INIT_DEFAULT );
 	BSP_TraceProfilerSetup();
 
+	
+
 	BSP_PeripheralAccess( BSP_MICROSD, true );
-	//BSP_PeripheralAccess( BSP_AUDIO_IN, true );
-	BSP_PeripheralAccess( BSP_I2S, false );
-	BSP_PeripheralAccess( BSP_AUDIO_OUT, true );
+  BSP_PeripheralAccess( BSP_AUDIO_OUT, false );
 }
 
 static void setupDAC(void)
@@ -94,20 +98,12 @@ static void setupPRS(void)
 
 static void setupCMU(void)
 {
+
 	CMU_ClockEnable( cmuClock_HFPER, true );
 	CMU_ClockEnable( cmuClock_DMA, true );
-	//CMU_ClockEnable( cmuClock_ADC0, true );
 	CMU_ClockEnable( cmuClock_DAC0, true );
 	CMU_ClockEnable( cmuClock_PRS, true );
 	CMU_ClockEnable( cmuClock_TIMER0, true );
-}
-
-static void setupADC( void )
-{
-  ADCConfig config;
-  config.rate = 7000000;
-  config.mode = ScanConversion;
-  ADCDriver_Init( &config );
 }
 
 static void setupDMA(void)
@@ -132,20 +128,96 @@ void read_samples(void)
 
   if (eof) {
 		DMADriver_StopDAC();
+		SDDriver_Finalize();
+
 	} else {
 
-		uint16_t buffer = (void*)MEM_GetAudioInBuffer( true );
+		uint16_t* buffer = MEM_GetAudioInBuffer( true );
 		int size = MEM_GetAudioInBufferSize();
-		signedToUnsigned(buffer, size);
-		downScale(buffer, size);
+		uint16_t tmp;
+		for (int i=0; i < 2*size; i++) {
+			tmp = buffer[i] + 0x8000;
+			tmp >>= 4;
+			buffer[i] = tmp;
+		}
+
 	}
- 
+}
+
+void write_samples(void) 
+{
+	uint16_t* buffer = MEM_GetAudioOutBuffer( true );
+	int size = MEM_GetAudioOutBufferSize();
+	uint16_t tmp;
+	for (int i=0; i < 2*size; i++) {
+		tmp = buffer[i] - 0x8000;
+		tmp <<= 4;
+		buffer[i] = tmp;
+	}
+
+
+	SDDriver_Write();
+}
+
+void sdToDACCallback( void ) {
+	//DMA_ActivateAuto(DMA_MEM_CPY, true, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
+
+	read_samples();
+
+	
+	int bufferSize               = MEM_GetAudioInBufferSize();
+	uint16_t *audioInBuffer      = MEM_GetAudioInBuffer(true);
+	uint16_t *audioOutBuffer     = MEM_GetAudioOutBuffer(true);
+	volatile uint16_t *fpgaLeftInBuffer   = FPGADriver_GetInBuffer(0);
+	volatile uint16_t *fpgaRightInBuffer  = FPGADriver_GetInBuffer(1);
+	volatile uint16_t *fpgaLeftOutBuffer  = FPGADriver_GetOutBuffer(0);
+	volatile uint16_t *fpgaRightOutBuffer = FPGADriver_GetOutBuffer(1);
+
+	for (int i=0, j; i<2*bufferSize; i+=2, j++) {
+
+		audioOutBuffer[i] = fpgaLeftInBuffer[j];
+		audioOutBuffer[i+1] = fpgaRightInBuffer[j];
+		//audioOutBuffer[i] = fpgaLeftOutBuffer[j];
+		//audioOutBuffer[i+1] = fpgaRightOutBuffer[j];
+		fpgaLeftInBuffer[j] = audioInBuffer[i];
+		fpgaRightInBuffer[j] = audioInBuffer[i+1];
+		
+	}
 } 
+
+void sdToDACCallback( void ) {
+	//DMA_ActivateAuto(DMA_MEM_CPY, true, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
+
+	read_samples();
+
+	
+	int bufferSize               = MEM_GetAudioInBufferSize();
+	uint16_t *audioInBuffer      = MEM_GetAudioInBuffer(true);
+	uint16_t *audioOutBuffer     = MEM_GetAudioOutBuffer(true);
+	volatile uint16_t *fpgaLeftInBuffer   = FPGADriver_GetInBuffer(0);
+	volatile uint16_t *fpgaRightInBuffer  = FPGADriver_GetInBuffer(1);
+	volatile uint16_t *fpgaLeftOutBuffer  = FPGADriver_GetOutBuffer(0);
+	volatile uint16_t *fpgaRightOutBuffer = FPGADriver_GetOutBuffer(1);
+
+	for (int i=0, j; i<2*bufferSize; i+=2, j++) {
+
+		audioOutBuffer[i] = fpgaLeftInBuffer[j];
+		audioOutBuffer[i+1] = fpgaRightInBuffer[j];
+		//audioOutBuffer[i] = fpgaLeftOutBuffer[j];
+		//audioOutBuffer[i+1] = fpgaRightOutBuffer[j];
+		fpgaLeftInBuffer[j] = audioInBuffer[i];
+		fpgaRightInBuffer[j] = audioInBuffer[i+1];
+		
+	}
+
+	write_samples();
+}
+
 
 void setupINT( void )
 {
 	INTDriver_Init();
-	INTDriver_RegisterCallback(0, &read_samples);
+	INTDriver_RegisterCallback(0, &sdToDACCallback);
 }
 
 void setupFPGA( void )
@@ -157,18 +229,20 @@ void setupFPGA( void )
   FPGADriver_Init( &config );
 }
 
-void setupTIMER() 
+void setupTIMER(uint32_t rate) 
 {
 	TIMER_Init_TypeDef init = TIMER_INIT_DEFAULT;
 	init.mode = timerModeUpDown;
-	TIMER_TopSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 22050 );
+	TIMER_TopSet( TIMER0, CMU_ClockFreqGet(cmuClock_TIMER0) / rate );
 	TIMER_Init( TIMER0, &init );
 }
 
-void init( void ) {
+void main( void ) {
+
+  CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
 	
 	setupBSP();
-
+	
 	setupMEM();
 	setupFPGA();
 	setupINT();
@@ -180,18 +254,17 @@ void init( void ) {
 
 	setupDAC();
 	setupDMA();
-	//setupADC();
 
-	setupTIMER();
+	setupTIMER(8000);
 
-	//Delay_Init();
+	Delay_Init();
 
 	while(1)
  {
-		BSP_LedsSet(0x2);
-		//Delay(1000);
-		//BSP_LedsSet(0);
-		//Delay(500);
+	 BSP_LedsSet(0x2);
+	 Delay(1000);
+	 BSP_LedsSet(0);
+	 Delay(500);
 	}
 
 }

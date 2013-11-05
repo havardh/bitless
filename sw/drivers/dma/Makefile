@@ -180,6 +180,7 @@ $(DIR)/drivers/int/src/INTDriver.c \
 $(LIB)/util/src/CircularBuffer.c \
 $(LIB)/util/src/sample_conversion.c \
 $(LIB)/util/src/Blink.c \
+$(LIB)/util/src/fatfs_file.c \
 $(LIB)/util/src/wav.c \
 demo/$(PROJECTNAME).c
 

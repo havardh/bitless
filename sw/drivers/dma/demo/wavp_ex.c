@@ -1,6 +1,6 @@
-/**************************************************************************//**
- * @file
- * @brief Wav Player, requires FAT32 formatted micro-SD card with .wav file
+/*****************************************************************************
+  * @file
+ * @brief Wav player, requires FAT32 formatted micro-SD card with .wav file
  * @details
  *   On some DK main boards, you need to remove the prototype board for this
  *   example to run successfully.
@@ -47,64 +47,50 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include <limits.h>
 
 #include "em_device.h"
-#include "em_common.h"
 #include "em_cmu.h"
 #include "em_emu.h"
 #include "em_dac.h"
 #include "em_prs.h"
 #include "em_timer.h"
 #include "em_dma.h"
-#include "em_usart.h"
 #include "dmactrl.h"
 #include "ff.h"
 #include "microsd.h"
 #include "diskio.h"
 #include "bsp.h"
-
-/** Remove this #define if you want to use DAC0 instead of the I2S dac. */
-#define USE_I2S
+#include "bsp_trace.h"
 
 /** Filename to open from SD-card */
-#define WAV_FILENAME             "sweet1.wav"
+#define WAV_FILENAME    "sweet1.wav"
 
 /** Ram buffers
  * BUFFERSIZE should be between 512 and 1024, depending on available ram on efm32
  */
-#define BUFFERSIZE               512
-
-/** Max number of output volume steps. */
-#define VOLUME_MAX               13
-
-/** Number of 5ms ticks between each volume pushbutton check. */
-#define TICKS_PER_VOLUMECHECK    5
-
-/** Volume pushbutton check mask. */
-#define PB_MASK                  (BC_UIF_PB1 | BC_UIF_PB2) /* Check PB1 and PB2 */
+#define BUFFERSIZE      512
 
 /** DMA callback structure */
-static DMA_CB_TypeDef DMAcallBack;
+DMA_CB_TypeDef DMAcallBack;
 
 /* Temporary buffer for use when source is mono, can't put samples directly in
  * stereo DMA buffer with f_read(). */
-static int16_t ramBufferTemporaryMono[BUFFERSIZE];
+int16_t ramBufferTemporaryMono[BUFFERSIZE];
 
 /* Buffers for DMA transfer, 32 bits are transfered at a time with DMA.
  * The buffers are twice as large as BUFFERSIZE to hold both left and right
  * channel samples. */
-static int16_t ramBufferDacData0Stereo[2 * BUFFERSIZE];
-static int16_t ramBufferDacData1Stereo[2 * BUFFERSIZE];
+int16_t ramBufferDacData0Stereo[2 * BUFFERSIZE];
+int16_t ramBufferDacData1Stereo[2 * BUFFERSIZE];
 
 /** Bytecounter, need to stop DMA when finished reading file */
-static uint32_t ByteCounter;
+uint32_t ByteCounter;
 
 /** File system specific */
-static FATFS Fatfs;
+FATFS Fatfs;
 
-/** File to read WAV audio data from */
-static FIL WAVfile;
+/** File to read bmp data from */
+FIL WAVfile;
 
 /** WAV header structure */
 typedef struct
@@ -124,28 +110,7 @@ typedef struct
 } WAV_Header_TypeDef;
 
 /** Wav header. Global as it is used in callbacks. */
-static WAV_Header_TypeDef wavHeader;
-
-/*
- *   DK push buttons PB1 and PB2 are used to decrease/increase output volume.
- *   Push the AEM button on the kit until "EFM" shows in the upper right
- *   corner of the TFT display to activate PB1 and PB2 pushbuttons.
- */
-
-/** Variables for volume control. */
-static int           volume;
-static volatile bool checkVolume;
-static int           checkVolumeCount;
-static uint16_t      last_buttons = 0;
-
-/** Table with approx. 3dB per step adjust factors. */
-static const uint32_t Volume[ VOLUME_MAX + 1 ] =
-{
-  0, 1, 2, 3, 4, 6, 9, 13, 18, 25, 35, 50, 71, 100
-};
-
-/** Adjustment factor used for adjusting volume, range is 0..100 */
-static volatile uint32_t volumeAdjustFactor;
+WAV_Header_TypeDef wavHeader;
 
 /***************************************************************************//**
  * @brief
@@ -177,22 +142,6 @@ DWORD get_fattime(void)
 }
 
 /**************************************************************************//**
- * @brief SysTick_Handler
- * Interrupt Service Routine for system tick counter.
- *****************************************************************************/
-void SysTick_Handler(void)
-{
-  if (checkVolumeCount < TICKS_PER_VOLUMECHECK)
-    checkVolumeCount++;
-
-  if ((checkVolumeCount == TICKS_PER_VOLUMECHECK) && (checkVolume == false))
-  {
-    checkVolumeCount = 0;
-    checkVolume      = true;
-  }
-}
-
-/**************************************************************************//**
  * @brief
  *   This function fills up the memory buffers with data from SD card.
  * @param stereo
@@ -202,10 +151,9 @@ void SysTick_Handler(void)
  *****************************************************************************/
 void FillBufferFromSDcard(bool stereo, bool primary)
 {
-  UINT     bytes_read;
-  int16_t  * buffer;
-  int      i, j;
-  uint16_t tmp;
+  UINT    bytes_read;
+  int16_t * buffer;
+  int     i, j;
 
   /* Set buffer pointer correct ram buffer */
   if (primary)
@@ -226,18 +174,10 @@ void FillBufferFromSDcard(bool stereo, bool primary)
     f_read(&WAVfile, buffer, 4 * BUFFERSIZE, &bytes_read);
     ByteCounter += bytes_read;
 
+    /* Make samples 12 bits and unsigned */
     for (i = 0; i < 2 * BUFFERSIZE; i++)
     {
-      /* Adjust volume */
-      buffer[i] = (buffer[i] * (int32_t) volumeAdjustFactor) / 100;
-
-      /* Convert from signed to unsigned */
-      tmp = buffer[i] + 0x8000;
-
-      /* Convert to 12 bits */
-      tmp >>= 4;
-
-      buffer[i] = tmp;
+      buffer[i] = (buffer[i] + 0x7fff) >> 4;
     }
   }
   else /* Mono */
@@ -249,19 +189,9 @@ void FillBufferFromSDcard(bool stereo, bool primary)
     j = 0;
     for (i = 0; i < (2 * BUFFERSIZE) - 1; i += 2)
     {
-      /* Adjust volume */
-      ramBufferTemporaryMono[j] = (ramBufferTemporaryMono[j] *
-                                   (int32_t) volumeAdjustFactor) / 100;
-
-      /* Convert from signed to unsigned */
-      tmp = ramBufferTemporaryMono[j] + 0x8000;
-
-      /* Convert to 12 bits */
-      tmp >>= 4;
-
-      /* Make sample 12 bits and unsigned */
-      buffer[ i     ] = tmp;
-      buffer[ i + 1 ] = tmp;
+      /* Mono, make samples 12 bit unsigned, put value in both left and right channel */
+      buffer[i]     = (ramBufferTemporaryMono[j] + 0x7fff) >> 4;
+      buffer[i + 1] = (ramBufferTemporaryMono[j] + 0x7fff) >> 4;
       j++;
     }
   }
@@ -279,8 +209,8 @@ void FillBufferFromSDcard(bool stereo, bool primary)
  *****************************************************************************/
 void PingPongTransferComplete(unsigned int channel, bool primary, void *user)
 {
-  (void) channel;              /* Unused parameter */
-  (void) user;                 /* Unused parameter */
+  (void)channel;                            /* Unused parameter */
+  (void)user;                               /* Unused parameter */
 
   FillBufferFromSDcard((bool) wavHeader.channels, primary);
 
@@ -292,21 +222,12 @@ void PingPongTransferComplete(unsigned int channel, bool primary, void *user)
     DMA->IFC = DMA_IFC_CH0DONE;
     DMA_ActivatePingPong( 0,
                           false,
-#ifdef USE_I2S
-                          (void *) & (USART1->TXDOUBLE),
-                          (void *) &ramBufferDacData0Stereo,
-                          (2 * BUFFERSIZE) - 1,
-                          (void *) &(USART1->TXDOUBLE),
-                          (void *) &ramBufferDacData1Stereo,
-                          (2 * BUFFERSIZE) - 1);
-#else
                           (void *) &(DAC0->COMBDATA),
                           (void *) &ramBufferDacData0Stereo,
                           BUFFERSIZE - 1,
                           (void *) &(DAC0->COMBDATA),
                           (void *) &ramBufferDacData1Stereo,
                           BUFFERSIZE - 1);
-#endif
     return;
   }
 
@@ -323,15 +244,10 @@ void PingPongTransferComplete(unsigned int channel, bool primary, void *user)
                       false,
                       NULL,
                       NULL,
-#ifdef USE_I2S
-                      (2 * BUFFERSIZE) - 1,
-#else
                       BUFFERSIZE - 1,
-#endif
                       stop);
 }
 
-#ifndef USE_I2S
 /**************************************************************************//**
  * @brief
  *   DAC Setup.
@@ -359,13 +275,8 @@ void DAC_setup(void)
    * and be triggered by the same prs-signal. */
   DAC_InitChannel(DAC0, &initChannel, 0);
   DAC_InitChannel(DAC0, &initChannel, 1);
-
-  DAC_Enable(DAC0, 0, true);
-  DAC_Enable(DAC0, 1, true);
 }
-#endif
 
-#ifndef USE_I2S
 /**************************************************************************//**
  * @brief
  *   Setup TIMER for prs triggering of DAC conversion
@@ -392,7 +303,6 @@ void TIMER_setup(void)
   /* Write new topValue */
   TIMER_TopBufSet(TIMER0, timerTopValue);
 }
-#endif
 
 /**************************************************************************//**
  * @brief
@@ -426,28 +336,17 @@ void DMA_setup(void)
 
   /* channel 0 and 1 will need data at the same time,
    * can use channel 0 as trigger */
-
-#ifdef USE_I2S
-  chnlCfg.select = DMAREQ_USART1_TXBL;
-#else
   chnlCfg.select = DMAREQ_DAC0_CH0;
-#endif
-
-  chnlCfg.cb = &DMAcallBack;
+  chnlCfg.cb     = &DMAcallBack;
   DMA_CfgChannel(0, &chnlCfg);
 
   /* Setting up channel descriptor */
-  /* Destination is DAC/USART register and doesn't move */
+  /* Destination is DAC register and doesn't move */
   descrCfg.dstInc = dmaDataIncNone;
 
-  /* Transfer 32/16 bit each time to DAC_COMBDATA/USART_TXDOUBLE register*/
-#ifdef USE_I2S
-  descrCfg.srcInc = dmaDataInc2;
-  descrCfg.size   = dmaDataSize2;
-#else
+  /* Transfer 32 bit each time to DAC_COMBDATA register*/
   descrCfg.srcInc = dmaDataInc4;
   descrCfg.size   = dmaDataSize4;
-#endif
 
   /* We have time to arbitrate again for each sample */
   descrCfg.arbRate = dmaArbitrate1;
@@ -460,161 +359,67 @@ void DMA_setup(void)
   /* Enabling PingPong Transfer*/
   DMA_ActivatePingPong(0,
                        false,
-#ifdef USE_I2S
-                       (void *) & (USART1->TXDOUBLE),
-                       (void *) &ramBufferDacData0Stereo,
-                       (2 * BUFFERSIZE) - 1,
-                       (void *) &(USART1->TXDOUBLE),
-                       (void *) &ramBufferDacData1Stereo,
-                       (2 * BUFFERSIZE) - 1);
-#else
                        (void *) &(DAC0->COMBDATA),
                        (void *) &ramBufferDacData0Stereo,
                        BUFFERSIZE - 1,
                        (void *) &(DAC0->COMBDATA),
                        (void *) &ramBufferDacData1Stereo,
                        BUFFERSIZE - 1);
-#endif
-}
-
-#ifdef USE_I2S
-/**************************************************************************//**
- * @brief
- *   Setup USART1 in I2S mode.
- * @details
- *   USART1 is initialized in I2S mode to feed the DS1334 I2S dac.
- *   Baudrate is set based on information from the WAV file header.
- *****************************************************************************/
-static void I2S_Setup(void)
-{
-  USART_InitI2s_TypeDef init = USART_INITI2S_DEFAULT;
-
-  CMU_ClockEnable(cmuClock_USART1, true);
-
-  /* Use location 1: TX  - Pin D0, (RX - Pin D1) */
-  /*                 CLK - Pin D2, CS - Pin D3   */
-
-  GPIO_PinModeSet(gpioPortD, 0, gpioModePushPull, 0);
-  GPIO_PinModeSet(gpioPortD, 2, gpioModePushPull, 0);
-  GPIO_PinModeSet(gpioPortD, 3, gpioModePushPull, 0);
-
-  /* Configure USART for basic I2S operation */
-  init.sync.baudrate = wavHeader.frequency * 32;
-  USART_InitI2s(USART1, &init);
-
-  /* Enable pins at location 1 */
-  USART1->ROUTE = USART_ROUTE_TXPEN |
-                  USART_ROUTE_CSPEN |
-                  USART_ROUTE_CLKPEN |
-                  USART_ROUTE_LOCATION_LOC1;
-}
-#endif
-
-/**************************************************************************//**
- * @brief
- *   Check if volume control pushbuttons are pressed.
- *****************************************************************************/
-static void CheckVolume(void)
-{
-  uint16_t leds, buttons;
-
-  if (checkVolume)
-  {
-    checkVolume = false;
-
-    /* Calculate new output volume. */
-
-    buttons = BSP_PushButtonsGet() & PB_MASK; /* Check pushbuttons */
-    if (buttons != last_buttons)
-    {
-      if (buttons & BC_UIF_PB2)               /* Increase volume */
-      {
-        if (volume < VOLUME_MAX)
-          volume++;
-      }
-      else if (buttons & BC_UIF_PB1)          /* Decrease volume */
-      {
-        if (volume)
-          volume--;
-      }
-      volumeAdjustFactor = Volume[ volume ];
-      last_buttons       = buttons;
-    }
-
-    /* Use 14 leftmost leds for volume control indication. */
-    leds = 0x00003FFF << (15 - volume);
-    BSP_LedsSet((uint16_t) leds);
-  }
 }
 
 /**************************************************************************//**
  * @brief
  *   Main function.
  * @details
- *   Configures the DK for sound output, reads the wav header and fills the data
+ *   Configures the DVK for sound output, reads the wav header and fills the data
  *   buffers. After the DAC, DMA, Timer and PRS are set up to perform playback
  *   the mainloop just enters em1 continuously.
  *****************************************************************************/
 int init(void)
 {
-  UINT    bytes_read;
-  FRESULT res;
-
+  UINT bytes_read;
   ByteCounter = 0;
 
   /* Use 32MHZ HFXO as core clock frequency, need high speed for 44.1kHz stereo */
   CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
 
-  /* Initialize DK board register access */
+  /* Initialize DVK board register access */
   BSP_Init(BSP_INIT_DEFAULT);
 
-  volume             = 7;
-  volumeAdjustFactor = Volume[ volume ];
-  BSP_LedsSet((uint16_t)(0x00003FFF << (15 - volume)));
-
-  /* Setup SysTick Timer for 10 msec interrupts  */
-  if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 100))
-  {
-    while (1) ;
-  }
-
-#ifdef USE_I2S
-  /* Enable I2S audio out driver */
-  BSP_PeripheralAccess(BSP_I2S, true);
-#else
-  /* Enable Audio out driver */
-  BSP_PeripheralAccess(BSP_AUDIO_OUT, true);
-#endif
+  /* If first word of user data page is non-zero, enable eA Profiler trace */
+  BSP_TraceProfilerSetup();
 
   /* Enable SPI access to MicroSD card */
-  BSP_PeripheralAccess(BSP_MICROSD, true);
+  BSP_RegisterWrite(BC_SPI_CFG, 1);
+  BSP_PeripheralAccess(BSP_SPI, true);
+
+	BSP_LedToggle(1);
+
+  /* Enable Audio out driver */
+  BSP_PeripheralAccess(BSP_AUDIO_OUT, true);
 
   /* Initialize filesystem */
-  MICROSD_Init();
-  res = f_mount(0, &Fatfs);
-  if (res != FR_OK)
+  if (initFatFS() == -1)
   {
     /* No micro-SD with FAT32 is present */
-    while (1) ;
+    while(1);
   }
 
   /* Open wav file from SD-card */
-  if (f_open(&WAVfile, WAV_FILENAME, FA_READ) != FR_OK)
+  if(f_open(&WAVfile, WAV_FILENAME, FA_READ)!=FR_OK)
   {
     /* No micro-SD with FAT32, or no WAV_FILENAME found */
-    while (1) ;
+    while(1);
   }
-
+	BSP_LedToggle(2);
   /* Read header and place in header struct */
   f_read(&WAVfile, &wavHeader, sizeof(wavHeader), &bytes_read);
 
   /* Start clocks */
   CMU_ClockEnable(cmuClock_DMA, true);
-#ifndef USE_I2S
   CMU_ClockEnable(cmuClock_DAC0, true);
   CMU_ClockEnable(cmuClock_TIMER0, true);
   CMU_ClockEnable(cmuClock_PRS, true);
-#endif
 
   /* Fill both primary and alternate RAM-buffer before start */
   FillBufferFromSDcard((bool) wavHeader.channels, true);
@@ -622,23 +427,27 @@ int init(void)
 
   /* Setup DMA and peripherals */
   DMA_setup();
-
-#ifndef USE_I2S
+  TIMER_setup();
   DAC_setup();
 
-  /* Start timer which will trig DMA ... */
-  TIMER_setup();
-#else
-  /* Setup USART1 as I2S master */
-  I2S_Setup();
-#endif
+  /* Enable DAC channel 0 and 1, located on pin PB11 and PB12 */
+  DAC_Enable(DAC0, 0, true);
+  DAC_Enable(DAC0, 1, true);
 
+	BSP_LedToggle(3);
+
+	//int led = 0;
   while (1)
   {
-    /* Enter EM1 while the DAC, Timer, PRS and DMA is working */
-    EMU_EnterEM1();
+		BSP_LedToggle(5);
 
-    /* Check if time to check volume pushbuttons. */
-    CheckVolume();
+    /* Enter EM1 while the DAC, Timer, PRS and DMA is working */
+    //EMU_EnterEM1();
+
+		Delay(1000);
+		BSP_LedsSet(0x00ff);
+		Delay(1000);
+		BSP_LedsSet(0xff00);
+
   }
 }
