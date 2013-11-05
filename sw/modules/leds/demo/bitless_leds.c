@@ -31,8 +31,12 @@ int main() {
 
     bool clear = false;
     int i = 0;
-    while (1); {
-        LEDController_SetLed(i++);
+    while (1) {
+        if (clear)
+            LEDController_SetLed(i++);
+        else
+            LEDController_ClearLed(i++);
+
         if (i == NUM_LEDS) {
             i = 0;
             clear = !clear;
