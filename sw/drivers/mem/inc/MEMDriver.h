@@ -3,8 +3,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "MEMConfig.h"
 
-void MEM_Init( void );
+void MEM_Init( MEMConfig *config );
 uint16_t* MEM_GetAudioInBuffer( bool primary );
 int MEM_GetAudioInBufferSize( void );
 

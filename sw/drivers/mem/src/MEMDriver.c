@@ -6,13 +6,11 @@ static bool bufferPrimary;
 static uint16_t *audioInBuffer;
 static uint16_t *audioOutBuffer;
 
-static uint16_t audioInBufferSecondary[64];
-static uint16_t audioOutBufferSecondary[64];
 
-void MEM_Init( void ) 
+void MEM_Init( MEMConfig *config ) 
 {
-  bufferSize = 512;
-  
+  bufferSize = config->bufferSize;
+
   audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
   audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
 
@@ -33,7 +31,7 @@ uint16_t* MEM_GetAudioInBuffer( bool primary )
 	if (primary) {
 		return audioInBuffer;
 	} else {
-		return audioInBufferSecondary;
+		return 0; //audioInBufferSecondary;
 	}
 }
 
@@ -47,7 +45,7 @@ uint16_t* MEM_GetAudioOutBuffer( bool primary )
 	if (primary) {
 		return audioOutBuffer;
 	} else {
-		return audioOutBufferSecondary;
+		return 0; //audioOutBufferSecondary;
 	}
 }
 
@@ -76,19 +74,4 @@ void cpucpy()
 	}
 
 }
-
-void dmacpyb()
-{
-	
-}
-
-void dmacpypp()
-{
-	
-}
-
-/*void PendSV_Handler(void)
-{
-	cpucpy();
-	}*/
 
