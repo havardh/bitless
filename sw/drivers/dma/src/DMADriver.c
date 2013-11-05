@@ -1,8 +1,5 @@
 #include "DMADriver.h"
-
-//#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
-#define SAMPLE_RATE     44100
-
+
 #define DMA_AUDIO_IN       0
 #define DMA_AUDIO_OUT      1
 #define DMA_FPGA_IN_LEFT   2
@@ -67,7 +64,7 @@ static void dmaCbBasic(unsigned int channel, bool primary, void *user)
 {
   (void) user;
 	if (active) {
-		DMA_ActivateBasic(DMA_AUDIO_OUT, true, false, dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
+		DMA_ActivateBasic(DMA_AUDIO_OUT, true, false, dacAddress, audioOutBuffer, bufferSize - 1);
 		called[channel]++;
 
 		INTDriver_SetTriggerInterrupt( 0 );
@@ -134,6 +131,8 @@ void DMADriver_Init(DMAConfig *config)
 	fpgaLeftOutBuffer  = FPGADriver_GetOutBuffer(0);
 	fpgaRightOutBuffer = FPGADriver_GetOutBuffer(1);
 
+	
+
 	switch (config->mode) {
 	case ADC_TO_DAC:
 		setupDACBasic();
@@ -143,9 +142,9 @@ void DMADriver_Init(DMAConfig *config)
 		break;
 	case SD_TO_DAC:
 		setupDACBasic();
-		setupADCBasic();
-		setupFPGAIn(DMAREQ_DAC0_CH0);
-		setupFPGAOut(DMAREQ_DAC0_CH0);
+		
+		//setupFPGAIn(DMAREQ_DAC0_CH0);
+		//setupFPGAOut(DMAREQ_DAC0_CH0);
 		break;
 	}
 
@@ -240,7 +239,7 @@ void setupDACBasic( void )
 	};
 	DMA_CfgDescr(DMA_AUDIO_OUT, true, &descrCfg);
 
-	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false, dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
+	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false,  dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
 
 	active = true;
 
@@ -270,8 +269,8 @@ void setupDACPingPong( void )
 	DMA_CfgDescr(DMA_AUDIO_OUT, false, &descrCfg );
 
 	DMA_ActivatePingPong(DMA_AUDIO_OUT, false,
-											 MEM_GetAudioOutBuffer(true), adcAddress, bufferSize - 1,
-											 MEM_GetAudioOutBuffer(false), adcAddress, bufferSize - 1);
+											 MEM_GetAudioOutBuffer(true), dacAddress, bufferSize - 1,
+											 MEM_GetAudioOutBuffer(false), dacAddress, bufferSize - 1);
 }
 
 static void setupFPGAIn( uint32_t source ) 
