@@ -21,28 +21,6 @@ real-time.
 In effect, this revelation forced us to from a very early point to be
 concerned about resource management on the FPGA.
 
-\subsection{Fourier-transforms}\label{subsection:fpga-design-ft}
-
-Looking into which types of Fourier-transform algorithms we could use on an
-embedded device, in a manner as efficiently as possible, and yet real-time,
-we ended up looking at Sliding-Discrete-Fourier-Transforms\cite{SD-FT} (or more
-colloquially known as SD-FTs\footnote{This is discussed in more detail in
-section \ref{subsubsection:fpga-alu-ft}.}).
-\missingfigure{Maybe insert a figure here showing how the SD-FT works on each
-sample at a time?}
-
-This Fourier-transform would enable the FPGA to receive a live stream of
-data samples representing sound from an input device through a mini-jack on the
-PCB, or just from the DMAs of the MCU if the input was a file on a SD-card. And
-then transform this live stream of samples into the frequency domain.
-
-Since we now were able to work on each discrete sample while it was converted
-into the frequency domain, we were now able to perform frequency based
-sound-manipulations, such as basic high-pass and low-pass filters.
-
-The sound-effect manipulations could now (in theory) be put to work.
-
-\FloatBarrier
 \subsection{Sequential processing cores?}\todo{Maybe find better subsection
 title?}
 
