@@ -1,0 +1,43 @@
+\FloatBarrier
+\section{Processor Core}\label{section:fpga-processor-core}
+\todo[inline]{How is the processor designed and \emph{why!}}
+
+\FloatBarrier
+\subsection{Considerations}
+\todo[inline]{Describe the pipelines of the cpu, and why it is implemented/
+designed the way it is.}
+
+The processor core was implemented with focus on three aspects:
+
+\begin{enumerate}
+	\item Real-time sound manipulation
+	\item A focus on energy-efficiency.
+	\begin{enumerate}
+		\item Since we are implementing this on an FPGA, the focus will be on
+simulating (through having signals in VHDL simulating energy-efficiency switch
+choices) opportunities and the potential for energy-efficiency. This because
+it will be most impossible to program and test an FPGA chip not meant
+specifically for energy-efficiency purposes to be tested with respect to
+energy-efficiency.
+	\end{enumerate}
+	\item An architectural design permitting the manipulation of the most common
+sound-effects on the above real-time datastream, and yet still having such a
+generalized design so as to permit the running of most standard MIPS
+instructions.
+\end{enumerate}
+
+With these three points in mind, the decision was made to base the design on a
+processor very similar to the generalized pipelined MIPS processor that the
+subject TDT4255\cite{tdt4255} has its students implementing in the course
+exercises.
+
+\FloatBarrier
+\input{chapters/fpga/processor-core/alu}
+
+\FloatBarrier
+\subsection{Floating-point implementation design choices}
+
+\FloatBarrier
+\subsection{Memory access}
+\todo[inline]{Why constant values go to the alu, and how it changes pipeline
+layout. How the core accesses memory.}
