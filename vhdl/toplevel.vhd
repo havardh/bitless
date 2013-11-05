@@ -139,11 +139,12 @@ begin
 	led1 <= blinking_led1 when control_register.blinkmode = '1' else control_register.led1;
 
 	-- Toplevel internal bus process:
-	control_reg_access: process(internal_bus_address, internal_bus_data_out, internal_bus_data_in,
+	control_reg_access: process(system_clk, internal_bus_address, internal_bus_data_out, internal_bus_data_in,
 		internal_bus_read, internal_bus_write, control_register)
 	begin
-		if rising_edge(internal_bus_write) then
-			if internal_bus_address.toplevel = '1' then
+		if rising_edge(system_clk) then
+			if internal_bus_write = '1' then
+				if internal_bus_address.toplevel = '1' then
 					-- Write the writeable control register fields:
 					control_register.reset <= internal_bus_data_in(15);
 					control_register.blinkmode <= internal_bus_data_in(13);
@@ -151,13 +152,27 @@ begin
 						control_register.led0 <= internal_bus_data_in(12);
 						control_register.led1 <= internal_bus_data_in(11);
 					end if;
+				end if;
 			end if;
-		end if;
 
-		if rising_edge(internal_bus_read) then
-			if internal_bus_address.toplevel = '1' then
-				-- Read the control register:
-				internal_bus_data_out <= b"00" &
+--			if internal_bus_read = '1' and internal_bus_address.toplevel = '1' then
+--				-- Read the control register:
+--				internal_bus_data_out <= b"00" &
+--					control_register.blinkmode &	-- Bit 13
+--					control_register.led0 &			-- Bit 12
+--					control_register.led1 &			-- Bit 11
+--					control_register.button1 &		-- Bit 10
+--					control_register.button0 &		-- Bit  9
+--					b"000000" &
+--					control_register.number_of_pipelines; -- LSB
+--			elsif internal_bus_read = '1' then
+--				internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)));
+--			end if;
+		end if;
+	end process;
+
+	internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)))
+		when internal_bus_address.toplevel = '0' else b"00" &
 					control_register.blinkmode &	-- Bit 13
 					control_register.led0 &			-- Bit 12
 					control_register.led1 &			-- Bit 11
@@ -165,11 +180,6 @@ begin
 					control_register.button0 &		-- Bit  9
 					b"000000" &
 					control_register.number_of_pipelines; -- LSB
-			else
-				internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)));
-			end if;
-		end if;
-	end process;
 
 	generate_pipelines:
 		for i in 0 to NUMBER_OF_PIPELINES - 1 generate

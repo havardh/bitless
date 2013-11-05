@@ -82,7 +82,7 @@ architecture behaviour of pipeline is
 			output_write_data	: out std_logic_vector(31 downto 0);
 			output_we			: out std_logic;
 			
-			output_read_address	: out std_logic_vector(address_width - 1 downto 0);
+			output_read_addr	: out std_logic_vector(address_width - 1 downto 0);
 			output_read_data	: in  std_logic_vector(31 downto 0)
 		);
 	end component;
@@ -129,7 +129,8 @@ architecture behaviour of pipeline is
 	end component;
 
 	-- Pipeline control register:
-	signal control_register : pipeline_control_register;
+	signal control_register : pipeline_control_register := (num_cores => std_logic_vector(to_unsigned(NUMBER_OF_CORES, 4)),
+		stopmode => '1', reset => '0', constcore_1 => b"0000", constcore_2 => b"0000");
 
 	-- Zero-extended internal bus address:
 	signal internal_dest_address : std_logic_vector(15 downto 0);
@@ -164,8 +165,6 @@ architecture behaviour of pipeline is
 	signal output_write_data : data_array_32(0 to NUMBER_OF_CORES - 1);
 	signal output_write_enable : std_logic_vector(0 to NUMBER_OF_CORES - 1);
 begin
-	control_register.num_cores <= std_logic_vector(to_unsigned(NUMBER_OF_CORES, 4));
-
 	-- Zero-extended internal signals:
 	internal_dest_address <= b"00" & int_address.address;
 	internal_device <= b"000000000000" & int_address.device;
@@ -183,26 +182,28 @@ begin
 	-- Internal bus read process:
 	internal_bus_read: process(clk, int_re)
 	begin
-		if rising_edge(int_re) then
-			if int_address.toplevel = '0' and int_address.pipeline = pipeline_address then
-				case int_address.device is
-					when x"0" =>
-						int_data_out <= control_register.constcore_1 & control_register.constcore_2 &
-							control_register.stopmode & b"000" & control_register.num_cores;
-					when x"1" =>
-						-- Constant memory is write-only
-					when x"2" =>
-						-- Input buffer is write-only
-					when x"3" => -- Read the output buffer
-						int_data_out <= input_read_data(NUMBER_OF_CORES - 1)(15 downto 0);
-					when others =>
-						-- Read core memories
-						case int_address.coredev is
-							when b"00" =>
-								-- Read control register
-							when others =>
-						end case;
-				end case;
+		if rising_edge(clk) then
+			if int_re = '1' then
+				if int_address.toplevel = '0' and int_address.pipeline = pipeline_address then
+					case int_address.device is
+						when x"0" =>
+							int_data_out <= control_register.constcore_1 & control_register.constcore_2 &
+								control_register.stopmode & control_register.reset & b"00" & control_register.num_cores;
+						when x"1" => -- Constant memory is write-only
+							int_data_out <= (others => '0');
+						when x"2" => -- Input buffer is write-only?
+							int_data_out <= (others => '0');
+						when x"3" => -- Read the output buffer
+							int_data_out <= input_read_data(NUMBER_OF_CORES - 1)(15 downto 0);
+						when others =>
+							-- Read core memories
+							case int_address.coredev is
+								when b"00" =>
+									-- Read control register
+								when others =>
+							end case;
+					end case;
+				end if;
 			end if;
 		end if;
 	end process;
@@ -218,6 +219,7 @@ begin
 							control_register.constcore_1 <= int_data_in(15 downto 12);
 							control_register.constcore_2 <= int_data_in(11 downto 8);
 							control_register.stopmode <= int_data_in(7);
+							control_register.reset <= int_data_in(6);
 						when x"1" =>
 							constmem_write_enable <= '1';
 						when x"2" =>
@@ -326,7 +328,7 @@ begin
 				output_write_addr => output_write_address(i),
 				output_write_data => output_write_data(i),
 				output_we => output_write_enable(i),
-				output_read_address => output_read_address(i),
+				output_read_addr => output_read_address(i),
 				output_read_data => output_read_data(i)
 			);
 
