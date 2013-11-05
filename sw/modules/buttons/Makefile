@@ -142,7 +142,7 @@ $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-../leds/src/leds.c \
+../leds/src/Leds.c \
 src/Buttons.c \
 demo/$(PROJECTNAME).c
 

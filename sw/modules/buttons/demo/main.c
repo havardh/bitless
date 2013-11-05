@@ -8,7 +8,7 @@
 #include "bsp.h"
 #include "bsp_trace.h"
 #include "gpiointerrupt.h"
-#include "leds.h"
+#include "Leds.h"
 #include "ButtonsConfig.h"
 #include "Buttons.h"
 
@@ -27,7 +27,7 @@ void setupSTKCallbacks(void) {
 }
 
 void toggleBitlessLED(uint8_t pin) {
-    LEDController_SetLeds(pin);
+    Leds_SetLeds(pin);
 }
 
 void setupBitlessCallbacks(void) {

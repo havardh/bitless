@@ -4,7 +4,7 @@
 #include "em_chip.h"
 #include "em_cmu.h"
 #include "em_emu.h"
-#include "leds.h"
+#include "Leds.h"
 
 volatile uint32_t msTicks;
 
@@ -27,15 +27,15 @@ int main() {
 
     if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while (1) ;
 
-    LEDController_Init();
+    Leds_Init();
 
     bool clear = false;
     int i = 0;
     while (1) {
         if (clear)
-            LEDController_SetLed(i++);
+            Leds_SetLed(i++);
         else
-            LEDController_ClearLed(i++);
+            Leds_ClearLed(i++);
 
         if (i == NUM_LEDS) {
             i = 0;
