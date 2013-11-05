@@ -11,45 +11,46 @@
 #include "ButtonsController.h"
 #include "ButtonsConfig.h"
 
-uint16_t led = 1;
-
-void toggleLED(uint8_t pin) {
-    BSP_LedToggle(led);
+void toggSTKleLED(uint8_t pin) {
+    if (pin == 9) {
+        BSP_LedToggle(1);
+    } else if (pin == 10) {
+        BSP_LedToggle(0);
+    }
 }
 
-void switchLed(uint8_t pin) {
-    led = !led;
-}
-
-void setupCallbacks(void) {
+void setupSTKCallbacks(void) {
     uint8_t btns[2] = {9, 10};
-    GPIOINT_IrqCallbackPtr_t ptrs[2] = {toggleLED, switchLed};
+    GPIOINT_IrqCallbackPtr_t ptrs[2] = {toggSTKleLED, toggSTKleLED};
     ButtonsController_RegisterCallbacks(btns, ptrs, 2);
+}
+
+void toggleBitlessLED(uint8_t pin) {
+    // LEDController_SetLeds(pin);
+}
+
+void setupBitlessCallbacks(void) {
+    uint8_t btns[5] = {BTN0, BTN1, BTN2, BTN3, BTN4};
+    GPIOINT_IrqCallbackPtr_t ptrs[5] = {toggleBitlessLED, toggleBitlessLED, toggleBitlessLED, toggleBitlessLED, toggleBitlessLED};
+    ButtonsController_RegisterCallbacks(btns, ptrs, 5);
 }
 
 int main(void) {
     /* Chip errata */
     CHIP_Init();
 
-    /* If first word of user data page is non-zero, enable eA Profiler trace */
-    BSP_TraceProfilerSetup();
+    Board_t type = GG_STK3700;
 
     /* Initialize gpio with buttonscontroller */
-    ButtonsConfig config;
-    config.numButtons = 2;
-    config.board = GG_STK3700;
-    config.pins = (uint8_t*) malloc(sizeof(uint8_t) * 2);
-    config.pins[0] = 9;
-    config.pins[0] = 10;
+    ButtonsController_Init(type);
 
-    // config.board = GG_DK3750;
-    
-    ButtonsController_Init(&config);
-
-    setupCallbacks();
-
-    /* Initialize LED driver */
-    BSP_LedsInit();
+    /* Configure leds */
+    if (type == GG_STK3700) {
+        setupSTKCallbacks();
+        BSP_LedsInit();
+    } else {
+        setupBitlessCallbacks();
+    }
 
     /* Infinite loop */
     while (1) {
