@@ -19,7 +19,7 @@ typedef struct {
     * ---------------------------------------------------------
     **********************************************/
     uint16_t *baseAddress;
-    /* Relative address, from 'baseAddress', to the first pipeline */
+    /* Relative address, from 'baseAddress', to the toplevel register */
     uint32_t toplevelAddress;
     /* The address size of each pipeline */
     uint32_t pipelineAddressSize;
@@ -39,5 +39,16 @@ typedef struct {
 #define DEFAULT_CORE_DEVICE_SIZE        0x10000
 #define DEFAULT_CORE_ADDRESS_SIZE       0x4000
 #define DEFAULT_FPGA_ADDRESS_SIZE       0x800000
+
+#define FPGA_CONFIG_DEFAULT(baseAddress)\
+{   DEFAULT_NUM_PIPELINES,              \
+    DEFAULT_NUM_CORES,                  \
+    baseAddress,                        \
+    DEFAULT_TOPLEVEL_ADDRESS,           \
+    DEFAULT_PIPELINE_ADDRESS_SIZE,      \
+    DEFAULT_CORE_DEVICE_ADDRESS,        \
+    DEFAULT_CORE_DEVICE_SIZE,           \
+    DEFAULT_CORE_ADDRESS_SIZE,          \
+}
     
 #endif /* _FPGACONFIG_H_ */

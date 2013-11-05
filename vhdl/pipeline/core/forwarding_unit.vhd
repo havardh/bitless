@@ -3,39 +3,90 @@ use IEEE.STD_LOGIC_1164.all;
 
 entity forwarding_unit is
     Port (
-			wb_reg					: in STD_LOGIC_VECTOR(4 downto 0); -- Hazard type 1
-			reg_addr_1			  	: in STD_LOGIC_VECTOR(4 downto 0); -- Hazard type a
-			reg_addr_2			 	: in STD_LOGIC_VECTOR(4 downto 0); -- Hazard type b
-			reg_write   			: in STD_LOGIC;
-			forward_1         	: out STD_LOGIC;
-			forward_2         	: out STD_LOGIC
+			wb_reg_1_addr,
+			wb_reg_2_addr,
+			reg_1_addr,
+			reg_2_addr	: std_logic_vector(4 downto 0);
+			
+			reg_we		: register_write_enable;
+			
+			data_1_in,
+			data_2_in,
+			data_1_out,
+			data_2_out	: std_logic_vector(15 downto 0);
+			data_wb_in	: std_logic_vector(31 downto 0)
     );
 end forwarding_unit;
 
 architecture Behavioral of forwarding_unit is
-
+	signal wb_1_in, wb_2_in : std_logic_vector(15 downto 0);
+	
 begin
-
-forward_signals : process(reg_addr_1, reg_addr_2, reg_write, wb_reg)
-
-begin
-    -- EX hazard
-    if (reg_write = '1') then
-        if (wb_reg = reg_addr_1) then 
-            forward_1 <= '1';
-            forward_2 <= '0';
-        elsif (web_reg = reg_addr_2) then 
-            forward_1 <= '0';
-            forward_2 <= '1';
-        else
-            forward_1 <= '0';
-            forward_2 <= '0';
-        end if;
-    else
-        forward_1 <= '0';
-        forward_2 <= '0';
-    end if;
-
-end process forward_signals;
-
+	wb_1_in	<= data_wb_in(15 downto 0);
+	wb_2_in	<= data_wb_in(31 downto 16);
+	
+	forward_signals : process(reg_addr_1, reg_addr_2, reg_write, wb_reg)
+	begin
+		case reg_we is
+			when REG_A_WRITE =>
+				--WB contains one value
+				if wb_reg_1_addr = reg_addr_1 then
+					--Single WB value is needed for data 1
+					data_1_out <= wb_1_in;
+					data_2_out <= data_2_in;
+				elsif wb_reg_1_addr = reg_addr_2 then
+					--Single WB value is needed for data 2
+					data_1_out <= data_1_in;
+					data_2_out <= wb_1_in;
+				else
+					--WB is not needed
+					data_1_out <= data_1_in;
+					data_2_out <= data_2_in;
+				end if;
+				
+			when REG_AB_WRITE =>
+				--WB contains two values
+				if wb_reg_1_addr = reg_addr_1 then
+					--Data 1 needs WB 1
+					data_1_out <= wb_1_in;
+				elsif wb_reg_2_addr = reg_addr_1 then
+					--Data 1 needs WB 2
+					data_1_out <= wb_2_in;
+				else
+					--Data 1 needs no WB
+					data_1_out <= data_1_in;
+				end if;
+				if wb_reg_1_addr = reg_addr_2 then 
+					--Data 2 needs WB 1
+					data_2_out <= wb_1_in;
+				elsif wb_reg_2_addr = reg_addr_2 then
+					--Data 2 needs WB 2
+					data_2_out <= wb_2_in;
+				else
+					--WB is not needed
+					data_2_out <= data_2_in;
+				end if;
+				
+			when REG_LDI_WRITE =>
+				--WB contains single LDI value
+				if wb_reg_1_addr = reg_addr_1 then
+					--Single WB value is needed for data 1
+					data_1_out <= wb_1_in;
+					data_2_out <= data_2_in;
+				elsif wb_reg_1_addr = reg_addr_2 then
+					--Single WB value is needed for data 2
+					data_1_out <= data_1_in;
+					data_2_out <= wb_1_in;
+				else
+					--WB is not needed
+					data_1_out <= data_1_in;
+					data_2_out <= data_2_in;
+				end if;
+			
+			when REG_DONT_WRITE =>
+				--WB is not needed
+				data_1_out <= data_1_in;
+				data_2_out <= data_2_in;
+		end case;
+	end process forward_signals;
 end Behavioral;
