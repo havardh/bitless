@@ -18,6 +18,7 @@ entity register_file is
 		write_reg_enb	: in register_write_enable;
 
 		reg_1_data		: out std_logic_vector(15 downto 0);
+		reg_1b_data		: out std_logic_vector(15 downto 0);
 		reg_2_data		: out std_logic_vector(15 downto 0)
 
 	);
@@ -48,6 +49,9 @@ begin
 
 reg_1_data <= (others=>'0') when reg_1_address="00000"
 			else regs(to_integer(unsigned(reg_1_address)));
+
+reg_1b_data <= (others=>'0') when reg_1_address="00000"
+			else regs(to_integer(unsigned(reg_1_address))+1);
 
 reg_2_data <= (others=>'0') when reg_2_address="00000"
 			else regs(to_integer(unsigned(reg_2_address)));
