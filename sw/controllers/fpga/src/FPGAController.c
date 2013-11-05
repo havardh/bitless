@@ -1,7 +1,4 @@
 #include "FPGAController.h"
-#include <assert.h>
-#include <stdio.h>
-#include <stdbool.h>
 
 #define BIT_HIGH(var,pos) ((var) & (1<<(pos)))
 
