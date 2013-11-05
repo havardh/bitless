@@ -42,14 +42,18 @@ package core_constants is
 		fp_add,
 		fp_sub,
 		fp_mac,
-		fp_mas
+		fp_mas,
+		ALU_FIXED_TO_FLOAT,
+		ALU_FLOAT_TO_FIXED
 	);
 
 	type alu_result_select is (
 		ALU_ADD_SELECT,
 		ALU_LOG_SELECT,
 		ALU_FPU_SELECT,
-		ALU_MUL_SELECT
+		ALU_MUL_SELECT,
+		ALU_FIX_SELECT,
+		ALU_FLT_SELECT
 	);
 
 	type register_write_enable is (

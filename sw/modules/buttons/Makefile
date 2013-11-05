@@ -113,7 +113,7 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 INCLUDEPATHS += \
 -I. \
 -Iinc/ \
--I../../drivers/buttons/inc\
+-I../leds/inc/ \
 -I../../types/inc\
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
@@ -142,9 +142,9 @@ $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-../../drivers/buttons/src/ButtonsDriver.c \
-demo/$(PROJECTNAME).c \
-src/ButtonsController.c
+../leds/src/leds.c \
+src/ButtonsController.c \
+demo/$(PROJECTNAME).c
 
 s_SRC +=
 
@@ -174,10 +174,10 @@ vpath %.S $(S_PATHS)
 # Default build is debug build
 all:	  debug
 
-debug:	  CFLAGS += -DDEBUG -O0 -g3
+debug:	  CFLAGS += -DDEBUG -O0 -g3 -std=c99
 debug:	  $(EXE_DIR)/$(PROJECTNAME).bin
 
-release:  CFLAGS += -DNDEBUG -O0 -g3
+release:  CFLAGS += -DNDEBUG -O0 -g3 -std=c99
 release:  $(EXE_DIR)/$(PROJECTNAME).bin
 
 # Create objects from C SRC files
