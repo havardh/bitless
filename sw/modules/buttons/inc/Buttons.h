@@ -1,5 +1,5 @@
-#ifndef _BUTTONSCONTROLLER_H_
-#define _BUTTONSCONTROLLER_H_
+#ifndef _BUTTONS_H_
+#define _BUTTONS_H_
 
 #include <stdint.h>
 #include "em_device.h"
@@ -16,12 +16,12 @@ typedef struct {
 } BTN_t;
 
 /* Init and setup */
-void ButtonsController_Init(Board_t board);
+void Buttons_Init(Board_t board);
 void STK3700_GpioSetup(void);
 void Bitless_GpioSetup(void);
 
 /* Register callback functions for buttons */
-void ButtonsController_RegisterCallbacks(uint8_t buttons[], GPIOINT_IrqCallbackPtr_t *callbackPtrs, uint8_t numButtons);
-void ButtonsController_SetCallback(uint8_t button, GPIOINT_IrqCallbackPtr_t callbackPtr);
+void Buttons_RegisterCallbacks(uint8_t buttons[], GPIOINT_IrqCallbackPtr_t *callbackPtrs, uint8_t numButtons);
+void Buttons_SetCallback(uint8_t button, GPIOINT_IrqCallbackPtr_t callbackPtr);
 
-#endif /* _BUTTONSCONTROLLER_H_ */
+#endif /* _BUTTONS_H_ */

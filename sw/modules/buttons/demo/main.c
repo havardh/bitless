@@ -8,9 +8,9 @@
 #include "bsp.h"
 #include "bsp_trace.h"
 #include "gpiointerrupt.h"
-#include "ButtonsController.h"
 #include "leds.h"
 #include "ButtonsConfig.h"
+#include "Buttons.h"
 
 void toggSTKleLED(uint8_t pin) {
     if (pin == 9) {
@@ -23,7 +23,7 @@ void toggSTKleLED(uint8_t pin) {
 void setupSTKCallbacks(void) {
     uint8_t btns[2] = {9, 10};
     GPIOINT_IrqCallbackPtr_t ptrs[2] = {toggSTKleLED, toggSTKleLED};
-    ButtonsController_RegisterCallbacks(btns, ptrs, 2);
+    Buttons_RegisterCallbacks(btns, ptrs, 2);
 }
 
 void toggleBitlessLED(uint8_t pin) {
@@ -33,7 +33,7 @@ void toggleBitlessLED(uint8_t pin) {
 void setupBitlessCallbacks(void) {
     uint8_t btns[5] = {BTN0, BTN1, BTN2, BTN3, BTN4};
     GPIOINT_IrqCallbackPtr_t ptrs[5] = {toggleBitlessLED, toggleBitlessLED, toggleBitlessLED, toggleBitlessLED, toggleBitlessLED};
-    ButtonsController_RegisterCallbacks(btns, ptrs, 5);
+    Buttons_RegisterCallbacks(btns, ptrs, 5);
 }
 
 int main(void) {
@@ -42,8 +42,8 @@ int main(void) {
 
     Board_t type = GG_STK3700;
 
-    /* Initialize gpio with buttonscontroller */
-    ButtonsController_Init(type);
+    /* Initialize gpio with buttons */
+    Buttons_Init(type);
 
     /* Configure leds */
     if (type == GG_STK3700) {

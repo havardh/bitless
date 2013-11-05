@@ -1,4 +1,4 @@
-#include "ButtonsController.h"
+#include "Buttons.h"
 
 static BTN_t BTNS[NUM_BUTTONS] = BUTTONS_ARRAY_INIT;
 
@@ -6,23 +6,23 @@ static BTN_t BTNS[NUM_BUTTONS] = BUTTONS_ARRAY_INIT;
 *   Setup callbacks for the different buttons specified in 'buttons', 
 *   with the corresponding callback functions referenced in 'callbackPtrs'.
 */
-void ButtonsController_RegisterCallbacks(uint8_t buttons[],
+void Buttons_RegisterCallbacks(uint8_t buttons[],
 	GPIOINT_IrqCallbackPtr_t *callbackPtrs, uint8_t numButtons)
 {
     for (int i = 0; i < numButtons; i++) {
-        ButtonsController_SetCallback(buttons[i], callbackPtrs[i]);
+        Buttons_SetCallback(buttons[i], callbackPtrs[i]);
     }
 }
 
 /*
 *   Register callbacks using the emlib gpiointerrupt library
 */
-void ButtonsController_SetCallback(uint8_t button, GPIOINT_IrqCallbackPtr_t callbackPtr) 
+void Buttons_SetCallback(uint8_t button, GPIOINT_IrqCallbackPtr_t callbackPtr) 
 {
     GPIOINT_CallbackRegister(button, callbackPtr);
 }
 
-void ButtonsController_Init(Board_t board) {
+void Buttons_Init(Board_t board) {
     /* Enable GPIO in CMU */
     CMU_ClockEnable(cmuClock_GPIO, true);
 
