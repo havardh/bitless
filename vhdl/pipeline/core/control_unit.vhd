@@ -47,7 +47,7 @@ entity control_unit is
         output_write_enable : out std_logic;
         add_imm             : out std_logic;
         load_const          : out std_logic;
-        branch_enable       : out std_logic;
+        branch_enable       : out std_logic
         );
 end control_unit;
 
@@ -94,7 +94,7 @@ begin
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
                                     
-                                when add_imm =>
+                                when add_imm_value =>
                                     alu_op <= ALU_ADD;
                                     reg_write_e <= REG_A_WRITE;
                                     mem_src <= MEM_INPUT;
@@ -278,44 +278,54 @@ begin
                             end case;
                     end case;
                 
-                when load_imm =>
+                when load_imm_value =>
                     state               <= execute;
-                    alu_op              <= ALU_ADD,
-                    reg_write_e         <= REG_LDI_WRITE,
-                    wb_src              <= MUX_IMM,
-                    mem_src             <= MEM_INPUT,
-                    load_imm            <= '1',
-                    output_write_enable <= '0',
+                    alu_op              <= ALU_ADD;
+                    reg_write_e         <= REG_LDI_WRITE;
+                    wb_src              <= MUX_IMM;
+                    mem_src             <= MEM_INPUT;
+                    load_imm            <= '1';
+                    output_write_enable <= '0';
                     add_imm             <= '0';
                     load_const          <= '0';
                     branch_enable       <= '0';                    
                 
                 when branch =>
                     state               <= bubble;
-                    alu_op              <= ALU_ADD,
-                    reg_write_e         <= REG_DONT_WRITE,
-                    wb_src              <= MUX_IMM,
-                    mem_src             <= MEM_INPUT,
-                    load_imm            <= '0',
-                    output_write_enable <= '0',
+                    alu_op              <= ALU_ADD;
+                    reg_write_e         <= REG_DONT_WRITE;
+                    wb_src              <= MUX_IMM;
+                    mem_src             <= MEM_INPUT;
+                    load_imm            <= '0';
+                    output_write_enable <= '0';
                     add_imm             <= '0';
                     load_const          <= '0';
                     branch_enable       <= '1';
+						  
+					when others =>
+						  state               <= execute;
+                    alu_op              <= ALU_ADD;
+                    reg_write_e         <= REG_DONT_WRITE;
+                    wb_src              <= MUX_IMM;
+                    mem_src             <= MEM_INPUT;
+                    load_imm            <= '0';
+                    output_write_enable <= '0';
+                    add_imm             <= '0';
+                    load_const          <= '0';
+                    branch_enable       <= '0';
+							
             end case;
         else
             state               <= execute;
-            alu_op              <= ALU_ADD,
-            reg_write_e         <= REG_DONT_WRITE,
-            wb_src              <= MUX_ALU,
-            mem_src             <= MEM_INPUT,
-            load_imm            <= '0',
-            output_write_enable <= '0',
+            alu_op              <= ALU_ADD;
+            reg_write_e         <= REG_DONT_WRITE;
+            wb_src              <= MUX_ALU;
+            mem_src             <= MEM_INPUT;
+            load_imm            <= '0';
+            output_write_enable <= '0';
             add_imm             <= '0';
             load_const          <= '0';
-            branch_enable       <= '0'
-
-
-                
+            branch_enable       <= '0';       
         end if;    
     end process;
     
