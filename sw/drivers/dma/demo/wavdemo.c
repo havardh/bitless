@@ -2,8 +2,16 @@
 #include <string.h>
 #include <stdint.h>
 #include <limits.h>
+#include <stdint.h>
+
+#include "DMAConfig.h"
+
+#include "MEMConfig.h"
 
 #include "MEMDriver.h"
+#include "DMADriver.h"
+#include "INTDriver.h"
+#include "FPGADriver.h"
 
 #include "em_device.h"
 #include "em_common.h"
@@ -21,32 +29,30 @@
 #include "bsp.h"
 
 
+#define DMA_MEM_CPY 0
+#define FPGA_BASE ((uint16_t*) 0x21000000)
+
 /** Filename to open from SD-card */
 #define WAV_FILENAME             "sweet1.wav"
 
 /** Ram buffers
- * BUFFERSIZE should be between 512 and 1024, depending on available ram on efm32
+ * BUFFERIZE should be between 512 and 1024, depending on available ram on efm32
  */
-#define BUFFERSIZE               512
-
-/** Max number of output volume steps. */
-#define VOLUME_MAX               13
-
-/** Number of 5ms ticks between each volume pushbutton check. */
-#define TICKS_PER_VOLUMECHECK    5
-
-/** Volume pushbutton check mask. */
-#define PB_MASK                  (BC_UIF_PB1 | BC_UIF_PB2) /* Check PB1 and PB2 */
+#define BUFFERSIZE               64
 
 /** DMA callback structure */
 static DMA_CB_TypeDef DMAcallBack;
 static DMA_CB_TypeDef cb;
 
+static DMA_CB_TypeDef cbIN;
+
+static DMA_CB_TypeDef cbOUT;
+
 /* Buffers for DMA transfer, 32 bits are transfered at a time with DMA.
  * The buffers are twice as large as BUFFERSIZE to hold both left and right
  * channel samples. */
-static int16_t ramBufferDacData0Stereo[2 * BUFFERSIZE];
-static int16_t ramBufferDacData1Stereo[2 * BUFFERSIZE];
+//static int16_t ramBufferDacData0Stereo[2 * BUFFERSIZE];
+//static int16_t ramBufferDacData1Stereo[2 * BUFFERSIZE];
 
 /** Bytecounter, need to stop DMA when finished reading file */
 static uint32_t ByteCounter;
@@ -83,22 +89,7 @@ static WAV_Header_TypeDef wavHeader;
  *   corner of the TFT display to activate PB1 and PB2 pushbuttons.
  */
 
-/** Variables for volume control. */
-static int           volume;
-static volatile bool checkVolume;
-static int           checkVolumeCount;
-static uint16_t      last_buttons = 0;
-
-/** Table with approx. 3dB per step adjust factors. */
-static const uint32_t Volume[ VOLUME_MAX + 1 ] =
-	{
-		0, 1, 2, 3, 4, 6, 9, 13, 18, 25, 35, 50, 71, 100
-	};
-
-/** Adjustment factor used for adjusting volume, range is 0..100 */
-static volatile uint32_t volumeAdjustFactor;
-
-static int buffer[8];
+int called[8];
 
 int initFatFS(void)
 {
@@ -108,84 +99,86 @@ int initFatFS(void)
   return 0;
 }
 
-DWORD get_fattime(void)
-{
-  return (28 << 25) | (2 << 21) | (1 << 16);
-}
+DWORD get_fattime(void) { return (28 << 25) | (2 << 21) | (1 << 16); }
 
-void SysTick_Handler(void)
-{
-  if (checkVolumeCount < TICKS_PER_VOLUMECHECK)
-    checkVolumeCount++;
-
-  if ((checkVolumeCount == TICKS_PER_VOLUMECHECK) && (checkVolume == false))
-		{
-			checkVolumeCount = 0;
-			checkVolume      = true;
-		}
-}
+void SysTick_Handler(void){}
 
 void transferComplete(unsigned int channel, bool primary, void *user)
-{
-  (void) channel;
-  (void) primary;
-  (void) user;
-
-  /* Clearing flag to indicate that transfer is complete */
-
+{  
+	(void) channel;  (void) primary;  (void) user; 
+		
+	called[channel]++;
 }
-
 
 
 void FillBufferFromSDcard(bool stereo, bool primary)
 {
   UINT     bytes_read;
-  int16_t  * buffer;
+  int16_t  * 		buffer = MEM_GetAudioInBuffer(true);
   int      i, j;
   uint16_t tmp;
 
-  /* Set buffer pointer correct ram buffer */
-  if (primary)
-	{
-		buffer = MEM_GetAudioInBuffer(true);
-	}
-  else /* Alternate */
-	{
-		buffer = ramBufferDacData1Stereo;
-	}
 
-	f_read(&WAVfile, buffer, 4 * MEM_GetAudioInBufferSize(), &bytes_read);
+	f_read(&WAVfile, buffer, 4*MEM_GetAudioInBufferSize(), &bytes_read);
 	ByteCounter += bytes_read;
 
-	for (i = 0; i < 2 * BUFFERSIZE; i++)
+	for (i = 0; i < 2*BUFFERSIZE; i++)
   {
-
-		/* Convert from signed to unsigned */
 		tmp = buffer[i] + 0x8000;
-		
-      /* Convert to 12 bits */
 		tmp >>= 4;
-		
 		buffer[i] = tmp;
-  }
+	}
 
 }
 
-void BasicTransferComplete(unsigned int channel, bool primary, void *user)
-{
-	DMA_ActivateAuto(1, true, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
-	DMA_ActivateBasic(0, true, false, (void *) &(DAC0->COMBDATA), MEM_GetAudioOutBuffer(true), MEM_GetAudioOutBufferSize() - 1);
+void basicTransferComplete(unsigned int channel, bool primary, void *user) 
+{}
+
+void onDACInterrupt( void ) {
+	//DMA_ActivateAuto(DMA_MEM_CPY, true, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
+
+	called[3]++;
 	FillBufferFromSDcard((bool) wavHeader.channels, true);
+
+	
+	int bufferSize               = MEM_GetAudioInBufferSize();
+	uint16_t *audioInBuffer      = MEM_GetAudioInBuffer(true);
+	uint16_t *audioOutBuffer     = MEM_GetAudioOutBuffer(true);
+	volatile uint16_t *fpgaLeftInBuffer   = FPGADriver_GetInBuffer(0);
+	volatile uint16_t *fpgaRightInBuffer  = FPGADriver_GetInBuffer(1);
+	volatile uint16_t *fpgaLeftOutBuffer  = FPGADriver_GetOutBuffer(0);
+	volatile uint16_t *fpgaRightOutBuffer = FPGADriver_GetOutBuffer(1);
+
+	for (int i=0, j; i<2*bufferSize; i+=2, j++) {
+
+		audioOutBuffer[i] = fpgaLeftInBuffer[j];
+		audioOutBuffer[i+1] = fpgaRightInBuffer[j];
+		fpgaLeftInBuffer[j] = audioInBuffer[i];
+		fpgaRightInBuffer[j] = audioInBuffer[i+1];
+		
+	}
+}
+
+void transferInComplete(unsigned int channel, bool primary, void *user) 
+{
+	(void) channel;  (void) primary;  (void) user;
+  
+	DMA_ActivateBasic(3, true, false, MEM_GetAudioInBuffer(true), FPGADriver_GetInBuffer(0), (MEM_GetAudioInBufferSize() / 2) - 1);
+	//DMA_ActivateAuto(4, false, MEM_GetAudioInBuffer(true) + sizeof(uint16_t), FPGADriver_GetInBuffer(1), (MEM_GetAudioInBufferSize() / 2)-1);
+	called[channel]++;
 }
 
 
 
-/**************************************************************************//**
-																																						 * @brief
-																																						 *   DAC Setup.
-																																						 * @details
-																																						 *   Setup DAC in stereo mode and triggered by PRS.
-																																						 *****************************************************************************/
+void transferOutComplete(unsigned int channel, bool primary, void *user) 
+{
+	(void) channel;  (void) primary;  (void) user;
+  
+	DMA_ActivateBasic(4, true, false, MEM_GetAudioInBuffer(true), FPGADriver_GetInBuffer(0), (MEM_GetAudioInBufferSize() / 2) - 1);
+	//DMA_ActivateAuto(4, false, MEM_GetAudioInBuffer(true) + sizeof(uint16_t), FPGADriver_GetInBuffer(1), (MEM_GetAudioInBufferSize() / 2)-1);
+	called[channel]++;
+}
+
 void DAC_setup(void)
 {
   DAC_Init_TypeDef        init        = DAC_INIT_DEFAULT;
@@ -212,13 +205,6 @@ void DAC_setup(void)
   DAC_Enable(DAC0, 1, true);
 }
 
-/**************************************************************************//**
-																																						 * @brief
-																																						 *   Setup TIMER for prs triggering of DAC conversion
-																																						 * @details
-																																						 *   Timer is set up to tick at the same frequency as the frequency described
-																																						 *   in the global .wav header. This will also cause a PRS trigger.
-																																						 *****************************************************************************/
 void TIMER_setup(void)
 {
   uint32_t timerTopValue;
@@ -251,15 +237,15 @@ void setupDma(void)
   DMA_Init(&dmaInit);
 
   /* Setting call-back function */  
-  cb.cbFunc  = transferComplete;
+  cb.cbFunc  = basicTransferComplete; //transferComplete;
   cb.userPtr = NULL;
 
   /* Setting up channel */
   chnlCfg.highPri   = false;
   chnlCfg.enableInt = true;
-  chnlCfg.select    = 0;
+  chnlCfg.select    = DMAREQ_DAC0_CH0; // 0
   chnlCfg.cb        = &(cb);
-  DMA_CfgChannel(1, &chnlCfg);
+  DMA_CfgChannel(DMA_MEM_CPY, &chnlCfg);
 
   /* Setting up channel descriptor */
   descrCfg.dstInc  = dmaDataInc4;
@@ -267,55 +253,11 @@ void setupDma(void)
   descrCfg.size    = dmaDataSize4;
   descrCfg.arbRate = dmaArbitrate1;
   descrCfg.hprot   = 0;
-  DMA_CfgDescr(1, true, &descrCfg);
+  DMA_CfgDescr(DMA_MEM_CPY, true, &descrCfg);	
+
+	DMA_ActivateBasic(DMA_MEM_CPY, true, false, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
 }
 
-void DMABasic_setup(void)
-{
-  /* DMA configuration structs */
-
-  /* Initializing the DMA */
-  DMA_Init_TypeDef       dmaInit;
-  dmaInit.hprot        = 0;
-  dmaInit.controlBlock = dmaControlBlock;
-  DMA_Init(&dmaInit);
-
-  DMAcallBack.cbFunc = BasicTransferComplete;
-  DMAcallBack.userPtr = NULL;
-
-  DMA_CfgChannel_TypeDef chnlCfg;
-  chnlCfg.highPri   = false; /* Can't use with peripherals */
-  chnlCfg.enableInt = true;  /* Interrupt needed when buffers are used */
-  chnlCfg.select = DMAREQ_DAC0_CH0;
-  chnlCfg.cb = &DMAcallBack;
-  DMA_CfgChannel(0, &chnlCfg);
-
-  /* Setting up channel descriptor */
-  /* Destination is DAC/USART register and doesn't move */
-  DMA_CfgDescr_TypeDef   descrCfg;
-  descrCfg.dstInc = dmaDataIncNone;
-  descrCfg.srcInc = dmaDataInc4;
-  descrCfg.size   = dmaDataSize4;
-  descrCfg.arbRate = dmaArbitrate1;
-  descrCfg.hprot   = 0;
-
-  /* Configure both primary and secondary descriptor alike */
-  DMA_CfgDescr(0, true, &descrCfg);
-
-
-	DMA_ActivateBasic(0, true, false, (void *) &(DAC0->COMBDATA), &ramBufferDacData0Stereo, BUFFERSIZE - 1);
-
-}
-
-
-/**************************************************************************//**
-																																						 * @brief
-																																						 *   Main function.
-																																						 * @details
-																																						 *   Configures the DK for sound output, reads the wav header and fills the data
-																																						 *   buffers. After the DAC, DMA, Timer and PRS are set up to perform playback
-																																						 *   the mainloop just enters em1 continuously.
-																																						 *****************************************************************************/
 int main(void)
 {
   UINT    bytes_read;
@@ -329,9 +271,6 @@ int main(void)
   /* Initialize DK board register access */
   BSP_Init(BSP_INIT_DEFAULT);
 
-  volume             = 7;
-  volumeAdjustFactor = Volume[ volume ];
-  BSP_LedsSet((uint16_t)(0x00003FFF << (15 - volume)));
 
   /* Setup SysTick Timer for 10 msec interrupts  */
   if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 100))
@@ -363,7 +302,8 @@ int main(void)
   /* Read header and place in header struct */
   f_read(&WAVfile, &wavHeader, sizeof(wavHeader), &bytes_read);
 
-	MEM_Init();
+	MEMConfig memConfig = { .bufferSize = BUFFERSIZE };
+	MEM_Init( &memConfig );
 
   /* Start clocks */
   CMU_ClockEnable(cmuClock_DMA, true);
@@ -376,7 +316,20 @@ int main(void)
 
   /* Setup DMA and peripherals */
 	setupDma();
-  DMABasic_setup();
+	//setupDeinterleavedDMA();
+	//setupInterleavedDMA();
+
+	INTDriver_Init();
+	INTDriver_RegisterCallback(0, &onDACInterrupt);
+
+	FPGAConfig configFPGA;
+  configFPGA.baseAddress = FPGA_BASE;
+  configFPGA.numPipelines = 2;
+  configFPGA.bufferSize = BUFFERSIZE;
+  FPGADriver_Init( &configFPGA );
+
+	DMAConfig config = { .mode = SD_TO_DAC };
+	DMADriver_Init( &config );
 
   DAC_setup();
 
