@@ -3,22 +3,21 @@
 
 As this project requires us to implement a MIMD processor in VHDL, we realized
 our design through implementing it in VHDL, and running the final processor on a
-\todo{Replace ``Spartan-6'' and FPGA with references/links?}Spartan-6 FieldProgrammableGateArray.
+Spartan-6\cite{fpga-chip} Field-Programmable-Gate-Array.
 
-Our MIMD processor design is was realized throughpipelined cores connected
-sequentially in a pipeline of their own. Since the processor contains homogenous
-cores, each core can receive and run the same instructions. To realize this as
-an \todo{Fancy inline thingy explaining MultipleInstructionsMultipleData acronym
-}``MIMD'', the first core in the sequential core-pipeline is the only one which
-can work with the data given to said pipeline by the EBI bus. The next core then
-works on the output of the first core, and in this fashion each core in the
-pipeline works on its own data independently of the data any other core is
-currently working on\footnote{This is how we realize the ``Multiple Data'' part
-of the MIMD definition.}.
+Our MIMD processor design is was realized through pipelined cores connected
+sequentially in a pipeline of their own. Since the processor consists of
+homogenous cores, each core can receive and run the same instructions. To
+realize this as a ``Multiple Instructions, Multiple Data'' (``MIMD''), the first
+core in the sequential core-pipeline is the only one which can work with the
+data given to said pipeline by the EBI bus. The next core then works on the
+output of the first core, and in this fashion each core in the pipeline works on
+its own data independently of the data any other core is currently working
+on\footnote{This is how we realize the ``Multiple Data'' part of the MIMD
+definition.}.
 
 And each of the processor cores has its own instruction memory, so that they can
-run each their own instructions, and that's how we have realized the \todo{Maybe
-add another fancy inline thingy here instead of qoutation marks?} ``Multiple
+run each their own instructions, and that's how we have realized the ``Multiple
 Instruction'' part of the MIMD definition.
 \newpage
 \input{chapters/fpga/design}

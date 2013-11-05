@@ -1,6 +1,5 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-use WORK.MIPS_CONSTANT_PKG.all;
 
 entity forwarding_unit is
     Port (

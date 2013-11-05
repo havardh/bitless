@@ -6,37 +6,38 @@
 \subsection{Top-down architectural view}\todo{Maybe find better subsection
 title?}
 
-\missingfigure{We should have a figure of the pipeline here, we've got several
+\missingfigure{We should have a figure of the pipeline here, we got several
 in google docs, use/pretty up one of those should suffice to give an
 architectural overview}
 
-In the above figure, \todo[inline]{insert reference to above figure} we
-illustrate how the processor connects all the processing cores together on the
-FPGA.
+In the above \todo{insert reference to above figure}figure\footnote{insert
+reference to above figure.}, we illustrate how the processor connects all the
+processing cores together on the FPGA.
 
-Though the \todo[inline]{reference to the same above figure} figure above shows
-that we've connected the \todo{Maybe insert EBI references?} EBI-bus to each
-processing core, during normal non-debugging runtime the cores only
-``communicate'' in the manner described in the next paragraph, and not through
-the EBI-bus. The EBI-bus is used only as inter-communication between the cores
-for debugging purposes.
+Though the \todo{insert reference to the same above figure}figure\footnote{
+insert reference to the same above figure.} above shows how we connected the
+EBI-bus\cite{efm_ebi} to each processing core, during normal non-debugging
+runtime the cores only ``communicate'' in the manner described below, and not
+through the EBI-bus. The EBI-bus is used only as a way for inter-communication
+between the cores when debugging.
 
 The manner in which the cores ``communicate'' with each other is instead by the
 two-stage ring-buffers between them. For each clockcycle belonging to the
 pipeline of processor cores, they switch which one of the ones preceding they
-read from, and which of the ones following they write to\footnote{This is where
-the ``Multiple Data'' part of the ``MIMD'' definition is enacted
-in our processor.}.
+read from, and which of the ones following they write to\footnote{As mentioned
+in the footnote on the introduction to this chapter, this is how the ``Multiple
+Data'' part of the ``MIMD'' definition is realized in our processor.}.
 
 \FloatBarrier
-\subsection{Start-up}
+\subsection{Start-up}\label{subsection:fpga-pipeline-startup}
 
-\todo[inline]{This is where we explain how the MCU sets up the pipeline}
+\todo[inline]{This is where we explain how the MCU sets up the pipeline, and
+how/what signals are set (and to what they are set) when the processor starts
+up.}
 
-
-\FloatBarrier
 \subsection{In action}
 
-So the input of the FPGA goes to the first core in each ``core-pipeline'', where
-the first core works on the sample, before giving it over to the next core in
-said pipeline.
+The input of the FPGA comes from the EBI-bus and enters one of the \todo{Insert
+reference here?}input-memory buffers of the first core in each of the
+``sequential-core-pipelines'', where the first core works on the sample, before
+giving it over to the next core in said pipeline.

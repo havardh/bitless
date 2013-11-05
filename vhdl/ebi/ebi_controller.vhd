@@ -40,20 +40,23 @@ architecture behaviour of ebi_controller is
 	signal current_state : state;
 
 	signal re_value, we_value : std_logic := '0';
-	signal transaction_finished : std_logic := '0';
+	signal transaction_finished, reset_finished : std_logic := '0';
 begin
 	int_write_enable <= we_value;
 	int_read_enable <= re_value;
 
 	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs, reset)
 	begin
-		if reset = '1' then
+		if reset = '1' and reset_finished = '0' then
 			current_state <= idle;
 			ebi_data <= (others => 'Z');
 			we_value <= '0';
 			re_value <= '0';
 			transaction_finished <= '0';
-		elsif rising_edge(clk) then
+			reset_finished <= '1';
+		elsif reset = '0' and reset_finished = '1' then
+			reset_finished <= '0';
+		elsif falling_edge(clk) then
 			case current_state is
 				when idle =>
 					ebi_data <= (others => 'Z');
@@ -72,8 +75,8 @@ begin
 	
 				when read_state =>
 					if re_value = '1' then
-						ebi_data <= int_data_out;
 						re_value <= '0';
+						ebi_data <= int_data_out;
 						transaction_finished <= '1';
 					elsif transaction_finished = '0' then
 						re_value <= '1';

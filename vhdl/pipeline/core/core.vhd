@@ -54,6 +54,7 @@ architecture behaviour of core is
 	component adder is
 		port (
 			a, b	: in	std_logic_vector(15 downto 0);
+			c : in std_logic;
 			result	: out	std_logic_vector(15 downto 0);
 			flags	: out	alu_flags
 		);
@@ -76,7 +77,7 @@ architecture behaviour of core is
 			spec_reg_addr		: out	std_logic_vector (4 downto 0);
 			alu_op				: out	alu_operation;
 			imm_select	 		: out	std_logic;
-			reg_write_e			: out	register_write_enable;
+--			reg_write_e			: out	register_write_enable;
 			reg_b_wr			: out	std_logic;
 			reg_write_source 	: out	std_logic_vector (1 downto 0);
 			output_write_enable : out	std_logic;
@@ -203,7 +204,8 @@ begin
 	pc_incrementer : adder
 	port map(
 		a		=> pc_reg,
-		b		=> "0001",
+		b		=> x"0001",
+		c => '0',
 		result	=> pc_inc
 	);
 	
@@ -221,7 +223,7 @@ begin
 	instruction_address <= pc_reg;
 	
 --Pipeline stage 2 ID
-	branch_target <= instruction_data(9 downto 0);
+--	branch_target <= instruction_data(9 downto 0);
 	
 	control : control_unit
 	port map(
@@ -231,7 +233,7 @@ begin
 		opt_code			=> instruction_data(15 downto 10),
 		spec_reg_addr		=> id_spec_addr,
 		imm_select	 		=> id_imm_slct,
-		reg_write_e			=> id_reg_we,
+--		reg_write_e			=> id_reg_we,
 		reg_b_wr			=> id_reg_wb,
 		reg_write_source 	=> id_reg_src,
 		output_write_enable => id_output_we,
@@ -261,7 +263,7 @@ begin
 			mem_alu_result_mux_control	<= id_alu_result_mux_control;
 			mem_input_data_mux_control	<= id_input_data_mux_control;
 			
-			mem_imm_data	<= instruction_data(13 downto 0);
+--			mem_imm_data	<= instruction_data(13 downto 0);
 			
 			mem_reg_1_addr	<= instruction_data(9 downto 5);
 			mem_reg_2_addr	<= instruction_data(4 downto 0);
@@ -271,28 +273,28 @@ begin
 	end process;
 	
 --Pipeline stage 3 MEM
-	mem_addr_mux : process(mem_addr_mux_control)
-	begin
-		if mem_addr_mux_control = '1' then
-			mem_addr <= mem_register_1_data;
-		else
-			mem_addr <= wb_data;
-		end if;
-		constant_addr <= mem_addr;
-		input_read_addr <= mem_addr;
-		output_read_addr <= mem_addr;
-		output_write_addr <= mem_addr;
-	end process;
-	
-	
-	mem_output_data_mux : process(mem_output_data_mux_control)
-	begin
-		if mem_output_data_mux_control = '1' then
-			output_write_data <= mem_register_2_data;
-		else
-			output_write_data <= mem_reg_1_addr & mem_reg_1_addr;
-		end if;
-	end process;
+--	mem_addr_mux : process(mem_addr_mux_control)
+--	begin
+--		if mem_addr_mux_control = '1' then
+--			mem_addr <= mem_register_1_data;
+--		else
+--			mem_addr <= wb_data;
+--		end if;
+--		constant_addr <= mem_addr;
+--		input_read_addr <= mem_addr;
+--		output_read_addr <= mem_addr;
+--		output_write_addr <= mem_addr;
+--	end process;
+--	
+--	
+--	mem_output_data_mux : process(mem_output_data_mux_control)
+--	begin
+--		if mem_output_data_mux_control = '1' then
+--			output_write_data <= mem_register_2_data;
+--		else
+--			output_write_data <= mem_reg_1_addr & mem_reg_1_addr;
+--		end if;
+--	end process;
 	
 	mem_input_data_mux : process(mem_input_data_mux_control)
 	begin
@@ -306,30 +308,30 @@ begin
 		end case;
 	end process;
 	--Forwarding unit
-	mem_forwarding_unit : forwarding_unit
-	port map(
-		wb_reg		=> wb_reg,
-		reg_addr_1	=> ex_reg_1_addr,
-		reg_addr_2	=> ex_reg_2_addr,
-		reg_write	=> wb_reg_we,
-		forward_1	=> mem_addr_mux_control,
-		forward_2	=> mem_output_data_mux_control
-	);
+--	mem_forwarding_unit : forwarding_unit
+--	port map(
+--		wb_reg		=> wb_reg,
+--		reg_addr_1	=> ex_reg_1_addr,
+--		reg_addr_2	=> ex_reg_2_addr,
+--		reg_write	=> wb_reg_we,
+--		forward_1	=> mem_addr_mux_control,
+--		forward_2	=> mem_output_data_mux_control
+--	);
 	--stage 4 pipeline regz
-	mem_ex_pipeline_regz : process(clk)
-	begin
-		if rising_edge(clk) then
-			ex_register_1_data			<= mem_register_1_data;
-			ex_register_2_data			<= mem_register_2_data;
-			ex_alu_result_mux_control	<= mem_alu_result_mux_control;
-			
-			ex_imm_data		<= mem_imm_data;
-			
-			ex_reg_1_addr	<= mem_reg_1_addr;
-			ex_reg_2_addr	<= mem_reg_2_addr;
-			ex_reg_we		<= mem_reg_we;
-		end if;
-	end process;
+--	mem_ex_pipeline_regz : process(clk)
+--	begin
+--		if rising_edge(clk) then
+--			ex_register_1_data			<= mem_register_1_data;
+--			ex_register_2_data			<= mem_register_2_data;
+--			ex_alu_result_mux_control	<= mem_alu_result_mux_control;
+--			
+--			ex_imm_data		<= mem_imm_data;
+--			
+--			ex_reg_1_addr	<= mem_reg_1_addr;
+--			ex_reg_2_addr	<= mem_reg_2_addr;
+--			ex_reg_we		<= mem_reg_we;
+--		end if;
+--	end process;
 		
 --Pipeline stage 4 EX
 	--ALU
@@ -351,22 +353,22 @@ begin
 		end if;
 	end process;
 	
-	alu_unit : alu
-	port map(
-		-- CLK
-		dsp_clk					=> '-',
-		cpu_clk 				=> clk,
-		-- ALU input data:
-		cpu_input_register_1	=> alu_input_1_mux_out,
-		cpu_input_register_2	=> alu_input_2_mux_out,
-		cpu_input_const 		=> ex_mem_data,
-		cpu_input_const_w		=> ex_constant_we,
-		-- ALU control:
-		operation 				=> ex_alu_op,
-		-- ALU result data:
-		result 					=> alu_result,
-		flags  					=> alu_flags
-	);
+--	alu_unit : alu
+--	port map(
+--		-- CLK
+--		dsp_clk					=> '-',
+--		cpu_clk 				=> clk,
+--		-- ALU input data:
+--		cpu_input_register_1	=> alu_input_1_mux_out,
+--		cpu_input_register_2	=> alu_input_2_mux_out,
+--		cpu_input_const 		=> ex_mem_data,
+--		cpu_input_const_w		=> ex_constant_we,
+--		-- ALU control:
+--		operation 				=> ex_alu_op,
+--		-- ALU result data:
+--		result 					=> alu_result,
+--		flags  					=> alu_flags
+--	);
 	
 	alu_result_mux : process(ex_alu_result_mux_control)
 	begin
@@ -381,25 +383,25 @@ begin
 		end case;
 	end process;
 	--Forwarding unit
-	ex_forwarding_unit : forwarding_unit
-	port map(
-		wb_reg		=> wb_reg,
-		reg_addr_1	=> ex_reg_1_addr,
-		reg_addr_2	=> ex_reg_2_addr,
-		reg_write	=> wb_reg_we,
-		forward_1	=> alu_input_1_mux_control,
-		forward_2	=> alu_input_2_mux_control
-	);
+--	ex_forwarding_unit : forwarding_unit
+--	port map(
+--		wb_reg		=> wb_reg,
+--		reg_addr_1	=> ex_reg_1_addr,
+--		reg_addr_2	=> ex_reg_2_addr,
+--		reg_write	=> wb_reg_we,
+--		forward_1	=> alu_input_1_mux_control,
+--		forward_2	=> alu_input_2_mux_control
+--	);
 	--stage 4 pipeline regz
-	ex_wb_pipeline_regz : process(clk)
-	begin
-		if rising_edge(clk) then
-			wb_reg		<= ex_reg_1_addr;
-			wb_reg_we	<= ex_reg_we;
-			wb_flags	<= ex_flags;
-			wb_data		<= alu_result_mux_out;
-		end if;
-	end process;
+--	ex_wb_pipeline_regz : process(clk)
+--	begin
+--		if rising_edge(clk) then
+--			wb_reg		<= ex_reg_1_addr;
+--			wb_reg_we	<= ex_reg_we;
+--			wb_flags	<= ex_flags;
+--			wb_data		<= alu_result_mux_out;
+--		end if;
+--	end process;
 
 --TODO:
 	--connect the rest (stage 5)

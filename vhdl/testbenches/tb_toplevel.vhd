@@ -68,7 +68,7 @@ architecture testbench of tb_toplevel is
 	signal toplevel_control_register : std_logic_vector(15 downto 0) := (others => '0');
 
 	constant EBI_CS_WAIT : time := 50 ns;
-	constant EBI_RE_WAIT : time := 150 ns;
+	constant EBI_RE_WAIT : time := 200 ns;
 	constant EBI_WE_WAIT : time := 150 ns;
 
 begin
@@ -104,6 +104,7 @@ begin
 
 		-- Reset? Not neccessary...
 		wait for 40 ns;
+		report "VHDL testbenches are like giant scripts that do not support functions";
 		wait for clk_period * 2;
 
 		-- Read the toplevel control register:
@@ -150,6 +151,35 @@ begin
 		ebi_cs <= '1';
 
 		report "Processor reset finished!";
+		wait for clk_period * 4;
+
+		-- Read the control register of pipeline 0:
+		report "Reading the control register of pipeline 0";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0000", b"00", b"00000000000000");
+		ebi_data <= (others => 'Z');
+		wait for EBI_CS_WAIT;
+		ebi_re <= '0';
+		wait for EBI_RE_WAIT;
+		ebi_re <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+
+		wait for clk_period * 4;
+
+--		NOTE: The following transfer cannot be verified as long as the constant memory is write-only.
+--		-- Write something to the constant memory of pipeline 0:
+--		report "Writing 0xbeef to address 0 in the constant memory of pipeline 0";
+--		ebi_cs <= '0';
+--		ebi_address <= make_ebi_address(false, b"00", b"0001", b"00", b"00000000000000");
+--		ebi_data <= x"beef";
+--		wait for EBI_CS_WAIT;
+--		ebi_we <= '0';
+--		wait for EBI_WE_WAIT;
+--		ebi_we <= '1';
+--		wait for EBI_CS_WAIT;
+--		ebi_cs <= '1';
+
 		wait for clk_period * 4;
 
 		wait;
