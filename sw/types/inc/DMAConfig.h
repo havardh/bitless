@@ -16,6 +16,8 @@ typedef struct {
 
 	Dataflow mode;
 
+	bool fgpaEnabled;
+
 	bool adcEnabled;
 	bool dacEnabled;
 
@@ -24,6 +26,6 @@ typedef struct {
 
 } DMAConfig;
 
-#define DMA_CONFIG_DEFAULT { 0, 0, 0, 0 };
+#define DMA_CONFIG_DEFAULT { ADC_TO_DAC, 0, 1, 0, 0, 0 };
 
 #endif /* _DMACONFIG_H_ */
