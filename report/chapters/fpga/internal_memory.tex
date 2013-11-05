@@ -1,12 +1,31 @@
 %Should contain: Ringbuffer, Switch buffer, input/output buffers, constant memory, inst memory, read and write lines to the fpga from the ARM. Originally the ARM only needed access to the first and the last data buffer but for debugging purposes the ARM was given access to all buffers.
 \section{Internal memory\todo{Better title}}\label{section:fpga-internal-memory}
-\todo[inline]{Short description? Discuss non-uniform memory access and important things.}
+\todo[inline]{Short description? Discuss non-uniform memory access and important
+things.}
 
 \subsection{Intruction memory}
-\todo[inline]{Describe the functionality and reasons behind decisions regarding the instruction memory.}
+\todo[inline]{Describe the functionality and reasons behind decisions regarding
+the instruction memory.}
+
+The instruction memory for each core is how we realize the ``Multiple
+Instructions'' part of the ``MIMD'' definition. This instruction memory which
+each core has is how the separate cores can run each their own independent
+instructions.
+
+Another aspect of this implementation choice is\footnote{Reference to section
+\ref{subsection:fpga-pipeline-startup} missing?} that before starting up all the
+cores (in effect starting up the sequential pipelines), the MCU can through the
+EBI-bus write the instructions into this instruction memory of each core,
+setting up which core in the sequential pipelines is supposed to perform which
+job.
 
 \subsection{Processor input/output memory}
-\todo[inline]{Describe the need for memory to behave as both ringbuffer/queues, and as switching buffers. Discuss why this is a good idea because of our intended functionality, and how we utilize the FPGAs resources to implement it in the best possible way.}
+\todo[inline]{Describe the need for memory to behave as both ringbuffer/queues,
+and as switching buffers. Discuss why this is a good idea because of our
+intended functionality, and how we utilize the FPGAs resources to implement it
+in the best possible way.}
 
 \subsection{Pipeline constant memory}
-\todo[inline]{Why did we separate this from input/ouput memory? Why is it shared between cores, and how? The reason we send it's values directly to the alu instead of to the register file?}
+\todo[inline]{Why did we separate this from input/ouput memory? Why is it shared
+between cores, and how? The reason we send it's values directly to the alu
+instead of to the register file?}
