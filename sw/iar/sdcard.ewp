@@ -1913,7 +1913,7 @@
   <group>
     <name>CMSIS</name>
     <file>
-      <name>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Source\IAR\startup_efm32gg.s</name>
+      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\IAR\startup_efm32gg.s</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Source\system_efm32gg.c</name>
@@ -1994,6 +1994,9 @@
       <name>$PROJ_DIR$\..\drivers\dma\src\DMADriver.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\drivers\fpga\src\FPGADriver.c</name>
     </file>
     <file>
@@ -2013,9 +2016,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\drivers\dma\demo\wavdemo.c</name>
     </file>
   </group>
 </project>

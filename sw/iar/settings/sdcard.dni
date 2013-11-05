@@ -18,7 +18,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=339855992
+Checksum=1030807268
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -44,8 +44,8 @@ PcSampCYCTAP=1
 PcSampPOSTCNT=15
 PcSampIndex=0
 DataLogMode=0
-ITMportsEnable=0
-ITMportsTermIO=0
+ITMportsEnable=1
+ITMportsTermIO=1
 ITMportsLogFile=0
 ITMlogFile=$PROJ_DIR$\ITM.log
 [SfrWindow]
@@ -100,7 +100,9 @@ mode=0
 Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\read-file.c}.46.5" 0 0 1 "" 0 "" 0
 Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\read-file.c}.53.13" 0 0 1 "" 0 "" 0
 Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavplayer.c}.27.1" 0 0 1 "" 0 "" 0
-Count=3
+Bp3=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavdemo2.c}.137.3" 0 0 1 "" 0 "" 0
+Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\sdcard\demo\copy-file.c}.103.7" 0 0 1 "" 0 "" 0
+Count=5
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
