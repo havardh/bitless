@@ -1,7 +1,14 @@
 % !TEX root = ../../report.tex
 \section{Instruction Set Architecture}\label{section:fpga-isa}
 
+The instruction set of the processor cores where designed before work
+started on the processor cores themselves. This was done in order
+to build the processor core based on which operations were actually
+needed. This resulted in two distinct drafts of the instruction set
+architecture.
+
 \subsection{First Draft}
+The first draft of the ISA was devised early in the design process.
 It was decided to use a processor architecture with 16-bit instruction words
 and 32 general purpose registers. The instructions are divided in three
 different classes: load/store instructions, arithmetic instructions, and
