@@ -57,6 +57,10 @@ static void initFiles( SDConfig *config )
 		WAV_Open(dstFile, config->outFile);
 	}
 
+	if (config->mode == INOUT) {
+		WAV_CopyHeader(srcFile, dstFile);
+	}
+
 }
 
 void SDDriver_PrintWAVS( void )

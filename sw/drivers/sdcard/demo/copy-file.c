@@ -14,7 +14,11 @@
 #include "em_timer.h"
 #include "em_dma.h"
 #include "em_usart.h"
+#include "em_chip.h"
 #include "dmactrl.h"
+
+#include "MEMConfig.h"
+#include "FPGAConfig.h"
 
 #include "SDDriver.h"
 
@@ -25,14 +29,27 @@
 
 #define WAV_FILENAME             "sweet1.wav"
 
+#define FPGA_BASE ((uint16_t*) 0x21000000)
+
+
 bool bytesLeft = true;
 
-int bufferSize = 512;
-void *buffer;
+int bufferSize = 64;
+//void *inBuffer;
+//void *outBuffer;
 
-void* GetBuffer(void) {
-	return buffer;
+bool done = false;
+
+void setupSWO(void);
+
+void* GetInBuffer(void) {
+	return (void*)MEM_GetAudioInBuffer(true);
 }
+
+void* GetOutBuffer(void) {
+	return (void*)MEM_GetAudioOutBuffer(true);
+}
+
 
 static FATFS Fatfs;
 static FIL WAVfile;
@@ -75,11 +92,124 @@ void setupSD()
 	config.mode = INOUT;
 	config.inFile = "sweet1.wav";
 	config.outFile = "sweet2.wav";
-	config.GetInputBuffer = GetBuffer;
-	config.GetOutputBuffer = GetBuffer;
+	config.GetInputBuffer = GetInBuffer;
+	config.GetOutputBuffer = GetOutBuffer;
 	config.bufferSize = bufferSize;
 	SDDriver_Init( &config );
 }
+
+bool copySamples( void ) 
+{
+	if (!SDDriver_Read()) {
+		
+		uint16_t *audioInBuffer = (uint16_t*)MEM_GetAudioInBuffer(true);
+		uint16_t *audioOutBuffer = (uint16_t*)MEM_GetAudioOutBuffer(true);
+		volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
+		volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
+		volatile uint16_t *fpgaLeftOutBuffer  = (volatile uint16_t*)FPGADriver_GetOutBuffer(0);
+		volatile uint16_t *fpgaRightOutBuffer = (volatile uint16_t*)FPGADriver_GetOutBuffer(1);
+
+		for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
+			fpgaLeftInBuffer[j] = audioInBuffer[i];
+			fpgaRightInBuffer[j] = audioInBuffer[i+1];
+			audioOutBuffer[i] = fpgaLeftInBuffer[j];
+			audioOutBuffer[i+1] = fpgaRightInBuffer[j];
+		}
+
+		//memcpy(audioOutBuffer, audioInBuffer, bufferSize*2);
+
+		SDDriver_Write();
+
+	} else {
+		done = true;
+	}
+
+}
+
+void setupTimer( void  ) 
+{
+	CMU_ClockEnable( cmuClock_HFPER, true );
+  CMU_ClockEnable( cmuClock_TIMER0, true);
+
+	TIMER_Init_TypeDef init = {
+		.enable = true,
+		.debugRun = true,
+		.prescale = timerPrescale1,
+		.clkSel = timerClkSelHFPerClk,
+		.fallAction = timerInputActionNone,
+		.riseAction = timerInputActionNone,
+		.mode = timerModeUp,
+		.dmaClrAct = false,
+		.quadModeX4 = false,
+		.oneShot = false,
+		.sync = false
+	};
+
+	TIMER_IntEnable( TIMER0, TIMER_IF_OF );
+	NVIC_EnableIRQ( TIMER0_IRQn );
+	TIMER_TopBufSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 8000 );
+	TIMER_Init( TIMER0, &init );	
+}
+
+void TIMER0_IRQHandler( void ) 
+{
+
+	TIMER_IntClear( TIMER0, TIMER_IF_OF );
+
+	copySamples();
+}
+
+void setupMEM( void ) 
+{
+	MEMConfig config = {
+		.bufferSize = bufferSize
+	};
+	MEM_Init( &config );
+}
+
+void setupFPGA( void )
+{
+	FPGAConfig config = {
+		.baseAddress = FPGA_BASE,
+		.numPipelines = 2,
+		.bufferSize = bufferSize
+	};
+	FPGADriver_Init( &config );
+	
+}
+
+int main( void ) 
+{
+	CHIP_Init();
+	setupBSP();
+	setupSWO();
+	setupMEM();
+	setupFPGA();
+
+	BSP_LedsSet(0x0);
+
+	printf("Main\n");
+	setupSD();
+
+	setupTimer();
+
+	while(1) {
+
+		if (done) 
+			BSP_LedsSet(0xff);
+
+		if (done)
+			break;
+
+	}
+	
+	SDDriver_Finalize();
+
+	while(1);
+	return 0;
+
+}
+
 
 void setupSWO(void)
 {
@@ -123,39 +253,3 @@ void setupSWO(void)
   ITM->TCR = 0x10009;
 }
 
-
-int main1( void ) 
-{
-
-	setupBSP();
-	setupSWO();
-
-	printf("Main\n");
-
-	buffer = (void*)malloc(sizeof(uint16_t)*bufferSize);
-	setupSD();
-	//printf("setupSD: Done\n");
-
-	//SDDriver_PrintWAVS();
-
-
-	//testOpen();
-
-	while(1) {
-		if (!SDDriver_Read()) {
-
-			SDDriver_Write();
-
-		} else {
-
-			break;
-
-		}
-	}
-	
-	SDDriver_Finalize();
-
-	while(1);
-	return 0;
-
-}

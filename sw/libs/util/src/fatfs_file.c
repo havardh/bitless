@@ -20,7 +20,7 @@ void open(int fileindex, char *filename, FileMode mode)
 	BYTE flag;
 	switch(mode) {
 	case READ: flag = FA_READ; break;
-	case WRITE: flag = FA_WRITE; break;
+	case WRITE: flag = FA_WRITE | FA_CREATE_ALWAYS; break;
 	}
 
 	FRESULT res = f_open(&files[fileindex], filename, flag);
@@ -38,7 +38,7 @@ void write(int fileindex, void *buffer, uint16_t bytesToWrite, uint16_t *bytesWr
 
 void seek(int fileindex, int position) 
 {
-	FRESULT res = f_lseek(files[fileindex], position);
+	FRESULT res = f_lseek(&files[fileindex], position);
 }
 
 void close(int fileindex)

@@ -7,4 +7,6 @@ typedef struct {
 
 } MEMConfig;
 
+#define MEM_DEFAULT { 512 }
+
 #endif /* _MEMCONFIG_H_ */

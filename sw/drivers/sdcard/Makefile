@@ -130,6 +130,7 @@ INCLUDEPATHS += \
 -I$(DIR)/drivers/dac/inc \
 -I$(DIR)/drivers/dma/inc \
 -I$(DIR)/drivers/prs/inc \
+-I$(DIR)/drivers/mem/inc \
 -I$(DIR)/drivers/fpga/inc \
 -I$(DIR)/drivers/sdcard/inc \
 -I$(DIR)/types/inc \
@@ -173,6 +174,9 @@ $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
 $(DIR)/controllers/adc/src/ADCController.c \
 $(DIR)/drivers/sdcard/src/SDDriver.c \
+$(DIR)/drivers/mem/src/MEMDriver.c \
+$(DIR)/drivers/fpga/src/FPGADriver.c \
+$(LIB)/util/src/CircularBuffer.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 
