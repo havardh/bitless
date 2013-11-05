@@ -68,6 +68,7 @@ architecture behaviour of alu is
 	signal cfpu_flags 		: alu_flags;
 	
 --Fixed point to floating point conversion
+	--This should be generated with settings <fixed: 13 bit integer, 0 bit fraction>, <float: 5 bit exponent, 11 bit mantissa>
 	component fix_to_float is
 		port (
 			a				: in	std_logic_vector(12 downto 0);
@@ -81,6 +82,7 @@ architecture behaviour of alu is
 	signal fix_float_output	: std_logic_vector(15 downto 0);
 	
 --Floating point to fixed point conversion
+	--This should be generated with settings <float: 5 bit exponent, 11 bit mantissa>, <fixed: 13 bit integer, 0 bit fraction>
 	component float_to_fix is
 		port (
 			a				: in	std_logic_vector(15 downto 0);
@@ -138,18 +140,18 @@ begin
 			flags 		=> cfpu_flags
 		);
 	
-	fix_float: fixed_to_float
+	fix_float: fix_to_float
 		port map (
-			a		=> fix_float_input(13 downto 0),
-			clk		=> clk,
-			ce		=> '1',
-			result	=> fix_float_output
+			a			=> fix_float_input(13 downto 0),
+			clk			=> cpu_clk,
+			ce			=> '1',
+			result		=> fix_float_output
 		);
 		
-	float_fix: float_to_fixed
+	float_fix: float_to_fix
 		port map (
 			a			=> float_fix_input,
-			clk			=> clk,
+			clk			=> cpu_clk,
 			ce			=> '1',
 			result		=> float_fix_output(12 downto 0),
 			overflow	=> ff_overflow
@@ -176,7 +178,7 @@ begin
 	end process adder_input_mux_b;
 
 	
-	result_mux: process(alu_result_select, adder_result, adder_flags, logic_result, logic_flags, mul_result, cfpu_result_1, cfpu_result_2, cfpu_flags, fix_float_output, float_fix_output, ff_flags)
+	result_mux: process(alu_result_select, adder_result, adder_flags, logic_result, logic_flags, mul_result, cfpu_result_1, cfpu_result_2, cfpu_flags, fix_float_output, float_fix_output, ff_overflow)
 	begin
 		case alu_result_select is
 			when ALU_ADD_SELECT =>
