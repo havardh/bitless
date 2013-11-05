@@ -26,8 +26,8 @@ concerned about resource management on the FPGA.
 Looking into which types of Fourier-transform algorithms we could use on an
 embedded device, in a manner as efficiently as possible, and yet real-time,
 we ended up looking at Sliding-Discrete-Fourier-Transforms\cite{SD-FT} (or more
-colloquially known as SD-FTs\footnote{This is discussed in more detail in
-section \ref{subsubsection:fpga-alu-ft}.}).
+colloquially known as SD-FTs (this is discussed in more detail in
+section \ref{subsubsection:fpga-alu-ft})).
 \missingfigure{Maybe insert a figure here showing how the SD-FT works on each
 sample at a time?}
 
@@ -49,9 +49,9 @@ title?}
 Not all of the known sound-effects require (or are even possible) with a
 Fourier-transform. Therefore it also became evident that for effects like say
 the ``echo-effect'', we would need to do some post-processing after having
-performed the inverse-Fourier-transform of the SD-FT\footnote{Sliding-Discrete
+performed the inverse-Fourier-transform of the SD-FT (Sliding-Discrete
 Fourier-transform, elaborated in the previous section
-\ref{subsection:fpga-design-ft}.}.
+\ref{subsection:fpga-design-ft}).
 
 Thus, so far this project required one processor-core to perform the SD-FT, and
 another to perform the actual sound-effect done with the samples in the

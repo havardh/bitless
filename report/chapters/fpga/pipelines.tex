@@ -23,9 +23,8 @@ for inter-communication between the cores when debugging.
 The manner in which the cores ``communicate'' with each other is instead by the
 two-stage ring-buffers between them. For each clockcycle belonging to the
 pipeline of processor cores, they switch which one of the ones preceding they
-read from, and which of the ones following they write to\footnote{As mentioned
-in the footnote on the introduction to this chapter, this is how the ``Multiple
-Data'' part of the ``MIMD'' definition is realized in our processor.}.
+read from, and which of the ones following they write to (as this is how the
+``Multiple Data'' part of the ``MIMD'' definition is realized in our processor).
 
 \FloatBarrier
 \subsection{Pipeline control register}\label{subsection:fpga-pipeline-startup}
@@ -41,15 +40,15 @@ up.}
 When starting up, the first thing that has to happen when attempting to
 initialize the FPGA-chip, is to use the EBI-bus to write to reset bit (the 15th
 (MSB)), should be used when initializing the FPGA in the toplevel
-FPGA-control register\footnote{Described in section
-\ref{subsection:fpga-design-toplevel}.}.
+FPGA-control register (which is described in section
+\ref{subsection:fpga-design-toplevel}).
 
 This then resets \todo{Resets what in the FPGA??}.
 
 After the reset has been accomplished, the reset bit in the toplevel
 FPGA-control register needs to be cleared again. The following step will then be
 to turn on the ``stopmode'' bit (the 7th bit) of the pipeline-control
-register\footnote{Described in section \ref{subsection:fpga-pipeline-startup}.}
+register (as described in section \ref{subsection:fpga-pipeline-startup}),
 to stop all of the processor cores on the FPGA.
 
 While all the processor cores are off, the instruction memory of each core needs
@@ -64,7 +63,6 @@ the FPGA should be running as programmed.
 \subsection{In action}
 
 The input of the FPGA comes from the EBI-bus and enters one of the input-memory
-buffers\footnote{As detailed in section \ref{subsection:fpga-internmem-IO}.} of
-the first core in each of the ``sequential-core-pipelines'', where the first
-core works on the sample, before giving it over to the next core in said
-pipeline.
+buffers (as detailed in section \ref{subsection:fpga-internmem-IO}), of the
+first core in each of the ``sequential-core-pipelines'', where the first core
+works on the sample, before giving it over to the next core in said pipeline.

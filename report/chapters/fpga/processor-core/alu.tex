@@ -12,9 +12,9 @@ With that in mind, a following prioritization list of supported hardware
 operations was made:\todo{This needs to be fleshed out when we've finished the
 ALU.}
 \begin{enumerate}
-	\item Logic to allow for sufficiently fast Fourier-transforms\footnote{So
-that the transform could be performed on each discrete sample within a single
-clockcycle of the sequential processing core pipeline.}.
+	\item Logic to allow for sufficiently fast Fourier-transforms (so that the
+transform could be performed on each discrete sample within a single clockcycle
+of the sequential processing core pipeline).
 	\begin{enumerate}
 		\item The Fourier-transform we settled on could be performed with only
 addition, substraction, and shifting. Therefore hardware support for these
@@ -33,10 +33,10 @@ in the design.tex file. The resulting reference refers to the ALU subsection as
 a whole, and not the FT subsection.}
 
 When it became necessary to start looking into how one implements a
-Fourier-transform on a FPGA processor\footnote{as previously mentioned in section
-\ref{section:fpga-design}.}, a lot of effort was spent on attemting to first
-find examples of how others have implemented FT's (Fourier-transforms) on
-embedded real-time devices before.
+Fourier-transform on a FPGA processor (as previously mentioned in section
+\ref{section:fpga-design}), a lot of effort was spent on attemting to first find
+examples of how others have implemented FT's (Fourier-transforms) on embedded
+real-time devices before.
 
 It did not take long before it became evident that there were two types of FT's
 standing out from the rest of when considering FT's for the purpose of real-time
