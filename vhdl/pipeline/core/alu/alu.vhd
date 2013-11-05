@@ -78,7 +78,7 @@ architecture behaviour of alu is
 		);
 	end component;
 --Fixed signals
-	signal fix_float_input	: std_logic_vector(15 downto 0);
+	signal fix_float_input	: std_logic_vector(12 downto 0);
 	signal fix_float_output	: std_logic_vector(15 downto 0);
 	
 --Floating point to fixed point conversion
@@ -88,14 +88,14 @@ architecture behaviour of alu is
 			a				: in	std_logic_vector(15 downto 0);
 			clk				: in	std_logic;
 			ce				: in	std_logic;
-			result			: out	std_logic_vector(13 downto 0);
+			result			: out	std_logic_vector(12 downto 0);
 			overflow		: out	std_logic
 		);
 	end component;
 	
 --Float signals
 	signal float_fix_input	: std_logic_vector(15 downto 0);
-	signal float_fix_output	: std_logic_vector(15 downto 0);
+	signal float_fix_output	: std_logic_vector(12 downto 0);
 	signal ff_overflow		: std_logic;
 
 --Logic signal
@@ -140,12 +140,14 @@ begin
 			flags 		=> cfpu_flags
 		);
 	
+	
+	fix_float_input <= cpu_input_register_1(12 downto 0);
 	fix_float: fix_to_float
 		port map (
-			a			=> fix_float_input(13 downto 0),
-			clk			=> cpu_clk,
+			a			=> fix_float_input,
+			clk		=> cpu_clk,
 			ce			=> '1',
-			result		=> fix_float_output
+			result	=> fix_float_output
 		);
 		
 	float_fix: float_to_fix
@@ -153,10 +155,9 @@ begin
 			a			=> float_fix_input,
 			clk			=> cpu_clk,
 			ce			=> '1',
-			result		=> float_fix_output(12 downto 0),
+			result		=> float_fix_output,
 			overflow	=> ff_overflow
 		);
-	float_fix_output(15 downto 13) <= "00";
 	
 	constant_register_update: process(cpu_input_const_w)
 	begin
@@ -197,10 +198,10 @@ begin
 				flags	<= cfpu_flags;
 				
 			when ALU_FIX_SELECT =>
-				result	<= fix_float_output;
+				result	<= SXT(fix_float_output, 32);
 				
 			when ALU_FLT_SELECT =>
-				result	<= float_fix_output;
+				result	<= SXT(float_fix_output, 32);
 				flags.overflow	<= ff_overflow;
 				
 		end case;
@@ -210,14 +211,6 @@ begin
 	logic_flags.carry		<= '0';
 	logic_flags.overflow	<= '0';
 	logic_flags.zero		<= '1' when logic_result = x"0000" else '0';
-	
-	--if logic_result(15) = '1' then
-	--				logic_flags.negative <= '1';
-	--			end if;
-
-	--if (cpu_input_register_1 or cpu_input_register_2) = x"0000" then
-	--				logic_flags.zero <= '1';
-	--			end if;
 
 	alu_process: process(operation,cpu_input_register_1, cpu_input_register_2)
 	begin
