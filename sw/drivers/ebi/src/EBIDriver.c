@@ -10,34 +10,61 @@ void EBIDriver_Init(void) {
     CMU_ClockEnable(cmuClock_GPIO, true);
 
     /* Configure GPIO pins as push pull */
-    /* Data */
-    GPIO_PinModeSet(gpioPortA, 0, gpioModePushPull, 0); /* EBI AD7  */
-    GPIO_PinModeSet(gpioPortA, 1, gpioModePushPull, 0); /* EBI AD6  */
-    GPIO_PinModeSet(gpioPortA, 2, gpioModePushPull, 0); /* EBI AD4  */
-    GPIO_PinModeSet(gpioPortA, 3, gpioModePushPull, 0); /* EBI AD1  */
+    /* Address / Data */
+    GPIO_PinModeSet(gpioPortE,  8, gpioModePushPull, 0); /* EBI AD00  */
+    GPIO_PinModeSet(gpioPortE,  9, gpioModePushPull, 0); /* EBI AD01  */
+    GPIO_PinModeSet(gpioPortE, 10, gpioModePushPull, 0); /* EBI AD02  */
+    GPIO_PinModeSet(gpioPortE, 11, gpioModePushPull, 0); /* EBI AD03  */
+    GPIO_PinModeSet(gpioPortE, 12, gpioModePushPull, 0); /* EBI AD04  */
+    GPIO_PinModeSet(gpioPortE, 13, gpioModePushPull, 0); /* EBI AD05  */
+    GPIO_PinModeSet(gpioPortE, 14, gpioModePushPull, 0); /* EBI AD06  */
+    GPIO_PinModeSet(gpioPortE, 15, gpioModePushPull, 0); /* EBI AD07  */
 
-    GPIO_PinModeSet(gpioPortB, 0, gpioModePushPull, 0); /* EBI AD8  */
-    GPIO_PinModeSet(gpioPortB, 1, gpioModePushPull, 0); /* EBI AD5  */
-    GPIO_PinModeSet(gpioPortB, 2, gpioModePushPull, 0); /* EBI AD3  */
-    GPIO_PinModeSet(gpioPortB, 3, gpioModePushPull, 0); /* EBI AD0  */
+    GPIO_PinModeSet(gpioPortA, 15, gpioModePushPull, 0); /* EBI AD08  */
+    GPIO_PinModeSet(gpioPortA,  0, gpioModePushPull, 0); /* EBI AD09  */
+    GPIO_PinModeSet(gpioPortA,  1, gpioModePushPull, 0); /* EBI AD10  */
+    GPIO_PinModeSet(gpioPortA,  2, gpioModePushPull, 0); /* EBI AD11  */
+    GPIO_PinModeSet(gpioPortA,  3, gpioModePushPull, 0); /* EBI AD12  */
+    GPIO_PinModeSet(gpioPortA,  4, gpioModePushPull, 0); /* EBI AD13  */
+    GPIO_PinModeSet(gpioPortA,  5, gpioModePushPull, 0); /* EBI AD14  */
+    GPIO_PinModeSet(gpioPortA,  6, gpioModePushPull, 0); /* EBI AD15  */
 
-    GPIO_PinModeSet(gpioPortC, 0, gpioModePushPull, 0); /* EBI AD10 */
-    GPIO_PinModeSet(gpioPortC, 1, gpioModePushPull, 0); /* EBI AD9  */
-    GPIO_PinModeSet(gpioPortC, 2, gpioModePushPull, 0); /* EBI AD2  */
+    /* Address */
+    GPIO_PinModeSet(gpioPortA, 12, gpioModePushPull, 0); /* EBI A00  */
+    GPIO_PinModeSet(gpioPortA, 13, gpioModePushPull, 0); /* EBI A01  */
+    GPIO_PinModeSet(gpioPortA, 14, gpioModePushPull, 0); /* EBI A02  */
+    GPIO_PinModeSet(gpioPortB,  9, gpioModePushPull, 0); /* EBI A03  */
+    GPIO_PinModeSet(gpioPortB, 10, gpioModePushPull, 0); /* EBI A04  */
+    GPIO_PinModeSet(gpioPortC,  6, gpioModePushPull, 0); /* EBI A05  */
+    GPIO_PinModeSet(gpioPortC,  7, gpioModePushPull, 0); /* EBI A06  */
+    GPIO_PinModeSet(gpioPortE,  0, gpioModePushPull, 0); /* EBI A07  */
 
-    GPIO_PinModeSet(gpioPortD, 0, gpioModePushPull, 0); /* EBI AD12 */
-    GPIO_PinModeSet(gpioPortD, 1, gpioModePushPull, 0); /* EBI AD11 */
+    GPIO_PinModeSet(gpioPortE,  1, gpioModePushPull, 0); /* EBI A08  */
+    GPIO_PinModeSet(gpioPortC,  9, gpioModePushPull, 0); /* EBI A09  */
+    GPIO_PinModeSet(gpioPortC, 10, gpioModePushPull, 0); /* EBI A10  */
+    GPIO_PinModeSet(gpioPortE,  4, gpioModePushPull, 0); /* EBI A11  */
+    GPIO_PinModeSet(gpioPortE,  5, gpioModePushPull, 0); /* EBI A12  */
+    GPIO_PinModeSet(gpioPortE,  6, gpioModePushPull, 0); /* EBI A13  */
+    GPIO_PinModeSet(gpioPortE,  7, gpioModePushPull, 0); /* EBI A14  */
+    GPIO_PinModeSet(gpioPortC,  8, gpioModePushPull, 0); /* EBI A15  */
 
-    GPIO_PinModeSet(gpioPortE, 0, gpioModePushPull, 0); /* EBI AD15 */
-    GPIO_PinModeSet(gpioPortE, 1, gpioModePushPull, 0); /* EBI AD14 */
-    GPIO_PinModeSet(gpioPortE, 2, gpioModePushPull, 0); /* EBI AD13 */
+    GPIO_PinModeSet(gpioPortB,  0, gpioModePushPull, 0); /* EBI A16  */
+    GPIO_PinModeSet(gpioPortB,  1, gpioModePushPull, 0); /* EBI A17  */
+    GPIO_PinModeSet(gpioPortB,  2, gpioModePushPull, 0); /* EBI A18  */
+    GPIO_PinModeSet(gpioPortB,  3, gpioModePushPull, 0); /* EBI A19  */
+    GPIO_PinModeSet(gpioPortB,  4, gpioModePushPull, 0); /* EBI A20  */
+    GPIO_PinModeSet(gpioPortB,  5, gpioModePushPull, 0); /* EBI A21  */
+    GPIO_PinModeSet(gpioPortB,  6, gpioModePushPull, 0); /* EBI A22  */
+    GPIO_PinModeSet(gpioPortC,  0, gpioModePushPull, 0); /* EBI A23  */
+    GPIO_PinModeSet(gpioPortC,  1, gpioModePushPull, 0); /* EBI A24  */
 
     /* Chip Select */
-    GPIO_PinModeSet(gpioPortD, 7, gpioModePushPull, 1); /* EBI CS0  */
-    GPIO_PinModeSet(gpioPortA, 6, gpioModePushPull, 1); /* EBI CS1  */
+    GPIO_PinModeSet(gpioPortD,  9, gpioModePushPull, 1); /* EBI CS0  */
+    GPIO_PinModeSet(gpioPortD, 10, gpioModePushPull, 1); /* EBI CS1  */
 
-    GPIO_PinModeSet(gpioPortB, 7, gpioModePushPull, 1); /* EBI Wen  */
-    GPIO_PinModeSet(gpioPortC, 7, gpioModePushPull, 1); /* EBI Ren  */
+    /* Read / Write */
+    GPIO_PinModeSet(gpioPortF,  8, gpioModePushPull, 1); /* EBI Wen  */
+    GPIO_PinModeSet(gpioPortF,  9, gpioModePushPull, 1); /* EBI Ren  */
 
     /* ---------------------------------------------------- */
     /* External 4MB PSRAM, Bank 2, Base Address 0x88000000  */
