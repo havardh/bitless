@@ -60,7 +60,7 @@ package control_unit_constants is
 	-- ***  group_code ***
 	constant reg_based1 	: STD_LOGIC_VECTOR := "00";
 	constant reg_based2		: STD_LOGIC_VECTOR := "01";
-	constant load_imm		: STD_LOGIC_VECTOR := "10";
+	constant load_imm_value		: STD_LOGIC_VECTOR := "10";
 	constant branch			: STD_LOGIC_VECTOR := "11";
 	
 	-- *** func ***
@@ -83,7 +83,7 @@ package control_unit_constants is
 			
 				-- add
 				constant add_regs				: STD_LOGIC_VECTOR := "00";
-				constant add_imm				: STD_LOGIC_VECTOR := "01";
+				constant add_imm_value		: STD_LOGIC_VECTOR := "01";
 				constant add_regs_fp			: STD_LOGIC_VECTOR := "10";
 				constant add_undefined			: STD_LOGIC_VECTOR := "11";
 				

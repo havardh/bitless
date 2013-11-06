@@ -3,4 +3,7 @@
 *.a
 exe
 lst
-all_tests
+
+# Ignore executables 
+controllers/fpga/demo/main
+tests/all_tests

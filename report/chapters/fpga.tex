@@ -1,48 +1,15 @@
 \FloatBarrier
 \chapter{FPGA}\label{chapter:fpga}
 
-As this project requires us to implement a MIMD processor in VHDL, we realized
-our design through implementing it in VHDL, and running the final processor on a
-\todo{Replace ``Spartan-6'' and FPGA with references/links?}Spartan-6 FieldProgrammableGateArray.
+The processor core was implemented on a Xilinx Spartan-6 FPGA. It consists
+of several audio processing pipelines, each containing a set of homogenous
+processor cores and memories. 
 
-Our MIMD processor design is was realized throughpipelined cores connected
-sequentially in a pipeline of their own. Since the processor contains homogenous
-cores, each core can receive and run the same instructions. To realize this as
-an \todo{Fancy inline thingy explaining MultipleInstructionsMultipleData acronym}
-``MIMD'', the first core in the sequential core-pipeline is the only one which
-can work with the data given to said pipeline by the EBI bus. The next core then
-works on the output of the first core, and in this fashion each core in the
-pipeline works on its own data independently of the data any other core is
-currently working on.
-
-And each of the processor cores has its own instruction memory, so that they can
-run each their own instructions, and that's how we have realized the \todo{Maybe add another fancy inline thingy here instead of qoutation marks?}
-``Multiple Instruction'' part of the MIMD definition.
-
-%Need something to insert a line here, or some other visual cue to cue the reader in that we're done with introducing the FPGA design, we're now going to tell the reader what to expect from the rest of the fpga chapter (I would prefer to use "\\"-x10)
-
-This chapter is structured in the following manner; First, in section \ref{section:fpga-design}
-we describe the design of the processor core in more detail, and explain the
-reasoning behind the general design principles we followed. Second, in section \ref{section:sequential-pipeline}
-we describe the aforementioned sequential pipeline in which the processor cores
-are implemented. Third in section \ref{section:fpga-processor-core} we explain
-the reasoning and design decisions behind the homogenous processor cores used
-in the pipeline. Fourth, in section \ref{section:fpga-internal-memory} we
-continue with describing the different types of memories that the processor as
-a whole with all its cores utilize, from the instruction memory, to the data
-memory, and the constant memory. Fifth, in section \ref{section:fpga-buses} we
-describe how the processor this chapter so far has detailed communicates with
-the MCU and the rest of the PCB through the EBI bus. Sixth, in section \ref{fpga-isa}
-we list and describe how the assembly language the processor cores are
-designed for works, as well as how it's meant to be utilized. Seventh, in
-section \ref{section:fpga-testing} we conclude this chapter by explaining and
-showing how the testing of the  \todo{Re-phrase this in a better way somehow?}
-VHDL/FPGA implementation and methodology is discussed, including the subsequent
-results.
 \input{chapters/fpga/design}
 \input{chapters/fpga/pipelines}
-\input{chapters/fpga/processor_core}
-\input{chapters/fpga/internal_memory}
 \input{chapters/fpga/communication}
+\input{chapters/fpga/core}
+\input{chapters/fpga/alu}
+\input{chapters/fpga/memories}
 \input{chapters/fpga/isa}
-\input{chapters/fpga/fpga_testing}
+\input{chapters/fpga/testing}
