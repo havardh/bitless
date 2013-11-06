@@ -1,8 +1,6 @@
+#include "ebi.h"
 
-#include "EBIDriver.h"
-
-void EBIDriver_Init(void) {
-
+void EBI_Init(void) {
     EBI_Init_TypeDef ebiConfig = EBI_INIT_DEFAULT;
 
     /* Enable clocks */
@@ -63,24 +61,23 @@ void EBIDriver_Init(void) {
     GPIO_PinModeSet(gpioPortD, 10, gpioModePushPull, 1); /* EBI CS1  */
 
     /* Read / Write */
-    GPIO_PinModeSet(gpioPortF,  8, gpioModePushPull, 1); /* EBI Wen  */
-    GPIO_PinModeSet(gpioPortF,  9, gpioModePushPull, 1); /* EBI Ren  */
+    GPIO_PinModeSet(gpioPortF,  8, gpioModePushPull, 1); /* EBI Wen, active low  */
+    GPIO_PinModeSet(gpioPortF,  9, gpioModePushPull, 1); /* EBI Ren, active low  */
 
     /* ---------------------------------------------------- */
-    /* External 4MB PSRAM, Bank 2, Base Address 0x88000000  */
-    /* Micron MT45W2MW16PGA-70 IT, 32Mb Cellular RAM        */
+    /* External 4MB SRAM, Bank 1, Base Address 0x84000000   */
+    /* CY7C1061AV33                                         */
     /* ---------------------------------------------------- */
-    ebiConfig.banks        = EBI_BANK2;
-    ebiConfig.csLines      = EBI_CS2;
-    ebiConfig.mode         = ebiModeD16A16ALE;
-    ebiConfig.alePolarity  = ebiActiveHigh;
-    ebiConfig.blEnable     = true;
-    ebiConfig.noIdle       = true;
-    ebiConfig.ardyEnable   = false;
-    ebiConfig.addrHalfALE  = true;
-    ebiConfig.readPrefetch = true;
-    ebiConfig.aLow         = ebiALowA16;
-    ebiConfig.aHigh        = ebiAHighA23;
+    ebiConfig.mode         = ebiModeD16;
+    ebiConfig.banks        = EBI_BANK1;
+    ebiConfig.csLines      = EBI_CS1;
+
+    ebiConfig.csPolarity   = ebiActiveHigh;
+
+    // ebiConfig.noIdle       = true;  /* Flag to enable or disable idle state insertion between transfers */
+    // ebiConfig.readPrefetch = true;
+    ebiConfig.aLow         = ebiALowA0;
+    ebiConfig.aHigh        = ebiAHighA22;
     ebiConfig.location     = ebiLocation1;
 
     /* Address Setup and hold time */
@@ -97,22 +94,21 @@ void EBIDriver_Init(void) {
     ebiConfig.writeHoldCycles   = 0;
     ebiConfig.writeSetupCycles  = 0;
 
-    /* Configure EBI bank 2 - external PSRAM */
+    /* Configure EBI bank 1 - external SRAM */
     EBI_Init(&ebiConfig);
 
     /* --------------------------------------------------------- */
-    /* Board FPGA registers, Bank 0, Base Address 0x80000000     */
-    /* FPGA Xilinx Spartan XC6SLX16 CSG324                        */
+    /* Board FPGA registers, Bank 0, Base Address 0x84000000     */
     /* --------------------------------------------------------- */
     ebiConfig.banks       = EBI_BANK0;
     ebiConfig.csLines     = EBI_CS0;
     ebiConfig.mode        = ebiModeD16A16ALE;;
-    ebiConfig.alePolarity = ebiActiveHigh;
+    // ebiConfig.alePolarity = ebiActiveHigh;
     /* keep blEnable */
-    ebiConfig.blEnable     = false;
-    ebiConfig.addrHalfALE  = true;
-    ebiConfig.readPrefetch = false;
-    ebiConfig.noIdle       = true;
+    // ebiConfig.blEnable     = false;
+    // ebiConfig.addrHalfALE  = true;
+    // ebiConfig.readPrefetch = false;
+    // ebiConfig.noIdle       = true;
 
     /* keep alow/ahigh configuration */
     /* ebiConfig.aLow = ebiALowA0; - needs to be set for PSRAM */
@@ -132,11 +128,11 @@ void EBIDriver_Init(void) {
     ebiConfig.writeHoldCycles   = 3;
     ebiConfig.writeSetupCycles  = 3;
 
-    /* Configure EBI bank 0 */
+    /* Configure EBI bank 0, FPGA */
     EBI_Init(&ebiConfig);
 }
 
-void EBIDriver_Disable(void) {
+void EBI_Disable(void) {
     /* Configure GPIO pins as disabled */
     /* Address / Data */
     GPIO_PinModeSet(gpioPortE,  8, gpioPinModeDisabled, 0); /* EBI AD00  */
