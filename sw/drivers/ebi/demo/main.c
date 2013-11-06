@@ -4,7 +4,8 @@
 #include "em_chip.h"
 #include "em_cmu.h"
 #include "em_emu.h"
-#include "Leds.h"
+#include "EbiDriver.h"
+#include "leds.h"
 
 #define DATA_LENGTH     10
 
@@ -14,13 +15,13 @@ static uint16_t sram_data[DATA_LENGTH] = {
 
 void write(uint16_t *data, uint32_t length, uint16_t *addr) {
     for (uint32_t i = 0; i < length; i++) {
-        (addr + i) = data[i];
+        *(addr + i) = data[i];
     }
 }
 
 void read(uint16_t *data, uint16_t length, uint16_t *addr) {
     for (uint32_t i = 0; i < length; i++) {
-        data[i] = (addr + i);
+        data[i] = *(addr + i);
     }
 }
 
@@ -37,23 +38,22 @@ bool compare(uint16_t *data, uint16_t *res, uint32_t length) {
 
 int main(void) {
     CHIP_Init();
+    LEDController_Init();
+    EBIDriver_Init();   
 
-    EBI_Init();
-
-    uint16_t *sram_addr = 0x84000000;
+    uint16_t *sram_addr = (uint16_t*) 0x84000000;
     uint16_t sram_res[DATA_LENGTH];
 
-    write(&sram_data, DATA_LENGTH, sram_addr);
 
-    read(&sram_res, DATA_LENGTH, sram_addr);
-
-    bool equal = compare(&sram_data, &sram_res);
+    write(sram_data, DATA_LENGTH, sram_addr);
+    read(sram_res, DATA_LENGTH, sram_addr);
+    bool equal = compare(sram_data, sram_res, DATA_LENGTH);
 
     while (1) {
         if (equal) {
-            LED_SetLeds(0xF);
+            LEDController_SetLeds(0xF);
         } else {
-            LED_SetLed(5);
+            LEDController_SetLed(4);
         }
     }
 }

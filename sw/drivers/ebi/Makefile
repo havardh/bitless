@@ -112,8 +112,8 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
--I./inc \
--I../leds/inc \
+-Iinc \
+-I../../controllers/leds/inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
@@ -137,12 +137,14 @@ $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_cmu.c \
 $(LIB)/emlib/src/em_ebi.c \
 $(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_dbg.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emlib/src/em_leuart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-src/ebi.c \
+../../controllers/leds/src/leds.c \
+src/EbiDriver.c \
 demo/$(PROJECTNAME).c
 
 s_SRC +=
