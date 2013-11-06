@@ -16,8 +16,8 @@ entity alu is
 		-- ALU input data:
 		cpu_input_register_1 	: in std_logic_vector(15 downto 0);
 		cpu_input_register_2 	: in std_logic_vector(15 downto 0);
-		cpu_input_const 			: in std_logic_vector(31 downto 0);
-		cpu_input_const_w			: in std_logic;
+		cpu_input_const 		: in std_logic_vector(31 downto 0);
+		cpu_input_const_w		: in std_logic;
 		-- ALU control:
 		operation 				: in alu_operation;
 		-- ALU result data:
@@ -225,6 +225,7 @@ begin
 				
 			when ALU_MUL =>
 				alu_result_select <= ALU_MUL_SELECT;
+                
 				
 			when ALU_FIXED_TO_FLOAT =>
 				alu_result_select <= ALU_FIX_SELECT;
