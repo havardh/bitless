@@ -7,9 +7,7 @@ entity forwarding_unit is
 			reg_we		: in register_write_enable;
             
 			wb_reg_1_addr,
-			wb_reg_2_addr,
 			reg_1_addr,
-			reg_1b_addr,
 			reg_2_addr	: in std_logic_vector(4 downto 0);
 			
 			data_1_in,
@@ -25,9 +23,40 @@ entity forwarding_unit is
 end forwarding_unit;
 
 architecture Behavioral of forwarding_unit is
+    component carry_lookahead_adder_4 is
+        port (
+			a, b : std_logic_vector(3 downto 0);
+			c : in std_logic;
+			g, p, c_out : out std_logic;
+			result : out std_logic_vector(3 downto 0)
+        );
+    end component;
+    
 	signal wb_1_in, wb_2_in : std_logic_vector(15 downto 0);
+    signal reg_1b_addr, wb_reg_2_addr : std_logic_vector(4 downto 0);
+    signal wb5, reg5 : std_logic;
 	
 begin
+    wb_5adder : carry_lookahead_adder_4
+    port map(
+        a   => wb_reg_1_addr(3 downto 0),
+        b   => x"0",
+        c   => '1',
+        c_out => wb5,
+        result => wb_reg_2_addr(3 downto 0)
+    );
+    wb_reg_2_addr(4) <= wb_reg_1_addr(4) xor wb5;
+    
+    reg_5adder : carry_lookahead_adder_4
+    port map(
+        a   => reg_1_addr(3 downto 0),
+        b   => x"0",
+        c   => '1',
+        c_out => reg5,
+        result => reg_1b_addr(3 downto 0)
+    );
+    reg_1b_addr(4) <= reg_1_addr(4) xor wb5;
+    
 	wb_1_in	<= data_wb_in(15 downto 0);
 	wb_2_in	<= data_wb_in(31 downto 16);
 	
