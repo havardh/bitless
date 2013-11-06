@@ -111,6 +111,7 @@ begin
                                     reg_write_e <= REG_DONT_WRITE;
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
+                                when others =>
                             end case;
                             
                         when sub_or_cmp =>
@@ -135,6 +136,7 @@ begin
                                     reg_write_e <= REG_DONT_WRITE;
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
+                                when others =>
                             end case;
                             
                         when multi =>
@@ -159,6 +161,7 @@ begin
                                     reg_write_e <= REG_A_WRITE;
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
+                                when others =>
                             end case;
                         
                         when shift =>
@@ -172,6 +175,7 @@ begin
                             reg_write_e <= REG_DONT_WRITE;
                             mem_src <= MEM_INPUT;
                             add_imm <= '0';
+                        when others =>
                     end case;
                     
                 when reg_based2 =>
@@ -203,6 +207,7 @@ begin
                                 when and_undefined2 =>
                                     alu_op      <= ALU_AND;
                                     reg_write_e <= REG_DONT_WRITE;
+                                when others =>
                             end case;
                             
                         when or_logic =>
@@ -226,6 +231,7 @@ begin
                                 when or_undefined =>
                                     alu_op      <= ALU_OR;
                                     reg_write_e <= REG_DONT_WRITE;
+                                when others =>
                             end case;
                             
                         when move_or_typecast =>
@@ -247,6 +253,7 @@ begin
                                     alu_op <= ALU_FIXED_TO_FLOAT;
                                 when typecast_to_int =>
                                     alu_op <= ALU_FLOAT_TO_FIXED;
+                                when others =>
                             end case;
                         
                         when load_or_store =>
@@ -275,7 +282,9 @@ begin
                                     mem_src     <= MEM_CONST;
                                     load_const  <= '0';
                                     output_write_enable <= '1';
+                                when others =>
                             end case;
+                        when others =>
                     end case;
                 
                 when load_imm_value =>
@@ -302,8 +311,8 @@ begin
                     load_const          <= '0';
                     branch_enable       <= '1';
 						  
-					when others =>
-						  state               <= execute;
+                when others =>
+                    state               <= execute;
                     alu_op              <= ALU_ADD;
                     reg_write_e         <= REG_DONT_WRITE;
                     wb_src              <= MUX_IMM;
@@ -313,7 +322,6 @@ begin
                     add_imm             <= '0';
                     load_const          <= '0';
                     branch_enable       <= '0';
-							
             end case;
         else
             state               <= execute;

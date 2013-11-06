@@ -66,7 +66,7 @@ architecture behaviour of pipeline is
 			reset				: in std_logic; -- Resets the processor core
 
 			-- Connections to the instruction memory:
-			instruction_address : out std_logic_vector(address_width - 1 downto 0);
+			instruction_addr    : out std_logic_vector(address_width - 1 downto 0);
 			instruction_data    : in std_logic_vector(15 downto 0);
 
 			-- Connections to the constant memory controller:
@@ -321,7 +321,7 @@ begin
 				reset => '0',
 				constant_addr => constmem_address_array(i),
 				constant_data => constmem_data_array(i),
-				instruction_address => instr_read_address(i),
+				instruction_addr => instr_read_address(i),
 				instruction_data => instr_read_data(i),
 				input_read_addr => input_read_address(i - 1),
 				input_read_data => input_read_data(i - 1),
