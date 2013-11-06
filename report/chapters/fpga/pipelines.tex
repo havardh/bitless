@@ -1,38 +1,16 @@
 \FloatBarrier
-\section{Sequential processing-core pipeline}\label{section:sequential-pipeline}
-\todo{Feel free to switch out the title for something better}
+\section{Audio Pipelines}\label{sec:audio_pipelines}
 
-\FloatBarrier
-\subsection{Top-down architectural view}\todo{Maybe find better subsection
-title?}
+\missingfigure{Overview of the pipeline structure}
 
-\missingfigure{We should have a figure of the pipeline here, we got several
-in google docs, use/pretty up one of those should suffice to give an
-architectural overview}
-
-In the above \todo{insert reference to above figure}figure \textbf{XX}, we
-illustrate how the processor connects all the processing cores together on the
-FPGA.
-
-Though the \todo{insert reference to the same above figure}figure \textbf{XX}
-above shows how we connected the EBI-bus\cite{efm_ebi} to each processing core,
-during normal non-debugging runtime the cores only ``communicate'' in the manner
-described below, and not through the EBI-bus. The EBI-bus is used only as a way
-for inter-communication between the cores when debugging.
-
-The manner in which the cores ``communicate'' with each other is instead by the
-two-stage ring-buffers between them. For each clockcycle belonging to the
-pipeline of processor cores, they switch which one of the ones preceding they
-read from, and which of the ones following they write to\footnote{As mentioned
-in the footnote on the introduction to this chapter, this is how the ``Multiple
-Data'' part of the ``MIMD'' definition is realized in our processor.}.
-
-\FloatBarrier
-\subsection{Pipeline control register}\label{subsection:fpga-pipeline-startup}
-
-\todo{This is where we describe the pipeline control register.}
+The processor consists of several audio pipelines. These consists of
+a series of processors connected by buffers. The buffers operate either
+as ringbuffers or as buffers switching between two sets of data.
+Figure \ref{fig:pipeline_overview}\todo{fix reference} illustrates the
+layout of the pipelines.
 
 \subsection{Start-up}\label{subsection:fpga-pipeline-startup}
+\todo{This does not belong here, remove or move to the software chapter}
 
 \todo[inline]{This is where we explain how the MCU sets up the pipeline, and
 how/what signals are set (and to what they are set) when the processor starts
@@ -41,15 +19,15 @@ up.}
 When starting up, the first thing that has to happen when attempting to
 initialize the FPGA-chip, is to use the EBI-bus to write to reset bit (the 15th
 (MSB)), should be used when initializing the FPGA in the toplevel
-FPGA-control register\footnote{Described in section
-\ref{subsection:fpga-design-toplevel}.}.
+FPGA-control register (which is described in section
+\ref{subsection:fpga-design-toplevel}).
 
 This then resets \todo{Resets what in the FPGA??}.
 
 After the reset has been accomplished, the reset bit in the toplevel
 FPGA-control register needs to be cleared again. The following step will then be
 to turn on the ``stopmode'' bit (the 7th bit) of the pipeline-control
-register\footnote{Described in section \ref{subsection:fpga-pipeline-startup}.}
+register (as described in section \ref{subsection:fpga-pipeline-startup}),
 to stop all of the processor cores on the FPGA.
 
 While all the processor cores are off, the instruction memory of each core needs
@@ -61,10 +39,3 @@ buffers on each pipeline.
 Then what remains is the final stage of turning the stopmode bit back on, and
 the FPGA should be running as programmed.
 
-\subsection{In action}
-
-The input of the FPGA comes from the EBI-bus and enters one of the input-memory
-buffers\footnote{As detailed in section \ref{subsection:fpga-internmem-IO}.} of
-the first core in each of the ``sequential-core-pipelines'', where the first
-core works on the sample, before giving it over to the next core in said
-pipeline.

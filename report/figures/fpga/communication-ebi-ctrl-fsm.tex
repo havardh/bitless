@@ -7,7 +7,7 @@
 		\node[state] (write) [below right=of idle] {write};
 		\path[->]
 			(idle) edge node {\small RE = 0} (read)
-			       edge node [swap] {\small EW = 0} (write)
+			       edge node [swap] {\small WE = 0} (write)
 			(read) edge node {\small RE = 1} (idle)
 			(write) edge node [swap] {\small WE = 1} (idle);
 	\end{tikzpicture}
