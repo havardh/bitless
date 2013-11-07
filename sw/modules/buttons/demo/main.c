@@ -9,8 +9,7 @@
 #include "bsp_trace.h"
 #include "gpiointerrupt.h"
 #include "Leds.h"
-#include "ButtonsConfig.h"
-#include "Buttons.h"
+#include "bl_buttons.h"
 
 void toggSTKleLED(uint8_t pin) {
     if (pin == 9) {
@@ -40,10 +39,11 @@ int main(void) {
     /* Chip errata */
     CHIP_Init();
 
-    Board_t type = GG_STK3700;
+    Board_t type = BITLESS;
 
     /* Initialize gpio with buttons */
     Buttons_Init(type);
+    Leds_Init();
 
     /* Configure leds */
     if (type == GG_STK3700) {
