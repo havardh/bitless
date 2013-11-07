@@ -24,14 +24,11 @@ typedef volatile struct {
     bool     overflow;          /* buffer overflow indicator */
 } circularBuffer;
 
-void USART_Init(void);
-
-void uartSetup(circularBuffer *rx, circularBuffer *tx);
-void cmuSetup(void);
-void uartPutData(uint8_t * dataPtr, uint32_t dataLen);
-uint32_t uartGetData(uint8_t * dataPtr, uint32_t dataLen);
-void uartPutChar(uint8_t charPtr);
-uint8_t uartGetChar(void);
+void UART_Init(circularBuffer *rx, circularBuffer *tx);
+void UART_PutChar(uint8_t charPtr);
+uint8_t UART_GetChar(void);
+void UART_PutData(uint8_t * dataPtr, uint32_t dataLen);
+uint32_t UART_GetData(uint8_t * dataPtr, uint32_t dataLen);
 
 
 #endif // _SERIAL_H_

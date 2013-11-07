@@ -1,24 +1,28 @@
-#include "serial.h"
-
-circularBuffer *rxBuf, *txBuf;
-
+#include "bl_uart.h"
 
 /* Setup UART0 in async mode for RS232*/
 static USART_TypeDef           * uart   = UART0;
 static USART_InitAsync_TypeDef uartInit = USART_INITASYNC_DEFAULT;
 
+circularBuffer *rxBuf, *txBuf;
+
 /******************************************************************************
 * @brief  uartSetup function
 *
 ******************************************************************************/
-void uartSetup(circularBuffer *rx, circularBuffer *tx) {
-    rxBuf = rx;
-    txBuf = tx;
+void UART_Init(circularBuffer *rx, circularBuffer *tx) {
+    /* Enable clock for HF peripherals */
+    CMU_ClockEnable(cmuClock_HFPER, true);
+    /* Enable clock for USART module */
+    CMU_ClockEnable(cmuClock_UART0, true);
     /* Enable clock for GPIO module (required for pin configuration) */
     CMU_ClockEnable(cmuClock_GPIO, true);
     /* Configure GPIO pins, uart location 0 */
     GPIO_PinModeSet(gpioPortF, 6, gpioModePushPull, 1); // TX
     GPIO_PinModeSet(gpioPortF, 7, gpioModeInput, 0);    // RX
+
+    rxBuf = rx;
+    txBuf = tx;
 
     /* Prepare struct for initializing UART in asynchronous mode*/
     uartInit.enable       = usartDisable;   /* Don't enable UART upon intialization */
@@ -38,12 +42,12 @@ void uartSetup(circularBuffer *rx, circularBuffer *tx) {
     /* Prepare UART Rx and Tx interrupts */
     USART_IntClear(uart, _UART_IF_MASK);
     USART_IntEnable(uart, UART_IF_RXDATAV);
-    NVIC_ClearPendingIRQ(UART1_RX_IRQn);
-    NVIC_ClearPendingIRQ(UART1_TX_IRQn);
-    NVIC_EnableIRQ(UART1_RX_IRQn);
-    NVIC_EnableIRQ(UART1_TX_IRQn);
+    NVIC_ClearPendingIRQ(UART0_RX_IRQn);
+    NVIC_ClearPendingIRQ(UART0_TX_IRQn);
+    NVIC_EnableIRQ(UART0_RX_IRQn);
+    NVIC_EnableIRQ(UART0_TX_IRQn);
 
-    /* Enable I/O pins at UART1 location #0 */
+    /* Enable I/O pins at UART0 location #0 */
     uart->ROUTE = UART_ROUTE_RXPEN | UART_ROUTE_TXPEN | UART_ROUTE_LOCATION_LOC0;
 
     /* Enable UART */
@@ -57,7 +61,7 @@ void uartSetup(circularBuffer *rx, circularBuffer *tx) {
  *  Note that if there are no pending characters in the receive buffer, this
  *  function will hang until a character is received.
  *****************************************************************************/
-uint8_t uartGetChar(void) {
+uint8_t UART_GetChar(void) {
     uint8_t ch;
 
     /* Check if there is a byte that is ready to be fetched. If no byte is ready, wait for incoming data */
@@ -79,7 +83,7 @@ uint8_t uartGetChar(void) {
  * @brief  uartPutChar function
  *
  *****************************************************************************/
-void uartPutChar(uint8_t ch) {
+void UART_PutChar(uint8_t ch) {
     /* Check if Tx queue has room for new data */
     if ((txBuf->pendingBytes + 1) > BUFFERSIZE) {
         /* Wait until there is room in queue */
@@ -101,7 +105,7 @@ void uartPutChar(uint8_t ch) {
  * @brief  uartPutData function
  *
  *****************************************************************************/
-void uartPutData(uint8_t *dataPtr, uint32_t dataLen) {
+void UART_PutData(uint8_t *dataPtr, uint32_t dataLen) {
     uint32_t i = 0;
 
     /* Check if buffer is large enough for data */
@@ -134,7 +138,7 @@ void uartPutData(uint8_t *dataPtr, uint32_t dataLen) {
  * @brief  uartGetData function
  *
  *****************************************************************************/
-uint32_t uartGetData(uint8_t * dataPtr, uint32_t dataLen) {
+uint32_t UART_GetData(uint8_t * dataPtr, uint32_t dataLen) {
     uint32_t i = 0;
 
     /* Wait until the requested number of bytes are available */
@@ -159,26 +163,6 @@ uint32_t uartGetData(uint8_t * dataPtr, uint32_t dataLen) {
     return i;
 }
 
-/***************************************************************************//**
- * @brief Set up Clock Management Unit
- ******************************************************************************/
-void cmuSetup(void) {
-    /* Start HFXO and wait until it is stable */
-    /* CMU_OscillatorEnable( cmuOsc_HFXO, true, true); */
-
-    /* Select HFXO as clock source for HFCLK */
-    /* CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO ); */
-
-    /* Disable HFRCO */
-    /* CMU_OscillatorEnable( cmuOsc_HFRCO, false, false ); */
-
-    /* Enable clock for HF peripherals */
-    CMU_ClockEnable(cmuClock_HFPER, true);
-
-    /* Enable clock for USART module */
-    CMU_ClockEnable(cmuClock_UART0, true);
-}
-
 
 /**************************************************************************//**
  * @brief UART0 RX IRQ Handler
@@ -188,7 +172,7 @@ void cmuSetup(void) {
  * Note that this function handles overflows in a very simple way.
  *
  *****************************************************************************/
-void UART1_RX_IRQHandler(void) {
+void UART0_RX_IRQHandler(void) {
     /* Check for RX data valid interrupt */
     if (uart->STATUS & UART_STATUS_RXDATAV) {
         /* Copy data into RX Buffer */
@@ -213,7 +197,7 @@ void UART1_RX_IRQHandler(void) {
  * Set up the interrupt prior to use
  *
  *****************************************************************************/
-void UART1_TX_IRQHandler(void) {
+void UART0_TX_IRQHandler(void) {
     /* Check TX buffer level status */
     if (uart->STATUS & UART_STATUS_TXBL) {
         if (txBuf->pendingBytes > 0) {

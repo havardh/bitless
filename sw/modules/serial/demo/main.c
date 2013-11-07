@@ -1,5 +1,4 @@
-#include "serial.h"
-#include "bsp.h"
+#include "bl_uart.h"
 
 /* Declare some strings */
 const char     welcomeString[]  = "Energy Micro RS-232 - Please press a key\n";
@@ -11,13 +10,13 @@ int main(void) {
     CHIP_Init();
 
     /* Initialize clocks and oscillators */
-    cmuSetup();
+    // cmuSetup();
 
 
     circularBuffer rxBuf, txBuf = { {0}, 0, 0, 0, false };
 
     /* Initialize UART peripheral */
-    uartSetup(&rxBuf, &txBuf);
+    UART_Init(&rxBuf, &txBuf);
 
     /* Initialize Development Kit in EBI mode */
     // BSP_Init(BSP_INIT_DEFAULT);
@@ -30,7 +29,7 @@ int main(void) {
 
 
     /* Write welcome message to UART */
-    uartPutData((uint8_t*) welcomeString, welLen);
+    UART_PutData((uint8_t*) welcomeString, welLen);
 
     /*  Eternal while loop
     *  CPU will sleep during Rx and Tx. When a byte is transmitted, an interrupt
@@ -46,15 +45,15 @@ int main(void) {
         /* Check if RX buffer has overflowed */
         if (rxBuf.overflow) {
             rxBuf.overflow = false;
-            uartPutData((uint8_t*) overflowString, ofsLen);
+            UART_PutData((uint8_t*) overflowString, ofsLen);
         }
 
         /* Check if termination character is received */
         if (rxBuf.data[(rxBuf.wrI - 1) % BUFFERSIZE] == TERMINATION_CHAR) {
             /* Copy received data to UART transmit queue */
             uint8_t tmpBuf[BUFFERSIZE];
-            int     len = uartGetData(tmpBuf, 0);
-            uartPutData(tmpBuf, len);
+            int     len = UART_GetData(tmpBuf, 0);
+            UART_PutData(tmpBuf, len);
         }
     }
 }

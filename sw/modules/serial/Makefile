@@ -145,7 +145,7 @@ $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emlib/src/em_leuart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-src/serial.c \
+src/bl_uart.c \
 demo/$(PROJECTNAME).c
 
 s_SRC +=
