@@ -1,4 +1,4 @@
-#include "EbiDriver.h"
+#include "bl_ebi.h"
 
 void EBIDriver_Init(void) {
     EBI_Init_TypeDef ebiConfig = EBI_INIT_DEFAULT;

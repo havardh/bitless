@@ -4,9 +4,8 @@
 #include "em_chip.h"
 #include "em_cmu.h"
 #include "em_emu.h"
-// #include "eadesigner.h"
-#include "leds.h"
-#include "EbiDriver.h"
+#include "bl_leds.h"
+#include "bl_ebi.h"
 
 #define DATA_LENGTH     10
 
@@ -46,7 +45,7 @@ int main(void) {
     if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while (1) ;
 
     EBIDriver_Init();
-    LEDController_Init();
+    Leds_Init();
 
     uint16_t *sram_addr = (uint16_t*) 0x84000000;   
     uint16_t sram_res[DATA_LENGTH];
@@ -54,16 +53,16 @@ int main(void) {
 
     write(sram_data, DATA_LENGTH, sram_addr);
     read(sram_res, DATA_LENGTH, sram_addr);
-    bool equal = compare(sram_data, sram_data1, DATA_LENGTH);
+    bool equal = compare(sram_data, sram_res, DATA_LENGTH);
 
     while (1) {
         if (equal) {
-            LEDController_SetLed(0);
-            LEDController_SetLed(1);
-            LEDController_SetLed(2);
-            LEDController_SetLed(3);
+            Leds_SetLed(0);
+            Leds_SetLed(1);
+            Leds_SetLed(2);
+            Leds_SetLed(3);
         } else {
-            LEDController_SetLed(4);
+            Leds_SetLed(4);
         }
     }
 }
