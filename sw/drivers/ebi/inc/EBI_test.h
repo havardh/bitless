@@ -1,1 +1,0 @@
-void EBITest_Init(void);
