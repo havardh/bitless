@@ -8,7 +8,25 @@
 #include "em_emu.h"
 #include "em_gpio.h"
 #include "gpiointerrupt.h"
-#include "ButtonsConfig.h"
+
+typedef enum {
+    GG_STK3700, BITLESS
+} Board_t;
+
+#define NUM_BUTTONS         5
+#define BTN0                15
+#define BTN1                11
+#define BTN2                0
+#define BTN3                1
+#define BTN4                2
+
+#define BUTTONS_ARRAY_INIT {\
+    {gpioPortB, (BTN0)},    \
+    {gpioPortC, (BTN1)},    \
+    {gpioPortD, (BTN2)},    \
+    {gpioPortD, (BTN3)},    \
+    {gpioPortD, (BTN4)},    \
+}
 
 typedef struct {
     GPIO_Port_TypeDef port;

@@ -4,8 +4,8 @@
 
 The application chosen for this project is audio processing. The MCU unit will
 provide audio samples to the FPGA which in turn will process the samples and
-return the result. As the FPGA contains multiple cores multiple filers,
-transforms and effects will be executed in parallell.
+return the result. As the FPGA contains multiple cores with multiple filters,
+transforms and effects will be executed in parallel.
 
 \subsection{Filters}
 
@@ -32,7 +32,7 @@ most known is the Fast Fourier Transform\todo{ref}.
 The Fast Fourier Transform, FFT, takes a collection of N samples, $S$, as input
 and returns the frequencies of this window in time, $FW$. On this frequency
 window a frequency domain filter can be executed, which results in a filtered
-window $FW_f$. This filtered window can then be tranformed back to a collection
+window $FW_f$. This filtered window can then be transformed back to a collection
 of filtered samples $S_f$ by utilizing the inverse Fast Fourier transform IFFT.
 The time complexity of the FFT is $O(n) = n*log(n)$, to get a smoother result
 the transform is usually performed on overlapping windows of the sample stream.
@@ -42,10 +42,10 @@ the transform is usually performed on overlapping windows of the sample stream.
 The Sliding Discrete Fourier Transform\todo{ref} takes one sample, $s_1$, a
 frequency domain $FW_0$, and a historic sample $s_n$ as input along with some
 constant coefficients.
-It returnes the frequency domain window, $FW_1$ as altered by adding the input
-sample, $s_1$ and removing the sample $s_n$. The fequency domain can be
+It returns the frequency domain window, $FW_1$ as altered by adding the input
+sample, $s_1$ and removing the sample $s_n$. The frequency domain can be
 initialized to all zeros and the same with the historic sample. The n value of
-the historic sample correspond to the window size N in the FFT algorithmn. The
+the historic sample correspond to the window size N in the FFT algorithm. The
 time complexity of the SDFT algorithm is $O(n) = n$. The inverse SDT takes the
 frequency window and the same constant coefficients as input and return exactly
 one sample $s_f$.
@@ -54,7 +54,7 @@ one sample $s_f$.
 Both the SDFT and FFT can be performed with both
 \todo{WRONG FOR THE SD-FT}integer and floating point arithmetic. The advantage
 of using integer is the speed of integer arithmetic compared to floating point.
-The integer version performes a worse approximation than the floating point
+The integer version performs a worse approximation than the floating point
 version. \todo{Not so sure this is correct either. The reasoning I'm aware of is
 that integer FFT (not SD-FT) requires much bigger integers than 8-bit to get
 useful results, as well as more area on the FPGA chip.}
@@ -80,21 +80,21 @@ useful results, as well as more area on the FPGA chip.}
 \subsection{Effect on architecture}
 
 \paragraph{Goal}
- - To make a pipelined MIMD with cores executing different transformes and
+ - To make a pipelined MIMD with cores executing different transforms and
 filters.
    E.g. Input $=>$ FFT $=>$ IIR $=>$ IFFT $=>$ Output
 
 \paragraph{Buffering}
- - The cores in the pipeline should have a shared memory inbetween each core to
+ - The cores in the pipeline should have a shared memory in between each core to
  communicate
    E.g. Mem $<=>$ Core $<=>$ Mem $<=>$ Core ... $<=>$ Mem
 
 \begin{itemize}
-	\item Insight A: FFT transformes a window of samples into a Frequency image
+	\item Insight A: FFT transforms a window of samples into a Frequency image
 for this window. The window is created by N samples.
-  \item Effect: Data will be transfered through the pipeline in big chuncks. One
-new chunck will be transfered on each ADC cycle.
-  \item Proposed solution: Each shared memory should be divided in two equaly
+  \item Effect: Data will be transfered through the pipeline in big chunks. One
+new chunk will be transfered on each ADC cycle.
+  \item Proposed solution: Each shared memory should be divided in two equally
 sized pieces, A and B. $Core_i$ uses $A_{i-1}$ as input and $B_{i+1}$ as
 output on cycle $2j$ and $B_{i-1}$ as input and $A_{i+1}$ on cycle $2j+1$ for
 $j = 0,1,2,3,4$
@@ -102,8 +102,9 @@ $j = 0,1,2,3,4$
 
 
 \begin{itemize}
-	\item Insight $B_1$: If the a FFT is not applied a N bit sample will arive
-at each ADC cycle.
+	\item Insight $B_1$: If the a FFT is not applied a N 
+	\todo{N is already used for the number of samples per transform} bit sample 
+	will arrive at each ADC cycle.
   \item Insight $B_2$: A filter needs historic samples.
   \item Effect: Data will be transfered in small quantities, if the previously
 scheme is used for samples at the start of the buffer historic data will not be

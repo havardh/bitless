@@ -94,7 +94,7 @@ DEPFLAGS = -MMD -MP -MF $(@:.o=.d)
 #
 # Add -Wa,-ahld=$(LST_DIR)/$(@F:.o=.lst) to CFLAGS to produce assembly list files
 #
-override CFLAGS += -D$(DEVICE) -Wall -Wextra -mcpu=cortex-m3 -mthumb -std=c99\
+override CFLAGS += -D$(DEVICE) -Wall -Wextra -mcpu=cortex-m3 -mthumb \
 -mfix-cortex-m3-ldrd -ffunction-sections \
 -fdata-sections -fomit-frame-pointer -DDEBUG_EFM  \
 $(DEPFLAGS)
@@ -112,14 +112,13 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
--Iinc \
--I../leds/inc \
+-Iinc/ \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
 -I$(LIB)/kits/common/drivers \
--I$(LIB)/kits/EFM32GG_DK3750/config \
+-I$(LIB)/kits/EFM32GG_STK3700/config \
 -I$(LIB)/emdrv/gpiointerrupt/inc
 
 ####################################################################
@@ -128,25 +127,25 @@ INCLUDEPATHS += \
 
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_dk_3201.c \
-$(LIB)/kits/common/bsp/bsp_dk_leds.c \
+$(LIB)/kits/common/bsp/bsp_bcc.c \
+$(LIB)/kits/common/bsp/bsp_stk.c \
+$(LIB)/kits/common/bsp/bsp_stk_leds.c \
 $(LIB)/kits/common/bsp/bsp_trace.c \
+$(LIB)/kits/common/drivers/retargetio.c \
 $(LIB)/kits/common/drivers/retargetserial.c \
 $(LIB)/emlib/src/em_assert.c \
-$(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_cmu.c \
 $(LIB)/emlib/src/em_ebi.c \
-$(LIB)/emlib/src/em_adc.c \
-$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_emu.c \
-$(LIB)/emlib/src/em_dbg.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
+$(LIB)/emlib/src/em_letimer.c \
+$(LIB)/emlib/src/em_pcnt.c \
+$(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emlib/src/em_leuart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-../leds/src/bl_leds.c \
-src/bl_ebi.c \
+src/bl_uart.c \
 demo/$(PROJECTNAME).c
 
 s_SRC +=
@@ -177,7 +176,7 @@ vpath %.S $(S_PATHS)
 # Default build is debug build
 all:	  debug
 
-debug:	  CFLAGS += -DDEBUG -O0 -g3
+debug:	  CFLAGS += -DDEBUG -O0 -g3 -std=c99
 debug:	  $(EXE_DIR)/$(PROJECTNAME).bin
 
 release:  CFLAGS += -DNDEBUG -O0 -g3

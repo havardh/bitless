@@ -121,49 +121,147 @@ BEGIN
 		cpu_input_register_1  <= "0000000000000001";
       cpu_input_register_2  <= "0000000000000001";
 		wait for cpu_clk_period/2;
-		assert result = x"0002" report "Result of 1 + 1 is not 2!";
+		assert result = x"00000002" report "ADD not working!";
 		
 		operation 				 <= ALU_ADD;
 		cpu_input_register_1  <= "1111111111111111";
       cpu_input_register_2  <= "0000000000000010";
 		wait for cpu_clk_period/2;
-		assert result = x"0001" report "Result of 1 + 1 is not 2!";
-		assert flags.overflow = '1' report "Overflow not"
+		assert result = x"00000001" report "Result of xFFFF + 2 is not 1!";
+		assert flags.overflow = '1' report "Overflow not set";
 		
-		operation 				 <= ALU_SUB;
-		cpu_input_register_1  <= "1111111111111111";
-      cpu_input_register_2  <= "0000000000000010";
-		
-		wait for cpu_clk_period/2;
 		operation 				 <= ALU_SUB;
 		cpu_input_register_1  <= "0111111111111111";
       cpu_input_register_2  <= "0000000000000010";
-		
 		wait for cpu_clk_period/2;
+		assert result = x"00007FFD" report "SUB not working";
+		
 		operation 				 <= ALU_OR;
 		cpu_input_register_1  <= "0101010101010101";
       cpu_input_register_2  <= "1010101010101010";
-		
 		wait for cpu_clk_period/2;
+		wait for cpu_clk_period/2;
+		assert result = x"FFFFFFFF" report "OR not working!";
+		
 		operation 				 <= ALU_OR;
 		cpu_input_register_1  <= "0000000000001100";
       cpu_input_register_2  <= "0000000000000110";
-		
 		wait for cpu_clk_period/2;
+		assert result = x"0000000E" report "OR not working!";
+		
 		operation 				 <= ALU_MUL;
 		cpu_input_register_1  <= "0000000000000001";
       cpu_input_register_2  <= "0000000000000001";
-		
 		wait for cpu_clk_period/2;
+		assert result = x"00000001" report "MUL not working!";
+	
 		operation 				 <= ALU_MUL;
 		cpu_input_register_1  <= "0000000000000111";
       cpu_input_register_2  <= "0000000000000101";
-		
 		wait for cpu_clk_period/2;
+		assert result = x"00000023" report "MUL not working!";
+		
 		operation 				 <= ALU_MUL;
 		cpu_input_register_1  <= "1111111111111001";
       cpu_input_register_2  <= "0000000000000101";
+		wait for cpu_clk_period/2;
+		assert result = x"FFFFFFDD" report "MUL not working!";
 		
+		operation 				 <= ALU_AND;
+		cpu_input_register_1  <= "1111111111111001";
+      cpu_input_register_2  <= "0000000000000101";
+		wait for cpu_clk_period/2;
+		assert result = x"00000001" report "AND isn't working";
+		
+		operation 				 <= ALU_AND;
+		cpu_input_register_1  <= "1111111111111001";
+      cpu_input_register_2  <= "0000000000000010";
+		wait for cpu_clk_period/2;
+		assert result = x"00000000" report "AND isn't working";
+		assert flags.zero = '1' report "AND zero flag isn't working";
+		
+		operation 				 <= ALU_AND;
+		cpu_input_register_1  <= "1111111111111001";
+      cpu_input_register_2  <= "1000000000000010";
+		wait for cpu_clk_period/2;
+		assert result = x"FFFF8000" report "AND isn't working";
+		assert flags.negative = '1' report "AND negative flag isn't working";
+		
+		operation 				 <= ALU_XOR;
+		cpu_input_register_1  <= "0000000110011001";
+      cpu_input_register_2  <= "0000000110011010";
+		wait for cpu_clk_period/2;
+		assert result = x"00000003" report "XOR isn't working";
+		assert flags.negative = '0' report "XOR negative flag isn't working";
+		
+		operation 				 <= ALU_XOR;
+		cpu_input_register_1  <= "0000000110011001";
+      cpu_input_register_2  <= "1000000110011010";
+		wait for cpu_clk_period/2;
+		assert result = x"FFFF8003" report "XOR isn't working";
+		assert flags.negative = '1' report "XOR negative flag isn't working";
+		
+		operation 				 <= ALU_NAND;
+		cpu_input_register_1  <= "0000000011000000";
+      cpu_input_register_2  <= "1111111111111111";
+		wait for cpu_clk_period/2;
+		assert result = "11111111111111111111111100111111" report "NAND isn't working";
+		
+		operation 				 <= ALU_NAND;
+		cpu_input_register_1  <= "0000000000000011";
+      cpu_input_register_2  <= "1111111111111111";
+		wait for cpu_clk_period/2;
+		assert result = x"FFFFFFFC" report "NAND isn't working";
+		
+		operation 				 <= ALU_NOR;
+		cpu_input_register_1  <= "0101010101010101";
+      cpu_input_register_2  <= "1010101010101010";
+		wait for cpu_clk_period/2;
+		wait for cpu_clk_period/2;
+		assert result = x"00000000" report "NOR not working!";
+		
+		operation 				 <= ALU_NOR;
+		cpu_input_register_1  <= "0000000000001100";
+      cpu_input_register_2  <= "0000000000000110";
+		wait for cpu_clk_period/2;
+		assert result = x"FFFFFFF1" report "NOR not working!";
+		
+		operation 				 <= ALU_MOVE;
+		cpu_input_register_1  <= "0000000000001100";
+      cpu_input_register_2  <= "0000000000000110";
+		wait for cpu_clk_period/2;
+		assert result = x"0000000C" report "MOVE not working!";
+		
+		operation 				 <= ALU_MOVE;
+      cpu_input_register_1  <= "0000000000000110";
+		cpu_input_register_2  <= "0000000000001100";
+		wait for cpu_clk_period/2;
+		assert result = x"00000006" report "MOVE not working!";
+		
+		
+		operation 				 <= ALU_MOVE_NEGATIVE;
+      cpu_input_register_1  <= "0000000000000110";
+		cpu_input_register_2  <= "0000000000001100";
+		wait for cpu_clk_period/2;
+		assert result = x"FFFFFFF9" report "MOVE_NEG not working!";
+		
+		operation 				 <= ALU_MOVE_NEGATIVE;
+		cpu_input_register_1  <= "0000000000001100";
+      cpu_input_register_2  <= "0000000000000110";
+		wait for cpu_clk_period/2;
+		assert result = x"FFFFFFF3" report "MOVE_NEG not working!";
+		
+--		operation 				 <= FP_MUL;
+--		cpu_input_register_1  <= "0011110000000000";
+--    cpu_input_register_2  <= "0011110000000000";
+--		wait for cpu_clk_period/2;
+--		assert result = "00000000000000000011110000000000" report "FP_MUL not working!";
+
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= x"0002";
+		wait for cpu_clk_period/2;
+		assert result = "0100000000000000" report "Fix_to_float not working!";
+
 
       wait;
    end process;

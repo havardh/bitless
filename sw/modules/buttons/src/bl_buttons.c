@@ -1,4 +1,4 @@
-#include "Buttons.h"
+#include "bl_buttons.h"
 
 static BTN_t BTNS[NUM_BUTTONS] = BUTTONS_ARRAY_INIT;
 
