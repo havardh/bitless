@@ -21,11 +21,12 @@
 #include "FPGAConfig.h"
 
 #include "SDDriver.h"
+#include "spi.h"
 
 #include "ff.h"
 #include "microsd.h"
 #include "diskio.h"
-#include "bsp.h"
+//#include "bsp.h"
 
 #define WAV_FILENAME             "sweet1.wav"
 
@@ -53,14 +54,14 @@ void* GetOutBuffer(void) {
 
 static FATFS Fatfs;
 static FIL WAVfile;
-
+/*
 void testOpen() 
 {
 	FRESULT res;
 
 	CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
 
-        BSP_Init(BSP_INIT_DEFAULT);
+	BSP_Init(BSP_INIT_DEFAULT);
 	BSP_PeripheralAccess(BSP_MICROSD, true);
 	
 	BSP_Init(BSP_INIT_DEFAULT);
@@ -79,11 +80,11 @@ void testOpen()
 	while(1); 
 
 }
-
+*/
 void setupBSP(void)
 {
-  BSP_Init(BSP_INIT_DEFAULT);
-  BSP_PeripheralAccess(BSP_MICROSD, true);
+  //BSP_Init(BSP_INIT_DEFAULT);
+  //BSP_PeripheralAccess(BSP_MICROSD, true);
 }
 
 void setupSD() 
@@ -98,25 +99,62 @@ void setupSD()
 	SDDriver_Init( &config );
 }
 
+
+void deinterleave( void ) 
+{
+	int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
+	int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
+	volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
+	volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
+
+	uint16_t tmp;
+	for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
+
+		fpgaLeftInBuffer[j]  = (audioInBuffer[i  ] + 0x8000);
+		fpgaRightInBuffer[j] = (audioInBuffer[i+1] + 0x8000);
+
+	}
+
+}
+
+void interleave( void ) 
+{
+	int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
+	int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
+	volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
+	volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
+	//volatile uint16_t *fpgaLeftOutBuffer  = (volatile uint16_t*)FPGADriver_GetOutBuffer(0);
+	//volatile uint16_t *fpgaRightOutBuffer = (volatile uint16_t*)FPGADriver_GetOutBuffer(1);
+	
+	for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
+		audioOutBuffer[i  ] = (fpgaLeftInBuffer[j]  - 0x8000); // << 4;
+		audioOutBuffer[i+1] = (fpgaRightInBuffer[j] - 0x8000); // << 4;
+	}
+	
+}
+
 bool copySamples( void ) 
 {
 	if (!SDDriver_Read()) {
 		
-		uint16_t *audioInBuffer = (uint16_t*)MEM_GetAudioInBuffer(true);
-		uint16_t *audioOutBuffer = (uint16_t*)MEM_GetAudioOutBuffer(true);
+		int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
+		int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
 		volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
 		volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
 		volatile uint16_t *fpgaLeftOutBuffer  = (volatile uint16_t*)FPGADriver_GetOutBuffer(0);
 		volatile uint16_t *fpgaRightOutBuffer = (volatile uint16_t*)FPGADriver_GetOutBuffer(1);
 
-		for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
-			fpgaLeftInBuffer[j] = audioInBuffer[i];
-			fpgaRightInBuffer[j] = audioInBuffer[i+1];
-			audioOutBuffer[i] = fpgaLeftInBuffer[j];
-			audioOutBuffer[i+1] = fpgaRightInBuffer[j];
-		}
+		deinterleave();
+		interleave();
 
-		//memcpy(audioOutBuffer, audioInBuffer, bufferSize*2);
+		/*
+		for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
+			fpgaLeftInBuffer[j]  = audioInBuffer[i  ];
+			fpgaRightInBuffer[j] = audioInBuffer[i+1];
+
+			audioOutBuffer[i  ] = fpgaLeftInBuffer[j];
+			audioOutBuffer[i+1] = fpgaRightInBuffer[j];
+			}*/
 
 		SDDriver_Write();
 
@@ -178,25 +216,52 @@ void setupFPGA( void )
 	
 }
 
+void USART2_setup(void)
+{
+  USART_InitSync_TypeDef init = USART_INITSYNC_DEFAULT;
+
+  init.baudrate     = 115200;
+  init.databits     = usartDatabits8;
+  init.msbf         = 0;
+  init.master       = 1;
+  init.clockMode    = usartClockMode0;
+  init.prsRxEnable  = 0;
+  init.autoTx       = 0;
+
+  USART_InitSync(USART2, &init);
+}
+
 int main( void ) 
 {
 	CHIP_Init();
-	setupBSP();
-	setupSWO();
+
+  /* Enable clock for USART2 */
+  CMU_ClockEnable(cmuClock_USART2, true);
+  CMU_ClockEnable(cmuClock_GPIO, true);
+  /* Custom initialization for USART2 */
+  //USART2_setup();
+  /* Enable signals TX, RX, CLK, CS */
+  //USART2->ROUTE |= USART_ROUTE_TXPEN | USART_ROUTE_RXPEN | USART_ROUTE_CLKPEN | USART_ROUTE_CSPEN;
+  
+	SPI_setup(2, 0, true);
+
+	
+	//setupBSP();
+	//setupSWO();
 	setupMEM();
 	setupFPGA();
 
-	BSP_LedsSet(0x0);
+	//BSP_LedsSet(0x0);
 
-	printf("Main\n");
+	//printf("Main\n");
 	setupSD();
 
 	setupTimer();
 
 	while(1) {
-
-		if (done) 
-			BSP_LedsSet(0xff);
+		
+		/*if (done) 
+			BSP_LedsSet(0xff);*/
 
 		if (done)
 			break;
@@ -209,47 +274,3 @@ int main( void )
 	return 0;
 
 }
-
-
-void setupSWO(void)
-{
-  /* Enable GPIO Clock. */
-  CMU->HFPERCLKEN0 |= CMU_HFPERCLKEN0_GPIO;
-  /* Enable Serial wire output pin */
-  GPIO->ROUTE |= GPIO_ROUTE_SWOPEN;
-#if defined(_EFM32_GIANT_FAMILY) || defined(_EFM32_WONDER_FAMILY) || defined(_EFM32_LEOPARD_FAMILY)
-  /* Set location 0 */
-  GPIO->ROUTE = (GPIO->ROUTE & ~(_GPIO_ROUTE_SWLOCATION_MASK)) | GPIO_ROUTE_SWLOCATION_LOC0;
-
-  /* Enable output on pin - GPIO Port F, Pin 2 */
-  GPIO->P[5].MODEL &= ~(_GPIO_P_MODEL_MODE2_MASK);
-  GPIO->P[5].MODEL |= GPIO_P_MODEL_MODE2_PUSHPULL;
-#else
-  /* Set location 1 */
-  GPIO->ROUTE = (GPIO->ROUTE & ~(_GPIO_ROUTE_SWLOCATION_MASK)) | GPIO_ROUTE_SWLOCATION_LOC1;
-  /* Enable output on pin */
-  GPIO->P[2].MODEH &= ~(_GPIO_P_MODEH_MODE15_MASK);
-  GPIO->P[2].MODEH |= GPIO_P_MODEH_MODE15_PUSHPULL;
-#endif
-  /* Enable debug clock AUXHFRCO */
-  CMU->OSCENCMD = CMU_OSCENCMD_AUXHFRCOEN;
-
-  while(!(CMU->STATUS & CMU_STATUS_AUXHFRCORDY));
-
-  /* Enable trace in core debug */
-  CoreDebug->DHCSR |= 1;
-  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-
-  /* Enable PC and IRQ sampling output */
-  DWT->CTRL = 0x400113FF;
-  /* Set TPIU prescaler to 16. */
-  TPI->ACPR = 0xf;
-  /* Set protocol to NRZ */
-  TPI->SPPR = 2;
-  /* Disable continuous formatting */
-  TPI->FFCR = 0x100;
-  /* Unlock ITM and output data */
-  ITM->LAR = 0xC5ACCE55;
-  ITM->TCR = 0x10009;
-}
-

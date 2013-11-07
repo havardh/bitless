@@ -1,4 +1,5 @@
 #include "SDDriver.h"
+#include "ff.h"
 
 static WAVFile *srcFile = 0;
 static WAVFile *dstFile = 0;
@@ -15,7 +16,7 @@ void SDDriver_Init( SDConfig *config )
 	GetInputBuffer = config->GetInputBuffer;
 	GetOutputBuffer = config->GetOutputBuffer;
 
-  BSP_PeripheralAccess(BSP_MICROSD, true);
+  //BSP_PeripheralAccess(BSP_MICROSD, true);
 	MICROSD_Init();
 	mount();
 	//printf("Mounted\n");
@@ -42,6 +43,8 @@ void SDDriver_Finalize()
 
 static void initFiles( SDConfig *config )
 {
+
+	FRESULT res = f_mkdir("test");
 
 	if (config->mode == IN || config->mode == INOUT) {
 		srcFile = (WAVFile*)malloc(sizeof(WAVFile));

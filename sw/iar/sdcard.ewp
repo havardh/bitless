@@ -2015,6 +2015,9 @@
       <name>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\util\src\spi.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
     </file>
   </group>

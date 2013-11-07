@@ -120,7 +120,7 @@ INCLUDEPATHS += \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_DK3750/config \
+-I$(LIB)/kits/EFM32GG_bitless/config \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
@@ -145,12 +145,14 @@ INCLUDEPATHS += \
 # $(LIB)/kits/common/bsp/bsp_stk.c \
 # $(LIB)/kits/common/bsp/bsp_stk_leds.c \
 
+
+# $(LIB)/kits/common/bsp/bsp_trace.c \
+# $(LIB)/kits/common/bsp/bsp_bcc.c \
+# $(LIB)/kits/common/bsp/bsp_dk_3201.c \
+# $(LIB)/kits/common/bsp/bsp_dk_leds.c \
+
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_bcc.c \
-$(LIB)/kits/common/bsp/bsp_dk_3201.c \
-$(LIB)/kits/common/bsp/bsp_dk_leds.c \
-$(LIB)/kits/common/bsp/bsp_trace.c \
 $(LIB)/kits/common/drivers/dmactrl.c \
 $(LIB)/kits/common/drivers/microsd.c \
 $(LIB)/kits/common/drivers/rtcdrv.c \
@@ -177,6 +179,7 @@ $(DIR)/drivers/sdcard/src/SDDriver.c \
 $(DIR)/drivers/mem/src/MEMDriver.c \
 $(DIR)/drivers/fpga/src/FPGADriver.c \
 $(LIB)/util/src/CircularBuffer.c \
+$(LIB)/util/src/spi.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 

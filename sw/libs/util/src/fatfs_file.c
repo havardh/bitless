@@ -23,7 +23,8 @@ void open(int fileindex, char *filename, FileMode mode)
 	case WRITE: flag = FA_WRITE | FA_CREATE_ALWAYS; break;
 	}
 
-	FRESULT res = f_open(&files[fileindex], filename, flag);
+  FRESULT res = f_open(&files[fileindex], filename, flag);
+	
 }
 
 void read(int fileindex, void *buffer, uint16_t bytesToRead, uint16_t *bytesRead)
