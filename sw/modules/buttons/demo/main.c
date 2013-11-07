@@ -8,7 +8,7 @@
 #include "bsp.h"
 #include "bsp_trace.h"
 #include "gpiointerrupt.h"
-#include "Leds.h"
+#include "bl_leds.h"
 #include "bl_buttons.h"
 
 void toggSTKleLED(uint8_t pin) {
