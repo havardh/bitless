@@ -118,8 +118,7 @@ INCLUDEPATHS += \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_DK3750/config \
--I$(DIR)/types/inc 
+-I$(LIB)/kits/EFM32GG_DK3750/config 
 
 ####################################################################
 # Files								   #

@@ -4,7 +4,10 @@
 #include "em_device.h"
 #include "em_dac.h"
 
-#include "DACConfig.h"
+typedef struct {
+int i;
+} DACConfig;
+
 
 void DACDriver_Init(const DACConfig *config);
 

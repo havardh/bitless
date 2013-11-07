@@ -124,11 +124,9 @@ INCLUDEPATHS += \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
--I$(DIR)/drivers/dma/inc \
--I$(DIR)/drivers/fpga/inc \
--I$(DIR)/drivers/mem/inc \
--I$(DIR)/types/inc \
--I$(DIR)/controllers/adc/inc \
+-I$(DIR)/modules/dma/inc \
+-I$(DIR)/modules/fpga/inc \
+-I$(DIR)/modules/mem/inc \
 -I$(DIR)/glib
 
 
@@ -165,9 +163,9 @@ $(LIB)/emlib/src/em_rtc.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
-$(DIR)/drivers/dma/src/DMADriver.c \
-$(DIR)/drivers/mem/src/MEMDriver.c \
-$(DIR)/drivers/fpga/src/FPGADriver.c \
+$(DIR)/modules/dma/src/bl_dma.c \
+$(DIR)/modules/mem/src/bl_mem.c \
+$(DIR)/modules/fpga/src/FPGADriver.c \
 demo/$(PROJECTNAME).c
 
 

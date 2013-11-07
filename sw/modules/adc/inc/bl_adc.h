@@ -1,7 +1,11 @@
-#ifndef _ADCCONFIG_H_
-#define _ADCCONFIG_H_
+#ifndef _ADC_H_
+#define _ADC_H_
 
 #include <stdint.h>
+//#ifdef DEVICE
+#include "em_device.h"
+#include "em_adc.h"
+//-#endif // DEVICE
 
 // ADC_SCANCTRL_INPUTMASK_CH7
 typedef enum {
@@ -30,4 +34,6 @@ typedef struct {
 	ADCModes mode;
 } ADCConfig;
 
-#endif /* _ADCCONFIG_H_ */
+void ADCDriver_Init(const ADCConfig *config);
+
+#endif /* _ADCDRIVER_H_ */

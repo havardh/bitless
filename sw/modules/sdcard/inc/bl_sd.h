@@ -7,6 +7,23 @@
 #include "SDConfig.h"
 #include <stdlib.h>
 
+typedef enum {
+	IN, OUT, INOUT
+} SDMode;
+
+typedef struct {
+
+	SDMode mode;
+	char *inFile;
+	char *outFile;
+
+	int bufferSize;
+	void* (*GetInputBuffer)(void);
+	void* (*GetOutputBuffer)(void);
+
+} SDConfig;
+
+
 void SDDriver_Init( SDConfig *config );
 
 bool SDDriver_Read();

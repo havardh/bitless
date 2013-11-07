@@ -125,12 +125,10 @@ INCLUDEPATHS += \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
 -I$(LIB)/util/inc \
--I$(DIR)/drivers/adc/inc \
--I$(DIR)/drivers/dac/inc \
--I$(DIR)/drivers/dma/inc \
--I$(DIR)/drivers/prs/inc \
--I$(DIR)/types/inc \
--I$(DIR)/controllers/adc/inc
+-I$(DIR)/modules/adc/inc \
+-I$(DIR)/modules/dac/inc \
+-I$(DIR)/modules/dma/inc \
+-I$(DIR)/modules/prs/inc 
 
 
 ####################################################################

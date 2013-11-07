@@ -124,15 +124,14 @@ INCLUDEPATHS += \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
--I$(DIR)/drivers/adc/inc \
--I$(DIR)/drivers/dac/inc \
--I$(DIR)/drivers/dma/inc \
--I$(DIR)/drivers/prs/inc \
--I$(DIR)/drivers/mem/inc \
--I$(DIR)/drivers/fpga/inc \
+-I$(DIR)/modules/adc/inc \
+-I$(DIR)/modules/dac/inc \
+-I$(DIR)/modules/dma/inc \
+-I$(DIR)/modules/prs/inc \
+-I$(DIR)/modules/mem/inc \
+-I$(DIR)/modules/fpga/inc \
 -I$(LIB)/util/inc \
--I$(DIR)/types/inc \
--I$(DIR)/controllers/adc/inc
+-I$(DIR)/types/inc
 
 
 ####################################################################
@@ -168,13 +167,12 @@ $(LIB)/emlib/src/em_rtc.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
-$(DIR)/controllers/adc/src/ADCController.c \
-$(DIR)/drivers/adc/src/ADCDriver.c \
-$(DIR)/drivers/dac/src/DACDriver.c \
-$(DIR)/drivers/dma/src/DMADriver.c \
-$(DIR)/drivers/prs/src/PRSDriver.c \
-$(DIR)/drivers/mem/src/MEMDriver.c \
-$(DIR)/drivers/fpga/src/FPGADriver.c \
+$(DIR)/modules/adc/src/bl_adc.c \
+$(DIR)/modules/dac/src/bl_dac.c \
+$(DIR)/modules/dma/src/bl_dma.c \
+$(DIR)/modules/prs/src/bl_prs.c \
+$(DIR)/modules/mem/src/bl_mem.c \
+$(DIR)/modules/fpga/src/FPGADriver.c \
 $(LIB)/util/src/Delay.c \
 ./demo/fpga.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \

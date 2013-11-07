@@ -1,4 +1,4 @@
-#include "DMADriver.h"
+#include "bl_dma.h"
 
 //#define BUFFER_SIZE     64     /* 64/44100 = appr 1.5 msec delay */
 #define SAMPLE_RATE     44100

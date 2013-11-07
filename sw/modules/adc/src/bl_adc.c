@@ -1,4 +1,4 @@
-#include "ADCDriver.h"
+#include "bl_adc.h"
 
 
 static void init(const ADCConfig *config);
