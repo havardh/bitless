@@ -10,7 +10,7 @@
 ####################################################################
 
 DEVICE = EFM32GG990F1024
-PROJECTNAME = ebi_sram
+PROJECTNAME = main
 
 OBJ_DIR = build
 EXE_DIR = exe
@@ -24,11 +24,10 @@ LST_DIR = lst
 # Change path to the tools according to your system configuration
 # DO NOT add trailing whitespace chars, they do matter !
 WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2012q4
-LINUXCS	   ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
+LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
 # /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
 
-LIB=/Users/havard/Documents/programmering/c/TDT4295/sw/libs
-DIR=/Users/havard/Documents/programmering/c/TDT4295/sw
+LIB=../../libs
 #/Users/havard/Documents/Silabs
 
 RMDIRS	   := rm -rf
@@ -95,9 +94,9 @@ DEPFLAGS = -MMD -MP -MF $(@:.o=.d)
 #
 # Add -Wa,-ahld=$(LST_DIR)/$(@F:.o=.lst) to CFLAGS to produce assembly list files
 #
-override CFLAGS += -D$(DEVICE) -Wall -Wextra -mcpu=cortex-m3 -mthumb \
+override CFLAGS += -D$(DEVICE) -Wall -Wextra -mcpu=cortex-m3 -mthumb -std=c99\
 -mfix-cortex-m3-ldrd -ffunction-sections \
--fdata-sections -fomit-frame-pointer -DDEBUG_EFM -std=c99 \
+-fdata-sections -fomit-frame-pointer -DDEBUG_EFM  \
 $(DEPFLAGS)
 
 override ASMFLAGS += -x assembler-with-cpp -D$(DEVICE) -Wall -Wextra -mcpu=cortex-m3 -mthumb
@@ -111,74 +110,56 @@ override LDFLAGS += -Xlinker -Map=$(LST_DIR)/$(PROJECTNAME).map -mcpu=cortex-m3 
 
 LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
-#-I$(LIB)/kits/EFM32GG_STK3700/config \
-
 INCLUDEPATHS += \
 -I. \
--I./demo \
+-Iinc \
+-I../../controllers/leds/inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_DK3750/config \
 -I$(LIB)/kits/common/drivers \
--I$(LIB)/emdrv/gpiointerrupt/inc \
--I$(LIB)/glib \
--I$(DIR)/drivers/ebi/inc 
-
+-I$(LIB)/kits/EFM32GG_DK3750/config \
+-I$(LIB)/emdrv/gpiointerrupt/inc
 
 ####################################################################
 # Files								   #
 ####################################################################
 
-# $(LIB)/kits/common/bsp/bsp_stk.c \
-# $(LIB)/kits/common/bsp/bsp_stk_leds.c \
-
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_bcc.c \
 $(LIB)/kits/common/bsp/bsp_dk_3201.c \
 $(LIB)/kits/common/bsp/bsp_dk_leds.c \
 $(LIB)/kits/common/bsp/bsp_trace.c \
-$(LIB)/kits/common/drivers/dmactrl.c \
-$(LIB)/kits/common/drivers/rtcdrv.c \
-$(LIB)/kits/common/drivers/retargetio.c \
-$(LIB)/kits/common/drivers/retargettft.c \
-$(LIB)/glib/dmd/ssd2119/dmd_ssd2119_16bit.c \
-$(LIB)/glib/dmd/ssd2119/dmdif_ssd2119_ebi16.c \
+$(LIB)/kits/common/drivers/retargetserial.c \
 $(LIB)/emlib/src/em_assert.c \
-$(LIB)/emlib/src/em_adc.c \
+$(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_cmu.c \
-$(LIB)/emlib/src/em_dac.c \
-$(LIB)/emlib/src/em_dma.c \
 $(LIB)/emlib/src/em_ebi.c \
+$(LIB)/emlib/src/em_adc.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_dbg.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
-$(LIB)/emlib/src/em_prs.c \
-$(LIB)/emlib/src/em_rtc.c \
-$(LIB)/emlib/src/em_system.c \
-$(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
-$(DIR)/drivers/ebi/src/EBIDriver.c \
+$(LIB)/emlib/src/em_leuart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+../../controllers/leds/src/leds.c \
+src/EbiDriver.c \
+src/eadesigner.c \
 demo/$(PROJECTNAME).c
-
-
 
 s_SRC +=
 
 S_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/GCC/startup_efm32gg.S
 
-
-
 ####################################################################
 # Rules								   #
 ####################################################################
 
 C_FILES = $(notdir $(C_SRC) )
-
 S_FILES = $(notdir $(S_SRC) $(s_SRC) )
 #make list of source paths, sort also removes duplicates
 C_PATHS = $(sort $(dir $(C_SRC) ) )
@@ -195,9 +176,6 @@ vpath %.s $(S_PATHS)
 vpath %.S $(S_PATHS)
 
 # Default build is debug build
-#dbg: 
-#	@echo $(C_FILES)
-
 all:	  debug
 
 debug:	  CFLAGS += -DDEBUG -O0 -g3

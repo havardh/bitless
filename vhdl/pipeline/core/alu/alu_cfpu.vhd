@@ -45,7 +45,7 @@ entity fpu is
 end fpu;
 
 architecture behaviour of fpu is
-	component fp_multiply
+	component multiply
 		port(
 			a				: in std_logic_vector(15 downto 0);
 			b				: in std_logic_vector(15 downto 0);
@@ -70,7 +70,7 @@ architecture behaviour of fpu is
 	signal mul_in_a, mul_in_b, mul_result, addsub_in_a, addsub_in_b, addsub_result : std_logic_vector(15 downto 0);
 	signal addsub_op : std_logic_vector(5 downto 0);
 begin
-	multiply: fp_multiply
+	fp_multiply: multiply
 		port map(
 			a					=> mul_in_a,
 			b					=> mul_in_b,
