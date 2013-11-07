@@ -26,18 +26,20 @@
 #include "ff.h"
 #include "microsd.h"
 #include "diskio.h"
-//#include "bsp.h"
 
-#define WAV_FILENAME             "sweet1.wav"
+/*
+ * This demo reads and writes samples from the SDCard with a FAT file system.
+ * The source file is allways called sweet1.wav and destination is sweet2.wav.
+ *
+ * The demo uses CPU to read and write the SDCard, but also to deinterleave
+ * and interleave the samples to and from the FPGA buffers. 
+ */
 
 #define FPGA_BASE ((uint16_t*) 0x21000000)
-
 
 bool bytesLeft = true;
 
 int bufferSize = 64;
-//void *inBuffer;
-//void *outBuffer;
 
 bool done = false;
 
@@ -49,42 +51,6 @@ void* GetInBuffer(void) {
 
 void* GetOutBuffer(void) {
 	return (void*)MEM_GetAudioOutBuffer(true);
-}
-
-
-static FATFS Fatfs;
-static FIL WAVfile;
-/*
-void testOpen() 
-{
-	FRESULT res;
-
-	CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
-
-	BSP_Init(BSP_INIT_DEFAULT);
-	BSP_PeripheralAccess(BSP_MICROSD, true);
-	
-	BSP_Init(BSP_INIT_DEFAULT);
-	BSP_LedsSet(0xff);
-	BSP_PeripheralAccess(BSP_I2S, true);
-	BSP_PeripheralAccess(BSP_MICROSD, true);
-	MICROSD_Init();
-
-	res = f_mount(0, &Fatfs);
-	while(res != FR_OK);
-
-	res = f_open(&WAVfile, WAV_FILENAME, FA_READ);
-	while(res != FR_OK);
-
-	BSP_LedsSet(0xff00);
-	while(1); 
-
-}
-*/
-void setupBSP(void)
-{
-  //BSP_Init(BSP_INIT_DEFAULT);
-  //BSP_PeripheralAccess(BSP_MICROSD, true);
 }
 
 void setupSD() 
@@ -121,6 +87,8 @@ void interleave( void )
 {
 	int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
 	int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
+
+	// When FPGA core is implemented the OutputBuffers should be utilized
 	volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
 	volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
 	//volatile uint16_t *fpgaLeftOutBuffer  = (volatile uint16_t*)FPGADriver_GetOutBuffer(0);
@@ -137,24 +105,8 @@ bool copySamples( void )
 {
 	if (!SDDriver_Read()) {
 		
-		int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
-		int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
-		volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
-		volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
-		volatile uint16_t *fpgaLeftOutBuffer  = (volatile uint16_t*)FPGADriver_GetOutBuffer(0);
-		volatile uint16_t *fpgaRightOutBuffer = (volatile uint16_t*)FPGADriver_GetOutBuffer(1);
-
 		deinterleave();
 		interleave();
-
-		/*
-		for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
-			fpgaLeftInBuffer[j]  = audioInBuffer[i  ];
-			fpgaRightInBuffer[j] = audioInBuffer[i+1];
-
-			audioOutBuffer[i  ] = fpgaLeftInBuffer[j];
-			audioOutBuffer[i+1] = fpgaRightInBuffer[j];
-			}*/
 
 		SDDriver_Write();
 
@@ -216,21 +168,6 @@ void setupFPGA( void )
 	
 }
 
-void USART2_setup(void)
-{
-  USART_InitSync_TypeDef init = USART_INITSYNC_DEFAULT;
-
-  init.baudrate     = 115200;
-  init.databits     = usartDatabits8;
-  init.msbf         = 0;
-  init.master       = 1;
-  init.clockMode    = usartClockMode0;
-  init.prsRxEnable  = 0;
-  init.autoTx       = 0;
-
-  USART_InitSync(USART2, &init);
-}
-
 int main( void ) 
 {
 	CHIP_Init();
@@ -238,31 +175,18 @@ int main( void )
   /* Enable clock for USART2 */
   CMU_ClockEnable(cmuClock_USART2, true);
   CMU_ClockEnable(cmuClock_GPIO, true);
-  /* Custom initialization for USART2 */
-  //USART2_setup();
-  /* Enable signals TX, RX, CLK, CS */
-  //USART2->ROUTE |= USART_ROUTE_TXPEN | USART_ROUTE_RXPEN | USART_ROUTE_CLKPEN | USART_ROUTE_CSPEN;
   
 	SPI_setup(2, 0, true);
 
-	
-	//setupBSP();
-	//setupSWO();
 	setupMEM();
 	setupFPGA();
 
-	//BSP_LedsSet(0x0);
-
-	//printf("Main\n");
 	setupSD();
 
 	setupTimer();
 
 	while(1) {
 		
-		/*if (done) 
-			BSP_LedsSet(0xff);*/
-
 		if (done)
 			break;
 
