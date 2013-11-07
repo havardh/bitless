@@ -136,6 +136,8 @@ $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_cmu.c \
 $(LIB)/emlib/src/em_ebi.c \
+$(LIB)/emlib/src/em_adc.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_emu.c \
 $(LIB)/emlib/src/em_dbg.c \
 $(LIB)/emlib/src/em_gpio.c \
@@ -145,6 +147,7 @@ $(LIB)/emlib/src/em_leuart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 ../../controllers/leds/src/leds.c \
 src/EbiDriver.c \
+src/eadesigner.c \
 demo/$(PROJECTNAME).c
 
 s_SRC +=
