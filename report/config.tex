@@ -11,11 +11,23 @@
 \usepackage{listings}
 \usepackage{cite}
 \usepackage{url}
+\usepackage{hyperref} %Used for hyperlinking
+
+%formatting rules for hyperlinks---
+\hypersetup{
+%links get funky colors without this. Do not remove!
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+%end of formatting rules for hyperlinks---
 
 \usetikzlibrary{automata,positioning}
 
 %formatting rules to enable subsubsubsection---
-\setcounter{secnumdepth}{3}
+\setcounter{secnumdepth}{2}
 
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
