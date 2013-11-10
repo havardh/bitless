@@ -26,7 +26,7 @@
 #include "ff.h"
 #include "microsd.h"
 #include "diskio.h"
-#include "bsp.h"
+//#include "bsp.h"
 
 
 #define DMA_MEM_CPY 0
@@ -106,7 +106,7 @@ void SysTick_Handler(void){}
 void transferComplete(unsigned int channel, bool primary, void *user)
 {  
 	(void) channel;  (void) primary;  (void) user; 
-		
+	
 	called[channel]++;
 }
 
@@ -135,13 +135,13 @@ void basicTransferComplete(unsigned int channel, bool primary, void *user)
 {}
 
 void onDACInterrupt( void ) {
-	//DMA_ActivateAuto(DMA_MEM_CPY, true, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
+	DMA_ActivateAuto(DMA_MEM_CPY, true, MEM_GetAudioOutBuffer(true), MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
 
 	called[3]++;
 	FillBufferFromSDcard((bool) wavHeader.channels, true);
 
 	
-	int bufferSize               = MEM_GetAudioInBufferSize();
+	/*int bufferSize               = MEM_GetAudioInBufferSize();
 	uint16_t *audioInBuffer      = MEM_GetAudioInBuffer(true);
 	uint16_t *audioOutBuffer     = MEM_GetAudioOutBuffer(true);
 	volatile uint16_t *fpgaLeftInBuffer   = FPGADriver_GetInBuffer(0);
@@ -156,7 +156,7 @@ void onDACInterrupt( void ) {
 		fpgaLeftInBuffer[j] = audioInBuffer[i];
 		fpgaRightInBuffer[j] = audioInBuffer[i+1];
 		
-	}
+		}*/
 }
 
 void transferInComplete(unsigned int channel, bool primary, void *user) 
@@ -237,7 +237,7 @@ void setupDma(void)
   DMA_Init(&dmaInit);
 
   /* Setting call-back function */  
-  cb.cbFunc  = basicTransferComplete; //transferComplete;
+  cb.cbFunc  = transferComplete;
   cb.userPtr = NULL;
 
   /* Setting up channel */
@@ -266,10 +266,10 @@ int main(void)
   ByteCounter = 0;
 
   /* Use 32MHZ HFXO as core clock frequency, need high speed for 44.1kHz stereo */
-  CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
+  //CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
 
   /* Initialize DK board register access */
-  BSP_Init(BSP_INIT_DEFAULT);
+  //BSP_Init(BSP_INIT_DEFAULT);
 
 
   /* Setup SysTick Timer for 10 msec interrupts  */
@@ -278,10 +278,10 @@ int main(void)
 			while (1) ;
 		}
 
-  BSP_PeripheralAccess(BSP_AUDIO_OUT, true);
+  //BSP_PeripheralAccess(BSP_AUDIO_OUT, true);
 
   /* Enable SPI access to MicroSD card */
-  BSP_PeripheralAccess(BSP_MICROSD, true);
+  //BSP_PeripheralAccess(BSP_MICROSD, true);
 
   /* Initialize filesystem */
   MICROSD_Init();
@@ -322,11 +322,11 @@ int main(void)
 	INTDriver_Init();
 	INTDriver_RegisterCallback(0, &onDACInterrupt);
 
-	FPGAConfig configFPGA;
-  configFPGA.baseAddress = FPGA_BASE;
-  configFPGA.numPipelines = 2;
-  configFPGA.bufferSize = BUFFERSIZE;
-  FPGADriver_Init( &configFPGA );
+	//FPGAConfig configFPGA;
+  //configFPGA.baseAddress = FPGA_BASE;
+  //configFPGA.numPipelines = 2;
+  //configFPGA.bufferSize = BUFFERSIZE;
+  //FPGADriver_Init( &configFPGA );
 
 	DMAConfig config = { .mode = SD_TO_DAC };
 	DMADriver_Init( &config );
