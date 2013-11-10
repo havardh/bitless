@@ -12,7 +12,7 @@ def main():
 def parse():
 		parser = argparse.ArgumentParser()
 		
-		parser.add_argument('-COM', '--port', metavar='p', type=int, help='set COMn as port')
+		parser.add_argument('-COM', '--port', metavar='p', help='name of tty')
 		parser.add_argument('-p', '--pipeline', metavar='n', type=int, help='set pipeline number')
 		parser.add_argument('-c', '--core', metavar='n', type=int, help='set core number')
 		parser.add_argument('-m', '--memory', metavar='n', type=int, help='set memory number')
