@@ -1,3 +1,4 @@
+#include "bl_uart.h"
 #include "bl_sdi.h"
 
 int main(void) {

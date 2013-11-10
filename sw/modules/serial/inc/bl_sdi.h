@@ -4,6 +4,9 @@
 #define CMD_LEN 4
 #define MEM_SIZE 16
 
+#include <stdint.h>
+#include "bl_uart.h"
+
 void SDI_Init(void);
 
 void SDI_Start(void);

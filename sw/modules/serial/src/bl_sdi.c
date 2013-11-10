@@ -21,9 +21,9 @@ void SDI_Init(void)
 		pipelines[i].cores = (Core*)malloc(sizeof(Core)*2);
 
 		for (int j=0; j<2; j++) {
-			pipeline[i].cores[j].in = malloc(sizeof(uint16_t)*MEM_SIZE);
-			pipeline[i].cores[j].out = malloc(sizeof(uint16_t)*MEM_SIZE);
-			pipeline[i].cores[j].inst = malloc(sizeof(uint16_t)*MEM_SIZE);
+			pipelines[i].cores[j].in = malloc(sizeof(uint16_t)*MEM_SIZE);
+			pipelines[i].cores[j].out = malloc(sizeof(uint16_t)*MEM_SIZE);
+			pipelines[i].cores[j].inst = malloc(sizeof(uint16_t)*MEM_SIZE);
 		}
 	}
 }
@@ -50,7 +50,7 @@ void write_instruction(uint8_t command[])
 	uint8_t pipeline = command[2];
 	uint8_t core = command[3];
 
-	uint16_t *inst = pipelines[pipeline].core[core].inst;
+	uint16_t *inst = pipelines[pipeline].cores[core].inst;
 
 	UART_GetData(inst, 16*2);
 }
@@ -60,7 +60,7 @@ void write_data(uint8_t command[])
 	uint8_t pipeline = command[2];
 	uint8_t memory = command[3];
 
-	uint16_t *mem = pipelines[pipeline].core[memory].in;
+	uint16_t *mem = pipelines[pipeline].cores[memory].in;
 	
 	UART_GetData(mem, 16*2);
 }
@@ -70,7 +70,7 @@ void read_data(uint8_t command[])
 	uint8_t pipeline = command[2];
 	uint8_t memory = command[3];
 
-	uint16_t *mem = pipelines[pipeline].core[memory].in;
+	uint16_t *mem = pipelines[pipeline].cores[memory].in;
 
 	UART_PutData(mem, 16*2);
 }
