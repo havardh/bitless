@@ -34,5 +34,6 @@ uint32_t UART_GetData(uint8_t * dataPtr, uint32_t dataLen);
 
 /* UART Terminal commands */
 void UART_ClearScreen(void);
+void UART_SetCursor(int row, int col);
 
 #endif // _SERIAL_H_

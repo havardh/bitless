@@ -4,6 +4,11 @@
 static USART_TypeDef           * uart   = UART0;
 static USART_InitAsync_TypeDef uartInit = USART_INITASYNC_DEFAULT;
 
+const char     clearScreen[]    = "\033[2J";
+const uint32_t clearLen         = sizeof(clearScreen) - 1;
+const char     resetCursor[]    = "\033[1;1H";
+const uint32_t resetLen         = sizeof(resetCursor) - 1;
+
 circularBuffer rxBuf, txBuf = { {0}, 0, 0, 0, false };
 
 /******************************************************************************
@@ -51,11 +56,22 @@ void UART_Init(void) {
     USART_Enable(uart, usartEnable);
 }
 
-const char     clearScreen[]    = "\033[2J";
-const uint32_t clearLen         = sizeof(clearScreen) - 1;
+/********************************
+* Terminal controls
+********************************/
 
 void UART_ClearScreen(void) {
-    UART_PutData(clearScreen, clearLen);
+    UART_PutData((uint8_t *) clearScreen, clearLen);
+}
+
+void UART_SetCursor(int row, int col) {
+    if (row > 0 && col > 0) {
+        char cursorPos[resetLen];
+        sprintf(cursorPos, "\033[%d;%dH", row, col);
+            UART_PutData((uint8_t *) cursorPos, resetLen);
+    } else {
+        UART_PutData((uint8_t *) resetCursor, resetLen);
+    }
 }
 
 /******************************************************************************
