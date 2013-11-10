@@ -4,57 +4,43 @@
 #include "em_chip.h"
 #include "em_cmu.h"
 #include "em_emu.h"
-#include "bsp.h"
-#include "bsp_trace.h"
+#include "bl_leds.h"
 
-volatile uint32_t msTicks; /* counts 1ms timeTicks */
+volatile uint32_t msTicks;
 
 void Delay(uint32_t dlyTicks);
 
-/**************************************************************************//**
- * @brief SysTick_Handler
- * Interrupt Service Routine for system tick counter
- *****************************************************************************/
 void SysTick_Handler(void)
 {
-  msTicks++;       /* increment counter necessary in Delay()*/
+  msTicks++;
 }
 
-/**************************************************************************//**
- * @brief Delays number of msTick Systicks (typically 1 ms)
- * @param dlyTicks Number of ticks to delay
- *****************************************************************************/
-void Delay(uint32_t dlyTicks)
-{
-  uint32_t curTicks;
+void Delay(uint32_t dlyTicks) {
+    uint32_t curTicks;
 
-  curTicks = msTicks;
-  while ((msTicks - curTicks) < dlyTicks) ;
+    curTicks = msTicks;
+    while ((msTicks - curTicks) < dlyTicks) ;
 }
 
-/**************************************************************************//**
- * @brief  Main function
- *****************************************************************************/
-int main(void)
-{
-  /* Chip errata */
-  CHIP_Init();
+int main() {
+    CHIP_Init();
 
-  /* If first word of user data page is non-zero, enable eA Profiler trace */
-  BSP_TraceProfilerSetup();
+    if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while (1) ;
 
-  /* Setup SysTick Timer for 1 msec interrupts  */
-  if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while (1) ;
+    Leds_Init();
 
-  /* Initialize LED driver */
-  BSP_LedsInit();
-  BSP_LedSet(0);
+    bool clear = false;
+    int i = 0;
+    while (1) {
+        if (!clear)
+            Leds_SetLed(i++);
+        else
+            Leds_ClearLed(i++);
 
-  /* Infinite blink loop */
-  while (1)
-  {
-    BSP_LedToggle(0);
-    BSP_LedToggle(1);
-    Delay(1000);
-  }
+        if (i == NUM_LEDS) {
+            i = 0;
+            clear = !clear;
+        }
+        Delay(500);
+    }
 }
