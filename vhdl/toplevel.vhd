@@ -145,6 +145,7 @@ begin
 		if rising_edge(system_clk) then
 			if internal_bus_write = '1' then
 				if internal_bus_address.toplevel = '1' then
+	
 					-- Write the writeable control register fields:
 					control_register.reset <= internal_bus_data_in(15);
 					control_register.blinkmode <= internal_bus_data_in(13);
@@ -152,22 +153,9 @@ begin
 						control_register.led0 <= internal_bus_data_in(12);
 						control_register.led1 <= internal_bus_data_in(11);
 					end if;
+
 				end if;
 			end if;
-
---			if internal_bus_read = '1' and internal_bus_address.toplevel = '1' then
---				-- Read the control register:
---				internal_bus_data_out <= b"00" &
---					control_register.blinkmode &	-- Bit 13
---					control_register.led0 &			-- Bit 12
---					control_register.led1 &			-- Bit 11
---					control_register.button1 &		-- Bit 10
---					control_register.button0 &		-- Bit  9
---					b"000000" &
---					control_register.number_of_pipelines; -- LSB
---			elsif internal_bus_read = '1' then
---				internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)));
---			end if;
 		end if;
 	end process;
 
