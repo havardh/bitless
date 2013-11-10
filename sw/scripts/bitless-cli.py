@@ -3,6 +3,7 @@ import serial
 import sys
 
 BAUDRATE=115200
+MEM_SIZE=4096
 
 def main():
 		args = parse()
@@ -86,9 +87,8 @@ def read_data(args):
 		port = args.port
 		command = 'rd' + `args.pipeline` + `args.memory`
 
-		print port, command
-
-		print 'read data'
+		data = read_from_bitless(port, command, MEM_SIZE)
+		write_file(args.read, data)
 
 
 def execute(args):
@@ -164,6 +164,19 @@ def read_file(filename):
 				data = f.read();
 				f.close()
 		return data
+
+def write_file(filename, data):
+		
+		f = None
+		try:
+				f = open(filename, 'w')
+		except:
+				print 'Could not open:', filename
+				sys.exit(1)
+		if f:
+				f.write(data)
+				f.close()
+
 
 
 if __name__ == "__main__":
