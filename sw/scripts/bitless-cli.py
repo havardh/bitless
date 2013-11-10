@@ -3,7 +3,7 @@ import serial
 import sys
 
 BAUDRATE=115200
-MEM_SIZE=4096
+MEM_SIZE=(16*2)
 
 def main():
 		args = parse()
@@ -161,7 +161,7 @@ def read_file(filename):
 				print 'File: "' + filename + '" not found'
 				sys.exit(1)
 		if f:
-				data = f.read();
+				data = f.read(MEM_SIZE);
 				f.close()
 		return data
 
