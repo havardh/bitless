@@ -55,36 +55,41 @@ architecture behaviour of pipeline is
 
 	component core is
 		generic(
-			address_width : natural := 16
-		);
+			instruct_addr_size  : natural := 16;
+			instruct_data_size  : natural := 16;
+			reg_addr_size       : natural := 5;
+			reg_data_size       : natural := 16;
+			memory_data_size    : natural := 32;
+			memory_addr_size    : natural := 16
+		 );
 
-		port(
-			clk					: in std_logic; -- Small cycle clock signal
-			memclk				: in std_logic; -- Memory clock signal
-			sample_clk			: in std_logic; -- Reset signal, "large cycle" clock signal
+		 port(
+			  clk                 : in std_logic; -- Small cycle clock signal
+			  memclk              : in std_logic; -- Memory clock signal
+			  sample_clk          : in std_logic; -- Reset signal, "large cycle" clock signal
 
-			reset				: in std_logic; -- Resets the processor core
+			  reset               : in std_logic; -- Resets the processor core
+			  
+			  -- Connection to instruction memory:
+			  instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
+			  instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
+			  
+			  -- Connections to the constant memory controller:
+			  constant_addr       : out std_logic_vector(memory_addr_size - 1 downto 0);
+			  constant_data       : in  std_logic_vector(memory_data_size - 1 downto 0);
 
-			-- Connections to the instruction memory:
-			instruction_addr    : out std_logic_vector(address_width - 1 downto 0);
-			instruction_data    : in std_logic_vector(15 downto 0);
+			  -- Connections to the input buffer:
+			  input_read_addr     : out std_logic_vector(memory_addr_size - 1 downto 0);
+			  input_read_data     : in  std_logic_vector(memory_data_size - 1 downto 0);
 
-			-- Connections to the constant memory controller:
-			constant_addr		: out std_logic_vector(address_width - 1 downto 0);
-			constant_data		: in  std_logic_vector(31 downto 0);
-
-			-- Connections to the input buffer:
-			input_read_addr		: out std_logic_vector(address_width - 1 downto 0);
-			input_read_data		: in  std_logic_vector(31 downto 0);
-
-			-- Connections to the output buffer:
-			output_write_addr	: out std_logic_vector(address_width - 1 downto 0);
-			output_write_data	: out std_logic_vector(31 downto 0);
-			output_we			: out std_logic;
-			
-			output_read_addr	: out std_logic_vector(address_width - 1 downto 0);
-			output_read_data	: in  std_logic_vector(31 downto 0)
-		);
+			  -- Connections to the output buffer:
+			  output_write_addr   : out std_logic_vector(memory_addr_size - 1 downto 0);
+			  output_write_data   : out std_logic_vector(memory_data_size - 1 downto 0);
+			  output_we           : out std_logic;
+			  
+			  output_read_addr    : out std_logic_vector(memory_addr_size - 1 downto 0);
+			  output_read_data    : in  std_logic_vector(memory_data_size - 1 downto 0)
+		 );
 	end component;
 
 	component instruction_memory is
@@ -113,6 +118,8 @@ architecture behaviour of pipeline is
 			clk 			: in std_logic; -- Main clock ("small cycle" clock)
 			memclk		: in std_logic; -- Memory clock
 			sample_clk	: in std_logic; -- Sample clock ("large cycle" clock)
+
+			reset       : in std_logic; -- Resets the addresses
 
 			-- Data and address I/O for using the buffer as output buffer:
 			b_data_in     : in  std_logic_vector(data_width - 1 downto 0);    -- B data input
@@ -284,6 +291,7 @@ begin
 			clk => clk,
 			memclk => memory_clk,
 			sample_clk => sample_clk,
+			reset => '0',
 			b_data_in => input_write_data,
 			b_data_out => open,
 			b_off_address => internal_dest_address,
@@ -313,7 +321,6 @@ begin
 
 		-- Core:
 		processor_core: core
-			generic map(address_width => 16)
 			port map(
 				clk => clk,
 				memclk => memory_clk,
@@ -339,6 +346,7 @@ begin
 				clk => clk,
 				memclk => memory_clk,
 				sample_clk => sample_clk,
+				reset => '0',
 				b_data_in => output_write_data(i),
 				b_data_out => output_read_data(i),
 				b_off_address => output_write_address(i),
