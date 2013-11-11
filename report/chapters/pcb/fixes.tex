@@ -1,0 +1,33 @@
+% !TEX root = ../../report.tex
+
+\section{Fixes}
+\todo{Quick notes taken in the lab, needs a rewrite probably}
+
+As the group had never before designed a PCB before, and since there are so
+many things that can go wrong, obviously something was bound to not 
+work as intended intially.
+
+After receiving the PCB we quickly realised that the footprint for the 
+linear regulator was miss-matched with the pinout of the component. 
+After consulting our design project we realised that the footprint had
+been fixed early on, but we had forgot to update the component within 
+the schematic. The same turned out to have happend with the low frequency
+crystal connected to the MCU.
+
+Both the above problems where easly solved. For the crystal pin 1 and 4
+was suppose to be used, but we had 1 and 2 in our design. As 2 and 3 are 
+unconnected we where able to solve the problem by soldering a patch cable
+between pin 4 and 2. \todo{Photo} 
+
+The linear regulator was slightly more advanced as we had switched pin
+1 and 5, and pin 2 and 4 in our design. The solution was soldering six 
+short patch cables on the pad itself, and then mount the linear regulator
+to those cables after ordering them correct. The resulted in the linear 
+regulator being mounted about 1 cm above the card. \todo{photo, both physcal and a schematic maybe?}
+
+In addition to the two footprints we had forgot to update we also had
+an actual connection error in the SRAM footprint. One of the two chip
+select inputs, CS1, was suppose to be grounded, but we had mistakenly connected
+it to VCC33, resulting in the unit being stuck in off mode. To solve
+this we slighly bent the chip select pin upwards, and connected it using
+a patch cable to an other pin near by that was grounded. \todo{photo}
