@@ -1,12 +1,14 @@
+% !TEX root = ../../report.tex
+
 \section{Dataflow}
 
-When designing a energy efficient system, dataflow is of great importance. The software 
-on the MCU tries to minimize the number of data stores and movements. CPU usage is also
-kept to a minimum as turning the CPU off conserves energy consumption.
+When designing an energy efficient system, dataflow is of great importance. The software 
+on the MCU has been designed to minimize the number of data stores and movements, and CPU
+usage is kept to a minimum so that the processor can be turned off to save energy.
 
 \subsection{Peripherals}
 The MCU facilitates audio I/O from ADC, DAC, SDCard and serial port interface to and from 
-the FPGA. \todo{is serial audio I/O implemented}
+the FPGA. \todo{is serial audio I/O implemented?}
 \input{figures/sw/sample-flow}
 
 \subsection{External Bus Interface}
