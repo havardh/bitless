@@ -45,7 +45,7 @@ begin
 	int_write_enable <= we_value;
 	int_read_enable <= re_value;
 
-	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs, reset)
+	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs, reset, reset_finished)
 	begin
 		if reset = '1' and reset_finished = '0' then
 			current_state <= idle;
