@@ -344,6 +344,8 @@ begin
                 mem_mem_value <= output_read_data;
             when MEM_CONST =>
                 mem_mem_value <= constant_data;
+            when others =>
+                mem_mem_value <= constant_data;
         end case;
     end process;
 
@@ -417,6 +419,8 @@ begin
             when MUX_MEM =>
                 ex_wb_data <= ex_mem_value;
             when MUX_IMM =>
+                ex_wb_data <= ex_imm_value;
+            when others =>
                 ex_wb_data <= ex_imm_value;
         end case;
     end process;
