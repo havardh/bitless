@@ -202,12 +202,12 @@ BEGIN
 		--And so on. Between each instruction check the corresponding registers or input-/output-buffers to verify instruction.
 
 		--Load value from input buffer to register 2
-		input_read_data <= X"1010101";
+		input_read_data <= X"10101010";
 		instruction_data <= load_inpt_1;
 		wait for clk_period*wait_period;
 
 		--Check if register 2 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= store_outpt_1
+		instruction_data <= store_outpt_1;
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 3
@@ -229,7 +229,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 5
-		constant_data <= X"1010101";
+		constant_data <= X"10101010";
 		instruction_data <= load_inpt_4;
 		wait for clk_period*wait_period;
 
@@ -247,7 +247,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 7
-		output_read_data <= X"1010101";
+		output_read_data <= X"10101010";
 		instruction_data <= load_inpt_6;
 		wait for clk_period*wait_period;
 
