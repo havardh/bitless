@@ -73,6 +73,9 @@ ARCHITECTURE behavior OF tb_alu IS
    -- Clock period definitions
    constant dsp_clk_period : time := 10 ns;
    constant cpu_clk_period : time := 10 ns;
+	
+	--helper signals
+	signal helper1, helper2, helper3 : std_logic_vector(31 downto 0);
  
 BEGIN
  
@@ -250,17 +253,58 @@ BEGIN
       cpu_input_register_2  <= "0000000000000110";
 		wait for cpu_clk_period/2;
 		assert result = x"FFFFFFF3" report "MOVE_NEG not working!";
-		
---		operation 				 <= FP_MUL;
---		cpu_input_register_1  <= "0011110000000000";
---    cpu_input_register_2  <= "0011110000000000";
---		wait for cpu_clk_period/2;
---		assert result = "00000000000000000011110000000000" report "FP_MUL not working!";
 
 		operation				<= ALU_FIXED_TO_FLOAT;
-		cpu_input_register_1	<= x"0002";
+		cpu_input_register_1	<= x"0002"; --initial value 2 converted
 		wait for cpu_clk_period/2;
-		assert result = "0100000000000000" report "Fix_to_float not working!";
+		assert result = "00000000000000000100000000000000" report "Fix_to_float not working!";
+		
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= "0000011001100000"; --random value which converts fine but I haven't calcualted which number it actually is
+		wait for cpu_clk_period/2;
+		assert result = "00000000000000000110011001100000" report "Fix_to_float not working!";
+		
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= "1111111111110011"; --random negative number which also converts fine
+		wait for cpu_clk_period/2;
+		assert result = "11111111111111111100101010000000" report "Fix_to_float not working!";
+
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= "0100000000000000"; --initial 2 converted back
+		wait for cpu_clk_period/2;
+		assert result = x"00000002" report "Float_to_fix not working!";
+		
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= "0110011001100000"; --random number converted back
+		wait for cpu_clk_period/2;
+		assert result = "00000000000000000000011001100000" report "Float_to_fix not working!";
+		
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= "1100101010000000"; --random negative number converted back
+		wait for cpu_clk_period/2;
+		assert result = "11111111111111111111111111110011" report "Float_to_fix not working!";
+		
+		--testing fp multiply, 5*3=15
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= x"0003"; 
+		wait for cpu_clk_period/2;
+		helper1 <= result;
+		
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= x"0005"; 
+		wait for cpu_clk_period/2;
+		helper2 <= result;
+		wait for cpu_clk_period;
+		operation 				 <= FP_MUL;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = x"0000000F" report "Float_to_fix not working!";
 
 
       wait;
