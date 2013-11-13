@@ -236,7 +236,8 @@ begin
         a       => pc_reg,
         b       => x"0000",
         c       => '1',
-        result  => pc_inc
+        result  => pc_inc,
+		flags	=> open
     );
     
     pc : process(clk)

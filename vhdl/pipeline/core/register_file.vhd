@@ -56,20 +56,3 @@ begin
 				else regs(to_integer(unsigned(reg_2_address)));
 
 end Behaviour;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

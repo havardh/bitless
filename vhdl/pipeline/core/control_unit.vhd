@@ -35,8 +35,8 @@ use work.control_unit_constants.all;
 
 entity control_unit is
     port (  
-        clk                 : in    std_logic;
-        reset               : in    std_logic;
+        clk                 : in    std_logic; --Not in use!!! If this is a combinatorial circuit, remove it!!!
+        reset               : in    std_logic; --Not yet implemented!
         opt_code            : in    std_logic_vector (5 downto 0);
 
         alu_op              : out alu_operation;
