@@ -196,7 +196,7 @@ architecture behaviour of core is
     signal ex_reg_1b_data       : std_logic_vector(reg_data_size-1 downto 0);
     signal ex_reg_2_data        : std_logic_vector(reg_data_size-1 downto 0);
     signal ex_fw_1              : std_logic_vector(reg_data_size-1 downto 0);
-    signal ex_fw_1b              : std_logic_vector(reg_data_size-1 downto 0);
+    signal ex_fw_1b             : std_logic_vector(reg_data_size-1 downto 0);
     signal ex_fw_2              : std_logic_vector(reg_data_size-1 downto 0);
     signal ex_imm_value         : std_logic_vector(memory_data_size-1 downto 0);
     signal ex_mem_value         : std_logic_vector(memory_data_size-1 downto 0);
@@ -267,7 +267,7 @@ begin
         mem_src             => id_mem_slct,
         load_imm            => id_load_imm,
         output_write_enable => id_output_we,
-        add_imm				=> id_add_imm,
+        add_imm				 => id_add_imm,
         load_const          => id_load_const,
         branch_enable       => branch_enable
     );
