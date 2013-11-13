@@ -85,8 +85,44 @@ ARCHITECTURE behavior OF tb_core IS
    constant clk_period : time := 10 ns;
    constant memclk_period : time := 10 ns;
    constant sample_clk_period : time := 10 ns;
+   
+   --Instruction constants
+   constant gc_load_store : std_logic_vector(1 downto 0) := "01"; --Group bits value code for load/store instructions
+   constant fc_load_store : std_logic_vector(1 downto 0) := "11"; --Function bits value code for store instructions
+     
+	 --Option constants
+   constant oc_store : std_logic_vector(1 downto 0) := "11"; --Option bits value code for store to output buffer
+   constant oc_load1 : std_logic_vector(1 downto 0) := "00"; --Option bits value code for load from input buffer
+   constant oc_load2 : std_logic_vector(1 downto 0) := "01"; --Option bits value code for load from output buffer
+   constant oc_load3 : std_logic_vector(1 downto 0) := "10"; --Option bits value code for load from constant buffer
+   
+   
+   --Instructions
+   --Currently the address in the the b-registers in the following commands does not matter, and isn't used. 
+   --This is because there's no memory connected, so all stores will have to check real-time on the outputlines from core,
+   --and all loads will have to check the register files and have the value ready on the inputlines on core when the instruction is run.
+   
+     --Store instructions
+   constant store_outpt_1 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"10101"&"00010"; --Store value in register 13 into the output address register 2's value poins to
+   constant store_outpt_2 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"11111"&"00011"; --Store value in register 31 into the output address register 3's value poins to
+   constant store_outpt_3 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00000"&"00100"; --Store value in register 0 into the output address register 4's value poins to
+   constant store_outpt_4 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"01010"&"00101"; --Store value in register 8 into the output address register 5's value poins to
+   constant store_outpt_5 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"11011"&"00110"; --Store value in register 27 into the output address register 6's value poins to
+   constant store_outpt_6 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00100"&"00111"; --Store value in register 4 into the output address register 7's value poins to
+   constant store_outpt_7 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00111"&"01000"; --Store value in register 7 into the output address register 8's value poins to
+   constant store_outpt_8 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"11000"&"01001"; --Store value in register 24 into the output address register 9's value poins to
+   
+     --Load instructions
+   constant load_inpt_1 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00010"&"00000"; --Load the value pointed to by value in address 0 to register 2
+   constant load_inpt_2 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00011"&"00000"; --Load the value pointed to by value in address 0 to register 3
+   constant load_inpt_3 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00100"&"00000"; --Load the value pointed to by value in address 0 to register 4
+   constant load_inpt_4 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00101"&"00000"; --Load the value pointed to by value in address 0 to register 5
+   constant load_inpt_5 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00110"&"00000"; --Load the value pointed to by value in address 0 to register 6
+   constant load_inpt_6 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00111"&"00000"; --Load the value pointed to by value in address 0 to register 7
+   constant load_inpt_7 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"01000"&"00000"; --Load the value pointed to by value in address 0 to register 8
+   constant load_inpt_8 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"01001"&"00000"; --Load the value pointed to by value in address 0 to register 9
  
-BEGIN
+BEGIN 
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: core PORT MAP (
@@ -138,11 +174,25 @@ BEGIN
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
-      wait for 100 ns;	
+	  reset <= '1';
+      wait for 100 ns;
+	  reset <= '0';
 
       wait for clk_period*10;
 
       -- insert stimulus here 
+	  
+--		--When commands are run, you need one clockcycle between each command, like shown below
+--		--First instruction
+--		instruction_data <= instruction_1;
+--		wait for clk_period;
+--		
+--		--Next instruction
+--		instruction_data <= instruction_2;
+--		wait for clk_period;
+		
+		--And so on. Between each instruction check the corresponding registers or input-/output-buffers to verify instruction.
+		
 
       wait;
    end process;
