@@ -68,6 +68,7 @@ architecture behaviour of core is
     signal pc_we            : std_logic;
     
     signal branch_enable    : std_logic;
+	 signal do_branch        : std_logic;
     signal branch_target    : std_logic_vector(9 downto 0);
     
 --********* Stage 2 - Control unit and register file *********
@@ -109,6 +110,7 @@ architecture behaviour of core is
     -- signals
     -- data signals
     signal id_imm_value         : std_logic_vector(memory_data_size-1 downto 0);
+	 signal id_branch_flags      : std_logic_vector(3 downto 0);
     
     -- addr signals
     signal id_reg_1_addr        : std_logic_vector( reg_addr_size-1 downto 0);
@@ -245,7 +247,7 @@ architecture behaviour of core is
 --Other
 
 begin
-    
+	 
 	 
 	 stop_core : process(reset, stop_core_signal) 
 	 begin
@@ -265,11 +267,27 @@ begin
         result  => pc_inc,
 		flags	=> open
     );
-    
+	 
+	 evaluate_branch : process(branch_enable, wb_flags, id_branch_flags)
+	 begin
+        if (branch_enable = '1') then
+		      if (id_branch_flags(3) = '1' and wb_flags.zero = '1')
+				or (id_branch_flags(2) = '1' and wb_flags.carry ='1')
+				or (id_branch_flags(1) = '1' and wb_flags.overflow = '1')
+				or (id_branch_flags(0) = '1' and wb_flags.negative = '1') then
+				    do_branch <= '1';
+				else
+				    do_branch <= '0';
+			   end if;
+		  else
+		      do_branch <= '0';
+		  end if;
+	 end process;
+	 
     pc : process(clk)
     begin
         if rising_edge(clk) then
-            if branch_enable = '1' then
+            if do_branch = '1' then
                 pc_reg <= ext(branch_target, instruct_addr_size);
             else
                 pc_reg <= pc_inc;
@@ -281,7 +299,7 @@ begin
 
 --Pipeline: ID
     branch_target <= instruction_data(9 downto 0);
-    
+    id_branch_flags <= instruction_data(13 downto 10);
     control_u : control_unit
     port map(
         opt_code            => instruction_data(15 downto 10),
@@ -386,10 +404,10 @@ begin
 -- Pipeline: EX
 
 	pipeline_mem_ex_reg : process(clk)
-    begin
+   begin
         if rising_edge(clk) then
 		      if (mem_add_imm ='1') then
-				    ex_reg_2_data <= ex_reg2_addr;
+				    ex_reg_2_data <= sxt(mem_reg_2_addr, 16);
 			   else
 				    ex_reg_2_data <= mem_fw_2;
 			   end if;
