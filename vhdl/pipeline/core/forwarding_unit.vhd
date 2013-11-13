@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use work.core_constants.all;
 
-entity forwarding_unit is
+entity forwarding_unit_mem is
     Port (
 			reg_we		: in register_write_enable;
             
@@ -20,20 +20,19 @@ entity forwarding_unit is
             
 			data_wb_in	: in std_logic_vector(31 downto 0)
     );
-end forwarding_unit;
+end forwarding_unit_mem;
 
-architecture Behavioral of forwarding_unit is
+architecture Behavioral of forwarding_unit_mem is
     
     
 	signal wb_1_in, wb_2_in : std_logic_vector(15 downto 0);
-   signal reg_1b_addr, wb_reg_2_addr : std_logic_vector(4 downto 0);
     
 begin
  
 	wb_1_in	<= data_wb_in(15 downto 0);
 	wb_2_in	<= data_wb_in(31 downto 16);
 	
-	forward_signals : process(reg_1_addr, reg_1b_addr, reg_2_addr, reg_we, wb_reg_1_addr, wb_reg_2_addr, wb_1_in, data_1_in, data_1b_in, data_2_in, wb_2_in)
+	forward_signals : process(reg_1_addr, reg_2_addr, reg_we, wb_reg_1_addr, wb_1_in, data_1_in, data_1b_in, data_2_in, wb_2_in)
 	begin
 		case reg_we is
 			when REG_A_WRITE =>
