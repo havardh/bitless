@@ -2,441 +2,229 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>4207333163</fileChecksum>
+  <fileChecksum>3739037663</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_vcmp.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_letimer.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_timer_cc.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_timer.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_assert.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_burtc.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dmactrl.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_prs_signals.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_pcnt.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_etm.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_dma.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\system_efm32gg.h</file>
       <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_wdog.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_msc.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usart.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_emu.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg990f1024.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_leuart.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_i2c.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_romtable.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_rtc.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_acmp.h</file>
-      <file>$PROJ_DIR$\..\drivers\sdcard\demo\read-file.c</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_calibrate.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
-      <file>$TOOLKIT_DIR$\config\linker\EnergyMicro\EFM32GG990F1024.icf</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_af_ports.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_devinfo.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\bl_uart.o</file>
       <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_adc.h</file>
-      <file>$PROJ_DIR$\..\libs\util\src\wav.c</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dmareq.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_gpio.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb_doep.h</file>
-      <file>$PROJ_DIR$\..\libs\CMSIS\Include\core_cmFunc.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dma_descriptor.h</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\drivers\microsd.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb_hc.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_uart.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dma_ch.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_emu.c</file>
-      <file>$PROJ_DIR$\..\libs\fatfs\src\diskio.c</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.c</file>
-      <file>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\IAR\startup_efm32gg.s</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\drivers\microsd.c</file>
-      <file>$PROJ_DIR$\..\libs\fatfs\src\ff.c</file>
-      <file>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_gpio.c</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_3201.c</file>
-      <file>$PROJ_DIR$\..\drivers\sdcard\demo\copy-file.c</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_usart.c</file>
-      <file>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\system_efm32gg.c</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_leds.c</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_assert.c</file>
-      <file>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_trace.c</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_cmu.c</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_system.c</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_timer.c</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_ebi.c</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_ebi.o</file>
-      <file>$PROJ_DIR$\..\libs\CMSIS\Include\core_cmInstr.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense_ch.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_prs_ch.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_rmu.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\system_efm32gg.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_calibrate.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_romtable.h</file>
+      <file>$PROJ_DIR$\..\libs\fatfs\inc\ff.h</file>
       <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dma.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_aes.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
-      <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+      <file>$PROJ_DIR$\..\modules\uart\inc\bl_uart.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_msc.h</file>
       <file>$PROJ_DIR$\Debug\Obj\em_usart.o</file>
-      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
-      <file>$PROJ_DIR$\..\libs\fatfs\src\msddiskio.c</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_cmu.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\em_device.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_assert.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dma_ch.h</file>
       <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_prs.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense_st.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_gpio.h</file>
       <file>$PROJ_DIR$\Debug\Obj\em_usart.pbi</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_gpio_p.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_ebi.h</file>
-      <file>$PROJ_DIR$\Debug\Exe\sdcard.out</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_cmu.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_bitband.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_aes.h</file>
+      <file>$PROJ_DIR$\..\libs\fatfs\inc\integer.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_devinfo.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_af_ports.h</file>
       <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
-      <file>$PROJ_DIR$\..\libs\kits\EFM32GG_DK3750\config\bspconfig.h</file>
-      <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_usart.h</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_common.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb_diep.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense_buf.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\bsp_dk_3201.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\read-file.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\read-file.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\sdcard.pbd</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_ebi.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_burtc_ret.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\SDDriver.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_timer.o</file>
+      <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_cmu.h</file>
+      <file>$PROJ_DIR$\..\libs\fatfs\src\msddiskio.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\bsp_trace.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_cmu.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_leuart.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\em_device.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_ebi.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_dma.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\bsp_dk_3201.pbi</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_bitband.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_dac.o</file>
       <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_af_pins.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\microsd.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\dmactrl.pbi</file>
+      <file>$PROJ_DIR$\..\drivers\sdcard\demo\copy-file.c</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_trace.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_3201.c</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_leds.c</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense_buf.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\startup_efm32gg.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_gpio.o</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_gpio.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\bsp_dk_leds.pbi</file>
+      <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
+      <file>$PROJ_DIR$\Debug\Obj\SDDriver.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\bsp_trace.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\bl_uart.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dma_descriptor.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\fatfs_file.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\system_efm32gg.pbi</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_emu.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense.h</file>
+      <file>$PROJ_DIR$\..\libs\CMSIS\Include\core_cm3.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ff.pbi</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_i2c.h</file>
       <file>$PROJ_DIR$\Debug\Obj\bsp_dk_leds.o</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dac.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\msddiskio.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\limits.h</file>
+      <file>$PROJ_DIR$\..\types\inc\SDConfig.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_rtc.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_gpio.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_letimer.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb_doep.h</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_ebi.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\drivers\microsd.c</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\bsp_dk_3201.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\EFM32GG_DK3750\config\traceconfig.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\diskio.pbi</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usart.h</file>
+      <file>$PROJ_DIR$\..\libs\fatfs\inc\diskio.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\bl_sdi.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_system.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\bl_sdi.o</file>
+      <file>$PROJ_DIR$\..\libs\CMSIS\Include\core_cmFunc.h</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_assert.h</file>
+      <file>$TOOLKIT_DIR$\config\linker\EnergyMicro\EFM32GG990F1024.icf</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_timer.pbi</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_common.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ff.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_prs_signals.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\system_efm32gg.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg990f1024.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_gpio.pbi</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_chip.h</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_prs.h</file>
       <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
       <file>$PROJ_DIR$\..\libs\kits\EFM32GG_DK3750\config\microsdconfig.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lcd.h</file>
-      <file>$PROJ_DIR$\..\libs\kits\EFM32GG_DK3750\config\traceconfig.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\msddiskio.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_timer.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\copy-file.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\SDDriver.o</file>
-      <file>$PROJ_DIR$\..\types\inc\SDConfig.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\bsp_dk_leds.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_trace.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_gpio.pbi</file>
       <file>$PROJ_DIR$\Debug\Obj\copy-file.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\ff.pbi</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\diskio.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\limits.h</file>
-      <file>$PROJ_DIR$\..\libs\fatfs\inc\diskio.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\wav.o</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\system_efm32gg.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\startup_efm32gg.o</file>
-      <file>$TOOLKIT_DIR$\inc\c\ystdio.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\wav.pbi</file>
-      <file>$PROJ_DIR$\..\drivers\sdcard\inc\SDDriver.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\dmactrl.o</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\drivers\msdh.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_system.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\SDDriver.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_cmu.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\bsp_dk_3201.pbi</file>
-      <file>$PROJ_DIR$\..\libs\fatfs\inc\integer.h</file>
-      <file>$PROJ_DIR$\..\libs\util\inc\wav.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_system.o</file>
-      <file>$TOOLKIT_DIR$\inc\c\intrinsics.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_emu.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_gpio.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_assert.pbi</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_msc.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\ff.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\bsp_trace.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\bsp_trace.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_ebi.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_timer.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_assert.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_cmu.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_emu.pbi</file>
-      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_bcreg_3201.h</file>
-      <file>$PROJ_DIR$\..\libs\fatfs\inc\ffconf.h</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_emu.h</file>
-      <file>$PROJ_DIR$\..\libs\fatfs\inc\ff.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\microsd.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\diskio.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_system.pbi</file>
-      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\system_efm32gg.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdarg.h</file>
-      <file>$PROJ_DIR$\..\libs\CMSIS\Include\core_cm3.h</file>
-      <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\fatfs_file.pbi</file>
-      <file>$PROJ_DIR$\..\libs\util\inc\file.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\fatfs_file.o</file>
+      <file>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</file>
       <file>$PROJ_DIR$\..\libs\emlib\inc\em_timer.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_dma.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_dac.h</file>
-      <file>$PROJ_DIR$\..\libs\emlib\inc\em_prs.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_dac.pbi</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_dma.c</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_dac.o</file>
-      <file>$PROJ_DIR$\..\libs\emlib\src\em_prs.c</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_dma.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_prs.o</file>
-      <file>$PROJ_DIR$\Debug\Obj\em_dma.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\diskio.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_emu.h</file>
       <file>$PROJ_DIR$\Debug\Obj\em_prs.pbi</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dac.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_dac.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\fatfs_file.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_cmu.pbi</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb_diep.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\EFM32GG_DK3750\config\bspconfig.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_timer_cc.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_gpio_p.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\sdcard.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\microsd.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_prs.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_ebi.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\drivers\msdh.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_bcreg_3201.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\copy-file.o</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_acmp.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\read-file.o</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_usart.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense_ch.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\wav.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\dmactrl.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\dmactrl.o</file>
+      <file>$PROJ_DIR$\Debug\Exe\sdcard.out</file>
+      <file>$PROJ_DIR$\Debug\Obj\wav.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_emu.o</file>
+      <file>$PROJ_DIR$\..\drivers\sdcard\inc\SDDriver.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_af_pins.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_trace.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_assert.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_emu.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\ystdio.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_system.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_system.pbi</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lcd.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\drivers\microsd.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\em_ebi.pbi</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_uart.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\intrinsics.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dmactrl.h</file>
+      <file>$PROJ_DIR$\..\libs\util\inc\wav.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_dmareq.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_usb_hc.h</file>
+      <file>$PROJ_DIR$\..\libs\util\inc\file.h</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_dac.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_etm.h</file>
+      <file>$PROJ_DIR$\..\modules\serial\inc\bl_sdi.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_pcnt.h</file>
+      <file>$PROJ_DIR$\..\libs\kits\EFM32GG_bitless\config\microsdconfig.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_burtc.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\read-file.pbi</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_prs_ch.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_burtc_ret.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdarg.h</file>
+      <file>$PROJ_DIR$\..\drivers\sdcard\demo\read-file.c</file>
+      <file>$PROJ_DIR$\..\libs\util\src\wav.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\inc\em_dma.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_vcmp.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_rmu.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_timer.h</file>
+      <file>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_cmu.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_msc.h</file>
+      <file>$PROJ_DIR$\..\libs\CMSIS\Include\core_cmInstr.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include\efm32gg_lesense_st.h</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_assert.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_usart.c</file>
+      <file>$PROJ_DIR$\..\modules\uart\src\bl_uart.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_emu.c</file>
+      <file>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.c</file>
+      <file>$PROJ_DIR$\..\libs\fatfs\src\diskio.c</file>
+      <file>$PROJ_DIR$\..\modules\serial\demo\main.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_prs.c</file>
+      <file>$PROJ_DIR$\..\libs\fatfs\inc\ffconf.h</file>
+      <file>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\system_efm32gg.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_ebi.c</file>
       <file>$PROJ_DIR$\..\libs\emlib\src\em_dac.c</file>
+      <file>$PROJ_DIR$\..\libs\fatfs\src\ff.c</file>
+      <file>$PROJ_DIR$\..\modules\serial\src\bl_sdi.c</file>
+      <file>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\IAR\startup_efm32gg.s</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_cmu.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_dma.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_gpio.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_timer.c</file>
+      <file>$PROJ_DIR$\..\libs\emlib\src\em_system.c</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>ILINK</name>
-          <file> 81</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\drivers\sdcard\demo\read-file.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 96</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 95</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 89 68 86 158 128 90 66 108 61 97 102 98 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 91 82 83 13 161 142 159 34 109 30 4 126</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 89 68 86 158 128 90 66 108 61 97 102 98 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 91 82 83 13 161 142 159 34 109 30 4 126</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 133</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 127</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 143 68 128 90 66 108 61 97 102 98 118 139 132 168</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 143 68 128 90 66 108 61 97 102 98 118 139 132 168</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_emu.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 157</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 146</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 13 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 83 82 4</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 13 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 83 82 4</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\fatfs\src\diskio.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 124</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 163</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 126 142 128 90 66 108 61 97 102 98 34 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 109 30 68 83 4</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 126 142 128 90 66 108 61 97 102 98 34 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 109 30 68 83 4</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 105</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 135</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 123</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 123</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\IAR\startup_efm32gg.s</name>
-      <outputs>
-        <tool>
-          <name>AARM</name>
           <file> 131</file>
         </tool>
       </outputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\kits\common\drivers\microsd.c</name>
+      <name>$PROJ_DIR$\..\libs\fatfs\src\msddiskio.c</name>
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 162</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 104</file>
+          <file> 64</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 126 142 128 90 66 108 61 97 102 98 34 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 109 30 68 83 4 82 88</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 126 142 128 90 66 108 61 97 102 98 34 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 109 30 68 83 4 82 88</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\fatfs\src\ff.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 122</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 150</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 161 142 128 90 66 108 61 97 102 98 159 126 166</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 161 142 128 90 66 108 61 97 102 98 159 126 166</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 138</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 115</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 134 89 68 86 158 128 90 66 108 61 97 102 98 143 34 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 109 30 83 4 142 116 168 139</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 134 89 68 86 158 128 90 66 108 61 97 102 98 143 34 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 109 30 83 4 142 116 168 139</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_gpio.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 120</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 147</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 30 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 83 4</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 30 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 83 4</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_3201.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 141</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 94</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 68 83 100 4 30 88 158 89 86</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 68 83 100 4 30 88 158 89 86</file>
+          <file> 81 18 116 76 53 97 25 43 38 160 121</file>
         </tool>
       </inputs>
     </file>
@@ -445,67 +233,40 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 121</file>
+          <file> 99</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 114</file>
+          <file> 123</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 118 90 66 108 61 97 102 98 139 132 71 129 128 68 168 125 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 91 82 83 13 174 175 172 173 88 123 134 89 86 158 143 34 109 30 4 142 116 161 159 126</file>
-        </tool>
-        <tool>
           <name>ICCARM</name>
-          <file> 118 90 66 108 61 97 102 98 139 132 71 129 128 68 168 125 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 91 82 83 13 174 175 172 173 88 123 134 89 86 158 143 34 109 30 4 142 116 161 159 126</file>
+          <file> 140 76 53 97 25 43 38 160 36 139 58 119 116 150 111 65 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 89 26 35 57 154 96 101 168 126 74 134 77 110 122 149 144 98 47 86 18 66 7 185 81</file>
         </tool>
       </inputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_usart.c</name>
+      <name>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_3201.c</name>
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 78</file>
+          <file> 34</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 70</file>
+          <file> 75</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 88 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 83 4</file>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 150 35 72 86 47 126 122 77</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 88 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 83 4</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\system_efm32gg.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 130</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 64</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 128 90 66 108 61 97 102 98 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 128 90 66 108 61 97 102 98 74 15 167 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103</file>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 150 35 72 86 47 126 122 77 110</file>
         </tool>
       </inputs>
     </file>
@@ -514,197 +275,59 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 117</file>
+          <file> 48</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 106</file>
+          <file> 63</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 89 68 86 158 128 90 66 108 61 97 102 98</file>
+          <file> 77 150</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 89 68 86 158 128 90 66 108 61 97 102 98</file>
+          <file> 77 150 110 122 116 76 53 97 25 43 38 160</file>
         </tool>
       </inputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_assert.c</name>
+      <name>$PROJ_DIR$\..\libs\kits\common\drivers\microsd.c</name>
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 148</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 155</file>
+          <file> 115</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 4</file>
+          <file> 81 18 116 76 53 97 25 43 38 160 144 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 47 150 35 86 26 126</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 4</file>
+          <file> 81 18 116 76 53 97 25 43 38 160 144 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135</file>
         </tool>
       </inputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</name>
+      <name>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</name>
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 169</file>
+          <file> 22</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 171</file>
+          <file> 50</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 170 128 90 66 108 61 97 102 98 161 142 159</file>
-        </tool>
-        <tool>
           <name>ICCARM</name>
-          <file> 170 128 90 66 108 61 97 102 98 161 142 159</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_trace.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 152</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 151</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 30 83 4 82 119 149 111 89 86 158</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 30 83 4 82 119 149 111 89 86 158</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_cmu.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 156</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 140</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 68 83 4 13</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 68 83 4 13</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_system.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 164</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 144</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 137 68 4</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 137 68 4</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_timer.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 113</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 154</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 172 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 4</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 172 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 4</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_ebi.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 153</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 58</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 100 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 4 68 83</file>
-        </tool>
-        <tool>
-          <name>ICCARM</name>
-          <file> 100 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 4 68 83</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\fatfs\src\msddiskio.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 112</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 126 142 128 90 66 108 61 97 102 98 136</file>
+          <file> 134 77 150 110 122 116 76 53 97 25 43 38 160 149 144 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 98 47 35 86 18 66 111 36</file>
         </tool>
       </inputs>
     </file>
@@ -713,26 +336,260 @@
       <inputs>
         <tool>
           <name>ILINK</name>
-          <file> 24 94 106 151 114 163 135 155 140 178 182 58 146 147 181 144 154 70 171 150 104 115 131 64 127 69 87 85</file>
+          <file> 87 84 3 102 130 13 29 37 0 32 133 46 117 83 23 12 90 120 45 92 24 49 21</file>
         </tool>
       </inputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\emlib\src\em_dma.c</name>
+      <name>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_trace.c</name>
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 180</file>
+          <file> 28</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 182</file>
+          <file> 51</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 173 118 90 66 108 61 97 102 98 139 132 68 74 15 167 128 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 83 4</file>
+          <file> 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 47 35 86 26 40 11 77</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 47 35 86 26 40 11 78 77 110 122</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\sdcard\demo\read-file.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 162</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 125</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 77 150 110 122 116 76 53 97 25 43 38 160 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 89 26 35 57 7 18 185 144 98 47 86 81</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 77 150 110 122 116 76 53 97 25 43 38 160 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 89 26 35 57 7 18 185 144 98 47 86 81</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 132</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 128</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 149 150 116 76 53 97 25 43 38 160 140 36 139 111</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 149 150 116 76 53 97 25 43 38 160 140 36 139 111</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 55</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 107</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 153 116 76 53 97 25 43 38 160 7 18 185</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 153 116 76 53 97 25 43 38 160 7 18 185</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_assert.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 137</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 13</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_usart.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 16</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 12</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 126 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 35 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 126 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 35 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\uart\src\bl_uart.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 52</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 3</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9 116 76 53 97 25 43 38 160 150 140 36 139 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 95 141 57 35 26 47 86 126</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 9 116 76 53 97 25 43 38 160 150 140 36 139 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 95 141 57 35 26 47 86 126</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_emu.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 138</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 57 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 35 26 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 57 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 35 26 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 129</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 130</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 74</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 74</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\fatfs\src\diskio.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 79</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 102</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 81 18 116 76 53 97 25 43 38 160 144 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 47 150 35 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 81 18 116 76 53 97 25 43 38 160 144 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 158 47 150 35 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\serial\demo\main.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 10</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 120</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9 116 76 53 97 25 43 38 160 150 140 36 139 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 95 141 57 35 26 47 86 126 156</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 9 116 76 53 97 25 43 38 160 150 140 36 139 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 95 141 57 35 26 47 86 126 156</file>
         </tool>
       </inputs>
     </file>
@@ -741,17 +598,67 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 183</file>
+          <file> 104</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 181</file>
+          <file> 117</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 175 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 4 83</file>
+          <file> 96 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 86 35</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 96 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 86 35</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\system_efm32gg.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 56</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 92</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 116 76 53 97 25 43 38 160 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 116 76 53 97 25 43 38 160 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_ebi.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 145</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 32</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 72 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 86 150 35</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 72 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 86 150 35</file>
         </tool>
       </inputs>
     </file>
@@ -760,17 +667,191 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 176</file>
+          <file> 106</file>
         </tool>
         <tool>
           <name>ICCARM</name>
-          <file> 178</file>
+          <file> 37</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 174 68 74 15 167 128 90 66 108 61 97 102 98 59 23 145 32 165 11 160 63 73 67 76 93 60 84 80 79 77 62 75 37 65 2 3 12 16 1 8 17 27 107 20 35 92 31 14 0 110 19 101 5 10 9 33 26 18 22 7 29 6 36 25 103 82 83 4</file>
+          <file> 154 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 35 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 154 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 35 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\fatfs\src\ff.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 61</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 90</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 7 18 116 76 53 97 25 43 38 160 185 81 165</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 7 18 116 76 53 97 25 43 38 160 185 81 165</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\serial\src\bl_sdi.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 82</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 84</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 156 116 76 53 97 25 43 38 160 9 150 140 36 139 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 95 141 57 35 26 47 86 126</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 156 116 76 53 97 25 43 38 160 9 150 140 36 139 31 93 60 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 95 141 57 35 26 47 86 126</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\IAR\startup_efm32gg.s</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 45</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_cmu.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 108</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 29</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 150 35 86 57</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 150 35 86 57</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_dma.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 33</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 0</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 168 140 76 53 97 25 43 38 160 36 139 150 31 93 60 116 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 35 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 168 140 76 53 97 25 43 38 160 36 139 150 31 93 60 116 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 26 35 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_gpio.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 94</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 46</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 47 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 35 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 47 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 35 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_timer.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 88</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 23</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 101 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 101 150 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 86</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_system.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 142</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 83</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 141 150 86</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 31 93 60 116 76 53 97 25 43 38 160 175 161 147 85 1 174 103 170 173 17 176 44 127 59 118 113 68 163 15 14 8 112 171 80 30 69 157 62 4 105 124 152 109 71 70 169 143 67 164 159 2 155 54 19 6 5 91 151 148 146 20 135 141 150 86</file>
         </tool>
       </inputs>
     </file>
@@ -785,6 +866,9 @@
     <forcedrebuild>
       <name>[MULTI_TOOL]</name>
       <tool>ILINK</tool>
+    </forcedrebuild>
+    <forcedrebuild>
+      <name>[REBUILD_ALL]</name>
     </forcedrebuild>
   </configuration>
 </project>
