@@ -89,25 +89,38 @@ begin
 			overflow	=> flags.overflow
 		);
 	
-	work: process(aluop_in)
+
+	
+	work: process(aluop_in, a, b, mul_result, addsub_result)
 	begin
 		case aluop_in is
-			when fp_mul =>
+			when fp_mul =>	
 				mul_in_a	<=	a;
 				mul_in_b	<=	b;
 				result		<=	mul_result;
+				addsub_in_a <= X"0000";
+				addsub_in_b <= X"0000";
 				
-			when fp_add =>
+			when fp_add =>		
 				addsub_in_a	<=	a;
-				addsub_in_b	<=	b;
+				addsub_in_b	<=	b;		
 				result		<=	addsub_result;
 				addsub_op	<= "000000";
 				
+				-- Default values to prevent latches
+				mul_in_a	<=	X"0000";
+				mul_in_b	<=	X"0000";
+				
 			when fp_sub =>
 				addsub_in_a	<=	a;
-				addsub_in_b	<=	b;
+				addsub_in_b	<=	b;		
+				
 				result		<=	addsub_result;
 				addsub_op	<= "000001";
+				
+				-- Default values to prevent latches
+				mul_in_a	<=	X"0000";
+				mul_in_b	<=	X"0000";
 				
 			when fp_mac =>
 				mul_in_a	<=	a;
@@ -128,7 +141,12 @@ begin
 				
 				addsub_op	<= "000001";
 				result		<=	addsub_result;
-			when others =>	
+			when others =>
+				mul_in_a <= X"0000";
+				mul_in_b <= X"0000";
+				addsub_in_a <= X"0000";
+				addsub_in_b <= X"0000";
+				result <= X"0000";
 				
 		end case;
 	end process;

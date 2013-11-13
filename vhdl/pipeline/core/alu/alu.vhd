@@ -159,7 +159,7 @@ begin
 			overflow	=> ff_overflow
 		);
 	
-	constant_register_update: process(cpu_input_const_w)
+	constant_register_update: process(cpu_clk, cpu_input_const_w)
 	begin
 		if rising_edge(cpu_clk) then
 			if cpu_input_const_w = '1' then

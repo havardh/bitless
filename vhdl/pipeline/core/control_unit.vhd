@@ -72,7 +72,7 @@ begin
     func        <= opt_code(3 downto 2);
     opt         <= opt_code(1 downto 0); 
 
-    update_control_signals : process (opt_code)
+    update_control_signals : process (opt_code, state, group_code, func, opt)
     begin
         if (state = execute) then        
             case group_code is

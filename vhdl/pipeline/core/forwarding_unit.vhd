@@ -30,13 +30,13 @@ architecture Behavioral of forwarding_unit is
     
 begin
 
-	wb_reg_2_addr <= wb_reg_1_addr + "00001";
-    reg_1b_addr <= reg_1_addr + "00001";
+	wb_reg_2_addr <= wb_reg_1_addr;-- + "00001";
+    reg_1b_addr <= reg_1_addr;-- + "00001";
     
 	wb_1_in	<= data_wb_in(15 downto 0);
 	wb_2_in	<= data_wb_in(31 downto 16);
 	
-	forward_signals : process(reg_1_addr, reg_1b_addr, reg_2_addr, reg_we, wb_reg_1_addr, wb_reg_2_addr)
+	forward_signals : process(reg_1_addr, reg_1b_addr, reg_2_addr, reg_we, wb_reg_1_addr, wb_reg_2_addr, wb_1_in, data_1_in, data_1b_in, data_2_in)
 	begin
 		case reg_we is
 			when REG_A_WRITE =>
