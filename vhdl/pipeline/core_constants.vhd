@@ -42,7 +42,9 @@ package core_constants is
 		fp_add,
 		fp_sub,
 		fp_mac,
-		fp_mas,
+		fp_mad,
+		fp_msc,
+		fp_msd,
 		ALU_FIXED_TO_FLOAT,
 		ALU_FLOAT_TO_FIXED
 	);

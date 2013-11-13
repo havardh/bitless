@@ -2,8 +2,8 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_SIGNED.ALL;
+use ieee.std_logic_arith.all;
+--use IEEE.NUMERIC_STD.ALL;
 
 library work;
 use work.core_constants.all;
