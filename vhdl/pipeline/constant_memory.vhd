@@ -29,9 +29,11 @@ architecture behaviour of constant_memory is
 	type memory_array is array(0 to size) of std_logic_vector(31 downto 0);
 	signal memory : memory_array;
 	
+	signal read_address_a_int, read_address_b_int : std_logic_vector(31 downto 0);
+	
 begin
-	read_data_a <= memory(to_integer(unsigned(read_address_a)));
-	read_data_b <= memory(to_integer(unsigned(read_address_b)));
+	read_data_a <= memory(to_integer(unsigned(read_address_a_int)));
+	read_data_b <= memory(to_integer(unsigned(read_address_b_int)));
 	
 	
 	write_process: process(memclk, write_enable, write_address)
@@ -44,6 +46,8 @@ begin
 					memory(to_integer(unsigned(write_address)))(15 downto 0) <= write_data;
 				end if;
 			end if;
+			read_address_a_int <= read_address_a;
+			read_address_b_int <= read_address_b;
 		end if;
 		
 	end process;

@@ -108,7 +108,7 @@ BEGIN
 		
 		-- Test reading the data back again
 		reg_1_address <= "00010";
-		wait for 1 ns;
+		wait for clk_period;
 		assert reg_1_data = X"0001" report " - Data read back is invalid" severity warning;
 		assert reg_1b_data = X"0000" report " - Data on 1b port is invalid" severity warning;
 		
@@ -122,7 +122,7 @@ BEGIN
 		
 		-- Test reading the same data back again
 		reg_1_address <= "00100";
-		wait for 1 ns;
+		wait for clk_period;
 		assert reg_1_data = x"0002" report " - Data read back is invalid" severity warning;
 		assert reg_1b_data = x"0003" report " - Data on 1b port is invalid" severity warning;
 		
@@ -136,7 +136,7 @@ BEGIN
 				
 		-- Test reading the same data back again
 		reg_1_address <= "00001";
-		wait for 1 ns;
+		wait for clk_period;
 		assert reg_1_data = x"000A" report " - Data read back is invalid" severity warning;
 		assert reg_1b_data = x"0000" report " - Data on 1b port is invalid" severity warning;
 		
@@ -150,7 +150,7 @@ BEGIN
 				
 		-- Test reading the same data back again
 		reg_1_address <= "00000";
-		wait for 1 ns;
+		wait for clk_period;
 		assert reg_1_data = x"0000" report " - Data read back is invalid" severity warning;
 		assert reg_1b_data = x"0000" report " - Data on 1b port is invalid" severity warning;
 		

@@ -39,6 +39,8 @@ architecture Behaviour of register_file is
 	signal reg_1_data_int : std_logic_vector(31 downto 0);
 	signal write_data_int : std_logic_vector(31 downto 0);
 	signal write_addr_int : std_logic_vector(4 downto 0);
+	
+	signal reg_1_address_int, reg_2_address_int : std_logic_vector(4 downto 0);
 begin
 	
 	-- Internal write data signal
@@ -55,12 +57,14 @@ begin
 			if write_reg_enb /= REG_DONT_WRITE then
 				regs(to_integer(unsigned(write_addr_int))) <= write_data_int;		
 			end if;
+			reg_1_address_int <= reg_1_address;
+			reg_2_address_int <= reg_2_address;
 		end if;
 	end process;
 
 	-- Internal reg 1 read data
 	reg_1_data_int <= (others=>'0') when reg_1_address = "00000"
-				else regs(to_integer(unsigned(reg_1_address)));
+				else regs(to_integer(unsigned(reg_1_address_int)));
 				
 	-- Hack the outputs
 	reg_1_data <= reg_1_data_int(15 downto 0);	
@@ -68,6 +72,6 @@ begin
 	
 
 	reg_2_data <= (others=>'0') when reg_2_address = "00000"
-				else regs(to_integer(unsigned(reg_2_address)))(15 downto 0);
+				else regs(to_integer(unsigned(reg_2_address_int)))(15 downto 0);
 
 end Behaviour;
