@@ -23,9 +23,10 @@ entity core is
         clk                 : in std_logic; -- Small cycle clock signal
         memclk              : in std_logic; -- Memory clock signal
         sample_clk          : in std_logic; -- Reset signal, "large cycle" clock signal
-
+			
         reset               : in std_logic; -- Resets the processor core
         
+		  proc_finished       : out std_logic := '0';
         -- Connection to instruction memory:
         instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
         instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
@@ -50,6 +51,8 @@ end entity;
 
 architecture behaviour of core is
 
+   signal stop_core_signal : STD_LOGIC;
+
 --********* Stage 1 - PC *********
     component adder is
         port (
@@ -70,15 +73,13 @@ architecture behaviour of core is
 --********* Stage 2 - Control unit and register file *********
     component control_unit is
         port (  
-            clk                 : in    std_logic;
-            reset               : in    std_logic;
             opt_code            : in    std_logic_vector (5 downto 0);
-
+		      
+				stop_core           : out STD_LOGIC;
             alu_op              : out alu_operation;
             reg_write_e         : out register_write_enable;
             wb_src              : out wb_source;
             mem_src             : out mem_source;
-            load_imm            : out std_logic;
             output_write_enable : out std_logic;
             add_imm             : out std_logic;
             load_const          : out std_logic;
@@ -120,14 +121,13 @@ architecture behaviour of core is
     signal id_reg_we            : register_write_enable;
     signal id_reg_wb_src        : wb_source;
     signal id_mem_slct          : mem_source;
-    signal id_load_imm          : std_logic;
     signal id_output_we         : std_logic;
     signal id_add_imm           : std_logic;
     signal id_load_const        : std_logic;
 
         
 --********* Stage 3 - Memory access / MEM *********
-    component forwarding_unit is
+    component forwarding_unit_mem is
         Port (
             reg_we		: in register_write_enable;
             
@@ -166,7 +166,6 @@ architecture behaviour of core is
     signal mem_reg_we           : register_write_enable;
     signal mem_reg_wb_src       : wb_source;
     signal mem_mem_slct         : mem_source;
-    signal mem_load_imm         : std_logic;
     signal mem_output_we        : std_logic;
     signal mem_add_imm          : std_logic;
     signal mem_load_const       : std_logic;
@@ -188,6 +187,24 @@ architecture behaviour of core is
             flags                   : out   alu_flags
         );
     end component;
+	 
+	 component forwarding_unit_ex is
+    Port (
+			reg_we		: in register_write_enable;
+            
+			wb_reg_1_addr,
+			reg_1_addr,
+			reg_2_addr	: in std_logic_vector(4 downto 0);
+			
+			data_1_in,
+			data_2_in   : in std_logic_vector(15 downto 0);
+            
+			data_1_out,
+			data_2_out	: out std_logic_vector(15 downto 0);
+            
+			data_wb_in	: in std_logic_vector(15 downto 0)
+    );
+	end component;
     
     
     -- signals
@@ -229,6 +246,16 @@ architecture behaviour of core is
 
 begin
     
+	 
+	 stop_core : process(reset, stop_core_signal) 
+	 begin
+	     if reset = '1' then
+		      proc_finished <= '0';
+		  elsif stop_core_signal = '1' then
+		      proc_finished <= '1';
+		  end if;
+	 end process;
+	 
 --Pipeline: IF
     pc_incrementer : adder
     port map(
@@ -257,15 +284,13 @@ begin
     
     control_u : control_unit
     port map(
-        clk                 => clk,
-        reset               => reset,
         opt_code            => instruction_data(15 downto 10),
         
+		  stop_core           => stop_core_signal,
         alu_op              => id_alu_op,
         reg_write_e         => id_reg_we,
         wb_src              => id_reg_wb_src,
         mem_src             => id_mem_slct,
-        load_imm            => id_load_imm,
         output_write_enable => id_output_we,
         add_imm				 => id_add_imm,
         load_const          => id_load_const,
@@ -292,6 +317,8 @@ begin
     
     -- signal mappings
     id_imm_value <= sxt(instruction_data(13 downto 0), 32);
+	 id_reg_1_addr <= instruction_data(9 downto 5);
+	 id_reg_2_addr <= instruction_data(4 downto 0);
 
     
     pipeline_id_mem_reg : process(clk)
@@ -306,7 +333,6 @@ begin
             mem_reg_we      <= id_reg_we;
             mem_reg_wb_src  <= id_reg_wb_src;
             mem_mem_slct    <= id_mem_slct;
-            mem_load_imm    <= id_load_imm;
             mem_output_we   <= id_output_we;
             mem_add_imm     <= id_add_imm;
             mem_load_const  <= id_load_const; 
@@ -314,7 +340,7 @@ begin
     end process;
 
 --Pipeline: MEM
-    mem_forward_unit : forwarding_unit
+    mem_forward_unit : forwarding_unit_mem
     port map (
         --MEM
         --addr in
@@ -350,12 +376,35 @@ begin
     end process;
 
     -- signal mapping
+	 output_write_data <= mem_fw_1b & mem_fw_1;
+	 output_we <= mem_output_we;
     input_read_addr <= mem_fw_2;
     output_read_addr <= mem_fw_2;
     output_write_addr <= mem_fw_2; 
     constant_addr <= mem_fw_2;
     
 -- Pipeline: EX
+
+	pipeline_mem_ex_reg : process(clk)
+    begin
+        if rising_edge(clk) then
+		      if (mem_add_imm ='1') then
+				    ex_reg_2_data <= ex_reg2_addr;
+			   else
+				    ex_reg_2_data <= mem_fw_2;
+			   end if;
+            ex_reg_1_data       <= mem_fw_1;
+            ex_imm_value        <= mem_imm_value;
+            ex_mem_value        <= mem_mem_value;
+            ex_reg_1_addr       <= mem_reg_1_addr;
+            ex_reg_2_addr       <= mem_reg_2_addr;
+           
+            ex_alu_op           <= mem_alu_op;         
+            ex_reg_we           <= mem_reg_we;
+            ex_reg_wb_src       <= mem_reg_wb_src;
+            ex_load_const       <= mem_load_const;
+        end if;
+    end process;
 
     core_alu : alu
     port map (
@@ -374,7 +423,7 @@ begin
         flags                   => ex_alu_flags
     );
 
-    ex_forwarding_unit : forwarding_unit
+    ex_forwarding_unit : forwarding_unit_ex
     port map (
         reg_we		        => wb_reg_we,
     
@@ -383,33 +432,15 @@ begin
         reg_2_addr	        => ex_reg_2_addr,
         
         data_1_in           => ex_reg_1_data,
-        data_1b_in          => ex_reg_1b_data,
         data_2_in           => ex_reg_2_data,
         
         data_1_out          => ex_fw_1,
-        data_1b_out         => ex_fw_1b,
         data_2_out          => ex_fw_2,
         
-        data_wb_in          => wb_data
+        data_wb_in          => wb_data(15 downto 0)
     );    
 
-    pipeline_mem_ex_reg : process(clk)
-    begin
-        if rising_edge(clk) then
-            ex_reg_1_data       <= mem_fw_1;
-            ex_reg_1b_data      <= mem_fw_1b;
-            ex_reg_2_data       <= mem_fw_2;
-            ex_imm_value        <= mem_imm_value;
-            ex_mem_value        <= mem_mem_value;
-            ex_reg_1_addr       <= mem_reg_1_addr;
-            ex_reg_2_addr       <= mem_reg_2_addr;
-           
-            ex_alu_op           <= mem_alu_op;         
-            ex_reg_we           <= mem_reg_we;
-            ex_reg_wb_src       <= mem_reg_wb_src;
-            ex_load_const       <= mem_load_const;
-        end if;
-    end process;
+    
 
     wb_slct_mux : process(ex_reg_wb_src, ex_imm_value, ex_alu_result, ex_mem_value)
     begin
