@@ -64,14 +64,16 @@ void setupSD()
 void transferComplete(unsigned int channel, bool primary, void *user)
 {  
 	(void) channel;  (void) primary;  (void) user;
-	called[channel]++;
+
+}
+
+void onDACRequest(void)
+{
 	if (!SDDriver_Read()) {
 		DMA_ActivateAuto(DMA_MEM_CPY, true, (void*)MEM_GetAudioOutBuffer(true), (void*)MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
 	} else {
 		done = true;
 	}
-
-
 }
 
 void setupTimer( uint32_t frequency ) 
@@ -149,7 +151,7 @@ void setupDma(void)
   DMA_ActivateBasic(DMA_MEM_CPY, true, false, (void*)MEM_GetAudioOutBuffer(true), (void*)MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
 }
 
-void DAC_setup(void)
+static void DAC_setup(void)
 {
   DAC_Init_TypeDef        init        = DAC_INIT_DEFAULT;
   DAC_InitChannel_TypeDef initChannel = DAC_INITCHANNEL_DEFAULT;
@@ -196,10 +198,10 @@ int main( void )
 	DMAConfig config = { .mode = SD_TO_DAC };
 	DMADriver_Init( &config );
 
-	DAC_Setup();
+	DAC_setup();
 
-	//INTDriver_Init();
-	//INTDriver_RegisterCallback(0, &onDACInterrupt);
+	INTDriver_Init();
+	INTDriver_RegisterCallback(0, &onDACRequest);
 
 	setupTimer(8000);
 
