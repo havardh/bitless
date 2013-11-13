@@ -18,7 +18,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=1546143666
+Checksum=-1559208380
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -103,9 +103,8 @@ Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavpl
 Bp3=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavdemo2.c}.137.3" 0 0 1 "" 0 "" 0
 Bp4=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\copy-file.c}.106.7" 0 0 1 "" 0 "" 0
 Bp5=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c}.47.10" 0 0 1 "" 0 "" 0
-Bp6=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavdemo.c}.110.2" 0 0 1 "" 0 "" 0
-Bp7=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\dma\demo\wavp.c}.72.7" 0 0 1 "" 0 "" 0
-Count=8
+Bp6=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\dma\demo\wavdemo.c}.110.2" 0 0 1 "" 0 "" 0
+Count=7
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
