@@ -25,6 +25,7 @@
 #include "DMADriver.h"
 #include "SDDriver.h"
 #include "spi.h"
+#include "sample_conversion.h"
 
 #include "ff.h"
 #include "microsd.h"
@@ -69,8 +70,21 @@ void transferComplete(unsigned int channel, bool primary, void *user)
 
 void onDACRequest(void)
 {
+
+	DMA_ActivateAuto(DMA_MEM_CPY, true, (void*)MEM_GetAudioOutBuffer(true), (void*)MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
+
+	uint16_t tmp;
+
 	if (!SDDriver_Read()) {
-		DMA_ActivateAuto(DMA_MEM_CPY, true, (void*)MEM_GetAudioOutBuffer(true), (void*)MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
+
+		int16_t * buffer = MEM_GetAudioInBuffer(true);
+
+		for (int i=0; i<2*MEM_GetAudioInBufferSize(); i++) {
+			tmp = buffer[i] + 0x8000;
+			tmp >>= 4;
+			buffer[i] = tmp;
+		}
+
 	} else {
 		done = true;
 	}
@@ -211,6 +225,8 @@ int main( void )
 	}
 	
 	SDDriver_Finalize();
+	DMA_Reset();
+	DAC_Reset(DAC0);
 
 	while(1);
 	return 0;

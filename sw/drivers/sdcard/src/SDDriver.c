@@ -25,7 +25,7 @@ void SDDriver_Init( SDConfig *config )
 
 bool SDDriver_Read() 
 {
-	WAV_Read(srcFile, (*GetInputBuffer)(), bufferSize);
+	WAV_Read(srcFile, (*GetInputBuffer)(), 4*bufferSize);
 
 	return WAV_EOF(srcFile);
 }
