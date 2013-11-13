@@ -74,20 +74,3 @@ begin
 				else regs(to_integer(unsigned(reg_2_address)))(15 downto 0);
 
 end Behaviour;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -95,7 +95,7 @@ begin
 	-- TODO: Is this the intended behaviour?
 	flags.overflow <= addsub_overflow or multiply_overflow;
 		
-	work: process(aluop_in, a, b, mul_result, addsub_result)
+	work: process(aluop_in, a, b, c, mul_result, addsub_result)
 	begin
 		case aluop_in is
 			when fp_mul =>	
