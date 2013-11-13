@@ -106,12 +106,16 @@ begin
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
                                     
-                                when add_undefined =>
-                                    alu_op <= ALU_ADD;
+--                                when add_undefined =>
+--                                    alu_op <= ALU_ADD;
+--                                    reg_write_e <= REG_DONT_WRITE;
+--                                    mem_src <= MEM_INPUT;
+--                                    add_imm <= '0';
+                                when others =>
+										      alu_op <= ALU_ADD;
                                     reg_write_e <= REG_DONT_WRITE;
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
-                                when others =>
                             end case;
                             
                         when sub_or_cmp =>
@@ -131,12 +135,16 @@ begin
                                     reg_write_e <= REG_DONT_WRITE;
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
-                                when sub_undefined =>
-                                    alu_op <= ALU_ADD;
+--                                when sub_undefined =>
+--                                    alu_op <= ALU_ADD;
+--                                    reg_write_e <= REG_DONT_WRITE;
+--                                    mem_src <= MEM_INPUT;
+--                                    add_imm <= '0';
+                                when others =>
+											   alu_op <= ALU_ADD;
                                     reg_write_e <= REG_DONT_WRITE;
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
-                                when others =>
                             end case;
                             
                         when multi =>
@@ -162,20 +170,28 @@ begin
                                     mem_src <= MEM_INPUT;
                                     add_imm <= '0';
                                 when others =>
+										      alu_op <= ALU_ADD;
+                                    reg_write_e <= REG_DONT_WRITE;
+                                    mem_src <= MEM_INPUT;
+                                    add_imm <= '0';
                             end case;
                         
-                        when shift =>
-                            -- case opt is
-                            --     when shift_lft =>
-                            --     when shift_rht => 
-                            --     when shift_undefined =>
-                            --     when shift_undefined2 =>
-                            -- end case;
-                            alu_op <= ALU_SUB;
+--                        when shift =>
+--                            case opt is
+--                                when shift_lft =>
+--                                when shift_rht => 
+--                                when shift_undefined =>
+--                                when shift_undefined2 =>
+--                            end case;
+--                            alu_op <= ALU_SUB;
+--                            reg_write_e <= REG_DONT_WRITE;
+--                            mem_src <= MEM_INPUT;
+--                            add_imm <= '0';
+                        when others =>
+								    alu_op <= ALU_SUB;
                             reg_write_e <= REG_DONT_WRITE;
                             mem_src <= MEM_INPUT;
                             add_imm <= '0';
-                        when others =>
                     end case;
                     
                 when reg_based2 =>
@@ -201,13 +217,15 @@ begin
                                 when and_nand =>
                                     alu_op      <= ALU_NAND;
                                     reg_write_e <= REG_A_WRITE;
-                                when and_undefined =>
-                                    alu_op      <= ALU_AND;
-                                    reg_write_e <= REG_DONT_WRITE;
-                                when and_undefined2 =>
-                                    alu_op      <= ALU_AND;
-                                    reg_write_e <= REG_DONT_WRITE;
+--                                when and_undefined =>
+--                                    alu_op      <= ALU_AND;
+--                                    reg_write_e <= REG_DONT_WRITE;
+--                                when and_undefined2 =>
+--                                    alu_op      <= ALU_AND;
+--                                    reg_write_e <= REG_DONT_WRITE;
                                 when others =>
+										      alu_op      <= ALU_AND;
+                                    reg_write_e <= REG_DONT_WRITE;
                             end case;
                             
                         when or_logic =>
@@ -228,10 +246,12 @@ begin
                                 when or_xor =>
                                     alu_op      <= ALU_XOR;
                                     reg_write_e <= REG_A_WRITE;
-                                when or_undefined =>
-                                    alu_op      <= ALU_OR;
-                                    reg_write_e <= REG_DONT_WRITE;
+--                                when or_undefined =>
+--                                    alu_op      <= ALU_OR;
+--                                    reg_write_e <= REG_DONT_WRITE;
                                 when others =>
+										      alu_op      <= ALU_OR;
+                                    reg_write_e <= REG_DONT_WRITE;
                             end case;
                             
                         when move_or_typecast =>
@@ -239,21 +259,26 @@ begin
                             output_write_enable <= '0';
                             wb_src              <= MUX_ALU;
                             load_const          <= '0';
-                            reg_write_e         <= REG_A_WRITE;
                             mem_src             <= MEM_INPUT;
                             add_imm             <= '0';
                                     
 
                             case opt is
                                 when move_move =>
-                                    alu_op <= ALU_MOVE;
+                                    alu_op      <= ALU_MOVE;
+												reg_write_e <= REG_A_WRITE;
                                 when move_move_neg =>
                                     alu_op <= ALU_MOVE_NEGATIVE;
+												reg_write_e <= REG_A_WRITE;
                                 when typecast_to_fp =>
                                     alu_op <= ALU_FIXED_TO_FLOAT;
+												reg_write_e <= REG_A_WRITE;
                                 when typecast_to_int =>
                                     alu_op <= ALU_FLOAT_TO_FIXED;
+												reg_write_e <= REG_A_WRITE;
                                 when others =>
+											   alu_op <= ALU_FLOAT_TO_FIXED;
+												reg_write_e <= REG_A_WRITE;
                             end case;
                         
                         when load_or_store =>
@@ -283,8 +308,19 @@ begin
                                     load_const  <= '0';
                                     output_write_enable <= '1';
                                 when others =>
+											   reg_write_e <= REG_DONT_WRITE;
+                                    mem_src     <= MEM_CONST;
+                                    load_const  <= '0';
+                                    output_write_enable <= '1';
                             end case;
                         when others =>
+							       alu_op  <= ALU_ADD;
+                            wb_src  <= MUX_MEM;
+                            add_imm <= '0';
+									 reg_write_e <= REG_DONT_WRITE;
+                            mem_src     <= MEM_CONST;
+                            load_const  <= '0';
+                            output_write_enable <= '0';
                     end case;
                 
                 when load_imm_value =>

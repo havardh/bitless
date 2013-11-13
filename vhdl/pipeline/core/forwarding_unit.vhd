@@ -26,13 +26,10 @@ architecture Behavioral of forwarding_unit is
     
     
 	signal wb_1_in, wb_2_in : std_logic_vector(15 downto 0);
-    signal reg_1b_addr, wb_reg_2_addr : std_logic_vector(4 downto 0);
+   signal reg_1b_addr, wb_reg_2_addr : std_logic_vector(4 downto 0);
     
 begin
-
-	wb_reg_2_addr <= wb_reg_1_addr;-- + "00001";
-    reg_1b_addr <= reg_1_addr;-- + "00001";
-    
+ 
 	wb_1_in	<= data_wb_in(15 downto 0);
 	wb_2_in	<= data_wb_in(31 downto 16);
 	
@@ -44,15 +41,11 @@ begin
 				-- data_1_out
 				if reg_1_addr = wb_reg_1_addr then
 					data_1_out <= wb_1_in;
+					data_1b_out <= wb_2_in;
 				else 
 					data_1_out <= data_1_in;
-				end if;
-				
-				if reg_1b_addr = wb_reg_1_addr then
-					data_1b_out <= wb_1_in;
-				else
 					data_1b_out <= data_1b_in;
-				end if;	
+				end if;
 				
 				if reg_2_addr = wb_reg_1_addr then
 					data_2_out <= wb_1_in;
@@ -62,54 +55,29 @@ begin
 				
 			when REG_AB_WRITE =>
 				--WB contains two values
-				--reg_1
-				if wb_reg_1_addr = reg_1_addr then
-					--Data 1 needs WB 1
+				if reg_1_addr = wb_reg_1_addr then
 					data_1_out <= wb_1_in;
-				elsif wb_reg_2_addr = reg_1_addr then
-					--Data 1 needs WB 2
-					data_1_out <= wb_2_in;
-				else
-					--Data 1 needs no WB
-					data_1_out <= data_1_in;
-				end if;
-				--reg_1b
-				if wb_reg_1_addr = reg_1b_addr then
-					--Data 1 needs WB 1
-					data_1b_out <= wb_1_in;
-				elsif wb_reg_2_addr = reg_1b_addr then
-					--Data 1 needs WB 2
 					data_1b_out <= wb_2_in;
-				else
-					--Data 1 needs no WB
+				else 
+					data_1_out <= data_1_in;
 					data_1b_out <= data_1b_in;
 				end if;
-				--reg_2
-				if wb_reg_1_addr = reg_2_addr then 
-					--Data 2 needs WB 1
+				
+				if reg_2_addr = wb_reg_1_addr then
 					data_2_out <= wb_1_in;
-				elsif wb_reg_2_addr = reg_2_addr then
-					--Data 2 needs WB 2
-					data_2_out <= wb_2_in;
 				else
-					--WB is not needed
 					data_2_out <= data_2_in;
 				end if;
 				
 			when REG_LDI_WRITE =>
-				--WB contains one value
-				-- data_1_out
+				--WB contains two values
 				if reg_1_addr = wb_reg_1_addr then
 					data_1_out <= wb_1_in;
+					data_1b_out <= wb_2_in;
 				else 
 					data_1_out <= data_1_in;
-				end if;
-				
-				if reg_1b_addr = wb_reg_1_addr then
-					data_1b_out <= wb_1_in;
-				else
 					data_1b_out <= data_1b_in;
-				end if;	
+				end if;
 				
 				if reg_2_addr = wb_reg_1_addr then
 					data_2_out <= wb_1_in;
