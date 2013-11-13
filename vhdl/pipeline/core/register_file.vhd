@@ -14,7 +14,7 @@ entity register_file is
 		reg_2_address	: in std_logic_vector(4 downto 0);
 		
 		-- Read data		
-		reg_1_data		: out std_logic_vector(31 downto 0);
+		reg_1_data		: out std_logic_vector(15 downto 0);
 		  -- 1b is the high 16 bits of reg_1
 		reg_1b_data		: out std_logic_vector(15 downto 0);
 		reg_2_data		: out std_logic_vector(15 downto 0);
@@ -63,12 +63,9 @@ begin
 				else regs(to_integer(unsigned(reg_1_address)));
 				
 	-- Hack the outputs
-	reg_1_data <= reg_1_data_int;
+	reg_1_data <= reg_1_data_int(15 downto 0);	
+	reg_1b_data <= reg_1_data_int(31 downto 16);
 	
-	-- Tests run with 15 downto 0, but that does not really make sense to me. We might have to 
-	-- swap back to 31 downto 16 when we start intergration tests
-	--reg_1b_data <= reg_1_data_int(31 downto 16);
-	reg_1b_data <= reg_1_data_int(15 downto 0);
 
 	reg_2_data <= (others=>'0') when reg_2_address = "00000"
 				else regs(to_integer(unsigned(reg_2_address)))(15 downto 0);
