@@ -1982,6 +1982,9 @@
       <name>$PROJ_DIR$\..\drivers\dma\src\DMADriver.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\drivers\fpga\src\FPGADriver.c</name>
     </file>
     <file>
@@ -2003,7 +2006,10 @@
       <name>$PROJ_DIR$\..\libs\util\src\spi.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\dma\demo\wavdemo.c</name>
+      <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\dma\demo\wavp.c</name>
     </file>
   </group>
 </project>
