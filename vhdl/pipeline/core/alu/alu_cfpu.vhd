@@ -38,21 +38,20 @@ entity fpu is
 	port (
 		a, b, c, d			: in	std_logic_vector(15 downto 0);
 		result, result_2	: out	std_logic_vector(15 downto 0);
-		aluop_in			: in	alu_operation;
-		flags				: out	alu_flags;
+		aluop_in				: in	alu_operation;
+		flags					: out	alu_flags;
 		cpu_clk, alu_clk 	: in	std_logic
 	);
 end fpu;
 
 architecture behaviour of fpu is
-	component multiply
+	component fp_multiply
 		port(
-			a				: in std_logic_vector(15 downto 0);
-			b				: in std_logic_vector(15 downto 0);
-			clk				: in std_logic;
-			result			: out std_logic_vector(15 downto 0);
-			underflow		: out std_logic;
-			overflow		: out std_logic
+			a			: in std_logic_vector(15 downto 0);
+			b			: in std_logic_vector(15 downto 0);
+			result	: out std_logic_vector(15 downto 0);
+			underflow: out std_logic;
+			overflow	: out std_logic
 		);
 	end component;
 	
@@ -69,15 +68,15 @@ architecture behaviour of fpu is
 	
 	signal mul_in_a, mul_in_b, mul_result, addsub_in_a, addsub_in_b, addsub_result : std_logic_vector(15 downto 0);
 	signal addsub_op : std_logic_vector(5 downto 0);
+	signal mul_flags, addsub_flags	: alu_flags;
 begin
-	fp_multiply: multiply
+	multiply: fp_multiply
 		port map(
 			a					=> mul_in_a,
 			b					=> mul_in_b,
 			result			=> mul_result,
 			underflow		=> open,
-			overflow			=> flags.overflow,
-			clk				=> cpu_clk
+			overflow			=> mul_flags.overflow
 		);
 	addsub: fp_addsub
 		port map(
@@ -86,7 +85,7 @@ begin
 			operation	=> addsub_op,
 			result		=> addsub_result,
 			underflow	=> open,
-			overflow	=> flags.overflow
+			overflow	=> addsub_flags.overflow
 		);
 	
 	work: process(aluop_in)
@@ -96,18 +95,21 @@ begin
 				mul_in_a	<=	a;
 				mul_in_b	<=	b;
 				result		<=	mul_result;
+				flags	<= mul_flags;
 				
 			when fp_add =>
 				addsub_in_a	<=	a;
 				addsub_in_b	<=	b;
 				result		<=	addsub_result;
 				addsub_op	<= "000000";
+				flags <= addsub_flags;
 				
 			when fp_sub =>
 				addsub_in_a	<=	a;
 				addsub_in_b	<=	b;
 				result		<=	addsub_result;
 				addsub_op	<= "000001";
+				flags <= addsub_flags;
 				
 			when fp_mac =>
 				mul_in_a	<=	a;
@@ -118,6 +120,7 @@ begin
 				
 				addsub_op	<= "000000";
 				result		<=	addsub_result;
+				flags			<= addsub_flags;
 				
 			when fp_mas =>
 				mul_in_a	<=	a;
@@ -128,6 +131,7 @@ begin
 				
 				addsub_op	<= "000001";
 				result		<=	addsub_result;
+				result		<= addsub_result;
 			when others =>	
 				
 		end case;

@@ -71,9 +71,7 @@ architecture behaviour of alu is
 	--This should be generated with settings <fixed: 13 bit integer, 0 bit fraction>, <float: 5 bit exponent, 11 bit mantissa>
 	component fix_to_float is
 		port (
-			a				: in	std_logic_vector(12 downto 0);
-			clk				: in	std_logic;
-			ce				: in	std_logic;
+			a					: in	std_logic_vector(12 downto 0);
 			result			: out	std_logic_vector(15 downto 0)
 		);
 	end component;
@@ -85,11 +83,8 @@ architecture behaviour of alu is
 	--This should be generated with settings <float: 5 bit exponent, 11 bit mantissa>, <fixed: 13 bit integer, 0 bit fraction>
 	component float_to_fix is
 		port (
-			a				: in	std_logic_vector(15 downto 0);
-			clk				: in	std_logic;
-			ce				: in	std_logic;
-			result			: out	std_logic_vector(12 downto 0);
-			overflow		: out	std_logic
+			a					: in	std_logic_vector(15 downto 0);
+			result			: out	std_logic_vector(12 downto 0)
 		);
 	end component;
 	
@@ -142,21 +137,17 @@ begin
 	
 	
 	fix_float_input <= cpu_input_register_1(12 downto 0);
+	float_fix_input <= cpu_input_register_1;
 	fix_float: fix_to_float
 		port map (
 			a			=> fix_float_input,
-			clk		=> cpu_clk,
-			ce			=> '1',
 			result	=> fix_float_output
 		);
 		
 	float_fix: float_to_fix
 		port map (
-			a			=> float_fix_input,
-			clk			=> cpu_clk,
-			ce			=> '1',
-			result		=> float_fix_output,
-			overflow	=> ff_overflow
+			a				=> float_fix_input,
+			result		=> float_fix_output
 		);
 	
 	constant_register_update: process(cpu_input_const_w)
