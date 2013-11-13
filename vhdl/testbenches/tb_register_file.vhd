@@ -31,10 +31,6 @@ USE ieee.std_logic_1164.ALL;
 library work;
 use work.core_constants.all;
  
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
- 
 ENTITY tb_register_file IS
 END tb_register_file;
  
@@ -50,7 +46,8 @@ ARCHITECTURE behavior OF tb_register_file IS
          write_address : IN  std_logic_vector(4 downto 0);
          data_in : IN  std_logic_vector(31 downto 0);
          write_reg_enb : IN  register_write_enable;
-         reg_1_data : OUT  std_logic_vector(15 downto 0);
+         reg_1_data : OUT  std_logic_vector(31 downto 0);
+			reg_1b_data : OUT std_logic_vector(15 downto 0);
          reg_2_data : OUT  std_logic_vector(15 downto 0)
         );
     END COMPONENT;
@@ -65,11 +62,12 @@ ARCHITECTURE behavior OF tb_register_file IS
    signal write_reg_enb : register_write_enable := reg_dont_write;
 
  	--Outputs
-   signal reg_1_data : std_logic_vector(15 downto 0);
+   signal reg_1_data : std_logic_vector(31 downto 0);
+	signal reg_1b_data : std_logic_vector(15 downto 0);
    signal reg_2_data : std_logic_vector(15 downto 0);
 
    -- Clock period definitions
-   constant clk_period : time := 10 ns;
+   constant clk_period : time := 40 ns;
  
 BEGIN
  
@@ -82,6 +80,7 @@ BEGIN
           data_in => data_in,
           write_reg_enb => write_reg_enb,
           reg_1_data => reg_1_data,
+			 reg_1b_data => reg_1b_data,
           reg_2_data => reg_2_data
         );
 
@@ -98,44 +97,62 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;	
-
-      wait for clk_period*10;
 
 		--Test for data write to one register
+		assert false report "Testing REG_A_WRITE (16 bit write), ensure that the top part of the word is cropped" severity note;
 		data_in <= x"00010001";
 		write_reg_enb <= REG_A_WRITE;
 		write_address <= "00010";
 		
-		wait for clk_period*2;
+		wait for clk_period;
+		
+		-- Test reading the data back again
+		reg_1_address <= "00010";
+		wait for 1 ns;
+		assert reg_1_data = X"00000001" report " - Data read back is invalid" severity warning;
+		assert reg_1b_data = X"0001" report " - Data on 1b port is invalid" severity warning;
 		
 		--Test for data write to two registers
+		assert false report "Resting REG_AB_WRITE (32 bit write), ensure that the top part of the word is not cropped" severity note;
 		data_in <= x"00030002";
 		write_reg_enb <= REG_AB_WRITE;
 		write_address <= "00100";
 		
-		wait for clk_period*2;
+		wait for clk_period;
+		
+		-- Test reading the same data back again
+		reg_1_address <= "00100";
+		wait for 1 ns;
+		assert reg_1_data = x"00030002" report " - Data read back is invalid" severity warning;
+		assert reg_1b_data = x"0002" report " - Data on 1b port is invalid" severity warning;
 		
 		--Test for LDI write
-		data_in <= x"0000000A";
+		assert false report "Test REG_LDI_WRITE, ensure that the value is put in register 1" severity note;
+		data_in <= x"0030000A";
+		write_address <= "11011";
 		write_reg_enb <= REG_LDI_WRITE;
 		
-		wait for clk_period*2;
+		wait for clk_period;
+				
+		-- Test reading the same data back again
+		reg_1_address <= "00001";
+		wait for 1 ns;
+		assert reg_1_data = x"0000000A" report " - Data read back is invalid" severity warning;
+		assert reg_1b_data = x"000A" report " - Data on 1b port is invalid" severity warning;
 		
+		-- Make sure nothing is written to register 0
+		assert false report "Test writing to register 0, ensure nothing is stored" severity note;
+		data_in <= x"FFFFFFFF";
+		write_address <= "00000";
+		write_reg_enb <= REG_AB_WRITE;
+		
+		wait for clk_period;
+				
+		-- Test reading the same data back again
 		reg_1_address <= "00000";
-		reg_2_address <= "00001";
-		write_reg_enb <= REG_DONT_WRITE;
-		
-		wait for clk_period*2;
-		
-		reg_1_address <= "00010";
-		reg_2_address <= "00011";
-		
-		wait for clk_period*2;
-		
-		reg_1_address <= "00100";
-		reg_2_address <= "00101";
+		wait for 1 ns;
+		assert reg_1_data = x"00000000" report " - Data read back is invalid" severity warning;
+		assert reg_1b_data = x"0000" report " - Data on 1b port is invalid" severity warning;
 		
       wait;
    end process;
