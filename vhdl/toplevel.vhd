@@ -103,7 +103,7 @@ begin
 			memory_clock => memory_clk,
 			dsp_clock => open
 		);
-	sample_clk <= ctrl_bus(0);
+	sample_clk <= ctrl_bus(3);
 
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
