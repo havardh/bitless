@@ -67,6 +67,9 @@ architecture behaviour of fpu is
 		);
 	end component;
 	
+	-- Overflow signals
+	signal multiply_overflow, addsub_overflow : std_logic;
+	
 	signal mul_in_a, mul_in_b, mul_result, addsub_in_a, addsub_in_b, addsub_result : std_logic_vector(15 downto 0);
 	signal addsub_op : std_logic_vector(5 downto 0);
 begin
@@ -76,7 +79,7 @@ begin
 			b					=> mul_in_b,
 			result			=> mul_result,
 			underflow		=> open,
-			overflow			=> flags.overflow,
+			overflow			=> multiply_overflow,
 			clk				=> cpu_clk
 		);
 	addsub: fp_addsub
@@ -86,11 +89,12 @@ begin
 			operation	=> addsub_op,
 			result		=> addsub_result,
 			underflow	=> open,
-			overflow	=> flags.overflow
+			overflow	=> addsub_overflow
 		);
-	
-
-	
+		
+	-- TODO: Is this the intended behaviour?
+	flags.overflow <= addsub_overflow or multiply_overflow;
+		
 	work: process(aluop_in, a, b, c, mul_result, addsub_result)
 	begin
 		case aluop_in is
