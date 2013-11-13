@@ -84,6 +84,10 @@ ARCHITECTURE behavior OF tb_core IS
 	constant memclk_period : time := 10 ns;
 	constant sample_clk_period : time := 10 ns;
 
+	--Signal constants
+	constant zero32b : std_logic_vector(31 downto 0) := X"00000000";
+	constant wait_period : integer := 5; --Should be the clockcycles an instruction needs to propagate through the whole pipelined core
+
 	--Instruction constants
 	constant gc_load_store : std_logic_vector(1 downto 0) := "01"; --Group bits value code for load/store instructions
 	constant fc_load_store : std_logic_vector(1 downto 0) := "11"; --Function bits value code for store instructions
@@ -183,83 +187,90 @@ BEGIN
 --		--When commands are run, you need one clockcycle between each command, like shown below
 --		--First instruction
 --		instruction_data <= instruction_1;
---		wait for clk_period*2;
+--		wait for clk_period*wait_period;
 --
 --		--Check if instruction worked
---		wait for clk_period*2;
+--		wait for clk_period*wait_period;
 --
 --		--Next instruction
 --		instruction_data <= instruction_2;
 --		wait for clk_period;
 --
 --		--Check if instruction worked
---		wait for clk_period*2;
+--		wait for clk_period*wait_period;
 --
 		--And so on. Between each instruction check the corresponding registers or input-/output-buffers to verify instruction.
 
 		--Load value from input buffer to register 2
 		input_read_data <= X"1010101";
 		instruction_data <= load_inpt_1;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 2 has the above hex value
-		wait for clk_period*2;
+		--Check if register 2 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= store_outpt_1
+		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 3
 		input_read_data <= X"01010101";
 		instruction_data <= load_inpt_2;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 3 has the above hex value
-		wait for clk_period*2;
+		--Check if register 3 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= load_inpt_3;
+		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 4
 		input_read_data <= X"00001111";
 		instruction_data <= load_inpt_3;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 4 has the above hex value
-		wait for clk_period*2;
+		--Check if register 4 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= load_inpt_4;
+		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 5
 		constant_data <= X"1010101";
 		instruction_data <= load_inpt_4;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 5 has the above hex value
-		wait for clk_period*2;
+		--Check if register 5 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= load_inpt_5;
+		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 6
 		constant_data <= X"01010101";
 		instruction_data <= load_inpt_5;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 6 has the above hex value
-		wait for clk_period*2;
+		--Check if register 6 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= load_inpt_6;
+		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 7
 		output_read_data <= X"1010101";
 		instruction_data <= load_inpt_6;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 7 has the above hex value
-		wait for clk_period*2;
+		--Check if register 7 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= load_inpt_7;
+		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 8
 		output_read_data <= X"01010101";
 		instruction_data <= load_inpt_7;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 8 has the above hex value
-		wait for clk_period*2;
+		--Check if register 8 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= load_inpt_8;
+		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 9
 		output_read_data <= X"00001111";
 		instruction_data <= load_inpt_8;
-		wait for clk_period*2;
+		wait for clk_period*wait_period;
 
-		--Check if register 9 has the above hex value
-
+		--Check if register 9 has the above hex value, by checking the value on signal output_write_data
+		instruction_data <= load_inpt_9;
 
 		wait;
 	end process;
