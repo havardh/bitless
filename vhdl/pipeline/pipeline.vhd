@@ -41,7 +41,7 @@ architecture behaviour of pipeline is
 			size : natural -- Number of 16 bit words to store
 		);
 		port (
-			clk            : in  std_logic; -- System clock input, ICE
+			--clk            : in  std_logic; -- System clock input, ICE
 			memclk         : in  std_logic; -- Clock signal
 			read_address_a : in  std_logic_vector(15 downto 0); -- Read address A
 			read_data_a    : out std_logic_vector(31 downto 0); -- Data read A
@@ -256,7 +256,7 @@ begin
 	const_mem: constant_memory
 		generic map(size => 1024)
 		port map(
-			clk => clk,
+			--clk => clk,
 			memclk => memory_clk,
 			write_address => internal_dest_address,
 			write_data => int_data_in,

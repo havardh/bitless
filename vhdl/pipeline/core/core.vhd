@@ -17,7 +17,6 @@ entity core is
         reg_data_size       : natural := 16;
         memory_data_size    : natural := 32;
         memory_addr_size    : natural := 16
-
     );
 
     port(
