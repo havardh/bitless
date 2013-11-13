@@ -216,7 +216,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Check if register 3 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= load_inpt_3;
+		instruction_data <= store_outpt_2;
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 4
@@ -225,7 +225,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Check if register 4 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= load_inpt_4;
+		instruction_data <= store_outpt_3;
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 5
@@ -234,7 +234,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Check if register 5 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= load_inpt_5;
+		instruction_data <= store_outpt_4;
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 6
@@ -243,7 +243,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Check if register 6 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= load_inpt_6;
+		instruction_data <= store_outpt_5;
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 7
@@ -252,7 +252,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Check if register 7 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= load_inpt_7;
+		instruction_data <= store_outpt_6;
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 8
@@ -261,7 +261,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Check if register 8 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= load_inpt_8;
+		instruction_data <= store_outpt_7;
 		wait for clk_period*wait_period;
 
 		--Load value from input buffer to register 9
@@ -270,7 +270,7 @@ BEGIN
 		wait for clk_period*wait_period;
 
 		--Check if register 9 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= load_inpt_9;
+		instruction_data <= store_outpt_8;
 
 		wait;
 	end process;
