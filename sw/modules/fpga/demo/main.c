@@ -1,29 +1,96 @@
+#include <string.h>
+#include <stdio.h>
 #include "FPGAController.h"
 #include "FPGAConfig.h"
+#include "bl_uart.h"
+#include "bl_leds.h"
 
-void initMemory() {
-    uint16_t *program = (uint16_t *) malloc(sizeof(uint16_t) * DEFAULT_CORE_ADDRESS_SIZE);
-    uint16_t *inputBuffer;
-    uint16_t *outputBuffer;
+#define READ_TOPLEVEL       "Reading toplevel...\n\r"
+#define WRITE_TOPLEVEL      "Writing toplevel...\n\r"
+#define READ_PIPELINE       "Reading pipeline...\n\r"
+#define WRITE_PIPELINE      "Writing pipeline...\n\r"
+#define READ_CORE           "Reading core...\n\r"
+#define WRITE_CORE          "Writing core...\n\r"
 
-    for (int p = 0; p < DEFAULT_NUM_PIPELINES; p++) {
-        for (int i = 0; i < DEFAULT_NUM_CORES; i++) {
-            FPGACore_SetProgram(FPGA_GetCore(p, i), program, DEFAULT_CORE_ADDRESS_SIZE);
-        }
+#define STR_BUFFER          200
+
+void read_toplevel(void);
+void write_toplevel(void);
+void read_pipeline(void);
+void write_pipeline(void);
+void read_core(void);
+void write_core(void);
+
+void parse_cmd() {
+    char cmd = (char) UART_GetChar();
+
+    switch (cmd) {
+        case 'a':
+            UART_PutData((uint8_t*)READ_TOPLEVEL, strlen(READ_TOPLEVEL));
+            read_toplevel();
+            break;
+        case 'b':
+            UART_PutData((uint8_t*)WRITE_TOPLEVEL, strlen(WRITE_TOPLEVEL));
+            write_toplevel();
+            break;
+        case 'c':
+            UART_PutData((uint8_t*)READ_PIPELINE, strlen(READ_PIPELINE));
+            read_pipeline();
+            break;
+        case 'd':
+            UART_PutData((uint8_t*)WRITE_PIPELINE, strlen(WRITE_PIPELINE));
+            write_pipeline();
+            break;
+        case 'e':
+            UART_PutData((uint8_t*)READ_CORE, strlen(READ_CORE));
+            read_core();
+            break;
+        case 'f':
+            UART_PutData((uint8_t*)WRITE_CORE, strlen(WRITE_CORE));
+            write_core();
+            break;
     }
-    free(program);
 }
 
 int main() {
+    Leds_Init();
+    UART_Init();
 
-    uint16_t *a = (uint16_t *) malloc(sizeof(uint16_t) * 0x800000);
-    FPGAConfig conf = FPGA_CONFIG_DEFAULT(a);
+    UART_PutData((uint8_t*)"Test\n\r", 6);
 
+    FPGAConfig conf = FPGA_CONFIG_DEFAULT((uint16_t*) 0x80000000);
     FPGA_Init(&conf);
 
-    initMemory();
 
+    while (1) {
+        parse_cmd();
+    }
+        
     FPGA_Destroy();
-    
     return 0;
 }
+
+void read_toplevel(void) {
+    FPGA_ControlRegister reg = FPGA_GetControlRegister();
+
+    char toplevel[STR_BUFFER];
+    sprintf(toplevel, " ");
+}
+
+void write_toplevel(void) {
+    
+}
+
+void read_pipeline(void) {
+}
+
+void write_pipeline(void) {
+
+}
+
+void read_core(void) {
+}
+
+void write_core(void) {
+}
+

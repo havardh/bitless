@@ -16,11 +16,6 @@ FPGA_ControlRegister FPGA_GetControlRegister(void) {
     uint16_t reg = *fpga.controlRegister;
 
     FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
-    ctrlReg.blinkMode = BIT_HIGH(reg, 13);
-    ctrlReg.LED0      = BIT_HIGH(reg, 12);
-    ctrlReg.LED1      = BIT_HIGH(reg, 11);
-    ctrlReg.BTN0      = BIT_HIGH(reg, 10);
-    ctrlReg.BTN1      = BIT_HIGH(reg,  9);
     ctrlReg.pipelines = 0x7 & reg; // Value of lower three bits
 
     return ctrlReg;
@@ -32,15 +27,6 @@ void FPGA_SetControlRegister(FPGA_ControlRegister reg) {
     if (reg.reset)
         regVal += CTRL_RESET_ADDR;
 
-    if (reg.blinkMode)
-        regVal += CTRL_BLINK_ADDR;
-
-    if (reg.LED0)
-        regVal += CTRL_LED0_ADDR;
-
-    if (reg.LED1)
-        regVal += CTRL_LED1_ADDR;
-
     fpga.controlRegister[0] = (uint16_t) regVal;
 }
 
@@ -49,27 +35,6 @@ void FPGA_Reset(void) {
     ctrlReg.reset = true;
 
     FPGA_SetControlRegister(ctrlReg);
-}
-
-void FPGA_SetLeds(bool led0, bool led1) {
-    FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
-    ctrlReg.LED0 = led0;
-    ctrlReg.LED1 = led1;
-
-    FPGA_SetControlRegister(ctrlReg);
-}
-
-void FPGA_SetBlinkMode(bool blinkMode) {
-    FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
-    ctrlReg.blinkMode = blinkMode;
-
-    FPGA_SetControlRegister(ctrlReg);
-}
-
-uint32_t FPGA_GetButtonStatus(void) {
-    FPGA_ControlRegister ctrlReg = FPGA_GetControlRegister();
-
-    return (uint32_t) (0x1 & ctrlReg.BTN1) + (0x1 & ctrlReg.BTN0);
 }
 
 FPGA_Pipeline* FPGA_GetPipeline(uint32_t pipeline) {

@@ -38,22 +38,12 @@ typedef struct {
 
 typedef struct {
     bool reset;
-    bool blinkMode;
     uint32_t pipelines;
-    bool LED0;
-    bool LED1;
-    bool BTN0;
-    bool BTN1;
 } FPGA_ControlRegister;
 
 #define FPGA_CTRL_REG_DEFAULT                       \
 {   false,  /* Reset, write only */                 \
-    false,  /* Blink mode */                        \
     0,      /* Number of pipelines, read only */    \
-    false,  /* LED0 */                              \
-    false,  /* LED1 */                              \
-    false,  /* BTN0, read only */                   \
-    false,  /* BTN1, read only */                   \
 }
 
 /* FPGA Processor methods */
@@ -63,9 +53,9 @@ uint16_t* FPGA_GetBaseAddress(void);
 FPGA_ControlRegister FPGA_GetControlRegister(void);
 void FPGA_SetControlRegister(FPGA_ControlRegister controlRegister);
 void FPGA_Reset(void);
-void FPGA_SetLeds(bool led0, bool led1);
-void FPGA_SetBlinkMode(bool blinkMode);
-uint32_t FPGA_GetButtonStatus(void);
+// void FPGA_SetLeds(bool led0, bool led1);
+// void FPGA_SetBlinkMode(bool blinkMode);
+// uint32_t FPGA_GetButtonStatus(void);
 
 /* FPGA Pipeline methods */
 uint16_t* FPGAPipeline_GetInputBuffer(FPGA_Pipeline *pipeline);
