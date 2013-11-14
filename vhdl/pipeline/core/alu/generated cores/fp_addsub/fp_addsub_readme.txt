@@ -1,5 +1,5 @@
 The following files were generated for 'fp_addsub' in directory 
-Z:\TDT4295_2\ipcore_dir\
+Z:\TDT4295_3\ipcore_dir\
 
 fp_addsub.asy:
    Graphical symbol information file. Used by the ISE tools and some

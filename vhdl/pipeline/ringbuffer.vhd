@@ -101,8 +101,7 @@ begin
 		if reset = '1' then
 			if mode = NORMAL_MODE then
 				a_base_address <= x"0000";
-				b_base_address <= std_logic_vector(to_unsigned(window_size, b_base_address'length));
-				-- b_base_address <= std_logic_vector(to_unsigned(buffer_size / 2, b_base_address'length));
+				b_base_address <= std_logic_vector(to_unsigned(buffer_size / 2, b_base_address'length));
 			else
 				a_base_address <= x"0000";
 				b_base_address <= std_logic_vector(to_unsigned(window_size, b_base_address'length));

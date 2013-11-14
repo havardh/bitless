@@ -7,12 +7,12 @@
 // \   \   \/     Version: M.81d
 //  \   \         Application: netgen
 //  /   /         Filename: fp_multiply.v
-// /___/   /\     Timestamp: Wed Nov 13 15:31:35 2013
+// /___/   /\     Timestamp: Thu Nov 14 10:31:54 2013
 // \   \  /  \ 
 //  \___\/\___\
 //             
 // Command	: -intstyle ise -w -sim -ofmt verilog ./tmp/_cg\fp_multiply.ngc ./tmp/_cg\fp_multiply.v 
-// Device	: 6slx16csg324-2
+// Device	: 6slx45csg324-2
 // Input file	: ./tmp/_cg/fp_multiply.ngc
 // Output file	: ./tmp/_cg/fp_multiply.v
 // # of Modules	: 1

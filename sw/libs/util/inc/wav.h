@@ -33,14 +33,15 @@ typedef struct {
   WAVFileMode mode;
 
   bool eof;
-	int position;
+	uint16_t position;
 } WAVFile;
 
 void WAV_Open(WAVFile *file, char *filename);
-void WAV_Read(WAVFile *file, void *buffer, uint32_t bytesToRead);
-void WAV_Write(WAVFile *file, void *buffer, uint32_t bytesToWrite);
+void WAV_Read(WAVFile *file, void *buffer, uint16_t bytesToRead);
+void WAV_Write(WAVFile *file, void *buffer, uint16_t bytesToWrite);
 void WAV_Close(WAVFile *file);
 
+void WAV_CopyHeader(WAVFile *from, WAVFile *to);
 bool WAV_EOF(WAVFile *file);
 
 void WAV_ReadHeader(WAVFile *file);

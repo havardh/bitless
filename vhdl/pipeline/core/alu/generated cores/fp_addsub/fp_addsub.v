@@ -7,12 +7,12 @@
 // \   \   \/     Version: M.81d
 //  \   \         Application: netgen
 //  /   /         Filename: fp_addsub.v
-// /___/   /\     Timestamp: Wed Nov 13 15:35:49 2013
+// /___/   /\     Timestamp: Thu Nov 14 10:27:38 2013
 // \   \  /  \ 
 //  \___\/\___\
 //             
 // Command	: -intstyle ise -w -sim -ofmt verilog ./tmp/_cg\fp_addsub.ngc ./tmp/_cg\fp_addsub.v 
-// Device	: 6slx16csg324-2
+// Device	: 6slx45csg324-2
 // Input file	: ./tmp/_cg/fp_addsub.ngc
 // Output file	: ./tmp/_cg/fp_addsub.v
 // # of Modules	: 1

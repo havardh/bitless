@@ -1,5 +1,5 @@
 The following files were generated for 'fix_to_float' in directory 
-Z:\TDT4295_2\ipcore_dir\
+Z:\TDT4295_3\ipcore_dir\
 
 fix_to_float.asy:
    Graphical symbol information file. Used by the ISE tools and some

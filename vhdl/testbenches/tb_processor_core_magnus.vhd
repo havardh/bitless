@@ -42,10 +42,9 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
     COMPONENT core
     PORT(
          clk : IN  std_logic;
-         memclk : IN  std_logic;
-         sample_clk : IN  std_logic;
          reset : IN  std_logic;
          proc_finished : OUT  std_logic;
+         pl_stop_core        : in std_logic;
          instruction_addr : OUT  std_logic_vector(15 downto 0);
          instruction_data : IN  std_logic_vector(15 downto 0);
          constant_addr : OUT  std_logic_vector(15 downto 0);
@@ -63,12 +62,11 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
 
    --Inputs
    signal clk : std_logic := '0';
-   signal memclk : std_logic := '0';
-   signal sample_clk : std_logic := '0';
    signal reset : std_logic := '0';
+   signal pl_stop_core : std_logic := '0';
    signal instruction_data : std_logic_vector(15 downto 0) := (others => '0');
    signal constant_data : std_logic_vector(31 downto 0) :=    "00000000000000000000000000000000";
-   signal input_read_data : std_logic_vector(31 downto 0) :=  "00000000000000000000000000000001";
+   signal input_read_data : std_logic_vector(31 downto 0) :=  "11111111111111111111111111111111";
    signal output_read_data : std_logic_vector(31 downto 0) := "00000000000000000000000000000010";
 
  	--Outputs
@@ -83,23 +81,24 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
 
    -- Clock period definitions
    constant clk_period : time := 10 ns;
-   constant memclk_period : time := 10 ns;
-   constant sample_clk_period : time := 10 ns;
 	
-	constant load_instruction0 : std_logic_vector(15 downto 0) := "0111000001000000";
-	constant load_instruction1 : std_logic_vector(15 downto 0) := "0111000001000000";
-	constant load_instruction2 : std_logic_vector(15 downto 0) := "0111000001000000";
-	constant load_instruction3 : std_logic_vector(15 downto 0) := "0111110001000000";
+	constant load_instruction0  : std_logic_vector(15 downto 0) := "0111000001000000";
+	
+	
+	constant store_instruction0 : std_logic_vector(15 downto 0) := "0111110001000000";
+	
+	constant finished_instruction : std_logic_vector(15 downto 0) := "0011000000000000";
+	
+	constant no_op_instruction : std_logic_vector(15 downto 0) := (others => '0');
  
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: core PORT MAP (
           clk => clk,
-          memclk => memclk,
-          sample_clk => sample_clk,
           reset => reset,
           proc_finished => proc_finished,
+          pl_stop_core => pl_stop_core,
           instruction_addr => instruction_addr,
           instruction_data => instruction_data,
           constant_addr => constant_addr,
@@ -122,22 +121,6 @@ BEGIN
 		wait for clk_period/2;
    end process;
  
-   memclk_process :process
-   begin
-		memclk <= '0';
-		wait for memclk_period/2;
-		memclk <= '1';
-		wait for memclk_period/2;
-   end process;
- 
-   sample_clk_process :process
-   begin
-		sample_clk <= '0';
-		wait for sample_clk_period/2;
-		sample_clk <= '1';
-		wait for sample_clk_period/2;
-   end process;
- 
 
    -- Stimulus process
    stim_proc: process
@@ -151,13 +134,29 @@ BEGIN
 		instruction_data <= load_instruction0;
 		wait for clk_period;
 		
-		instruction_data <= load_instruction1;
+		instruction_data <= no_op_instruction;
 		wait for clk_period;
 		
-		--instruction_data <= load_instruction2;
-		--wait for clk_period;
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
 		
-		instruction_data <= load_instruction3;
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= store_instruction0;
+		wait for clk_period;
+		
+		--instruction_data <= finished_instruction;
+		
 		wait for clk_period;
 		
 
