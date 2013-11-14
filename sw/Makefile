@@ -122,6 +122,7 @@ INCLUDEPATHS += \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
 -I$(LIB)/kits/EFM32GG_bitless/config \
+-I$(DIR)/modules/programs/inc \
 -I$(LIB)/emdrv/gpiointerrupt/inc
 
 ####################################################################
@@ -142,6 +143,10 @@ $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 $(DIR)/modules/leds/src/bl_leds.c \
 $(DIR)/modules/main/src/MainController.c \
 $(DIR)/modules/buttons/src/bl_buttons.c \
+$(DIR)/modules/programs/src/LiveFilter.c \
+$(DIR)/modules/programs/src/Wavplayer.c \
+$(DIR)/modules/programs/src/StoredFilter.c \
+$(DIR)/modules/programs/src/FPGAProgrammer.c \
 $(PROJECTNAME).c
 
 s_SRC +=
