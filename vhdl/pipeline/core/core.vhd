@@ -108,9 +108,14 @@ architecture behaviour of core is
     end component register_file;
     
     -- signals
+	 signal id_stop_processor   : std_logic;
+	 signal id_instruction      : std_logic_vector(instruct_data_size-1 downto 0);
     -- data signals
     signal id_imm_value         : std_logic_vector(memory_data_size-1 downto 0);
-	 signal id_branch_flags      : std_logic_vector(3 downto 0);
+	 signal id_branch_flags     : std_logic_vector(3 downto 0);
+	 signal id_reg_1_data       : std_logic_vector(reg_data_size-1 downto 0);
+	 signal id_reg_1b_data      : std_logic_vector(reg_data_size-1 downto 0);
+	 signal id_reg_2_data       : std_logic_vector(reg_data_size-1 downto 0);
     
     -- addr signals
     signal id_reg_1_addr        : std_logic_vector( reg_addr_size-1 downto 0);
@@ -118,6 +123,7 @@ architecture behaviour of core is
     signal id_spec_addr         : std_logic_vector( reg_addr_size-1 downto 0);
     
     -- control signals
+    signal id_stop_core_signal  : std_logic;
     signal id_bubble            : std_logic;
     signal id_alu_op            : alu_operation;
     signal id_reg_we            : register_write_enable;
@@ -164,6 +170,7 @@ architecture behaviour of core is
     signal mem_reg_2_addr       : std_logic_vector( reg_addr_size-1 downto 0);
     
     -- control signals
+    signal mem_stop_core_signal : std_logic;
     signal mem_alu_op           : alu_operation;
     signal mem_reg_we           : register_write_enable;
     signal mem_reg_wb_src       : wb_source;
@@ -227,6 +234,7 @@ architecture behaviour of core is
     signal ex_reg_2_addr        : std_logic_vector( reg_addr_size-1 downto 0);
    
     -- control signals
+    signal ex_stop_core_signal  : std_logic;
     signal ex_alu_op            : alu_operation;
     signal ex_reg_we            : register_write_enable;
     signal ex_reg_wb_src        : wb_source;
@@ -243,19 +251,23 @@ architecture behaviour of core is
     signal wb_reg_2_addr        : std_logic_vector(reg_addr_size-1 downto 0);
     
     -- control signals
+    signal wb_stop_core_signal  : std_logic;
     signal wb_reg_we            : register_write_enable;    
 --Other
 
 begin
 	 
 	 
-	 stop_core : process(reset, stop_core_signal) 
+	 stop_core : process(reset, stop_core_signal, wb_stop_core_signal) 
 	 begin
-	     if reset = '1' then
-		      proc_finished <= '0';
-		  elsif stop_core_signal = '1' then
-		      proc_finished <= '1';
-		  end if;
+        if reset = '1' then
+            proc_finished <= '0';
+            id_stop_processor <= '0';
+		elsif stop_core_signal = '1' then
+		    id_stop_processor <= '1';
+        elsif wb_stop_core_signal then
+            proc_finished <= '1';
+		end if;
 	 end process;
 	 
 --Pipeline: IF
@@ -297,20 +309,29 @@ begin
     
     instruction_addr <= pc_reg;
 
+    pipeline_if_id_reg : process(instruction_data)
+    begin
+        if (id_stop_processor = '1') then
+            id_instruction <= (others => '0');
+        else
+            id_instruction <= instruction_data;
+        end if;
+	end process;
 --Pipeline: ID
-    branch_target <= instruction_data(9 downto 0);
-    id_branch_flags <= instruction_data(13 downto 10);
-    control_u : control_unit
+    branch_target <= id_instruction(9 downto 0);
+    id_branch_flags <= id_instruction(13 downto 10);
+    
+    id_control_unit : control_unit
     port map(
-        opt_code            => instruction_data(15 downto 10),
+        opt_code            => id_instruction(15 downto 10),
         
-		  stop_core           => stop_core_signal,
+		stop_core           => stop_core_signal,
         alu_op              => id_alu_op,
         reg_write_e         => id_reg_we,
         wb_src              => id_reg_wb_src,
         mem_src             => id_mem_slct,
         output_write_enable => id_output_we,
-        add_imm				 => id_add_imm,
+        add_imm				=> id_add_imm,
         load_const          => id_load_const,
         branch_enable       => branch_enable
     );
@@ -319,29 +340,33 @@ begin
     port map(
         clk             => clk,
 
-        reg_1_address   => instruction_data(9 downto 5),
-        reg_2_address   => instruction_data(4 downto 0),
+        reg_1_address   => id_instruction(9 downto 5),
+        reg_2_address   => id_instruction(4 downto 0),
         write_address   => wb_reg_1_addr,
 
         data_in         => wb_data,
 
         write_reg_enb   => wb_reg_we,
 
-        reg_1_data      => mem_reg_1_data,
-        reg_1b_data     => mem_reg_1b_data,
-        reg_2_data      => mem_reg_2_data
+        reg_1_data      => id_reg_1_data,
+        reg_1b_data     => id_reg_1b_data,
+        reg_2_data      => id_reg_2_data
     );
 
     
     -- signal mappings
-    id_imm_value <= sxt(instruction_data(13 downto 0), 32);
-	 id_reg_1_addr <= instruction_data(9 downto 5);
-	 id_reg_2_addr <= instruction_data(4 downto 0);
+    id_imm_value <= sxt(id_instruction(13 downto 0), 32);
+	id_reg_1_addr <= id_instruction(9 downto 5);
+	id_reg_2_addr <= id_instruction(4 downto 0);
 
     
     pipeline_id_mem_reg : process(clk)
     begin
         if rising_edge(clk) then
+		    
+            mem_reg_1_data  <= id_reg_1_data;
+            mem_reg_1b_data <= id_reg_1b_data;
+            mem_reg_2_data  <= id_reg_2_data;
             
             mem_imm_value   <= id_imm_value;    
             mem_reg_1_addr  <= id_reg_1_addr;
@@ -406,11 +431,11 @@ begin
 	pipeline_mem_ex_reg : process(clk)
    begin
         if rising_edge(clk) then
-		      if (mem_add_imm ='1') then
-				    ex_reg_2_data <= sxt(mem_reg_2_addr, 16);
-			   else
-				    ex_reg_2_data <= mem_fw_2;
-			   end if;
+		    if (mem_add_imm ='1') then
+                ex_reg_2_data <= sxt(mem_reg_2_addr, 16);
+			else
+                ex_reg_2_data <= mem_fw_2;
+			end if;
             ex_reg_1_data       <= mem_fw_1;
             ex_imm_value        <= mem_imm_value;
             ex_mem_value        <= mem_mem_value;

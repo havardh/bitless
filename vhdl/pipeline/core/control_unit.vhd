@@ -158,7 +158,7 @@ begin
 											mem_src <= MEM_INPUT;
 											add_imm <= '0';
 									  when multi_sub_fp =>
-											alu_op <= fp_mas;
+											alu_op <= fp_msc;
 											reg_write_e <= REG_A_WRITE;
 											mem_src <= MEM_INPUT;
 											add_imm <= '0';
