@@ -253,6 +253,7 @@ begin
 				alu_result_select <= ALU_LOG_SELECT;
 			
 			when others =>
+				alu_result_select <= ALU_FPU_SELECT;
 		end case;
 	end process alu_process;
 end behaviour;

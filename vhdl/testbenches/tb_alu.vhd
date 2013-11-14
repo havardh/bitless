@@ -27,6 +27,7 @@
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+use ieee.std_logic_arith.ALL;
 
 library work;
 use work.core_constants.all;
@@ -307,28 +308,14 @@ BEGIN
 --		assert result = x"0000000F" report "Float_to_fix not working!";
 
 		--testing fp multiply, 5*3=15
-		operation				<= ALU_FIXED_TO_FLOAT;
-		cpu_input_register_1	<= x"0003"; 
-		wait for cpu_clk_period/2;
-		helper1 <= result;
-		
-		operation				<= ALU_FIXED_TO_FLOAT; 
-		cpu_input_register_1	<= x"0005"; 
-		wait for cpu_clk_period/2;
-		helper2 <= result;
-		wait for cpu_clk_period;
-		
+	
 		operation 				 <= FP_SUB;
-		cpu_input_register_1  <= ext(helper1(12 downto 0));
-		cpu_input_register_2  <= ext(helper2(12 downto 0));
-		wait for cpu_clk_period/2;
-		helper3 <= result;
+		cpu_input_register_1  <= "0100010100000000"; --5 in floatingpoint notation
+		cpu_input_register_2  <= "0100001000000000"; --3 in floatingpoint notation
 		wait for cpu_clk_period*2;
+		assert result = "00000000000000000100000000000000" report "fp_sub not working";--2 in flatingpoint notation signextended from 16 to 32
 		
-		operation				<= ALU_FLOAT_TO_FIXED;
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result = x"00000008" report "Float_to_fix not working!";
+		
 
 
 		
