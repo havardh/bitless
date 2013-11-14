@@ -3,6 +3,6 @@
 
 #include "bl_leds.h"
 
-void StoredFilter(void);
+void StoredFilter_Start(void);
 
 #endif /* _STOREDFILTER_H_ */

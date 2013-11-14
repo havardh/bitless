@@ -1,6 +1,6 @@
 #include "StoredFilter.h"
 
-void StoredFilter(void) 
+void StoredFilter_Start(void) 
 {
 		Leds_SetLeds(0x4);
 }

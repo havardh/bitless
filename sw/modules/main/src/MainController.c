@@ -17,6 +17,10 @@ void callback(uint8_t pin);
 
 void MainController_init(void) 
 {
+	Board_t type = BITLESS;
+	Buttons_Init(type);
+	Leds_Init();
+
 	uint8_t btns[5] = { BTN0, BTN1, BTN2, BTN3, BTN4 };
 	GPIOINT_IrqCallbackPtr_t ptrs[5] = { 
 		programFPGA, 
@@ -31,9 +35,6 @@ void MainController_init(void)
 void MainController_run(void) 
 {
 
-	Board_t type = BITLESS;
-	Buttons_Init(type);
-	Leds_Init();
 
 	while(1) {
 		EMU_EnterEM3(true);
@@ -53,7 +54,7 @@ void startADCtoDAC(uint8_t pin)
 
 void startSDtoSD(uint8_t pin)
 {
-	StoredFilter();
+	StoredFilter_Start();
 }
 
 void startWAVPlayer(uint8_t pin)
