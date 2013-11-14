@@ -3,7 +3,7 @@ import serial
 import sys
 
 BAUDRATE=115200
-MEM_SIZE=(16*2)
+MEM_SIZE=(32)
 
 def main():
 		args = parse()
@@ -111,9 +111,6 @@ def write_to_bitless(port, command, data):
 				# Reset the port
 				serial_port.flush()
 
-				# Check what bitless thinks about it
-				response = serial_port.read()
-
 				# Say good bye for now
 				serial_port.close()
 
@@ -145,7 +142,7 @@ def read_from_bitless(port, command, n):
 				
 def serial_open(port):
 		try:
-				ser = serial.Serial(port=port, baudrate=BAUDRATE, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=1)
+				ser = serial.Serial(port=port, baudrate=BAUDRATE, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=None)
 		except serial.SerialException:
 				print 'COM Port', port, 'Unknown'
 				sys.exit(1)
