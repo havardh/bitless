@@ -1,0 +1,3 @@
+[submodule "hassembler"]
+	path = hassembler
+	url = git@github.com:terjr/hassembler.git

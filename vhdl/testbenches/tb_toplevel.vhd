@@ -149,6 +149,21 @@ begin
 		ebi_cs <= '1';
 		wait for EBI_CS_WAIT;
 
+		-- Write some no-ops to the instruction memory:
+--		for i in 0 to 4 loop
+--			report "Writing no-op into core 0's instruction memory";
+--			ebi_cs <= '0';
+--			ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", std_logic_vector(unsigned(i)));
+--			ebi_data <= x"0000";
+--			wait for EBI_CS_WAIT;
+--			ebi_we <= '0';
+--			wait for EBI_WE_WAIT;
+--			ebi_we <= '1';
+--			wait for EBI_CS_WAIT;
+--			ebi_cs <= '1';
+--			wait for EBI_CS_WAIT;
+--		end loop;
+
 		-- Write the second instruction to memory of core 0:
 		report "Writing word 2 into core 0's instruction memory";
 		ebi_cs <= '0';
@@ -161,6 +176,21 @@ begin
 		wait for EBI_CS_WAIT;
 		ebi_cs <= '1';
 		wait for EBI_CS_WAIT;
+
+		-- Write some no-ops to the instruction memory:
+--		for i in 0 to 4 loop
+--			report "Writing no-op into core 0's instruction memory";
+--			ebi_cs <= '0';
+--			ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000000");
+--			ebi_data <= x"0000";
+--			wait for EBI_CS_WAIT;
+--			ebi_we <= '0';
+--			wait for EBI_WE_WAIT;
+--			ebi_we <= '1';
+--			wait for EBI_CS_WAIT;
+--			ebi_cs <= '1';
+--			wait for EBI_CS_WAIT;
+--		end loop;
 
 		-- Write the third instruction to memory of core 0:
 		report "Writing word 1 into core 0's instruction memory";
@@ -190,11 +220,17 @@ begin
 		wait for EBI_CS_WAIT;
 
 		-- Disable the stopmode in the pipeline:
-		report "Disabling pipeline stopmode";
+		report "Enabling processor!";
 		ebi_cs <= '0';
-		ebi_address <= make_ebi_address(false, b"00", b"0000", b"00", b"00000000000000");
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"00", b"00000000000000");
 		ebi_data <= (7 => '0', others => '0');
-		
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
 
 		wait;
 	end process;
