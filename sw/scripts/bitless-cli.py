@@ -94,7 +94,12 @@ def read_data(args):
 
 
 def execute(args):
-		print 'execute'
+
+		print 'execute'    
+		port = args.port
+		command = 'e' + `args.execute`.zfill(3) 
+		print port, command
+		#write_to_bitless(port, command, 0)
 
 def write_to_bitless(port, command, data):
 		print 'executing', command

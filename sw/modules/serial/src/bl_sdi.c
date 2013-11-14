@@ -8,6 +8,7 @@
 void write_instruction(uint8_t command[]);
 void write_data(uint8_t command[]);
 void read_data(uint8_t command[]);
+void execute(uint8_t command[]);
 
 void SDI_Init(void) 
 {
@@ -28,6 +29,8 @@ void SDI_Start(void)
 			write_data(command);
 		} else if ( command[0] == 'r' && command[1] == 'd' ) {
 			read_data(command);
+		} else if ( command[0] == 'e') {
+			execute(command);
 		}
 	}
 }
@@ -75,5 +78,24 @@ void read_data(uint8_t command[])
 	UART_PutData((uint8_t*)mem, DATA_SIZE*2);
 }
 
+static int parseIterations(uint8_t command[]) 
+{
+	int iterations = (int)command[3];
+	iterations += (int)command[2]*10;
+	iterations += (int)command[3]*100;
 
+	return iterations;
+}
 
+void execute(uint8_t command[])
+{
+	FPGA_Enable();
+	
+	int iterations = parseIterations(command);
+
+	for (int i=0; i<iterations; i++) {
+		FPGA_ToggleClock();
+	}
+
+	FPGA_Disable();
+}
