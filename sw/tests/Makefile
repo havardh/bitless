@@ -21,14 +21,13 @@ CFLAGS += --std=c99 -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetecto
 
 SRC_DIRS = \
   .\
-	../controllers/main/src\
-  ../libs/math/src\
 	./test-doubles/drivers/**\
 	./test-doubles/libs/**\
   src\
 
 
 TEST_SRC_DIRS = \
+	./modules/fpga\
 	./libs/**\
 
 INCLUDE_DIRS =\

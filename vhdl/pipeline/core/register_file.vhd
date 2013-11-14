@@ -18,6 +18,7 @@ entity register_file is
 		write_reg_enb	: in register_write_enable;
 
 		reg_1_data		: out std_logic_vector(15 downto 0);
+		reg_1b_data		: out std_logic_vector(15 downto 0);
 		reg_2_data		: out std_logic_vector(15 downto 0)
 
 	);
@@ -25,9 +26,8 @@ end entity;
 
 architecture Behaviour of register_file is
 
-	type regs_t is array (31 downto 1) of std_logic_vector(15 downto 0);
+	type regs_t is array (31 downto 0) of std_logic_vector(15 downto 0);
 	signal regs : regs_t := (others => (others => '0'));
-
 
 begin
 	registers: process(clk)
@@ -46,11 +46,14 @@ begin
 		end if;
 	end process;
 
-reg_1_data <= (others=>'0') when reg_1_address="00000"
-			else regs(to_integer(unsigned(reg_1_address)));
+	reg_1_data <= (others=>'0') when reg_1_address=b"00000"
+				else regs(to_integer(unsigned(reg_1_address)));
 
-reg_2_data <= (others=>'0') when reg_2_address="00000"
-			else regs(to_integer(unsigned(reg_2_address)));
+	reg_1b_data <= (others=>'0') when reg_1_address=b"00000"
+				else regs(to_integer(unsigned(reg_1_address))+1);
+
+	reg_2_data <= (others=>'0') when reg_2_address=b"00000"
+				else regs(to_integer(unsigned(reg_2_address)));
 
 end Behaviour;
 

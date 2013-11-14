@@ -3,5 +3,8 @@ TDT4295
 
 Datamaskinprosjektet 2013 - Energigruppa
 
-NEWS: you can now use subversion!!!
+NEWS: 
+* EBI is working!
+* The SDcard is working!!!
+* We have sound!
 

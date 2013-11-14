@@ -1,0 +1,21 @@
+\FloatBarrier
+
+\section{Design Planning}\label{sec:fpga-design}
+\todo{I think all this can be moved to the introduction and the FFT stuff here
+can be merged with the FFT stuff there - KKS}
+
+The processor was designed top-down for sound processing. As sound processing
+often requires fourier transforms, several solutions were considered for how
+to implement hardware support for this.
+
+Designing a core specifically for doing the fourier transform and its inverse
+was considered, but could cause increased complexity when desiging the
+audio processing pipelines. A variant of this idea was to equip the first
+and the last core of each audio pipeline with instructions accelerating
+the most compute intensive parts of the fourier transforms, but this
+would cause the processors to not be homogenous.
+
+In the end, implementing a simple floating point unit in each of the cores
+would not only allow acceleration of the fourier transforms, but also manipulation
+of the resulting samples in the frequency domain.
+

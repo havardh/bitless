@@ -12,7 +12,7 @@ use work.internal_bus.all;
 
 entity toplevel is
 	-- These ports connect to pins on the FPGA. These are set up using PlanAhead
-	-- and stored in a .ucf file. This must be done sometime later.
+	-- and stored in a .ucf file.
 
 	port (
 		fpga_clk 	: in std_logic; -- FPGA clock, 60 MHz input clock
@@ -33,6 +33,17 @@ entity toplevel is
 end entity;
 
 architecture behaviour of toplevel is
+
+	-- Blink controller for testmode:
+	component blink_controller is
+		port(
+			system_clk : in std_logic; -- System clock input (60MHz)
+			enable, reset : in std_logic; -- Blink controller enable and reset signals
+			led0_blink, led1_blink : out std_logic -- Output signal for the LEDs
+		);
+	end component;
+
+	-- Main pipeline component:
 	component pipeline is
 		port (
 			clk			: in std_logic; -- Small cycle clock
@@ -51,6 +62,7 @@ architecture behaviour of toplevel is
 		);
 	end component;
 
+	-- Clock controller generating clocks of various frequencies:
 	component clock_controller is
 		port(
 			clk_in       : in std_logic;  -- FPGA main clock input
@@ -71,47 +83,33 @@ architecture behaviour of toplevel is
 
 	-- Internal FPGA clocks:
 	signal system_clk, memory_clk, sample_clk : std_logic;
-	signal gated_system_clk : std_logic;
 	signal ebi_ctrl_clk : std_logic;
 
-	-- Toplevel control register (TODO: insert pipeline number):
-	signal control_register : toplevel_control_register := (
-		number_of_pipelines => (others => '0'), ebi_controller_reset => '0',
-		master_enable => '1');
+	-- Inverted EBI CS signal:
+	signal ebi_cs_inv : std_logic;
+
+	-- Blinking LEDS:
+	signal blinking_led0, blinking_led1 : std_logic;
+
+	-- Toplevel control register:
+	signal control_register : toplevel_control_register := (reset => '0', led0 => '0', led1 => '0', blinkmode => '1',
+		number_of_pipelines => std_logic_vector(to_unsigned(NUMBER_OF_PIPELINES, 3)), button0 => '0', button1 => '0');
 begin
 	-- Set up the clock controller:
 	clk_ctrl: clock_controller
 		port map (
 			clk_in => fpga_clk,
-			system_clock => gated_system_clk,
+			system_clock => system_clk,
 			memory_clock => memory_clk,
 			dsp_clock => open
 		);
 	sample_clk <= ctrl_bus(0);
 
-	-- EBI controller clock gate, disable the EBI controller clock
-	-- when the chip select is disabled. This saves power, at least
-	-- in theory:
-	ebi_ctrl_clock_gate: BUFGCE
-		port map (
-			I => gated_system_clk,
-			O => ebi_ctrl_clk,
-			CE => not ebi_cs
-		);
-
-	-- FPGA clock gate:
-	fpga_clock_gate: BUFGCE
-		port map (
-			I => gated_system_clk,
-			O => system_clk,
-			CE => control_register.master_enable
-		);
-
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
 		port map (
-			clk => ebi_ctrl_clk,
-			reset => control_register.ebi_controller_reset,
+			clk => system_clk,
+			reset => control_register.reset,
 			ebi_address => ebi_address,
 			ebi_data => ebi_data,
 			ebi_cs => ebi_cs,
@@ -124,8 +122,55 @@ begin
 			int_read_enable => internal_bus_read
 		);
 
+	-- Instatiate the blink controller:
+	blink_ctrl: blink_controller
+		port map(
+			system_clk => system_clk,
+			enable => control_register.blinkmode,
+			reset => control_register.reset,
+			led0_blink => blinking_led0,
+			led1_blink => blinking_led1
+		);
+
+	-- Set up the control register:
+	control_register.button0 <= button0;
+	control_register.button1 <= button1;
+	led0 <= blinking_led0 when control_register.blinkmode = '1' else control_register.led0;
+	led1 <= blinking_led1 when control_register.blinkmode = '1' else control_register.led1;
+
+	-- Toplevel internal bus process:
+	control_reg_access: process(system_clk, internal_bus_address, internal_bus_data_out, internal_bus_data_in,
+		internal_bus_read, internal_bus_write, control_register)
+	begin
+		if rising_edge(system_clk) then
+			if internal_bus_write = '1' then
+				if internal_bus_address.toplevel = '1' then
+	
+					-- Write the writeable control register fields:
+					control_register.reset <= internal_bus_data_in(15);
+					control_register.blinkmode <= internal_bus_data_in(13);
+					if control_register.blinkmode = '0' then -- LEDs only writeable if not in blink mode
+						control_register.led0 <= internal_bus_data_in(12);
+						control_register.led1 <= internal_bus_data_in(11);
+					end if;
+
+				end if;
+			end if;
+		end if;
+	end process;
+
+	internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)))
+		when internal_bus_address.toplevel = '0' else b"00" &
+					control_register.blinkmode &	-- Bit 13
+					control_register.led0 &			-- Bit 12
+					control_register.led1 &			-- Bit 11
+					control_register.button1 &		-- Bit 10
+					control_register.button0 &		-- Bit  9
+					b"000000" &
+					control_register.number_of_pipelines; -- LSB
+
 	generate_pipelines:
-		for i in 0 to NUMBER_OF_PIPELINES generate
+		for i in 0 to NUMBER_OF_PIPELINES - 1 generate
 			pipeline_x: pipeline
 				port map (
 					clk => system_clk,
@@ -139,7 +184,5 @@ begin
 					int_we => internal_bus_write
 				);
 		end generate;
-
-		internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)));
 
 end behaviour;

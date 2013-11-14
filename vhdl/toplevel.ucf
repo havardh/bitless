@@ -1,5 +1,5 @@
-
-# PlanAhead Generated physical constraints 
+# Design constraints
+TEMPERATURE=22 C;
 
 NET "button0" LOC = D6;
 NET "button1" LOC = C6;
@@ -63,3 +63,8 @@ NET "gpio_bus[10]" LOC = D8;
 NET "gpio_bus[11]" LOC = C8;
 NET "led0" LOC = B2;
 NET "led1" LOC = A2;
+
+NET "fpga_clk" TNM_NET = fpga_clk;
+TIMESPEC TS_fpga_clk = PERIOD "fpga_clk" 16.666666666 ns HIGH 50%;
+NET "ctrl_bus[0]" CLOCK_DEDICATED_ROUTE = FALSE;
+

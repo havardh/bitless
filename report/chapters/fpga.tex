@@ -1,5 +1,18 @@
+\FloatBarrier
+
 \chapter{FPGA}\label{chapter:fpga}
 
-\input{chapters/fpga/isa}
-\input{chapters/fpga/communication}
+The processor core was implemented on a Xilinx Spartan-6 FPGA.
+It consists of several audio processing pipelines, each
+containing a set of homogenous processor cores and memories.
 
+\todo{We need a better introduction here. Review what was
+removed earlier and try to piece together something that is
+suited for a "light" intro. E.g. what role does the FPGA play in
+the system as a whole, why the chapter is structured the way it
+is, etc.}
+
+\input{chapters/fpga/design} \input{chapters/fpga/pipelines}
+\input{chapters/fpga/communication} \input{chapters/fpga/core}
+\input{chapters/fpga/alu} \input{chapters/fpga/memories}
+\input{chapters/fpga/isa} \input{chapters/fpga/testing}

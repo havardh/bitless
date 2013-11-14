@@ -1,0 +1,36 @@
+%Should contain: Ringbuffer, Switch buffer, input/output buffers, constant memory, inst memory, read and write lines to the fpga from the ARM. Originally the ARM only needed access to the first and the last data buffer but for debugging purposes the ARM was given access to all buffers.
+\section{Memories}\label{sec:fpga-memories}
+\todo[inline]{Short description?}
+
+The internal block RAMs in the FPGA are used to implement all memories in the processor.
+Although this limits the amount of memory available, it makes it possible to have
+equal access time for all the different kinds of memories. It also precludes having
+to use external RAM which would be slower and consume more energy.
+
+\subsection{Intruction memory}
+\todo[inline]{Describe the functionality and reasons behind decisions regarding
+the instruction memory.}
+
+Each processor core has a separate instruction memory. This memory is programmed
+with the programme for the processor core by the MCU before the processor core is
+started.
+
+\subsection{Audio Pipeline Buffers}
+\todo[inline]{Describe the need for memory to behave as both ringbuffer/queues,
+and as switching buffers. Discuss why this is a good idea because of our
+intended functionality, and how we utilize the FPGAs resources to implement it
+in the best possible way.}
+
+\subsection{Constant memory}
+
+The constant memory is used to store constants that is read-only by the processor
+cores. Each audio pipeline contains a constant memory that is accessed by two
+cores in the pipeline. Which cores have access to the constant memory can be
+configured by the MCU in the pipeline control register.
+
+The reason for allowing only two processors to access the constant memory is
+that the internal block RAM in the FPGA have two independent read ports, allowing
+two simultaneous reads. If more processors were to have access to the constant
+memories an arbitration unit would have to be used, and the advantage of using
+the block RAM to ensure a one-cycle access time would be negated.
+

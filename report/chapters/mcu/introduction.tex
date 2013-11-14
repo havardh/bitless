@@ -1,0 +1,25 @@
+% !TEX root = ../../report.tex
+
+The software is implemented on an ARM Cortex-M3 supplied by
+EnergyMicro. This chapter describes the modules that are
+executed on this chip. The responsibility of the software
+component is mainly producing samples that the FPGA consumes and
+to consume the samples the FPGA produces as results.
+
+It implements interfaces to the different I/O devices that the
+system as a whole uses as source and destination for data
+samples. These include ADC and DAC connected to Jack plugs on
+the card and MicroSD card connected to the SDCard Slot. In
+addition a serial port is available for communication with a PC.
+
+This component also handles general I/O like buttons for
+controlling the behavior for of the program at runtime, and LEDs
+for visual feedback.
+
+The last responsibility is providing a way to program the FPGA
+cores. This functionality is used when the filters used on the
+FPGA are configured. \todo[inline]{Most of this is too specific.
+It should be a "light" introduction; needs to be rewritten. E.g.
+give an overview of terminology (CPU vs MCU), what role the MCU
+plays in the system compared to the rest, and why the chapter
+has been structured so and so. -JK}
