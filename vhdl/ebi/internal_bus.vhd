@@ -27,7 +27,7 @@ package internal_bus is
 
 			-- EBI inputs:
 			ebi_address      : in std_logic_vector(22 downto 0);
-			ebi_data         : inout std_logic_vector(15 downto 0);
+			ebi_data         : inout std_logic_vector(7 downto 0);
 			ebi_cs           : in std_logic;
 			ebi_read_enable  : in std_logic;
 			ebi_write_enable : in std_logic;
