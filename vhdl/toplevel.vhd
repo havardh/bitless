@@ -19,7 +19,7 @@ entity toplevel is
 
 		-- EBI interface lines:
 		ebi_address : in    std_logic_vector(22 downto 0);	-- EBI address lines
-		ebi_data		: inout std_logic_vector(15 downto 0); -- EBI data lines
+		ebi_data		: inout std_logic_vector(7 downto 0); -- EBI data lines
 		ebi_re		: in    std_logic;	-- EBI read enable (active low)
 		ebi_we		: in    std_logic;	-- EBI write enable (active low)
 		ebi_cs		: in    std_logic;	-- EBI chip select (active low)
@@ -28,7 +28,7 @@ entity toplevel is
 		ctrl_bus				: inout std_logic_vector(2 downto 0); -- Control bus connected to the MCU
 		led0, led1			: out std_logic; -- LEDs
 		button0, button1	: in std_logic;  -- Buttons
-		gpio_bus				: inout std_logic_vector(12 downto 0) -- GPIO bus, connected to a header
+		gpio_bus				: inout std_logic_vector(3 downto 0) -- GPIO bus, connected to a header
 	);
 end entity;
 
