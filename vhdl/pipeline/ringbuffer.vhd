@@ -21,6 +21,8 @@ entity ringbuffer is
 		memclk		: in std_logic; -- Memory clock
 		sample_clk	: in std_logic; -- Sample clock ("large cycle" clock)
 
+		reset       : in std_logic; -- Resets the addresses
+
 		-- Data and address I/O for using the buffer as output buffer:
 		b_data_in     : in  std_logic_vector(data_width - 1 downto 0);    -- B data input
 		b_data_out    : out std_logic_vector(data_width - 1 downto 0);    -- B data output
@@ -46,7 +48,7 @@ architecture behaviour of ringbuffer is
 	end component;
 
 	type memory_array is array(0 to buffer_size) of std_logic_vector(data_width - 1 downto 0);
-	signal memory			: memory_array;
+	signal memory			: memory_array := (others => (others => '0'));
 
 	signal a_address		: std_logic_vector(address_width - 1 downto 0) := (others => '0');	--Actual address as A-buffer.
 	signal b_address		: std_logic_vector(address_width - 1 downto 0) := (others => '0');	--Actual address as B-buffer.
@@ -80,7 +82,7 @@ begin
 	a_base_inc : adder
 		port map(
 			a => a_base_address,
-			b => x"0001",
+			b => std_logic_vector(to_unsigned(window_size, 16)),
 			c => '0',
 			result => a_incremented
 		);
@@ -88,15 +90,24 @@ begin
 	b_base_inc : adder
 		port map(
 			a => b_base_address,
-			b => x"0001",
+			b => std_logic_vector(to_unsigned(window_size, 16)),
 			c => '0',
 			result => b_incremented
 		);
 
 	-- Switch the buffer pointers according to the buffer mode:
-	buffer_switch: process(sample_clk, mode)
+	buffer_switch: process(sample_clk, mode, reset)
 	begin
-		if rising_edge(sample_clk) then
+		if reset = '1' then
+			if mode = NORMAL_MODE then
+				a_base_address <= x"0000";
+				b_base_address <= std_logic_vector(to_unsigned(window_size, b_base_address'length));
+				-- b_base_address <= std_logic_vector(to_unsigned(buffer_size / 2, b_base_address'length));
+			else
+				a_base_address <= x"0000";
+				b_base_address <= std_logic_vector(to_unsigned(window_size, b_base_address'length));
+			end if;
+		elsif rising_edge(sample_clk) then
 			case mode is
 				when NORMAL_MODE =>
 					b_base_address	<= a_base_address;
@@ -108,7 +119,7 @@ begin
 		end if;
 	end process;
 
-	-- Update the memory, insert stuff here relating to the buffer windows and pointers:
+	-- Read/write memory:
 	memory_process: process(memclk, b_we)
 	begin
 		if rising_edge(memclk) then

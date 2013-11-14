@@ -34,7 +34,7 @@ architecture testbench of tb_toplevel is
 
 	-- FPGA clock, 60 MHz:
 	signal fpga_clk : std_logic;
-	signal clk_period : time := 16.6 ns;
+	constant clk_period : time := 16.6 ns;
 
 	-- EBI signals:
 	signal ebi_address : std_logic_vector(22 downto 0) := (others => '0');
