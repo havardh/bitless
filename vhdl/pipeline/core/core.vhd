@@ -238,7 +238,6 @@ architecture behaviour of core is
     signal ex_reg_2_addr        : std_logic_vector( reg_addr_size-1 downto 0);
    
     -- control signals
-    signal ex_do_branch         : std_logic;
     signal ex_stop_core_signal  : std_logic;
     signal ex_alu_op            : alu_operation;
     signal ex_reg_we            : register_write_enable;
@@ -337,7 +336,7 @@ begin
     begin
         if rising_edge(clk) then
             if (id_stop_processor = '1' or restart_bubble = '1' 
-            or mem_do_branch = '1' or ex_do_branch = '1') then
+            or do_branch = '1' or mem_do_branch = '1') then
                 id_instruction <= (others => '0');
             else
                 id_instruction <= instruction_data;
@@ -453,7 +452,6 @@ begin
 			else
                 ex_reg_2_data <= mem_fw_2;
 			end if;
-            ex_do_branch        <= mem_do_branch;
             ex_reg_1_data       <= mem_fw_1;
             ex_imm_value        <= mem_imm_value;
             ex_mem_slct         <= mem_mem_slct;
