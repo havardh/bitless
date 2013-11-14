@@ -62,12 +62,12 @@ architecture behaviour of core is
         );
     end component;
     --Pipeline registers for stage 1
-    signal pc_reg           : std_logic_vector(reg_data_size-1 downto 0);
-    signal pc_inc           : std_logic_vector(reg_data_size-1 downto 0);
+    signal pc_reg           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '1');
+    signal pc_inc           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '0');
     signal pc_we            : std_logic;
     signal proc_finished_reg    : std_logic;
     
-    signal branch_enable    : std_logic;
+    signal restart_bubble   : std_logic;
 	signal do_branch        : std_logic;
     signal branch_target    : std_logic_vector(9 downto 0);
     
@@ -76,7 +76,7 @@ architecture behaviour of core is
         port (  
             opt_code            : in    std_logic_vector (5 downto 0);
 		      
-				stop_core       : out STD_LOGIC;
+			stop_core           : out STD_LOGIC;
             alu_op              : out alu_operation;
             reg_write_e         : out register_write_enable;
             wb_src              : out wb_source;
@@ -113,10 +113,10 @@ architecture behaviour of core is
 	signal id_instruction           : std_logic_vector(instruct_data_size-1 downto 0);
     -- data signals
     signal id_imm_value         : std_logic_vector(memory_data_size-1 downto 0);
-	 signal id_branch_flags     : std_logic_vector(3 downto 0);
-	 signal id_reg_1_data       : std_logic_vector(reg_data_size-1 downto 0);
-	 signal id_reg_1b_data      : std_logic_vector(reg_data_size-1 downto 0);
-	 signal id_reg_2_data       : std_logic_vector(reg_data_size-1 downto 0);
+	signal id_branch_flags     : std_logic_vector(3 downto 0);
+    signal id_reg_1_data       : std_logic_vector(reg_data_size-1 downto 0);
+	signal id_reg_1b_data      : std_logic_vector(reg_data_size-1 downto 0);
+	signal id_reg_2_data       : std_logic_vector(reg_data_size-1 downto 0);
     
     -- addr signals
     signal id_reg_1_addr        : std_logic_vector( reg_addr_size-1 downto 0);
@@ -124,6 +124,7 @@ architecture behaviour of core is
     signal id_spec_addr         : std_logic_vector( reg_addr_size-1 downto 0);
     
     -- control signals
+    signal id_branch_enable     : std_logic;
     signal id_stop_core_signal  : std_logic;
     signal id_bubble            : std_logic;
     signal id_alu_op            : alu_operation;
@@ -171,6 +172,7 @@ architecture behaviour of core is
     signal mem_reg_2_addr       : std_logic_vector( reg_addr_size-1 downto 0);
     
     -- control signals
+    signal mem_branch_enable    : std_logic;
     signal mem_stop_core_signal : std_logic;
     signal mem_alu_op           : alu_operation;
     signal mem_reg_we           : register_write_enable;
@@ -292,9 +294,9 @@ begin
 		flags	=> open
     );
 	 
-	 evaluate_branch : process(branch_enable, wb_flags, id_branch_flags)
+	 evaluate_branch : process(id_branch_enable, wb_flags, id_branch_flags)
 	 begin
-        if (branch_enable = '1') then
+        if (id_branch_enable = '1') then
 		      if (id_branch_flags(3) = '1' and wb_flags.zero = '1')
 				or (id_branch_flags(2) = '1' and wb_flags.carry ='1')
 				or (id_branch_flags(1) = '1' and wb_flags.overflow = '1')
@@ -312,10 +314,15 @@ begin
     pc : process(clk)
     begin
         if rising_edge(clk) then
-            if do_branch = '1' then
+            if id_stop_processor = '1' then
+                pc_reg <= (others => '0');
+                restart_bubble <= '1';
+            elsif do_branch = '1' then
                 pc_reg <= ext(branch_target, instruct_addr_size);
+                restart_bubble <= '0';
             else
                 pc_reg <= pc_inc;
+                restart_bubble <= '0';
             end if;
         end if;
     end process;
@@ -325,7 +332,7 @@ begin
     pipeline_if_id_reg : process(clk)
     begin
         if rising_edge(clk) then
-            if (id_stop_processor = '1') then
+            if (id_stop_processor = '1' or restart_bubble = '1') then
                 id_instruction <= (others => '0');
             else
                 id_instruction <= instruction_data;
@@ -348,8 +355,8 @@ begin
         output_write_enable => id_output_we,
         add_imm				=> id_add_imm,
         load_const          => id_load_const,
-        branch_enable       => branch_enable
-    );
+        branch_enable       => id_branch_enable
+        );
     
     regfile : register_file
     port map(
@@ -363,9 +370,9 @@ begin
 
         write_reg_enb   => wb_reg_we,
 
-        reg_1_data      => mem_reg_1_data,
-        reg_1b_data     => mem_reg_1b_data,
-        reg_2_data      => mem_reg_2_data
+        reg_1_data      => id_reg_1_data,
+        reg_1b_data     => id_reg_1b_data,
+        reg_2_data      => id_reg_2_data
     );
 
     
@@ -378,6 +385,11 @@ begin
     pipeline_id_mem_reg : process(clk)
     begin
         if rising_edge(clk) then 
+        
+            mem_reg_1_data  <= id_reg_1_data;
+            mem_reg_1b_data <= id_reg_1b_data;
+            mem_reg_2_data  <= id_reg_2_data;
+            
             mem_imm_value   <= id_imm_value;    
             mem_reg_1_addr  <= id_reg_1_addr;
             mem_reg_2_addr  <= id_reg_2_addr;
