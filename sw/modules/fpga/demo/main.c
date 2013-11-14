@@ -74,11 +74,13 @@ void read_toplevel(void) {
     FPGA_ControlRegister reg = FPGA_GetControlRegister();
 
     char toplevel[STR_BUFFER];
-    sprintf(toplevel, " ");
+    sprintf(toplevel, "Toplevel\n\r");
+    sprintf(toplevel, "Reset: %d\n\r", (int)reg.reset);
+    sprintf(toplevel, "Pipelines: %d\n\r", (int)reg.pipelines);
 }
 
 void write_toplevel(void) {
-    
+
 }
 
 void read_pipeline(void) {

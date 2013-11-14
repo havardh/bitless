@@ -11,25 +11,25 @@
 #define CORE_DEVICE_SIZE 		0x10000
 #define CORE_ADDRESS_SIZE       0x4000
 
-// conf is defined in the tests
-#define PIPELINE0_START         (conf.baseAddress + 0x000000) // 1 00 0000 00 00000000000000
-#define CORE0_CONTROL           (conf.baseAddress + 0x020000) // 1 00 0010 00 00000000000000
-#define CORE0_IMEM              (conf.baseAddress + 0x024000) // 1 00 0010 01 00000000000000
-#define CORE0_INPUT             (conf.baseAddress + 0x028000) // 1 00 0010 10 00000000000000 
-#define CORE0_OUTPUT            (conf.baseAddress + 0x02C000) // 1 00 0010 11 00000000000000
-#define CORE1_CONTROL           (conf.baseAddress + 0x030000) // 1 00 0011 00 00000000000000
-#define CORE1_IMEM              (conf.baseAddress + 0x034000) // 1 00 0011 01 00000000000000
-#define CORE1_INPUT             (conf.baseAddress + 0x038000) // 1 00 0011 10 00000000000000
-#define CORE1_OUTPUT            (conf.baseAddress + 0x03C000) // 1 00 0011 11 00000000000000
+// conf is defined in the tests                                  T PP DDDD CC AAAAAAAAAAAAAA
+#define PIPELINE0_START         (conf.baseAddress + 0x000000) // 0 00 0000 00 00000000000000
+#define CORE0_CONTROL           (conf.baseAddress + 0x020000) // 0 00 0010 00 00000000000000
+#define CORE0_IMEM              (conf.baseAddress + 0x024000) // 0 00 0010 01 00000000000000
+#define CORE0_INPUT             (conf.baseAddress + 0x028000) // 0 00 0010 10 00000000000000 
+#define CORE0_OUTPUT            (conf.baseAddress + 0x02C000) // 0 00 0010 11 00000000000000
+#define CORE1_CONTROL           (conf.baseAddress + 0x030000) // 0 00 0011 00 00000000000000
+#define CORE1_IMEM              (conf.baseAddress + 0x034000) // 0 00 0011 01 00000000000000
+#define CORE1_INPUT             (conf.baseAddress + 0x038000) // 0 00 0011 10 00000000000000
+#define CORE1_OUTPUT            (conf.baseAddress + 0x03C000) // 0 00 0011 11 00000000000000
 
-#define PIPELINE1_START         (conf.baseAddress + 0x100000) // 1 01 0000 00 00000000000000
-#define CORE4_CONTROL           (conf.baseAddress + 0x120000) // 1 01 0010 00 00000000000000
-#define CORE4_IMEM              (conf.baseAddress + 0x124000) // 1 01 0010 01 00000000000000
-#define CORE4_INPUT             (conf.baseAddress + 0x128000) // 1 01 0010 10 00000000000000
-#define CORE4_OUTPUT            (conf.baseAddress + 0x12C000) // 1 01 0010 11 00000000000000
-#define CORE7_CONTROL           (conf.baseAddress + 0x150000) // 1 01 0101 00 00000000000000
-#define CORE7_IMEM              (conf.baseAddress + 0x154000) // 1 01 0101 01 00000000000000
-#define CORE7_INPUT             (conf.baseAddress + 0x158000) // 1 01 0101 10 00000000000000
-#define CORE7_OUTPUT            (conf.baseAddress + 0x15C000) // 1 01 0101 11 00000000000000
+#define PIPELINE1_START         (conf.baseAddress + 0x100000) // 0 01 0000 00 00000000000000
+#define CORE4_CONTROL           (conf.baseAddress + 0x120000) // 0 01 0010 00 00000000000000
+#define CORE4_IMEM              (conf.baseAddress + 0x124000) // 0 01 0010 01 00000000000000
+#define CORE4_INPUT             (conf.baseAddress + 0x128000) // 0 01 0010 10 00000000000000
+#define CORE4_OUTPUT            (conf.baseAddress + 0x12C000) // 0 01 0010 11 00000000000000
+#define CORE7_CONTROL           (conf.baseAddress + 0x150000) // 0 01 0101 00 00000000000000
+#define CORE7_IMEM              (conf.baseAddress + 0x154000) // 0 01 0101 01 00000000000000
+#define CORE7_INPUT             (conf.baseAddress + 0x158000) // 0 01 0101 10 00000000000000
+#define CORE7_OUTPUT            (conf.baseAddress + 0x15C000) // 0 01 0101 11 00000000000000
 
 #endif /* _FPGA_ADDRESSES_H_ */

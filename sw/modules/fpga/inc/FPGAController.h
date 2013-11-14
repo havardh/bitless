@@ -9,6 +9,7 @@
 typedef struct {
     uint32_t pos;
     uint32_t bufferSize;
+    uint16_t *address;
     uint16_t *inputBuffer;
     uint16_t *outputBuffer;
     uint32_t imemSize;
@@ -41,6 +42,29 @@ typedef struct {
     uint32_t pipelines;
 } FPGA_ControlRegister;
 
+typedef struct {
+    uint16_t firstCore;  /* First core with access to constant memory */
+    uint16_t secondCore; /* Second core with access to constant memory */
+    uint16_t numCores;
+    bool stopMode;
+    bool reset;
+} FPGA_PipelineControlRegister;
+
+typedef struct {
+    uint32_t imemSize;
+    bool finished;
+    bool stopMode;
+    bool reset;
+} FPGA_CoreControlRegister;
+
+#define PIPELINE_CTRL_REG_DEFAULT                   \
+{   0, /* firstCore */                              \
+    0, /* secondCore */                             \
+    0, /* numCores */                               \
+    false, /* stopMode */                           \
+    false, /* reset */                              \
+}
+
 #define FPGA_CTRL_REG_DEFAULT                       \
 {   false,  /* Reset, write only */                 \
     0,      /* Number of pipelines, read only */    \
@@ -53,14 +77,13 @@ uint16_t* FPGA_GetBaseAddress(void);
 FPGA_ControlRegister FPGA_GetControlRegister(void);
 void FPGA_SetControlRegister(FPGA_ControlRegister controlRegister);
 void FPGA_Reset(void);
-// void FPGA_SetLeds(bool led0, bool led1);
-// void FPGA_SetBlinkMode(bool blinkMode);
-// uint32_t FPGA_GetButtonStatus(void);
 
 /* FPGA Pipeline methods */
 uint16_t* FPGAPipeline_GetInputBuffer(FPGA_Pipeline *pipeline);
 uint16_t* FPGAPipeline_GetOutputBuffer(FPGA_Pipeline *pipeline);
 FPGA_Core* FPGAPipeline_GetCore(FPGA_Pipeline *pipeline, uint32_t core);
+FPGA_PipelineControlRegister FPGAPipeline_GetControlRegister(FPGA_Pipeline *pipeline);
+void FPGAPipeline_SetControlRegister(FPGA_Pipeline *pipeline, FPGA_PipelineControlRegister reg);
 
 /* FPGA Core methods */
 void FPGACore_GetProgram(FPGA_Core *core, uint16_t *program);

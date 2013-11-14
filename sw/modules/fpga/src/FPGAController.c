@@ -70,6 +70,36 @@ uint16_t* FPGAPipeline_GetOutputBuffer(FPGA_Pipeline *pipeline) {
     return core->outputBuffer;   
 }
 
+FPGA_PipelineControlRegister FPGAPipeline_GetControlRegister(FPGA_Pipeline *pipeline) {
+    uint16_t regVal = *(pipeline->address);
+
+    FPGA_PipelineControlRegister pReg;
+    pReg.firstCore  = regVal & 0xf000;
+    pReg.secondCore = regVal & 0x0f00;
+    pReg.stopMode   = BIT_HIGH(regVal, 7);
+    pReg.reset      = BIT_HIGH(regVal, 6);
+    pReg.numCores   = regVal & 0x000f;
+
+    return pReg;
+}
+
+void FPGAPipeline_SetControlRegister(FPGA_Pipeline *pipeline, FPGA_PipelineControlRegister reg) {
+    uint16_t regVal = 0x0000;
+
+    if (reg.reset)
+        regVal = 0xffff;
+
+    // regVal +=  0xffff & reg.firstCore;
+    // regVal +=  0xffff & reg.secondCore;
+    // if (reg.stopMode)
+    //     regVal += 0xffff & 128;
+
+    // if (reg.reset)
+    //     regVal += 0xffff & 64;
+    
+    *(pipeline->address) = regVal;
+}
+
 /*******************************************
 * FPGA Core methods                        *
 *******************************************/
@@ -110,6 +140,18 @@ void FPGACore_SetControls(FPGA_Core *core, uint16_t *controls, uint32_t controlS
     }
 }
 
+FPGA_CoreControlRegister FPGACore_GetControlRegister(FPGA_Core *core) {
+    uint16_t regVal = *(core->address);
+
+    FPGA_CoreControlRegister reg;
+    reg.imemSize  = regVal & 0xf800;
+    reg.finished   = BIT_HIGH(regVal, 2);
+    reg.stopMode   = BIT_HIGH(regVal, 1);
+    reg.reset      = BIT_HIGH(regVal, 0);
+
+    return reg;
+}
+
 /*******************************************
 * FPGA Setup and teardown                  *
 *******************************************/
@@ -146,6 +188,7 @@ void FPGA_Core_New(FPGA_Core *core, uint32_t corePos, uint32_t pipelinePos, FPGA
     uint16_t *pipelineAddress = FPGA_GetPipeline(pipelinePos)->address;
     uint16_t *coreAddress = (pipelineAddress + config->coreDeviceAddress + corePos * config->coreDeviceSize);
     
+    core->address = coreAddress;
     core->ctrlmem = coreAddress;
     core->imem = (core->ctrlmem + config->coreAddressSize);
     core->inputBuffer = (core->imem + config->coreAddressSize);
