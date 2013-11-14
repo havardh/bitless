@@ -178,6 +178,7 @@ architecture behaviour of pipeline is
 	signal core_control_registers : core_control_register_array(0 to NUMBER_OF_CORES - 1) :=
 		(others => (reset => '1', stopmode => '1', instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)),
 			finished => '0'));
+
 begin
 	-- Zero-extended internal signals:
 	internal_dest_address <= b"00" & int_address.address;
@@ -338,43 +339,43 @@ begin
 			);
 
 		-- Core:
---		processor_reset(i) <= core_control_registers(i).reset or control_register.reset;
---		processor_stop(i) <= core_control_registers(i).stopmode or control_register.stopmode;
---		processor_core: core
---			port map(
---				clk => clk,
---				reset => processor_reset(i),
---				pl_stop_core => processor_stop(i),
---				proc_finished => core_control_registers(i).finished,
---				constant_addr => constmem_address_array(i),
---				constant_data => constmem_data_array(i),
---				instruction_addr => instr_read_address(i),
---				instruction_data => instr_read_data(i),
---				input_read_addr => input_read_address(i - 1),
---				input_read_data => input_read_data(i - 1),
---				output_write_addr => output_write_address(i),
---				output_write_data => output_write_data(i),
---				output_we => output_write_enable(i),
---				output_read_addr => output_read_address(i),
---				output_read_data => output_read_data(i)
---			);
---
---		-- Output buffer:
---		output_buffer: ringbuffer
---			generic map(data_width => 32, address_width => 16)
---			port map(
---				clk => clk,
---				memclk => memory_clk,
---				sample_clk => sample_clk,
---				reset => '0',
---				b_data_in => output_write_data(i),
---				b_data_out => output_read_data(i),
---				b_off_address => output_write_address(i),
---				b_we => output_write_enable(i),
---				a_data_out => input_read_data(i),
---				a_off_address => input_read_address(i),
---				mode => RING_MODE
---			);
+		processor_reset(i) <= core_control_registers(i).reset or control_register.reset;
+		processor_stop(i) <= core_control_registers(i).stopmode or control_register.stopmode;
+		processor_core: core
+			port map(
+				clk => clk,
+				reset => processor_reset(i),
+				pl_stop_core => processor_stop(i),
+				proc_finished => core_control_registers(i).finished,
+				constant_addr => constmem_address_array(i),
+				constant_data => constmem_data_array(i),
+				instruction_addr => instr_read_address(i),
+				instruction_data => instr_read_data(i),
+				input_read_addr => input_read_address(i - 1),
+				input_read_data => input_read_data(i - 1),
+				output_write_addr => output_write_address(i),
+				output_write_data => output_write_data(i),
+				output_we => output_write_enable(i),
+				output_read_addr => output_read_address(i),
+				output_read_data => output_read_data(i)
+			);
+
+		-- Output buffer:
+		output_buffer: ringbuffer
+			generic map(data_width => 32, address_width => 16)
+			port map(
+				clk => clk,
+				memclk => memory_clk,
+				sample_clk => sample_clk,
+				reset => '0',
+				b_data_in => output_write_data(i),
+				b_data_out => output_read_data(i),
+				b_off_address => output_write_address(i),
+				b_we => output_write_enable(i),
+				a_data_out => input_read_data(i),
+				a_off_address => input_read_address(i),
+				mode => RING_MODE
+			);
 	end generate;
 
 end behaviour;

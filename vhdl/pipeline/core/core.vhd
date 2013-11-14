@@ -25,7 +25,7 @@ entity core is
 		pl_stop_core        : in std_logic;	
         reset               : in std_logic; -- Resets the processor core
         
-		  proc_finished       : out std_logic := '0';
+		proc_finished       : out std_logic := '0';
         -- Connection to instruction memory:
         instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
         instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
@@ -267,7 +267,7 @@ begin
         if rising_edge(clk) then
             if reset = '1' then
                 proc_finished_reg <= '0';
-                id_stop_processor_reg <= '0';
+                id_stop_processor_reg <= '1';
             elsif wb_stop_core_signal = '1' or pl_stop_core = '1' then
                 proc_finished_reg <= '1';
                 id_stop_processor_reg <= '1';
@@ -276,7 +276,7 @@ begin
                 id_stop_processor_reg <= '1';
             else
                 proc_finished_reg <= proc_finished_reg;
-                id_stop_processor_reg <= id_stop_processor_reg;
+                id_stop_processor_reg <= '0';
             end if;
         end if;
         proc_finished <= proc_finished_reg;
