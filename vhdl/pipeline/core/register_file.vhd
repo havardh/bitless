@@ -53,7 +53,7 @@ begin
 	-- Register write process
 	write_registers: process(clk)
 	begin
-		if rising_edge(clk) then
+		if falling_edge(clk) then
 			if write_reg_enb /= REG_DONT_WRITE then
 				regs(to_integer(unsigned(write_addr_int))) <= write_data_int;		
 			end if;
