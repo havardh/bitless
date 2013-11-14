@@ -125,165 +125,165 @@ BEGIN
 		cpu_input_register_1  <= "0000000000000001";
       cpu_input_register_2  <= "0000000000000001";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0002" report "ADD not working!";
+		assert result = x"00000002" report "ADD not working!";
 		
 		operation 				 <= ALU_ADD;
 		cpu_input_register_1  <= "1111111111111111";
       cpu_input_register_2  <= "0000000000000010";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0001" report "Result of xFFFF + 2 is not 1!";
+		assert result = x"00000001" report "Result of xFFFF + 2 is not 1!";
 		assert flags.overflow = '1' report "Overflow not set";
 		
 		operation 				 <= ALU_SUB;
 		cpu_input_register_1  <= "0111111111111111";
       cpu_input_register_2  <= "0000000000000010";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"7FFD" report "SUB not working";
+		assert result = x"00007FFD" report "SUB not working";
 		
 		operation 				 <= ALU_OR;
 		cpu_input_register_1  <= "0101010101010101";
       cpu_input_register_2  <= "1010101010101010";
 		wait for cpu_clk_period/2;
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"FFFF" report "OR not working!";
+		assert result = x"FFFFFFFF" report "OR not working!";
 		
 		operation 				 <= ALU_OR;
 		cpu_input_register_1  <= "0000000000001100";
       cpu_input_register_2  <= "0000000000000110";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"000E" report "OR not working!";
+		assert result = x"0000000E" report "OR not working!";
 		
 		operation 				 <= ALU_MUL;
 		cpu_input_register_1  <= "0000000000000001";
       cpu_input_register_2  <= "0000000000000001";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0001" report "MUL not working!";
+		assert result = x"00000001" report "MUL not working!";
 	
 		operation 				 <= ALU_MUL;
 		cpu_input_register_1  <= "0000000000000111";
       cpu_input_register_2  <= "0000000000000101";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0023" report "MUL not working!";
+		assert result = x"00000023" report "MUL not working!";
 		
 		operation 				 <= ALU_MUL;
 		cpu_input_register_1  <= "1111111111111001";
       cpu_input_register_2  <= "0000000000000101";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"FFDD" report "MUL not working!";
+		assert result = x"FFFFFFDD" report "MUL not working!";
 		
 		operation 				 <= ALU_AND;
 		cpu_input_register_1  <= "1111111111111001";
       cpu_input_register_2  <= "0000000000000101";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0001" report "AND isn't working";
+		assert result = x"00000001" report "AND isn't working";
 		
 		operation 				 <= ALU_AND;
 		cpu_input_register_1  <= "1111111111111001";
       cpu_input_register_2  <= "0000000000000010";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0000" report "AND isn't working";
+		assert result = x"00000000" report "AND isn't working";
 		assert flags.zero = '1' report "AND zero flag isn't working";
 		
 		operation 				 <= ALU_AND;
 		cpu_input_register_1  <= "1111111111111001";
       cpu_input_register_2  <= "1000000000000010";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"8000" report "AND isn't working";
+		assert result = x"FFFF8000" report "AND isn't working";
 		assert flags.negative = '1' report "AND negative flag isn't working";
 		
 		operation 				 <= ALU_XOR;
 		cpu_input_register_1  <= "0000000110011001";
       cpu_input_register_2  <= "0000000110011010";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0003" report "XOR isn't working";
+		assert result = x"00000003" report "XOR isn't working";
 		assert flags.negative = '0' report "XOR negative flag isn't working";
 		
 		operation 				 <= ALU_XOR;
 		cpu_input_register_1  <= "0000000110011001";
       cpu_input_register_2  <= "1000000110011010";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"8003" report "XOR isn't working";
+		assert result = x"FFFF8003" report "XOR isn't working";
 		assert flags.negative = '1' report "XOR negative flag isn't working";
 		
 		operation 				 <= ALU_NAND;
 		cpu_input_register_1  <= "0000000011000000";
       cpu_input_register_2  <= "1111111111111111";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "1111111100111111" report "NAND isn't working";
+		assert result = "11111111111111111111111100111111" report "NAND isn't working";
 		
 		operation 				 <= ALU_NAND;
 		cpu_input_register_1  <= "0000000000000011";
       cpu_input_register_2  <= "1111111111111111";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"FFFC" report "NAND isn't working";
+		assert result = x"FFFFFFFC" report "NAND isn't working";
 		
 		operation 				 <= ALU_NOR;
 		cpu_input_register_1  <= "0101010101010101";
       cpu_input_register_2  <= "1010101010101010";
 		wait for cpu_clk_period/2;
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0000" report "NOR not working!";
+		assert result = x"00000000" report "NOR not working!";
 		
 		operation 				 <= ALU_NOR;
 		cpu_input_register_1  <= "0000000000001100";
       cpu_input_register_2  <= "0000000000000110";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"FFF1" report "NOR not working!";
+		assert result = x"FFFFFFF1" report "NOR not working!";
 		
 		operation 				 <= ALU_MOVE;
 		cpu_input_register_1  <= "0000000000001100";
       cpu_input_register_2  <= "0000000000000110";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"000C" report "MOVE not working!";
+		assert result = x"0000000C" report "MOVE not working!";
 		
 		operation 				 <= ALU_MOVE;
       cpu_input_register_1  <= "0000000000000110";
 		cpu_input_register_2  <= "0000000000001100";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0006" report "MOVE not working!";
+		assert result = x"00000006" report "MOVE not working!";
 		
 		
 		operation 				 <= ALU_MOVE_NEGATIVE;
       cpu_input_register_1  <= "0000000000000110";
 		cpu_input_register_2  <= "0000000000001100";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"FFF9" report "MOVE_NEG not working!";
+		assert result = x"FFFFFFF9" report "MOVE_NEG not working!";
 		
 		operation 				 <= ALU_MOVE_NEGATIVE;
 		cpu_input_register_1  <= "0000000000001100";
       cpu_input_register_2  <= "0000000000000110";
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"FFF3" report "MOVE_NEG not working!";
+		assert result = x"FFFFFFF3" report "MOVE_NEG not working!";
 
 		operation				<= ALU_FIXED_TO_FLOAT;
 		cpu_input_register_1	<= x"0002"; --initial value 2 converted
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "0100000000000000" report "Fix_to_float not working!";
+		assert result = "00000000000000000100000000000000" report "Fix_to_float not working!";
 		
 		operation				<= ALU_FIXED_TO_FLOAT;
 		cpu_input_register_1	<= "0000011001100000"; --random value which converts fine but I haven't calcualted which number it actually is
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "0110011001100000" report "Fix_to_float not working!";
+		assert result = "00000000000000000110011001100000" report "Fix_to_float not working!";
 		
 		operation				<= ALU_FIXED_TO_FLOAT;
 		cpu_input_register_1	<= "1111111111110011"; --random negative number which also converts fine
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "1100101010000000" report "Fix_to_float not working!";
+		assert result = "11111111111111111100101010000000" report "Fix_to_float not working!";
 
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= "0100000000000000"; --initial 2 converted back
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0002" report "Float_to_fix not working!";
+		assert result = x"00000002" report "Float_to_fix not working!";
 		
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= "0110011001100000"; --random number converted back
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "0000011001100000" report "Float_to_fix not working!";
+		assert result = "00000000000000000000011001100000" report "Float_to_fix not working!";
 		
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= "1100101010000000"; --random negative number converted back
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "1111111111110011" report "Float_to_fix not working!";
+		assert result = "11111111111111111111111111110011" report "Float_to_fix not working!";
 		
 		--initial values for fp tests. 3 and 5. fp values stored in helper1 and 2
 		operation				<= ALU_FIXED_TO_FLOAT;
@@ -307,7 +307,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"000F" report "fp_mul not working!";
+		assert result = x"0000000F" report "fp_mul not working!";
 		
 		--testing fp sub 3-5=-2
 		wait for cpu_clk_period;
@@ -320,7 +320,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"FFFE" report "fp_sub not working!";
+		assert result = x"FFFFFFFE" report "fp_sub not working!";
 		
 		--testing fp add 3+5=8
 		wait for cpu_clk_period;
@@ -333,7 +333,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0008" report "fp_add not working!";
+		assert result = x"00000008" report "fp_add not working!";
 		
 		--initial values for fp tests. 117 and 12. fp values stored in helper1 and 2
 		operation				<= ALU_FIXED_TO_FLOAT;
@@ -357,7 +357,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "0000010101111100" report "fp_mul not working!";
+		assert result = "00000000000000000000010101111100" report "fp_mul not working!";
 		
 		--testing fp sub 117-12=105
 		wait for cpu_clk_period;
@@ -370,7 +370,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0069" report "fp_sub not working!";
+		assert result = x"00000069" report "fp_sub not working!";
 		
 		--testing fp add 117+12=129
 		wait for cpu_clk_period;
@@ -383,7 +383,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0081" report "fp_add not working!";
+		assert result = x"00000081" report "fp_add not working!";
 		
 		--initial values for fp tests. 316 and -19. fp values stored in helper1 and 2
 		operation				<= ALU_FIXED_TO_FLOAT;
@@ -407,7 +407,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "1111000100110000" report "fp_mul not working!";
+		assert result = "11111111111111111111000100110000" report "fp_mul not working!";
 		
 		--testing fp sub 316-(-12)=328
 		wait for cpu_clk_period;
@@ -420,7 +420,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0148" report "fp_sub not working!";
+		assert result = x"00000148" report "fp_sub not working!";
 		
 		--testing fp add 316+(-12)=304
 		wait for cpu_clk_period;
@@ -433,7 +433,7 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0130" report "fp_add not working!";
+		assert result = x"00000130" report "fp_add not working!";
 
 		--initial values for fp tests. 3 and 5. fp values stored in helper1 and 2
 		operation				<= ALU_FIXED_TO_FLOAT;
@@ -447,7 +447,6 @@ BEGIN
 		helper2 <= result;
 		wait for cpu_clk_period;
 		
-		--FP_MAC
 		--testing fp mac B = B + A*0 (C = 0)
 		operation 				 <= FP_MAC;
 		cpu_input_register_1  <= helper1(15 downto 0);
@@ -517,187 +516,9 @@ BEGIN
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
 		assert result(15 downto 0) = x"0006" report "fp mac not working";
-		--conclusion. It rounds to the closest integer. If exaclt half it is random		
-		--FP_MAD
-		--testing fp mad A = A + B*0 (D = 0)
-		operation 				 <= FP_MAD;
-		cpu_input_register_1  <= helper1(15 downto 0);
-		cpu_input_register_2  <= helper2(15 downto 0);
-		cpu_input_const		 <= x"00000000";
-		cpu_input_const_w		 <= '1';
-		wait for cpu_clk_period*2;
-		assert result(15 downto 0) = helper1(15 downto 0) report "fp mad not working";
+		--conclusion. It rounds to the closest integer. It rounds down if precisely half
 		
-		--testing fp mac A = A + B*B (D = B)
-		operation 				 			<= FP_MAD;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(31 downto 16)	<= helper2(15 downto 0);
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
 		
-		operation				<= ALU_FLOAT_TO_FIXED;
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"001C" report "fp mad not working";
-		
-		--testing fp mac A = A + B*A (D = A)
-		operation 				 			<= FP_MAD;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(31 downto 16)	<= helper1(15 downto 0);
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED;
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0012" report "fp mad not working";
-		
-		--testing fp mac A = A + B*0.5 (D = 0.5)
-		operation 				 			<= FP_MAD;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(31 downto 16)	<= "0011100000000000"; --0.5
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED; --this rounds 5,5 up to 6
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0006" report "fp mad not working";
-		
-		--testing fp mac A = A + B*0.25 (D = 0.25)
-		operation 				 			<= FP_MAD;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(31 downto 16)	<= "0011010000000000"; --0.25
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED; --this rounds 5,5 up to 6
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0004" report "fp mad not working";
-		
-		--FP_MSC B -= A*C'
-		--testing fp msc B = B - A*0 (C = 0)
-		operation 				 <= FP_MSC;
-		cpu_input_register_1  <= helper1(15 downto 0);
-		cpu_input_register_2  <= helper2(15 downto 0);
-		cpu_input_const		 <= x"00000000";
-		cpu_input_const_w		 <= '1';
-		wait for cpu_clk_period*2;
-		assert result(15 downto 0) = helper2(15 downto 0) report "fp msc not working";
-		
-		--testing fp msc B = B - A*B (C = B)
-		operation 				 			<= FP_MSC;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(15 downto 0)	<= helper2(15 downto 0);
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED;
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "1111111111110110" report "fp msc not working";
-		
-		--testing fp msc B = B - A*A (C = A)
-		operation 				 			<= FP_MSC;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(15 downto 0)	<= helper1(15 downto 0);
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED;
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = "1111111111111100" report "fp msc not working";
-		
-		--testing fp msc B = B - A*0.5 (C = 0.5)
-		operation 				 			<= FP_MSC;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(15 downto 0)	<= "0011100000000000"; --0.5
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED; --this rounds 3,5 up to 4
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0004" report "fp msc not working";
-		
-		--testing fp msc B = B - A*0.25 (C = 0.25)
-		operation 				 			<= FP_MSC;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(15 downto 0)	<= "0011010000000000"; --0.25
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED; 
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0004" report "fp msc not working";
-		
-		--FP_MSD A -= B*D
-		--testing fp msd A = A - B*0 (D = 0)
-		operation 				 <= FP_MSD;
-		cpu_input_register_1  <= helper1(15 downto 0);
-		cpu_input_register_2  <= helper2(15 downto 0);
-		cpu_input_const		 <= x"00000000";
-		cpu_input_const_w		 <= '1';
-		wait for cpu_clk_period*2;
-		assert result(15 downto 0) = helper1(15 downto 0) report "fp msd not working";
-		
-		--testing fp msd A = A - B*0.5 (D = 0.5)
-		operation 				 			<= FP_MSD;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(31 downto 16)	<= "0011100000000000"; --0.5
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED; --this rounds 0,5 down to 0
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0000" report "fp msd not working";
-		
-		--testing fp msc A = A - B*0.25 (D = 0.25)
-		operation 				 			<= FP_MSD;
-		cpu_input_register_1  			<= helper1(15 downto 0);
-		cpu_input_register_2  			<= helper2(15 downto 0);
-		cpu_input_const(31 downto 16)	<= "0011010000000000"; --0.25
-		cpu_input_const_w		 			<= '1';
-		wait for cpu_clk_period*2;
-		helper3 <= result;
-		wait for cpu_clk_period;
-		
-		operation				<= ALU_FLOAT_TO_FIXED; 
-		cpu_input_register_1	<= helper3(15 downto 0);
-		wait for cpu_clk_period/2;
-		assert result(15 downto 0) = x"0002" report "fp msd not working";
-
 
 		
 
