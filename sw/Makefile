@@ -1,4 +1,4 @@
-####################################################################
+	####################################################################
 # Makefile							   #
 ####################################################################
 
@@ -24,10 +24,13 @@ LST_DIR = lst
 # Change path to the tools according to your system configuration
 # DO NOT add trailing whitespace chars, they do matter !
 WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2012q4
-LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
+# LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
+LINUXCS	   ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
+# /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
 
-LIB=./libs
+LIB=libs
 DIR=.
+#/Users/havard/Documents/Silabs
 
 RMDIRS	   := rm -rf
 RMFILES	   := rm -rf
@@ -109,17 +112,18 @@ override LDFLAGS += -Xlinker -Map=$(LST_DIR)/$(PROJECTNAME).map -mcpu=cortex-m3 
 
 LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
-#-I$(LIB)/kits/EFM32GG_STK3700/config \
-
 INCLUDEPATHS += \
 -I. \
+-I$(DIR)/modules/buttons/inc \
+-I$(DIR)/modules/leds/inc \
+-I$(DIR)/modules/main/inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_DK3700/config \
--I$(LIB)/emdrv/gpiointerrupt/inc \
--I$(DIR)/controllers/main/inc
+-I$(LIB)/kits/EFM32GG_bitless/config \
+-I$(DIR)/modules/programs/inc \
+-I$(LIB)/emdrv/gpiointerrupt/inc
 
 ####################################################################
 # Files								   #
@@ -127,10 +131,6 @@ INCLUDEPATHS += \
 
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_bcc.c \
-$(LIB)/kits/common/bsp/bsp_stk.c \
-$(LIB)/kits/common/bsp/bsp_stk_leds.c \
-$(LIB)/kits/common/bsp/bsp_trace.c \
 $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_cmu.c \
 $(LIB)/emlib/src/em_ebi.c \
@@ -140,7 +140,13 @@ $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-$(DIR)/controllers/main/src/MainController.c \
+$(DIR)/modules/leds/src/bl_leds.c \
+$(DIR)/modules/main/src/MainController.c \
+$(DIR)/modules/buttons/src/bl_buttons.c \
+$(DIR)/modules/programs/src/LiveFilter.c \
+$(DIR)/modules/programs/src/Wavplayer.c \
+$(DIR)/modules/programs/src/StoredFilter.c \
+$(DIR)/modules/programs/src/FPGAProgrammer.c \
 $(PROJECTNAME).c
 
 s_SRC +=
@@ -148,14 +154,11 @@ s_SRC +=
 S_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/GCC/startup_efm32gg.S
 
-
-
 ####################################################################
 # Rules								   #
 ####################################################################
 
 C_FILES = $(notdir $(C_SRC) )
-
 S_FILES = $(notdir $(S_SRC) $(s_SRC) )
 #make list of source paths, sort also removes duplicates
 C_PATHS = $(sort $(dir $(C_SRC) ) )
@@ -172,15 +175,12 @@ vpath %.s $(S_PATHS)
 vpath %.S $(S_PATHS)
 
 # Default build is debug build
-#dbg: 
-#	@echo $(C_FILES)
-
 all:	  debug
 
-debug:	  CFLAGS += -DDEBUG -O0 -g3
+debug:	  CFLAGS += -DDEBUG -O0 -g3 -std=c99
 debug:	  $(EXE_DIR)/$(PROJECTNAME).bin
 
-release:  CFLAGS += -DNDEBUG -O0 -g3
+release:  CFLAGS += -DNDEBUG -O0 -g3 -std=c99
 release:  $(EXE_DIR)/$(PROJECTNAME).bin
 
 # Create objects from C SRC files
