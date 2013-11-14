@@ -1,68 +1,68 @@
 ####################################################################
-# Makefile							   #
+# Makefile								 #
 ####################################################################
 
 .SUFFIXES:				# ignore builtin rules
 .PHONY: all debug release clean
 
 ####################################################################
-# Definitions							   #
+# Definitions								 #
 ####################################################################
 
 DEVICE = EFM32GG990F1024
-PROJECTNAME = copy-file
+PROJECTNAME = wavplayer
 
 OBJ_DIR = build
 EXE_DIR = exe
 LST_DIR = lst
 
 ####################################################################
-# Definitions of toolchain.					   #
-# You might need to do changes to match your system setup	   #
+# Definitions of toolchain.						 #
+# You might need to do changes to match your system setup		 #
 ####################################################################
 
 # Change path to the tools according to your system configuration
 # DO NOT add trailing whitespace chars, they do matter !
-WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2012q4
-LINUXCS	   ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
+WINDOWSCS	 ?= GNU Tools ARM Embedded\4.7 2012q4
+LINUXCS		 ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
 # /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
 
 LIB=/Users/havard/Documents/programmering/c/TDT4295/sw/libs
 DIR=/Users/havard/Documents/programmering/c/TDT4295/sw
 #/Users/havard/Documents/Silabs
 
-RMDIRS	   := rm -rf
-RMFILES	   := rm -rf
-ALLFILES   := /*.*
+RMDIRS		 := rm -rf
+RMFILES		 := rm -rf
+ALLFILES	 := /*.*
 NULLDEVICE := /dev/null
 SHELLNAMES := $(ComSpec)$(COMSPEC)
 
 # Try autodetecting the environment
 ifeq ($(SHELLNAMES),)
-  # Assume we are making on a Linux platform
-  TOOLDIR := $(LINUXCS)
+	# Assume we are making on a Linux platform
+	TOOLDIR := $(LINUXCS)
 else
-  QUOTE :="
-  ifneq ($(COMSPEC),)
-    # Assume we are making on a mingw/msys/cygwin platform running on Windows
-    # This is a convenient place to override TOOLDIR, DO NOT add trailing
-    # whitespace chars, they do matter !
-    TOOLDIR := $(PROGRAMFILES)/$(WINDOWSCS)
-    ifeq ($(findstring cygdrive,$(shell set)),)
-      # We were not on a cygwin platform
-      NULLDEVICE := NUL
-    endif
-  else
-    # Assume we are making on a Windows platform
-    # This is a convenient place to override TOOLDIR, DO NOT add trailing
-    # whitespace chars, they do matter !
-    SHELL      := $(SHELLNAMES)
-    TOOLDIR    := $(ProgramFiles)/$(WINDOWSCS)
-    RMDIRS     := rd /s /q
-    RMFILES    := del /s /q
-    ALLFILES   := \*.*
-    NULLDEVICE := NUL
-  endif
+	QUOTE :="
+	ifneq ($(COMSPEC),)
+		# Assume we are making on a mingw/msys/cygwin platform running on Windows
+		# This is a convenient place to override TOOLDIR, DO NOT add trailing
+		# whitespace chars, they do matter !
+		TOOLDIR := $(PROGRAMFILES)/$(WINDOWSCS)
+		ifeq ($(findstring cygdrive,$(shell set)),)
+			# We were not on a cygwin platform
+			NULLDEVICE := NUL
+		endif
+	else
+		# Assume we are making on a Windows platform
+		# This is a convenient place to override TOOLDIR, DO NOT add trailing
+		# whitespace chars, they do matter !
+		SHELL			 := $(SHELLNAMES)
+		TOOLDIR		 := $(ProgramFiles)/$(WINDOWSCS)
+		RMDIRS		 := rd /s /q
+		RMFILES		 := del /s /q
+		ALLFILES	 := \*.*
+		NULLDEVICE := NUL
+	endif
 endif
 
 # Create directories and do a clean which is compatible with parallell make
@@ -70,11 +70,11 @@ $(shell mkdir $(OBJ_DIR)>$(NULLDEVICE) 2>&1)
 $(shell mkdir $(EXE_DIR)>$(NULLDEVICE) 2>&1)
 $(shell mkdir $(LST_DIR)>$(NULLDEVICE) 2>&1)
 ifeq (clean,$(findstring clean, $(MAKECMDGOALS)))
-  ifneq ($(filter $(MAKECMDGOALS),all debug release),)
-    $(shell $(RMFILES) $(OBJ_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
-    $(shell $(RMFILES) $(EXE_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
-    $(shell $(RMFILES) $(LST_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
-  endif
+	ifneq ($(filter $(MAKECMDGOALS),all debug release),)
+		$(shell $(RMFILES) $(OBJ_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
+		$(shell $(RMFILES) $(EXE_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
+		$(shell $(RMFILES) $(LST_DIR)$(ALLFILES)>$(NULLDEVICE) 2>&1)
+	endif
 endif
 
 CC	= $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-gcc$(QUOTE)
@@ -84,12 +84,12 @@ OBJCOPY = $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-objcopy$(QUOTE)
 DUMP	= $(QUOTE)$(TOOLDIR)/bin/arm-none-eabi-objdump$(QUOTE)
 
 ####################################################################
-# Flags								   #
+# Flags									 #
 ####################################################################
 
 # -MMD : Don't generate dependencies on system header files.
-# -MP  : Add phony targets, useful when a h-file is removed from a project.
-# -MF  : Specify a file to write the dependencies to.
+# -MP	 : Add phony targets, useful when a h-file is removed from a project.
+# -MF	 : Specify a file to write the dependencies to.
 DEPFLAGS = -MMD -MP -MF $(@:.o=.d)
 
 #
@@ -109,9 +109,9 @@ override LDFLAGS += -Xlinker -Map=$(LST_DIR)/$(PROJECTNAME).map -mcpu=cortex-m3 
 -mthumb -T$(LIB)/Device/EnergyMicro/EFM32GG/Source/GCC/efm32gg.ld \
  -Wl,--gc-sections
 
-LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
+LIBS = -Wl,--start-group -lgcc -lc -lnosys	 -Wl,--end-group
 
-#-I$(LIB)/kits/EFM32GG_STK3700/config \
+# -I$(LIB)/kits/EFM32GG_DK3750/config \
 
 INCLUDEPATHS += \
 -I. \
@@ -120,76 +120,70 @@ INCLUDEPATHS += \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_bitless/config \
+-I$(LIB)/kits/EFM32GG_DK3750/config \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
--I$(LIB)/fatfs/inc \
--I$(LIB)/usb/inc \
+-I$(DIR)/drivers/adc/inc \
+-I$(DIR)/drivers/dac/inc \
+-I$(DIR)/drivers/dma/inc \
+-I$(DIR)/drivers/prs/inc \
+-I$(DIR)/drivers/sdcard/inc \
+-I$(DIR)/drivers/mem/inc \
+-I$(DIR)/drivers/int/inc \
+-I$(DIR)/drivers/fpga/inc \
 -I$(LIB)/util/inc \
--I$(DIR)/modules/adc/inc \
--I$(DIR)/modules/dac/inc \
--I$(DIR)/modules/dma/inc \
--I$(DIR)/modules/prs/inc \
--I$(DIR)/modules/fpga/inc \
--I$(DIR)/modules/sdcard/inc \
--I$(LIB)/util/inc 
+-I$(DIR)/types/inc \
+-I$(DIR)/controllers/adc/inc \
+-I$(LIB)/fatfs/inc 
+
 
 ####################################################################
-# Files								   #
+# Files									 #
 ####################################################################
 
-# $(LIB)/kits/common/bsp/bsp_stk.c \
-# $(LIB)/kits/common/bsp/bsp_stk_leds.c \
 
 
-# $(LIB)/kits/common/bsp/bsp_trace.c \
-# $(LIB)/kits/common/bsp/bsp_bcc.c \
+
 # $(LIB)/kits/common/bsp/bsp_dk_3201.c \
 # $(LIB)/kits/common/bsp/bsp_dk_leds.c \
 
-C_SRC +=  \
+C_SRC +=	\
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/drivers/dmactrl.c \
+$(LIB)/kits/common/bsp/bsp_dk_3201.c \
+$(LIB)/kits/common/bsp/bsp_trace.c \
+$(LIB)/kits/common/bsp/bsp_dk_leds.c \
 $(LIB)/kits/common/drivers/microsd.c \
-$(LIB)/kits/common/drivers/rtcdrv.c \
-$(LIB)/fatfs/src/ff.c \
-$(LIB)/fatfs/src/diskio.c \
-$(LIB)/util/src/wav.c \
-$(LIB)/util/src/fatfs_file.c \
+$(LIB)/kits/common/drivers/dmactrl.c \
 $(LIB)/emlib/src/em_assert.c \
-$(LIB)/emlib/src/em_adc.c \
 $(LIB)/emlib/src/em_cmu.c \
-$(LIB)/emlib/src/em_dac.c \
-$(LIB)/emlib/src/em_dma.c \
-$(LIB)/emlib/src/em_ebi.c \
 $(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_dma.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_gpio.c \
-$(LIB)/emlib/src/em_int.c \
-$(LIB)/emlib/src/em_prs.c \
-$(LIB)/emlib/src/em_rtc.c \
 $(LIB)/emlib/src/em_system.c \
+$(LIB)/emlib/src/em_prs.c \
+$(LIB)/emlib/src/em_ebi.c \
 $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
-$(DIR)/modules/mem/src/bl_mem.c \
-$(DIR)/modules/fpga/src/FPGADriver.c \
-$(LIB)/util/src/CircularBuffer.c \
-$(LIB)/util/src/spi.c \
-$(DIR)/modules/sdcard/src/bl_sd.c \
+$(LIB)/fatfs/src/ff.c \
+$(LIB)/fatfs/src/diskio.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+$(LIB)/util/src/Blink.c \
+$(LIB)/util/src/fatfs_file.c \
+$(LIB)/util/src/wav.c \
 demo/$(PROJECTNAME).c
-
 
 
 s_SRC +=
 
-S_SRC +=  \
+S_SRC +=	\
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/GCC/startup_efm32gg.S
 
 
 
 ####################################################################
-# Rules								   #
+# Rules									 #
 ####################################################################
 
 C_FILES = $(notdir $(C_SRC) )
@@ -213,13 +207,13 @@ vpath %.S $(S_PATHS)
 #dbg: 
 #	@echo $(C_FILES)
 
-all:	  debug
+all:		debug
 
-debug:	  CFLAGS += -DDEBUG -O0 -g3
-debug:	  $(EXE_DIR)/$(PROJECTNAME).bin
+debug:		CFLAGS += -DDEBUG -O0 -g3
+debug:		$(EXE_DIR)/$(PROJECTNAME).bin
 
-release:  CFLAGS += -DNDEBUG -O0 -g3
-release:  $(EXE_DIR)/$(PROJECTNAME).bin
+release:	CFLAGS += -DNDEBUG -O0 -g3
+release:	$(EXE_DIR)/$(PROJECTNAME).bin
 
 # Create objects from C SRC files
 $(OBJ_DIR)/%.o: %.c

@@ -10,7 +10,7 @@
 ####################################################################
 
 DEVICE = EFM32GG990F1024
-PROJECTNAME = memmem
+PROJECTNAME = wavplayer
 
 OBJ_DIR = build
 EXE_DIR = exe
@@ -120,7 +120,7 @@ INCLUDEPATHS += \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_STK3700/config \
+-I$(LIB)/kits/EFM32GG_DK3750/config \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
@@ -129,6 +129,7 @@ INCLUDEPATHS += \
 -I$(DIR)/modules/dac/inc \
 -I$(DIR)/modules/dma/inc \
 -I$(DIR)/modules/prs/inc 
+-I$(LIB)/fatfs/inc 
 
 
 ####################################################################
@@ -143,31 +144,41 @@ INCLUDEPATHS += \
 
 C_SRC +=	\
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_bcc.c \
+$(LIB)/kits/common/bsp/bsp_dk_3201.c \
 $(LIB)/kits/common/bsp/bsp_trace.c \
-$(LIB)/kits/common/bsp/bsp_stk.c \
-$(LIB)/kits/common/bsp/bsp_stk_leds.c \
+$(LIB)/kits/common/bsp/bsp_dk_leds.c \
+$(LIB)/kits/common/drivers/microsd.c \
 $(LIB)/kits/common/drivers/dmactrl.c \
-$(LIB)/kits/common/drivers/rtcdrv.c \
 $(LIB)/emlib/src/em_assert.c \
-$(LIB)/emlib/src/em_adc.c \
 $(LIB)/emlib/src/em_cmu.c \
-$(LIB)/emlib/src/em_dac.c \
-$(LIB)/emlib/src/em_dma.c \
-$(LIB)/emlib/src/em_ebi.c \
 $(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_dma.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_gpio.c \
-$(LIB)/emlib/src/em_int.c \
-$(LIB)/emlib/src/em_prs.c \
-$(LIB)/emlib/src/em_rtc.c \
 $(LIB)/emlib/src/em_system.c \
+$(LIB)/emlib/src/em_prs.c \
+$(LIB)/emlib/src/em_ebi.c \
 $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
+$(LIB)/fatfs/src/ff.c \
+$(LIB)/fatfs/src/diskio.c \
+$(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+$(DIR)/drivers/adc/src/ADCDriver.c \
+$(DIR)/drivers/dma/src/DMADriver.c \
+$(DIR)/drivers/dac/src/DACDriver.c \
+$(DIR)/drivers/prs/src/PRSDriver.c \
+$(DIR)/drivers/mem/src/MEMDriver.c \
+$(DIR)/drivers/sdcard/src/SDDriver.c \
+$(DIR)/drivers/fpga/src/FPGADriver.c \
+$(DIR)/drivers/int/src/INTDriver.c \
+$(LIB)/util/src/CircularBuffer.c \
+$(LIB)/util/src/sample_conversion.c \
 $(LIB)/util/src/Blink.c \
-$(LIB)/util/src/Delay.c \
 demo/$(PROJECTNAME).c
 
 
+# $(LIB)/util/src/fatfs_file.c \
+# $(LIB)/util/src/wav.c \
 
 s_SRC +=
 
