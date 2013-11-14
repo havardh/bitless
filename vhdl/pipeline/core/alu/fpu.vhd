@@ -7,7 +7,7 @@ use work.core_constants.all;
 
 entity fpu is
 	port (
-		a, b, const_c, const_d			: in	std_logic_vector(15 downto 0);
+		a, b, c, d			: in	std_logic_vector(15 downto 0);
 		aluop_in			: in	alu_operation;
 		cpu_clk, alu_clk 	: in	std_logic;
 		result, result_2	: out	std_logic_vector(15 downto 0);
@@ -69,7 +69,7 @@ begin
 	
 	result_2 <= (others => '0');
 	
-	fpu_ctrl : process(aluop_in, a, b, const_c, const_d, fp_mul_flag_overflow, fp_addsub_flag_overflow, fp_mul_result_out, fp_addsub_result_out)
+	fpu_ctrl : process(aluop_in, a, b, c, d, fp_mul_flag_overflow, fp_addsub_flag_overflow, fp_mul_result_out, fp_addsub_result_out)
 	begin
 		case aluop_in is
 			when fp_mul =>--FLOATING POINT MULTIPLICATION
@@ -107,7 +107,7 @@ begin
 				
 			when fp_mac =>--FLOATING POINT MULTIPLY AND ACCUMULATE B += A*C
 				fp_mul_data_in_1 <= a;
-				fp_mul_data_in_2 <= const_c;
+				fp_mul_data_in_2 <= c;
 				
 				fp_addsub_data_in_1 <= b;
 				fp_addsub_data_in_2 <= fp_mul_result_out;
@@ -117,7 +117,7 @@ begin
 				result <= fp_addsub_result_out;
 				
 			when fp_mad =>--FLOATING POINT MULTIPLY AND ACCUMULATE A += B*D
-				fp_mul_data_in_1 <= const_d;
+				fp_mul_data_in_1 <= d;
 				fp_mul_data_in_2 <= b;
 				
 				fp_addsub_data_in_1 <= a;
@@ -129,7 +129,7 @@ begin
 				
 			when fp_msc =>--FLOATING POINT MULTIPLY AND SUBTRACT B -= A*C
 				fp_mul_data_in_1 <= a;
-				fp_mul_data_in_2 <= const_c;
+				fp_mul_data_in_2 <= c;
 				
 				fp_addsub_data_in_1 <= b;
 				fp_addsub_data_in_2 <= fp_mul_result_out;
@@ -139,7 +139,7 @@ begin
 				result <= fp_addsub_result_out;
 				
 			when fp_msd =>--FLOATING POINT MULTIPLY AND SUBTRACT A -= B*D
-				fp_mul_data_in_1 <= const_d;
+				fp_mul_data_in_1 <= d;
 				fp_mul_data_in_2 <= b;
 				
 				fp_addsub_data_in_1 <= a;
@@ -167,13 +167,13 @@ begin
 --		if mul_select(0) = '0' then
 --			fp_mul_data_in_1	<= a;
 --		else
---			fp_mul_data_in_1	<= const_d;
+--			fp_mul_data_in_1	<= d;
 --		end if;
 --		
 --		if mul_select(1) = '0' then
 --			fp_mul_data_in_2	<= b;
 --		else
---			fp_mul_data_in_2	<= const_c;
+--			fp_mul_data_in_2	<= c;
 --		end if;
 --	end process;
 --	
