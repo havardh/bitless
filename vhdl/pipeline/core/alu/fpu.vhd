@@ -9,6 +9,7 @@ entity fpu is
 	port (
 		a, b, c, d			: in	std_logic_vector(15 downto 0);
 		aluop_in			: in	alu_operation;
+		cpu_clk, alu_clk 	: in	std_logic;
 		result, result_2	: out	std_logic_vector(15 downto 0);
 		flags				: out	alu_flags
 	);

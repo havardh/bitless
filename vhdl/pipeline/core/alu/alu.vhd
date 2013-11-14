@@ -12,7 +12,7 @@ use work.core_constants.all;
 entity alu is
 	port (
 		-- CLK
-		cpu_clk 				: in std_logic;
+		dsp_clk, cpu_clk 		: in std_logic;
 		-- ALU input data:
 		cpu_input_register_1 	: in std_logic_vector(15 downto 0);
 		cpu_input_register_2 	: in std_logic_vector(15 downto 0);
@@ -56,9 +56,10 @@ architecture behaviour of alu is
 	component FPU is
 		port (
 		a, b, c, d			: in	std_logic_vector(15 downto 0);
-		aluop_in			: in	alu_operation;
 		result, result_2	: out	std_logic_vector(15 downto 0);
-		flags				: out	alu_flags
+		aluop_in			: in	alu_operation;
+		flags				: out	alu_flags;
+		cpu_clk, alu_clk 	: in	std_logic
 	);
 	end component;
 --FPU signals
@@ -70,7 +71,7 @@ architecture behaviour of alu is
 	--This should be generated with settings <fixed: 13 bit integer, 0 bit fraction>, <float: 5 bit exponent, 11 bit mantissa>
 	component fix_to_float is
 		port (
-			a				: in	std_logic_vector(12 downto 0);
+			a					: in	std_logic_vector(12 downto 0);
 			result			: out	std_logic_vector(15 downto 0)
 		);
 	end component;
@@ -90,6 +91,7 @@ architecture behaviour of alu is
 --Float signals
 	signal float_fix_input	: std_logic_vector(15 downto 0);
 	signal float_fix_output	: std_logic_vector(12 downto 0);
+	signal ff_overflow		: std_logic;
 
 --Logic signal
 	signal logic_result 	: std_logic_vector(15 downto 0);
@@ -125,7 +127,9 @@ begin
 			b 			=> cpu_input_register_2,
 			c 			=> C1,
 			d 			=> C2,
-			aluop_in 	=> operation,
+			aluop_in 	=> operation,	
+			alu_clk		=> dsp_clk,	
+			cpu_clk 	=> cpu_clk,
 			result 		=> cfpu_result_1,
 			result_2 	=> cfpu_result_2,
 			flags 		=> cfpu_flags
@@ -136,14 +140,14 @@ begin
 	float_fix_input <= cpu_input_register_1;
 	fix_float: fix_to_float
 		port map (
-			a		=> fix_float_input,
+			a			=> fix_float_input,
 			result	=> fix_float_output
 		);
 		
 	float_fix: float_to_fix
 		port map (
-			a		=> float_fix_input,
-			result	=> float_fix_output
+			a				=> float_fix_input,
+			result		=> float_fix_output
 		);
 	
 	constant_register_update: process(cpu_clk, cpu_input_const_w)
@@ -166,9 +170,8 @@ begin
 	end process adder_input_mux_b;
 
 	
-	result_mux: process(alu_result_select, adder_result, adder_flags, logic_result, logic_flags, mul_result, cfpu_result_1, cfpu_result_2, cfpu_flags, fix_float_output, float_fix_output)
+	result_mux: process(alu_result_select, adder_result, adder_flags, logic_result, logic_flags, mul_result, cfpu_result_1, cfpu_result_2, cfpu_flags, fix_float_output, float_fix_output, ff_overflow)
 	begin
-		flags <= (others => '0');
 		case alu_result_select is
 			when ALU_ADD_SELECT =>
 				result	<= sxt(adder_result, 32);
@@ -190,6 +193,7 @@ begin
 				
 			when ALU_FLT_SELECT =>
 				result	<= SXT(float_fix_output, 32);
+				flags.overflow	<= ff_overflow;
 				
 		end case;
 	end process result_mux;
@@ -201,8 +205,6 @@ begin
 
 	alu_process: process(operation,cpu_input_register_1, cpu_input_register_2)
 	begin
-		sub_enable	<= '0';
-		logic_result <= (others => '0');
 		case operation is
 			when ALU_ADD =>
 				alu_result_select <= ALU_ADD_SELECT;
@@ -214,6 +216,7 @@ begin
 				
 			when ALU_MUL =>
 				alu_result_select <= ALU_MUL_SELECT;
+                
 				
 			when ALU_FIXED_TO_FLOAT =>
 				alu_result_select <= ALU_FIX_SELECT;
