@@ -66,9 +66,10 @@ architecture behaviour of core is
     signal pc_reg           : std_logic_vector(reg_data_size-1 downto 0);
     signal pc_inc           : std_logic_vector(reg_data_size-1 downto 0);
     signal pc_we            : std_logic;
+    signal proc_finished_reg    : std_logic;
     
     signal branch_enable    : std_logic;
-	 signal do_branch        : std_logic;
+	signal do_branch        : std_logic;
     signal branch_target    : std_logic_vector(9 downto 0);
     
 --********* Stage 2 - Control unit and register file *********
@@ -76,7 +77,7 @@ architecture behaviour of core is
         port (  
             opt_code            : in    std_logic_vector (5 downto 0);
 		      
-				stop_core           : out STD_LOGIC;
+				stop_core       : out STD_LOGIC;
             alu_op              : out alu_operation;
             reg_write_e         : out register_write_enable;
             wb_src              : out wb_source;
@@ -108,8 +109,9 @@ architecture behaviour of core is
     end component register_file;
     
     -- signals
-	 signal id_stop_processor   : std_logic;
-	 signal id_instruction      : std_logic_vector(instruct_data_size-1 downto 0);
+    signal id_stop_processor_reg    : std_logic;
+	signal id_stop_processor        : std_logic;
+	signal id_instruction           : std_logic_vector(instruct_data_size-1 downto 0);
     -- data signals
     signal id_imm_value         : std_logic_vector(memory_data_size-1 downto 0);
 	 signal id_branch_flags     : std_logic_vector(3 downto 0);
@@ -183,7 +185,7 @@ architecture behaviour of core is
     component alu is
         port (
             -- CLK
-            dsp_clk, cpu_clk        : in    std_logic;
+            cpu_clk                 : in    std_logic;
             -- ALU input data:
             cpu_input_register_1    : in    std_logic_vector(reg_data_size-1 downto 0);
             cpu_input_register_2    : in    std_logic_vector(reg_data_size-1 downto 0);
@@ -258,17 +260,27 @@ architecture behaviour of core is
 begin
 	 
 	 
-	 stop_core : process(reset, stop_core_signal, wb_stop_core_signal) 
+	 stop_core : process(clk, proc_finished_reg, id_stop_processor_reg) 
 	 begin
-        if reset = '1' then
-            proc_finished <= '0';
-            id_stop_processor <= '0';
-		elsif stop_core_signal = '1' then
-		    id_stop_processor <= '1';
-        elsif wb_stop_core_signal then
-            proc_finished <= '1';
-		end if;
-	 end process;
+        if rising_edge(clk) then
+            if reset = '1' then
+                proc_finished_reg <= '0';
+                id_stop_processor_reg <= '0';
+            elsif stop_core_signal = '1' then
+                proc_finished_reg <= '1';
+                id_stop_processor_reg <= '1';
+            elsif wb_stop_core_signal = '1' then
+                proc_finished_reg <= '0';
+                id_stop_processor_reg <= '1';
+            else
+                proc_finished_reg <= proc_finished_reg;
+                id_stop_processor_reg <= id_stop_processor_reg;
+            end if;
+        end if;
+        proc_finished <= proc_finished_reg;
+        id_stop_processor <= id_stop_processor_reg;
+     end process;
+       
 	 
 --Pipeline: IF
     pc_incrementer : adder
@@ -451,8 +463,7 @@ begin
 
     core_alu : alu
     port map (
-        -- CLK
-        dsp_clk                 => '-', 
+        -- CLK 
         cpu_clk                 => clk,
         -- ALU input data:
         cpu_input_register_1    => ex_fw_1,
