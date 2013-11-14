@@ -68,7 +68,7 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
    signal reset : std_logic := '0';
    signal instruction_data : std_logic_vector(15 downto 0) := (others => '0');
    signal constant_data : std_logic_vector(31 downto 0) :=    "00000000000000000000000000000000";
-   signal input_read_data : std_logic_vector(31 downto 0) :=  "00000000000000000000000000000001";
+   signal input_read_data : std_logic_vector(31 downto 0) :=  "11111111111111111111111111111111";
    signal output_read_data : std_logic_vector(31 downto 0) := "00000000000000000000000000000010";
 
  	--Outputs
@@ -86,10 +86,14 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
    constant memclk_period : time := 10 ns;
    constant sample_clk_period : time := 10 ns;
 	
-	constant load_instruction0 : std_logic_vector(15 downto 0) := "0111000001000000";
-	constant load_instruction1 : std_logic_vector(15 downto 0) := "0111000001000000";
-	constant load_instruction2 : std_logic_vector(15 downto 0) := "0111000001000000";
-	constant load_instruction3 : std_logic_vector(15 downto 0) := "0111110001000000";
+	constant load_instruction0  : std_logic_vector(15 downto 0) := "0111000001000000";
+	
+	
+	constant store_instruction0 : std_logic_vector(15 downto 0) := "0111110001000000";
+	
+	constant finished_instruction : std_logic_vector(15 downto 0) := "0011000000000000";
+	
+	constant no_op_instruction : std_logic_vector(15 downto 0) := (others => '0');
  
 BEGIN
  
@@ -151,13 +155,29 @@ BEGIN
 		instruction_data <= load_instruction0;
 		wait for clk_period;
 		
-		instruction_data <= load_instruction1;
+		instruction_data <= no_op_instruction;
 		wait for clk_period;
 		
-		--instruction_data <= load_instruction2;
-		--wait for clk_period;
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
 		
-		instruction_data <= load_instruction3;
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		instruction_data <= store_instruction0;
+		wait for clk_period;
+		
+		instruction_data <= finished_instruction;
+		
 		wait for clk_period;
 		
 
