@@ -65,10 +65,9 @@ int main(void) {
 
     /* Initialize UART peripheral */
     UART_Init();
-    // char str[20];
-    // sprintf(str, "Test\n\r");
-    // UART_PutData((uint8_t*)str, strlen(str)-1);
-    Leds_SetLed(4);
+    char str[20];
+    sprintf(str, "Test\n\r");
+    UART_PutData((uint8_t*)str, strlen(str));
     while (1) {
         // UART_GetData((uint8_t*)str, 7);
         // UART_PutData((uint8_t*)str, strlen(str));
