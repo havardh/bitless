@@ -11,7 +11,7 @@ void read_data(uint8_t command[]);
 
 void SDI_Init(void) 
 {
-	FPGAConfig conf = FPGA_CONFIG_DEFAULT(0x20000000);
+	FPGAConfig conf = FPGA_CONFIG_DEFAULT(0x80000000);
 	FPGA_Init( &conf );
 }
 

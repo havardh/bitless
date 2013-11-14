@@ -3,7 +3,9 @@ import serial
 import sys
 
 BAUDRATE=115200
-MEM_SIZE=(32)
+
+INST_SIZE=512
+DATA_SIZE=1024
 
 def main():
 		args = parse()
@@ -49,7 +51,7 @@ def write_instruction(args):
 
 		port = args.port
 		command = 'wi' + `args.pipeline` + `args.core`
-		data = read_file(args.instruction)
+		data = read_file(args.instruction, INST_SIZE*2)
 		
 		write_to_bitless(port, command, data)
 
@@ -67,7 +69,7 @@ def write_data(args):
 
 		port = args.port
 		command = 'wd' + `args.pipeline` + `args.memory`
-		data = read_file(args.data)
+		data = read_file(args.data, DATA_SIZE*2)
 
 		write_to_bitless(port, command, data)
 
@@ -87,7 +89,7 @@ def read_data(args):
 		port = args.port
 		command = 'rd' + `args.pipeline` + `args.memory`
 
-		data = read_from_bitless(port, command, MEM_SIZE)
+		data = read_from_bitless(port, command, DATA_SIZE*2)
 		write_file(args.read, data)
 
 
@@ -148,7 +150,7 @@ def serial_open(port):
 				sys.exit(1)
 		return ser
 
-def read_file(filename):
+def read_file(filename, num_bytes):
 
 		f = None
 		data = None
@@ -158,7 +160,7 @@ def read_file(filename):
 				print 'File: "' + filename + '" not found'
 				sys.exit(1)
 		if f:
-				data = f.read(MEM_SIZE);
+				data = f.read(num_bytes);
 				f.close()
 		return data
 
