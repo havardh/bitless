@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <symbol version="7" name="fp_addsub">
     <symboltype>BLOCK</symboltype>
-    <timestamp>2013-11-13T14:34:58</timestamp>
+    <timestamp>2013-11-14T9:26:47</timestamp>
     <pin polarity="Input" x="0" y="80" name="a[15:0]" />
     <pin polarity="Input" x="0" y="112" name="b[15:0]" />
     <pin polarity="Input" x="0" y="176" name="operation[5:0]" />

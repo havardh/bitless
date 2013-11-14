@@ -15,13 +15,15 @@ void FPGADriver_Init( FPGAConfig *config )
   numPipelines = config->numPipelines;
   bufferSize   = config->bufferSize;
 
+	int n = 1;
+
   inBuffers  = malloc(sizeof(CircularBuffer) * numPipelines);
   outBuffers = malloc(sizeof(CircularBuffer) * numPipelines);
   
   for (int i=0; i<numPipelines; i++) 
   {
-    inBuffers[i]  = CircularBuffer_New(malloc(sizeof(uint16_t) * 64*4), 64*4, 4);
-    outBuffers[i] = CircularBuffer_New(malloc(sizeof(uint16_t) * 64*4), 64*4, 4);
+		inBuffers[i]  = CircularBuffer_New(malloc(sizeof(uint16_t) * bufferSize), bufferSize*n, n);
+		outBuffers[i] = CircularBuffer_New(malloc(sizeof(uint16_t) * bufferSize), bufferSize*n, n);
   }
   
 }

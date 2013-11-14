@@ -15,6 +15,7 @@
 #include "PRSDriver.h"
 #include "ADCDriver.h"
 #include "DACDriver.h"
+#include "INTDriver.h"
 #include "Delay.h"
 #include "Blink.h"
 #include <string.h>
@@ -85,6 +86,8 @@ void setupDMA( void )
 {
 	DMAConfig config = DMA_CONFIG_DEFAULT;
 
+	config.mode = ADC_TO_DAC;
+
 	config.dacEnabled = true;
 	config.adcEnabled = true;
 
@@ -135,77 +138,29 @@ static void setupPRS( )
 	PRSDriver_Init();
 }
 
-int test( void ) 
+static void setupBSP()
 {
+	BSP_Init( BSP_INIT_DEFAULT );
+	BSP_TraceProfilerSetup();
 
-	int result = 0;
-	for(int i=0; i<BUFFER_SIZE; i++) {
-
-		if (out[i] != i) {
-			result |= 1;
-		}
-
-		if (i < BUFFER_SIZE / 2) {
-
-			if (fpgaZero[i] != i*2) {
-				result |= 4;
-			}
-
-			if (fpgaOne[i] != (i*2)+1) {
-				result |= 8;
-			}
-		}
-
-	}
-
-	return result;
+	BSP_PeripheralAccess( BSP_AUDIO_IN, true );
+	BSP_PeripheralAccess( BSP_AUDIO_OUT, true );
 }
 
-void test_and_display( void ) 
+static void setupINT()
 {
-		volatile int result = test();
-		
-		if (result & 1) {
-			BSP_LedToggle(0);
-		}
-		if (result & 2) {
-			BSP_LedToggle(1);
-		}
-
-		if (result & 4) {
-			//BSP_LedToggle(0);
-		}
-		if (result & 8) {
-			//BSP_LedToggle(1);
-		}
-}
-
-void init( void ) 
-{
-
-	in  = MEM_GetAudioInBuffer(true);
-	out = MEM_GetAudioOutBuffer(true);
-	memset(out, 0, 64*2);
-
-	fpgaZero = FPGADriver_GetInBuffer(0);
-	fpgaOne  = FPGADriver_GetInBuffer(1);
-	memset(fpgaZero, 0, 64);
-	memset(fpgaOne, 0, 64);
-
-	for (int i=0; i<BUFFER_SIZE; i++) {
-		in[i] = i;
-
-		fpgaZero[i] = i;
-		fpgaOne[i] = i;
-	}
+	INTDriver_Init();
 }
 
 int main( void ) 
 {
+	setupBSP();
+
+	Delay_Init();
+ 
 	setupMEM();
 	setupFPGA();
-
-	init();
+	setupINT();
 
 	setupCMU();
 

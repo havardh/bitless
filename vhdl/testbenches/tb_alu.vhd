@@ -27,6 +27,7 @@
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+use ieee.std_logic_arith.ALL;
 
 library work;
 use work.core_constants.all;
@@ -284,7 +285,7 @@ BEGIN
 		wait for cpu_clk_period/2;
 		assert result = "11111111111111111111111111110011" report "Float_to_fix not working!";
 		
-		--testing fp multiply, 5*3=15
+		--initial values for fp tests. 3 and 5. fp values stored in helper1 and 2
 		operation				<= ALU_FIXED_TO_FLOAT;
 		cpu_input_register_1	<= x"0003"; 
 		wait for cpu_clk_period/2;
@@ -295,6 +296,8 @@ BEGIN
 		wait for cpu_clk_period/2;
 		helper2 <= result;
 		wait for cpu_clk_period;
+		
+		--testing fp multiply, 5*3=15
 		operation 				 <= FP_MUL;
 		cpu_input_register_1  <= helper1(15 downto 0);
 		cpu_input_register_2  <= helper2(15 downto 0);
@@ -304,7 +307,136 @@ BEGIN
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result = x"0000000F" report "Float_to_fix not working!";
+		assert result = x"0000000F" report "fp_mul not working!";
+		
+		--testing fp sub 3-5=-2
+		wait for cpu_clk_period;
+		operation 				 <= FP_SUB;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = x"FFFFFFFE" report "fp_sub not working!";
+		
+		--testing fp add 3+5=8
+		wait for cpu_clk_period;
+		operation 				 <= FP_ADD;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = x"00000008" report "fp_add not working!";
+		
+		--initial values for fp tests. 117 and 12. fp values stored in helper1 and 2
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= "0000000001110101"; 
+		wait for cpu_clk_period/2;
+		helper1 <= result;
+		
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= "0000000000001100"; 
+		wait for cpu_clk_period/2;
+		helper2 <= result;
+		wait for cpu_clk_period;
+	
+		--testing fp multiply, 117*12=1404
+		operation 				 <= FP_MUL;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = "00000000000000000000010101111100" report "fp_mul not working!";
+		
+		--testing fp sub 117-12=105
+		wait for cpu_clk_period;
+		operation 				 <= FP_SUB;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = x"00000069" report "fp_sub not working!";
+		
+		--testing fp add 117+12=129
+		wait for cpu_clk_period;
+		operation 				 <= FP_ADD;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = x"00000081" report "fp_add not working!";
+		
+		--initial values for fp tests. 316 and -19. fp values stored in helper1 and 2
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= x"013C"; 
+		wait for cpu_clk_period/2;
+		helper1 <= result;
+		
+		operation				<= ALU_FIXED_TO_FLOAT;
+		cpu_input_register_1	<= "1111111111110100"; 
+		wait for cpu_clk_period/2;
+		helper2 <= result;
+		wait for cpu_clk_period;
+		
+		--testing fp multiply, 316*(-12)=-3792
+		operation 				 <= FP_MUL;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = "11111111111111111111000100110000" report "fp_mul not working!";
+		
+		--testing fp sub 316-(-12)=328
+		wait for cpu_clk_period;
+		operation 				 <= FP_SUB;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = x"00000148" report "fp_sub not working!";
+		
+		--testing fp add 316+(-12)=304
+		wait for cpu_clk_period;
+		operation 				 <= FP_ADD;
+		cpu_input_register_1  <= helper1(15 downto 0);
+		cpu_input_register_2  <= helper2(15 downto 0);
+		wait for cpu_clk_period/2;
+		helper3 <= result;
+		wait for cpu_clk_period;
+		operation				<= ALU_FLOAT_TO_FIXED;
+		cpu_input_register_1	<= helper3(15 downto 0);
+		wait for cpu_clk_period/2;
+		assert result = x"00000130" report "fp_add not working!";
+
+
+		
 
 
       wait;

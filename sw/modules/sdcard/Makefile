@@ -120,12 +120,13 @@ INCLUDEPATHS += \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/EFM32GG_DK3750/config \
+-I$(LIB)/kits/EFM32GG_bitless/config \
 -I$(LIB)/kits/common/drivers \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
 -I$(LIB)/fatfs/inc \
 -I$(LIB)/usb/inc \
+-I$(LIB)/util/inc \
 -I$(DIR)/modules/adc/inc \
 -I$(DIR)/modules/dac/inc \
 -I$(DIR)/modules/dma/inc \
@@ -134,7 +135,6 @@ INCLUDEPATHS += \
 -I$(DIR)/modules/sdcard/inc \
 -I$(LIB)/util/inc 
 
-
 ####################################################################
 # Files								   #
 ####################################################################
@@ -142,12 +142,14 @@ INCLUDEPATHS += \
 # $(LIB)/kits/common/bsp/bsp_stk.c \
 # $(LIB)/kits/common/bsp/bsp_stk_leds.c \
 
+
+# $(LIB)/kits/common/bsp/bsp_trace.c \
+# $(LIB)/kits/common/bsp/bsp_bcc.c \
+# $(LIB)/kits/common/bsp/bsp_dk_3201.c \
+# $(LIB)/kits/common/bsp/bsp_dk_leds.c \
+
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_bcc.c \
-$(LIB)/kits/common/bsp/bsp_dk_3201.c \
-$(LIB)/kits/common/bsp/bsp_dk_leds.c \
-$(LIB)/kits/common/bsp/bsp_trace.c \
 $(LIB)/kits/common/drivers/dmactrl.c \
 $(LIB)/kits/common/drivers/microsd.c \
 $(LIB)/kits/common/drivers/rtcdrv.c \
@@ -169,6 +171,10 @@ $(LIB)/emlib/src/em_rtc.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
+$(DIR)/modules/mem/src/bl_mem.c \
+$(DIR)/modules/fpga/src/FPGADriver.c \
+$(LIB)/util/src/CircularBuffer.c \
+$(LIB)/util/src/spi.c \
 $(DIR)/modules/sdcard/src/bl_sd.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c

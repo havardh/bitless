@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 12.4
-# Date: Wed Nov 13 14:31:42 2013
+# Date: Thu Nov 14 09:32:00 2013
 #
 ##############################################################
 #
@@ -18,7 +18,7 @@ SET asysymbol = true
 SET busformat = BusFormatAngleBracketNotRipped
 SET createndf = false
 SET designentry = VHDL
-SET device = xc6slx16
+SET device = xc6slx45
 SET devicefamily = spartan6
 SET flowvendor = Foundation_ISE
 SET formalverification = false
@@ -62,4 +62,4 @@ CSET operation_type=Multiply
 CSET result_precision_type=Custom
 # END Parameters
 GENERATE
-# CRC: 4af235bf
+# CRC: 6b0571e4

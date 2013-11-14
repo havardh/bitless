@@ -1,5 +1,5 @@
 The following files were generated for 'multiplier' in directory 
-Z:\TDT4295_2\ipcore_dir\
+Z:\TDT4295_3\ipcore_dir\
 
 multiplier.asy:
    Graphical symbol information file. Used by the ISE tools and some

@@ -7,12 +7,12 @@
 // \   \   \/     Version: M.81d
 //  \   \         Application: netgen
 //  /   /         Filename: multiplier.v
-// /___/   /\     Timestamp: Wed Nov 13 15:28:06 2013
+// /___/   /\     Timestamp: Thu Nov 14 10:24:47 2013
 // \   \  /  \ 
 //  \___\/\___\
 //             
 // Command	: -intstyle ise -w -sim -ofmt verilog ./tmp/_cg\multiplier.ngc ./tmp/_cg\multiplier.v 
-// Device	: 6slx16csg324-2
+// Device	: 6slx45csg324-2
 // Input file	: ./tmp/_cg/multiplier.ngc
 // Output file	: ./tmp/_cg/multiplier.v
 // # of Modules	: 1
