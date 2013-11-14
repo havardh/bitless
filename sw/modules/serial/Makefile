@@ -123,6 +123,7 @@ INCLUDEPATHS += \
 -I$(LIB)/kits/EFM32GG_bitless/config \
 -I$(DIR)/modules/uart/inc \
 -I$(DIR)/modules/serial/inc \
+-I$(DIR)/modules/fpga/inc \
 -I$(LIB)/emdrv/gpiointerrupt/inc
 
 ####################################################################
@@ -143,6 +144,7 @@ $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
 $(DIR)/modules/uart/src/bl_uart.c \
 $(DIR)/modules/serial/src/bl_sdi.c \
+$(DIR)/modules/fpga/src/FPGAController.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 

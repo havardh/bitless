@@ -1,37 +1,18 @@
+#include "FPGAController.h"
+#include "FPGAConfig.h"
 #include "bl_sdi.h"
+
+#define INST_SIZE 512
+#define DATA_SIZE 1024
 
 void write_instruction(uint8_t command[]);
 void write_data(uint8_t command[]);
 void read_data(uint8_t command[]);
 
-typedef struct {
-	uint16_t *in, *out, *inst;
-} Core;
-
-typedef struct {
-	Core *cores;
-} Pipeline;
-
-static Pipeline *pipelines;
-
-static uint8_t nums[32] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 };
-
 void SDI_Init(void) 
 {
-	pipelines = (Pipeline*)malloc(sizeof(Pipeline)*1);
-	for (int i=0; i<1; i++) {
-		pipelines[i].cores = (Core*)malloc(sizeof(Core)*1);
-
-		for (int j=0; j<1; j++) {
-			pipelines[i].cores[j].in = (uint16_t*)malloc(sizeof(uint16_t)*16);
-			//pipelines[i].cores[j].out = nums;
-			//pipelines[i].cores[j].inst = nums;
-
-			for(int k=0; k<16; k++) {
-				pipelines[i].cores[j].in[k] = nums[k];
-			}
-		}
-	}
+	FPGAConfig conf = FPGA_CONFIG_DEFAULT(0x20000000);
+	FPGA_Init( &conf );
 }
 
 void SDI_Start(void)
@@ -54,11 +35,24 @@ void SDI_Start(void)
 void write_instruction(uint8_t command[])
 {
 	uint8_t pipeline = command[2];
-	uint8_t core = command[3];
+	uint8_t coreIndex = command[3];
 
-	uint16_t *inst = pipelines[pipeline].cores[core].inst;
+	FPGA_Core *core = FPGA_GetCore(pipeline, coreIndex);
 
-	UART_GetData((uint8_t*)inst, 16*2);
+	UART_GetData((uint8_t*)core->imem, INST_SIZE*2);
+}
+
+static uint16_t *getBuffer(uint8_t pipeline, uint8_t memory)
+{
+	uint16_t *mem;
+
+	FPGA_Pipeline *p = FPGA_GetPipeline(pipeline);
+	if (memory == 0) {
+		mem = FPGAPipeline_GetInputBuffer(p);
+	} else if (memory == 1) {
+		mem = FPGAPipeline_GetOutputBuffer(p);
+	}
+	return mem;
 }
 
 void write_data(uint8_t command[])
@@ -66,9 +60,9 @@ void write_data(uint8_t command[])
 	uint8_t pipeline = command[2];
 	uint8_t memory = command[3];
 
-	uint16_t *mem = pipelines[pipeline].cores[memory].in;
-	
-	UART_GetData((uint8_t*)nums, 32);
+	uint16_t *mem = getBuffer(pipeline, memory);
+
+	UART_GetData((uint8_t*)mem, DATA_SIZE*2);
 }
 
 void read_data(uint8_t command[])
@@ -76,9 +70,9 @@ void read_data(uint8_t command[])
 	uint8_t pipeline = command[2];
 	uint8_t memory = command[3];
 
-	uint16_t *mem = pipelines[pipeline].cores[memory].in;
+	uint16_t *mem = getBuffer(pipeline, memory);
 
-	UART_PutData((uint8_t*)nums, 32);
+	UART_PutData((uint8_t*)mem, DATA_SIZE*2);
 }
 
 
