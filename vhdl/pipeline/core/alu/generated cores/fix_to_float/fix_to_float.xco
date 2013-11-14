@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 12.4
-# Date: Wed Nov 13 14:38:20 2013
+# Date: Thu Nov 14 09:34:06 2013
 #
 ##############################################################
 #
@@ -18,7 +18,7 @@ SET asysymbol = true
 SET busformat = BusFormatAngleBracketNotRipped
 SET createndf = false
 SET designentry = VHDL
-SET device = xc6slx16
+SET device = xc6slx45
 SET devicefamily = spartan6
 SET flowvendor = Foundation_ISE
 SET formalverification = false
@@ -62,4 +62,4 @@ CSET operation_type=Fixed_to_float
 CSET result_precision_type=Custom
 # END Parameters
 GENERATE
-# CRC: 81958956
+# CRC: cdab18b9

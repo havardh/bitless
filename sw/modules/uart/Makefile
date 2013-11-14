@@ -117,9 +117,18 @@ INCLUDEPATHS += \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
+-I$(LIB)/kits/EFM32GG_bitless/config \
 -I$(LIB)/kits/common/drivers \
--I$(LIB)/kits/EFM32GG_STK3700/config \
--I$(LIB)/emdrv/gpiointerrupt/inc
+-I$(LIB)/emdrv/gpiointerrupt/inc \
+-I$(LIB)/glib \
+-I$(DIR)/modules/adc/inc \
+-I$(DIR)/modules/dac/inc \
+-I$(DIR)/modules/dma/inc \
+-I$(DIR)/modules/prs/inc \
+-I$(DIR)/modules/mem/inc \
+-I$(DIR)/modules/int/inc \
+-I$(DIR)/modules/fpga/inc \
+-I$(LIB)/util/inc
 
 ####################################################################
 # Files								   #
@@ -127,23 +136,28 @@ INCLUDEPATHS += \
 
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_bcc.c \
-$(LIB)/kits/common/bsp/bsp_stk.c \
-$(LIB)/kits/common/bsp/bsp_stk_leds.c \
-$(LIB)/kits/common/bsp/bsp_trace.c \
 $(LIB)/kits/common/drivers/retargetio.c \
 $(LIB)/kits/common/drivers/retargetserial.c \
 $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_cmu.c \
-$(LIB)/emlib/src/em_ebi.c \
-$(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_dma.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_gpio.c \
-$(LIB)/emlib/src/em_int.c \
-$(LIB)/emlib/src/em_letimer.c \
-$(LIB)/emlib/src/em_pcnt.c \
-$(LIB)/emlib/src/em_system.c \
+$(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_prs.c \
+$(LIB)/emlib/src/em_ebi.c \
+$(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
-$(LIB)/emlib/src/em_leuart.c \
+$(DIR)/drivers/adc/src/ADCDriver.c \
+$(DIR)/drivers/dma/src/DMADriver.c \
+$(DIR)/drivers/dac/src/DACDriver.c \
+$(DIR)/drivers/prs/src/PRSDriver.c \
+$(DIR)/drivers/mem/src/MEMDriver.c \
+$(DIR)/drivers/fpga/src/FPGADriver.c \
+$(DIR)/drivers/int/src/INTDriver.c \
+$(LIB)/util/src/CircularBuffer.c \
+$(LIB)/util/src/Delay.c \
+$(LIB)/util/src/Blink.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 src/bl_uart.c \
 demo/$(PROJECTNAME).c

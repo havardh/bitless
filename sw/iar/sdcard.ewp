@@ -103,7 +103,7 @@
         </option>
         <option>
           <name>GenLowLevelInterface</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GEndianModeBE</name>
@@ -115,7 +115,7 @@
         </option>
         <option>
           <name>GenStdoutInterface</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -303,11 +303,12 @@
           <state>$PROJ_DIR$\..\libs\fatfs\inc</state>
           <state>$PROJ_DIR$\..\libs\kits\common\drivers</state>
           <state>$PROJ_DIR$\..\libs\kits\common\bsp</state>
-          <state>$PROJ_DIR$\..\libs\kits\EFM32GG_DK3750\config</state>
+          <state>$PROJ_DIR$\..\libs\kits\EFM32GG_bitless\config</state>
           <state>$PROJ_DIR$\..\libs\util\inc</state>
           <state>$PROJ_DIR$\..\drivers\fpga\inc</state>
           <state>$PROJ_DIR$\..\types\inc</state>
           <state>$PROJ_DIR$\..\drivers\prs\inc</state>
+          <state>$PROJ_DIR$\..\drivers\int\inc</state>
           <state>$PROJ_DIR$\..\drivers\adc\inc</state>
           <state>$PROJ_DIR$\..\drivers\dac\inc</state>
           <state>$PROJ_DIR$\..\drivers\mem\inc</state>
@@ -569,10 +570,11 @@
           <state>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include</state>
           <state>$PROJ_DIR$\..\libs\emlib\inc</state>
           <state>$PROJ_DIR$\..\libs\fatfs\inc</state>
+          <state>$PROJ_DIR$\..\drivers\int\inc</state>
           <state>$PROJ_DIR$\..\drivers\sdcard\inc</state>
           <state>$PROJ_DIR$\..\libs\kits\common\drivers</state>
           <state>$PROJ_DIR$\..\libs\kits\common\bsp</state>
-          <state>$PROJ_DIR$\..\libs\kits\EFM32GG_DK3750\config</state>
+          <state>$PROJ_DIR$\..\libs\kits\EFM32GG_bitless\config</state>
           <state>$PROJ_DIR$\..\libs\util\inc</state>
           <state>$PROJ_DIR$\..\drivers\fpga\inc</state>
           <state>$PROJ_DIR$\..\types\inc</state>
@@ -1898,15 +1900,6 @@
   </configuration>
   <group>
     <name>bsp</name>
-    <file>
-      <name>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_3201.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_dk_leds.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\kits\common\bsp\bsp_trace.c</name>
-    </file>
   </group>
   <group>
     <name>CMSIS</name>
@@ -1914,7 +1907,7 @@
       <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\IAR\startup_efm32gg.s</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\libs\Device\ENERGYMICRO\EFM32GG\Source\system_efm32gg.c</name>
+      <name>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Source\system_efm32gg.c</name>
     </file>
   </group>
   <group>
@@ -1928,6 +1921,9 @@
   </group>
   <group>
     <name>emlib</name>
+    <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_adc.c</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\..\libs\emlib\src\em_assert.c</name>
     </file>
@@ -1974,16 +1970,46 @@
   <group>
     <name>Source</name>
     <file>
-      <name>$PROJ_DIR$\..\drivers\sdcard\demo\copy-file.c</name>
+      <name>$PROJ_DIR$\..\drivers\adc\src\ADCDriver.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\util\src\CircularBuffer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\dac\src\DACDriver.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\dma\src\DMADriver.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\drivers\fpga\src\FPGADriver.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\int\src\INTDriver.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\mem\src\MEMDriver.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\prs\src\PRSDriver.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\util\src\sample_conversion.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\util\src\spi.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\drivers\dma\demo\wavp.c</name>
     </file>
   </group>
 </project>

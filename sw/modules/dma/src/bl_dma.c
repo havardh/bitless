@@ -18,8 +18,8 @@ static void setupADCPingPong( void );
 static void setupDACBasic( void );
 static void setupDACPingPong( void );
 
-static void setupFPGAIn( void );
-static void setupFPGAOut( void );
+static void setupFPGAIn( uint32_t source );
+static void setupFPGAOut( uint32_t source );
 
 static DMA_CB_TypeDef cbInData;
 static DMA_CB_TypeDef cbOutData;
@@ -41,6 +41,8 @@ static void *fpgaLeftInBuffer;
 static void *fpgaRightInBuffer;
 static void *fpgaLeftOutBuffer;
 static void *fpgaRightOutBuffer;
+
+static bool active;
 
 static int bufferSize;
 
@@ -64,8 +66,13 @@ static void dacCbPingPong(unsigned int channel, bool primary, void *user)
 static void dmaCbBasic(unsigned int channel, bool primary, void *user)
 {
   (void) user;
-	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false, dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
-	called[channel]++;
+	if (active) {
+		DMA_ActivateBasic(DMA_AUDIO_OUT, true, false, dacAddress, audioOutBuffer, bufferSize - 1);
+		called[channel]++;
+
+		INTDriver_SetTriggerInterrupt( 0 );
+		
+	}
 }
 
 static void adcCbPingPong(unsigned int channel, bool primary, void *user)
@@ -82,29 +89,37 @@ static void adcCbPingPong(unsigned int channel, bool primary, void *user)
 static void fpgaInLeftCb(unsigned int channel, bool primary, void *user)
 {
 	(void) user;
-	DMA_ActivateBasic(DMA_FPGA_IN_LEFT, true, false, FPGADriver_GetInBuffer(0), audioInBuffer, (bufferSize / 2) - 1);
-	called[channel]++;
+	if (active) {
+		DMA_ActivateBasic(DMA_FPGA_IN_LEFT, true, false, FPGADriver_GetInBuffer(0), audioInBuffer, (bufferSize / 2) - 1);
+		called[channel]++;
+  }
 }
 
 static void fpgaInRightCb(unsigned int channel, bool primary, void *user)
 {
 	(void) user;
-	DMA_ActivateBasic(DMA_FPGA_IN_RIGHT, true, false, FPGADriver_GetInBuffer(1), (((uint16_t*)audioInBuffer)+1), (bufferSize / 2) - 1);
-	called[channel]++;
+	if (active) {
+	  DMA_ActivateBasic(DMA_FPGA_IN_RIGHT, true, false, FPGADriver_GetInBuffer(1), (((uint16_t*)audioInBuffer)+1), (bufferSize / 2) - 1);
+	  called[channel]++;
+	}
 }
 
 static void fpgaOutLeftCb(unsigned int channel, bool primary, void *user)
 {
 	(void) user;
-	DMA_ActivateBasic(DMA_FPGA_OUT_LEFT, true, false, (((uint16_t*)audioOutBuffer)+1), FPGADriver_GetInBuffer(0), (bufferSize / 2) - 1);	
-	called[channel]++;
+	if (active) {
+		DMA_ActivateBasic(DMA_FPGA_OUT_LEFT, true, false, (((uint16_t*)audioOutBuffer)+1), FPGADriver_GetInBuffer(0), (bufferSize / 2) - 1);	
+		called[channel]++;
+	}
 }
 
 static void fpgaOutRightCb(unsigned int channel, bool primary, void *user)
 {
 	(void) user;
-	DMA_ActivateBasic(DMA_FPGA_OUT_RIGHT, true, false, audioOutBuffer, FPGADriver_GetInBuffer(1), (bufferSize / 2) - 1);	
-	called[channel]++;
+	if (active) {
+		DMA_ActivateBasic(DMA_FPGA_OUT_RIGHT, true, false, audioOutBuffer, FPGADriver_GetInBuffer(1), (bufferSize / 2) - 1);	
+		called[channel]++;
+	}
 }
 
 void DMADriver_Init(DMAConfig *config) 
@@ -119,19 +134,22 @@ void DMADriver_Init(DMAConfig *config)
 	fpgaLeftOutBuffer  = FPGADriver_GetOutBuffer(0);
 	fpgaRightOutBuffer = FPGADriver_GetOutBuffer(1);
 
-	if (config->dacEnabled)
+	
+
+	switch (config->mode) {
+	case ADC_TO_DAC:
 		setupDACBasic();
-
-	if (config->adcEnabled)
 		setupADCBasic();
-
-	
-	if (config->fpgaInEnabled)
-		setupFPGAIn();
-
-	if (config->fpgaOutEnabled)
-		setupFPGAOut();
-	
+		setupFPGAIn(DMAREQ_ADC0_SCAN);
+		setupFPGAOut(DMAREQ_DAC0_CH0);
+		break;
+	case SD_TO_DAC:
+		setupDACBasic();
+		
+		//setupFPGAIn(DMAREQ_DAC0_CH0);
+		//setupFPGAOut(DMAREQ_DAC0_CH0);
+		break;
+	}
 
 }
 
@@ -198,6 +216,11 @@ void setupADCPingPong( void )
 
 }
 
+void DMADriver_StopDAC( void )
+{
+	active = false;
+}
+
 void setupDACBasic( void )
 {
 	cbOutData.cbFunc  = dmaCbBasic;
@@ -219,7 +242,9 @@ void setupDACBasic( void )
 	};
 	DMA_CfgDescr(DMA_AUDIO_OUT, true, &descrCfg);
 
-	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false, dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
+	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false,  dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
+
+	active = true;
 
 }
 
@@ -247,11 +272,11 @@ void setupDACPingPong( void )
 	DMA_CfgDescr(DMA_AUDIO_OUT, false, &descrCfg );
 
 	DMA_ActivatePingPong(DMA_AUDIO_OUT, false,
-											 MEM_GetAudioOutBuffer(true), adcAddress, bufferSize - 1,
-											 MEM_GetAudioOutBuffer(false), adcAddress, bufferSize - 1);
+											 MEM_GetAudioOutBuffer(true), dacAddress, bufferSize - 1,
+											 MEM_GetAudioOutBuffer(false), dacAddress, bufferSize - 1);
 }
 
-static void setupFPGAIn( void ) 
+static void setupFPGAIn( uint32_t source ) 
 {
 	cbFpgaInLeft.cbFunc   = fpgaInLeftCb;
 	cbFpgaInLeft.userPtr  = NULL;
@@ -261,7 +286,7 @@ static void setupFPGAIn( void )
   DMA_CfgChannel_TypeDef chnlCfgLeft = {
     .highPri   = false,
     .enableInt = true,
-    .select    = DMAREQ_ADC0_SCAN,
+    .select    = source, //DMAREQ_DAC0_CH0, //DMAREQ_ADC0_SCAN,
     .cb        = &cbFpgaInLeft
   };
   DMA_CfgChannel( DMA_FPGA_IN_LEFT,  &chnlCfgLeft );
@@ -269,7 +294,7 @@ static void setupFPGAIn( void )
 	DMA_CfgChannel_TypeDef chnlCfgRight = {
     .highPri   = false,
     .enableInt = true,
-    .select    = DMAREQ_ADC0_SCAN,
+    .select    = source, //DMAREQ_DAC0_CH0, //DMAREQ_ADC0_SCAN,
     .cb        = &cbFpgaInRight
   };
   DMA_CfgChannel( DMA_FPGA_IN_RIGHT, &chnlCfgRight );
@@ -288,7 +313,7 @@ static void setupFPGAIn( void )
 	DMA_ActivateBasic(DMA_FPGA_IN_RIGHT, true, false, FPGADriver_GetInBuffer(1), (((uint16_t*)audioInBuffer)+1), (bufferSize / 2) - 1);	
 }
 
-void setupFPGAOut( void ) 
+void setupFPGAOut( uint32_t source ) 
 {
 	cbFpgaOutLeft.cbFunc   = fpgaOutLeftCb;
 	cbFpgaOutLeft.userPtr  = NULL;
@@ -298,7 +323,7 @@ void setupFPGAOut( void )
   DMA_CfgChannel_TypeDef chnlCfgLeft = {
     .highPri   = false,
     .enableInt = true,
-    .select    = DMAREQ_DAC0_CH0,
+    .select    = source, //DMAREQ_DAC0_CH0,
     .cb        = &cbFpgaOutLeft
   };
   DMA_CfgChannel( DMA_FPGA_OUT_LEFT,  &chnlCfgLeft );
@@ -306,7 +331,7 @@ void setupFPGAOut( void )
   DMA_CfgChannel_TypeDef chnlCfgRight = {
     .highPri   = false,
     .enableInt = true,
-    .select    = DMAREQ_DAC0_CH0,
+    .select    = source, //DMAREQ_DAC0_CH0,
     .cb        = &cbFpgaOutRight
   };
   DMA_CfgChannel( DMA_FPGA_OUT_RIGHT, &chnlCfgRight );
