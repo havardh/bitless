@@ -45,7 +45,6 @@ ARCHITECTURE behavior OF tb_alu IS
  
     COMPONENT alu
     PORT(
-         dsp_clk : IN  std_logic;
          cpu_clk : IN  std_logic;
          cpu_input_register_1 : IN  std_logic_vector(15 downto 0);
          cpu_input_register_2 : IN  std_logic_vector(15 downto 0);
@@ -59,7 +58,6 @@ ARCHITECTURE behavior OF tb_alu IS
     
 
    --Inputs
-   signal dsp_clk : std_logic := '0';
    signal cpu_clk : std_logic := '0';
    signal cpu_input_register_1 : std_logic_vector(15 downto 0) := (others => '0');
    signal cpu_input_register_2 : std_logic_vector(15 downto 0) := (others => '0');
@@ -72,7 +70,6 @@ ARCHITECTURE behavior OF tb_alu IS
    signal flags : alu_flags;
 
    -- Clock period definitions
-   constant dsp_clk_period : time := 10 ns;
    constant cpu_clk_period : time := 10 ns;
 	
 	--helper signals
@@ -82,7 +79,6 @@ BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: alu PORT MAP (
-          dsp_clk => dsp_clk,
           cpu_clk => cpu_clk,
           cpu_input_register_1 => cpu_input_register_1,
           cpu_input_register_2 => cpu_input_register_2,
@@ -93,15 +89,6 @@ BEGIN
           flags => flags
         );
 
-   -- Clock process definitions
-   dsp_clk_process :process
-   begin
-		dsp_clk <= '0';
-		wait for dsp_clk_period/2;
-		dsp_clk <= '1';
-		wait for dsp_clk_period/2;
-   end process;
- 
    cpu_clk_process :process
    begin
 		cpu_clk <= '0';
@@ -117,7 +104,6 @@ BEGIN
       -- hold reset state for 100 ns.
       wait for 100 ns;	
 
-      wait for dsp_clk_period*10;
 
       -- insert stimulus here 
 		
