@@ -21,7 +21,7 @@ architecture behaviour of clock_controller is
 begin
 	clock_pll: PLL_BASE
 		generic map (
-			clkout0_divide => 5,	-- System clock = 120 MHz
+			clkout0_divide => 25,	-- System clock = 30 MHz
 			clkout1_divide => 3, -- Memory clock = 200 MHz
 			clkout2_divide => 2, -- DSP clock = 300 MHz
 			clkfbout_mult => 10, -- Multiply input clock to 600 MHz, required for the PLL to work
