@@ -15,7 +15,7 @@ entity ebi_controller is
 
 		-- EBI inputs:
 		ebi_address      : in std_logic_vector(22 downto 0);
-		ebi_data         : inout std_logic_vector(7 downto 0);
+		ebi_data         : inout std_logic_vector(15 downto 0);
 		ebi_cs           : in std_logic;
 		ebi_read_enable  : in std_logic;
 		ebi_write_enable : in std_logic;
@@ -41,14 +41,6 @@ architecture behaviour of ebi_controller is
 
 	signal re_value, we_value : std_logic := '0';
 	signal transaction_finished, reset_finished : std_logic := '0';
-
-	type buffer_state is (LOW_WORD, HIGH_WORD);
-
-	signal read_buffer_state : buffer_state := LOW_WORD;
-	signal read_buffer : std_logic_vector(7 downto 0);
-
-	signal write_buffer_state : buffer_state := LOW_WORD;
-	signal write_buffer : std_logic_vector(7 downto 0);
 begin
 	int_write_enable <= we_value;
 	int_read_enable <= re_value;
@@ -68,20 +60,14 @@ begin
 						current_state <= read_state;
 					elsif ebi_write_enable = '0' and ebi_cs = '0' then
 						int_address <= make_internal_address(ebi_address);
+						int_data_in <= ebi_data;
 						current_state <= write_state;
 					end if;
 	
 				when read_state =>
 					if re_value = '1' then
 						re_value <= '0';
-						if read_buffer_state = LOW_WORD then
-							read_buffer <= int_data_out(15 downto 8);
-							ebi_data <= int_data_out(7 downto 0);
-							read_buffer_state <= HIGH_WORD;
-						else
-							ebi_data <= read_buffer;
-							read_buffer_state <= LOW_WORD;
-						end if;
+						ebi_data <= int_data_out;
 						transaction_finished <= '1';
 					elsif transaction_finished = '0' then
 						re_value <= '1';
@@ -95,16 +81,8 @@ begin
 					if we_value = '1' then
 						we_value <= '0';
 						transaction_finished <= '1';
-					end if;
-					
-					if write_buffer_state = LOW_WORD and transaction_finished = '0' and we_value = '0' then
-						write_buffer <= ebi_data;
-						write_buffer_state <= HIGH_WORD;
-						transaction_finished <= '1';
 					elsif transaction_finished = '0' then
-						int_data_in <= ebi_data & write_buffer;
 						we_value <= '1';
-						write_buffer_state <= LOW_WORD;
 					end if;
 
 					if ebi_cs = '1' then

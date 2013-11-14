@@ -19,16 +19,13 @@ architecture testbench of tb_toplevel is
 
 			-- EBI interface lines:
 			ebi_address : in    std_logic_vector(22 downto 0);	-- EBI address lines
-			ebi_data		: inout std_logic_vector(7 downto 0); -- EBI data lines
+			ebi_data		: inout std_logic_vector(15 downto 0); -- EBI data lines
 			ebi_re		: in    std_logic;	-- EBI read enable (active low)
 			ebi_we		: in    std_logic;	-- EBI write enable (active low)
 			ebi_cs		: in    std_logic;	-- EBI chip select (active low)
 
 			-- Miscellaneous lines:
-			ctrl_bus				: inout std_logic_vector(2 downto 0); -- Control bus connected to the MCU
-			led0, led1			: out std_logic; -- LEDs
-			button0, button1	: in  std_logic; -- Buttons
-			gpio_bus				: inout std_logic_vector(3 downto 0) -- GPIO bus, connected to a header
+			ctrl_bus	  : inout std_logic_vector(2 downto 0) -- Control bus connected to the MCU
 		);
 	end component;
 
@@ -38,14 +35,11 @@ architecture testbench of tb_toplevel is
 
 	-- EBI signals:
 	signal ebi_address : std_logic_vector(22 downto 0) := (others => '0');
-	signal ebi_data : std_logic_vector(7 downto 0) := (others => '0');
+	signal ebi_data : std_logic_vector(15 downto 0) := (others => '0');
 	signal ebi_re, ebi_we, ebi_cs : std_logic := '1';
 
 	-- Other connections:
-	signal led0, led1 : std_logic;
-	signal button0, button1 : std_logic := '0';
 	signal ctrl_bus : std_logic_vector(2 downto 0);
-	signal gpio_bus : std_logic_vector(12 downto 0);
 
 	-- Makes an EBI address:
 	function make_ebi_address(toplevel : boolean; pipeline : std_logic_vector(1 downto 0);
@@ -82,11 +76,7 @@ begin
 			ebi_re => ebi_re,
 			ebi_we => ebi_we,
 			ebi_cs => ebi_cs,
-			ctrl_bus => ctrl_bus,
-			led0 => led0,
-			led1 => led1,
-			button0 => button0,
-			button1 => button1
+			ctrl_bus => ctrl_bus
 		);
 
 	-- FPGA clock process:
@@ -107,9 +97,7 @@ begin
 		wait for clk_period * 2;
 
 		-- Read the toplevel control register:
-
-		-- Low word:
-		report "Reading toplevel control register, low word";
+		report "Reading toplevel control register";
 		ebi_cs <= '0';
 		ebi_address <= make_ebi_address(true, b"00", b"0000", b"00", b"00000000000000");
 		ebi_data <= (others => 'Z');
@@ -117,88 +105,75 @@ begin
 		ebi_re <= '0';
 		wait for EBI_RE_WAIT;
 		ebi_re <= '1';
-		toplevel_control_register(7 downto 0) <= ebi_data;
+		toplevel_control_register <= ebi_data;
 		wait for EBI_CS_WAIT;
 		ebi_cs <= '1';
-		
 		wait for EBI_CS_WAIT;
 
-		-- High word:
-		report "Reading toplevel control register, high word";
+		-- Read pipeline 0's control register:
+		report "Reading pipeline control register";
 		ebi_cs <= '0';
-		ebi_address <= make_ebi_address(true, b"00", b"0000", b"00", b"00000000000000");
+		ebi_address <= make_ebi_address(false, b"00", b"0000", b"00", b"00000000000000");
 		ebi_data <= (others => 'Z');
 		wait for EBI_CS_WAIT;
 		ebi_re <= '0';
 		wait for EBI_RE_WAIT;
 		ebi_re <= '1';
-		toplevel_control_register(15 downto 8) <= ebi_data;
 		wait for EBI_CS_WAIT;
 		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
 
-		wait for EBI_CS_WAIT / 2;
-		toplevel_control_register <= toplevel_control_register and not b"0010000000000000";
-		wait for EBI_CS_WAIT / 2;
-
-		-- Clear the stopmode bit in the toplevel control register:
-
-		-- Low word:
-		report "Writing toplevel control register, low word";
+		-- Read core 0's control register:
+		report "Reading core control register";
 		ebi_cs <= '0';
-		ebi_address <= make_ebi_address(true, b"00", b"0000", b"00", b"00000000000000");
-		ebi_data <= toplevel_control_register(7 downto 0);
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"00", b"00000000000000");
+		ebi_data <= (others => 'Z');
+		wait for EBI_CS_WAIT;
+		ebi_re <= '0';
+		wait for EBI_RE_WAIT;
+		ebi_re <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		-- Write the first instruction to memory of core 0:
+		report "Writing word 1 into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000000");
+		ebi_data <= b"0111000001000000";
 		wait for EBI_CS_WAIT;
 		ebi_we <= '0';
 		wait for EBI_WE_WAIT;
 		ebi_we <= '1';
 		wait for EBI_CS_WAIT;
 		ebi_cs <= '1';
-		
 		wait for EBI_CS_WAIT;
 
-		-- High word:
-		report "Writing toplevel control register, low word";
+		-- Write the second instruction to memory of core 0:
+		report "Writing word 2 into core 0's instruction memory";
 		ebi_cs <= '0';
-		ebi_address <= make_ebi_address(true, b"00", b"0000", b"00", b"00000000000000");
-		ebi_data <= toplevel_control_register(15 downto 8);
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000001");
+		ebi_data <= b"0111110001000000";
 		wait for EBI_CS_WAIT;
 		ebi_we <= '0';
 		wait for EBI_WE_WAIT;
 		ebi_we <= '1';
 		wait for EBI_CS_WAIT;
 		ebi_cs <= '1';
-
 		wait for EBI_CS_WAIT;
 
-		-- Read the toplevel control register back again:
-
-		-- Low word:
-		report "Reading toplevel control register, low word";
+		-- Write the third instruction to memory of core 0:
+		report "Writing word 1 into core 0's instruction memory";
 		ebi_cs <= '0';
-		ebi_address <= make_ebi_address(true, b"00", b"0000", b"00", b"00000000000000");
-		ebi_data <= (others => 'Z');
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000010");
+		ebi_data <= b"0011000000000000";
 		wait for EBI_CS_WAIT;
-		ebi_re <= '0';
-		wait for EBI_RE_WAIT;
-		ebi_re <= '1';
-		toplevel_control_register(7 downto 0) <= ebi_data;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
 		wait for EBI_CS_WAIT;
 		ebi_cs <= '1';
-		
 		wait for EBI_CS_WAIT;
-
-		-- High word:
-		report "Reading toplevel control register, high word";
-		ebi_cs <= '0';
-		ebi_address <= make_ebi_address(true, b"00", b"0000", b"00", b"00000000000000");
-		ebi_data <= (others => 'Z');
-		wait for EBI_CS_WAIT;
-		ebi_re <= '0';
-		wait for EBI_RE_WAIT;
-		ebi_re <= '1';
-		toplevel_control_register(15 downto 8) <= ebi_data;
-		wait for EBI_CS_WAIT;
-		ebi_cs <= '1';
 
 		wait;
 	end process;

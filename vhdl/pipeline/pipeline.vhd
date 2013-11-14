@@ -171,6 +171,11 @@ architecture behaviour of pipeline is
 	signal output_write_address : address_array(0 to NUMBER_OF_CORES - 1);
 	signal output_write_data : data_array_32(0 to NUMBER_OF_CORES - 1);
 	signal output_write_enable : std_logic_vector(0 to NUMBER_OF_CORES - 1);
+
+	-- Core control registers:
+	signal core_control_registers : core_control_register_array(0 to NUMBER_OF_CORES - 1) :=
+		(others => (reset => '0', stopmode => '0',
+			instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)), deadline_missed => '0'));
 begin
 	-- Zero-extended internal signals:
 	internal_dest_address <= b"00" & int_address.address;
@@ -189,7 +194,7 @@ begin
 	-- Internal bus read process:
 	internal_bus_read: process(clk, int_re)
 	begin
-		if rising_edge(clk) then
+		if falling_edge(clk) then
 			if int_re = '1' then
 				if int_address.toplevel = '0' and int_address.pipeline = pipeline_address then
 					case int_address.device is
@@ -206,8 +211,13 @@ begin
 							-- Read core memories
 							case int_address.coredev is
 								when b"00" =>
-									-- Read control register
+									int_data_out <=
+										core_control_registers(to_integer(unsigned(internal_core))).instruction_memory_size
+										& b"00000000" & core_control_registers(to_integer(unsigned(internal_core))).deadline_missed
+										& core_control_registers(to_integer(unsigned(internal_core))).stopmode
+										& core_control_registers(to_integer(unsigned(internal_core))).reset;
 								when others =>
+									int_data_out <= (others => '0');
 							end case;
 					end case;
 				end if;
@@ -237,7 +247,12 @@ begin
 							-- Write core memories
 							case int_address.coredev is
 								when b"00" =>
-									-- Write control register
+									core_control_registers(to_integer(unsigned(internal_core))).reset <=
+										int_data_in(0);
+									core_control_registers(to_integer(unsigned(internal_core))).stopmode <=
+										int_data_in(1);
+								when b"01" =>
+									instr_write_enable(to_integer(unsigned(internal_core))) <= '1';
 								when others =>
 							end case;
 					end case;
@@ -280,6 +295,8 @@ begin
 				constmem_read_address_b <= constmem_address_array(i);
 			else
 				constmem_data_array(i) <= (others => '0');
+				constmem_read_address_a <= (others => '0');
+				constmem_read_address_b <= (others => '0');
 			end if;
 		end loop;
 	end process;
@@ -304,8 +321,7 @@ begin
 	-- Set up the output buffer signals:
 	input_read_address(NUMBER_OF_CORES - 1) <= internal_dest_address;
 
-	generate_cores:
-	for i in 0 to NUMBER_OF_CORES - 1 generate
+	generate_cores: for i in 0 to NUMBER_OF_CORES - 1 generate
 		-- Instruction memory:
 		instruction_mem: instruction_memory
 			generic map(size => 512)
