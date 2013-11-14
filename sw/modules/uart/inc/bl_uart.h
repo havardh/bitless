@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "em_device.h"
 #include "em_chip.h"
 #include "em_emu.h"
@@ -24,11 +25,15 @@ typedef volatile struct {
     bool     overflow;          /* buffer overflow indicator */
 } circularBuffer;
 
-void UART_Init(circularBuffer *rx, circularBuffer *tx);
+/* UART Transfer / Receive methods */
+void UART_Init(void);
 void UART_PutChar(uint8_t charPtr);
 uint8_t UART_GetChar(void);
 void UART_PutData(uint8_t * dataPtr, uint32_t dataLen);
 uint32_t UART_GetData(uint8_t * dataPtr, uint32_t dataLen);
 
+/* UART Terminal commands */
+void UART_ClearScreen(void);
+void UART_SetCursor(int row, int col);
 
 #endif // _SERIAL_H_
