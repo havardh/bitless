@@ -1,4 +1,4 @@
-	####################################################################
+####################################################################
 # Makefile							   #
 ####################################################################
 
@@ -25,11 +25,11 @@ LST_DIR = lst
 # DO NOT add trailing whitespace chars, they do matter !
 WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2012q4
 # LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
-LINUXCS	   ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
+LINUXCS		 ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
 # /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
 
-LIB=libs
-DIR=.
+LIB=../../libs
+DIR=../..
 #/Users/havard/Documents/Silabs
 
 RMDIRS	   := rm -rf
@@ -114,15 +114,16 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
--I$(DIR)/modules/buttons/inc \
--I$(DIR)/modules/leds/inc \
--I$(DIR)/modules/main/inc \
+-Iinc/ \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
+-I$(LIB)/kits/common/drivers \
 -I$(LIB)/kits/EFM32GG_bitless/config \
--I$(DIR)/modules/programs/inc \
+-I$(DIR)/modules/uart/inc \
+-I$(DIR)/modules/serial/inc \
+-I$(DIR)/modules/fpga/inc \
 -I$(LIB)/emdrv/gpiointerrupt/inc
 
 ####################################################################
@@ -137,17 +138,15 @@ $(LIB)/emlib/src/em_ebi.c \
 $(LIB)/emlib/src/em_emu.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
+$(LIB)/emlib/src/em_letimer.c \
+$(LIB)/emlib/src/em_pcnt.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
+$(DIR)/modules/uart/src/bl_uart.c \
+$(DIR)/modules/serial/src/bl_sdi.c \
+$(DIR)/modules/fpga/src/FPGAController.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-$(DIR)/modules/leds/src/bl_leds.c \
-$(DIR)/modules/main/src/MainController.c \
-$(DIR)/modules/buttons/src/bl_buttons.c \
-$(DIR)/modules/programs/src/LiveFilter.c \
-$(DIR)/modules/programs/src/Wavplayer.c \
-$(DIR)/modules/programs/src/StoredFilter.c \
-$(DIR)/modules/programs/src/FPGAProgrammer.c \
-$(PROJECTNAME).c
+demo/$(PROJECTNAME).c
 
 s_SRC +=
 
@@ -180,7 +179,7 @@ all:	  debug
 debug:	  CFLAGS += -DDEBUG -O0 -g3 -std=c99
 debug:	  $(EXE_DIR)/$(PROJECTNAME).bin
 
-release:  CFLAGS += -DNDEBUG -O0 -g3 -std=c99
+release:  CFLAGS += -DNDEBUG -O0 -g3
 release:  $(EXE_DIR)/$(PROJECTNAME).bin
 
 # Create objects from C SRC files

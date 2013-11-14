@@ -9,9 +9,11 @@ package core_constants is
 	type ringbuffer_mode is (NORMAL_MODE, RING_MODE);
 
 	-- Total number of pipelines to generate:
-	constant NUMBER_OF_PIPELINES : integer := 2;
+	constant NUMBER_OF_PIPELINES : integer := 1;
 	-- Total number of cores to generate:
-	constant NUMBER_OF_CORES : integer := 8;
+	constant NUMBER_OF_CORES : integer := 1;
+	-- Size of the instruction memories:
+	constant IMEM_SIZE : integer := 512;
 
 	type alu_flags is
 		record

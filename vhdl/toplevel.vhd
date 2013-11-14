@@ -19,29 +19,17 @@ entity toplevel is
 
 		-- EBI interface lines:
 		ebi_address : in    std_logic_vector(22 downto 0);	-- EBI address lines
-		ebi_data		: inout std_logic_vector(7 downto 0); -- EBI data lines
+		ebi_data		: inout std_logic_vector(15 downto 0); -- EBI data lines
 		ebi_re		: in    std_logic;	-- EBI read enable (active low)
 		ebi_we		: in    std_logic;	-- EBI write enable (active low)
 		ebi_cs		: in    std_logic;	-- EBI chip select (active low)
 
 		-- Miscellaneous lines:
-		ctrl_bus				: inout std_logic_vector(2 downto 0); -- Control bus connected to the MCU
-		led0, led1			: out std_logic; -- LEDs
-		button0, button1	: in std_logic;  -- Buttons
-		gpio_bus				: inout std_logic_vector(3 downto 0) -- GPIO bus, connected to a header
+		ctrl_bus	  : inout std_logic_vector(2 downto 0) -- Control bus connected to the MCU
 	);
 end entity;
 
 architecture behaviour of toplevel is
-
-	-- Blink controller for testmode:
-	component blink_controller is
-		port(
-			system_clk : in std_logic; -- System clock input (60MHz)
-			enable, reset : in std_logic; -- Blink controller enable and reset signals
-			led0_blink, led1_blink : out std_logic -- Output signal for the LEDs
-		);
-	end component;
 
 	-- Main pipeline component:
 	component pipeline is
@@ -88,12 +76,9 @@ architecture behaviour of toplevel is
 	-- Inverted EBI CS signal:
 	signal ebi_cs_inv : std_logic;
 
-	-- Blinking LEDS:
-	signal blinking_led0, blinking_led1 : std_logic;
-
 	-- Toplevel control register:
-	signal control_register : toplevel_control_register := (reset => '0', led0 => '0', led1 => '0', blinkmode => '1',
-		number_of_pipelines => std_logic_vector(to_unsigned(NUMBER_OF_PIPELINES, 3)), button0 => '0', button1 => '0');
+	signal control_register : toplevel_control_register := (reset => '0',
+		number_of_pipelines => std_logic_vector(to_unsigned(NUMBER_OF_PIPELINES, 3)));
 begin
 	-- Set up the clock controller:
 	clk_ctrl: clock_controller
@@ -122,22 +107,6 @@ begin
 			int_read_enable => internal_bus_read
 		);
 
-	-- Instatiate the blink controller:
-	blink_ctrl: blink_controller
-		port map(
-			system_clk => system_clk,
-			enable => control_register.blinkmode,
-			reset => control_register.reset,
-			led0_blink => blinking_led0,
-			led1_blink => blinking_led1
-		);
-
-	-- Set up the control register:
-	control_register.button0 <= button0;
-	control_register.button1 <= button1;
-	led0 <= blinking_led0 when control_register.blinkmode = '1' else control_register.led0;
-	led1 <= blinking_led1 when control_register.blinkmode = '1' else control_register.led1;
-
 	-- Toplevel internal bus process:
 	control_reg_access: process(system_clk, internal_bus_address, internal_bus_data_out, internal_bus_data_in,
 		internal_bus_read, internal_bus_write, control_register)
@@ -148,11 +117,6 @@ begin
 	
 					-- Write the writeable control register fields:
 					control_register.reset <= internal_bus_data_in(15);
-					control_register.blinkmode <= internal_bus_data_in(13);
-					if control_register.blinkmode = '0' then -- LEDs only writeable if not in blink mode
-						control_register.led0 <= internal_bus_data_in(12);
-						control_register.led1 <= internal_bus_data_in(11);
-					end if;
 
 				end if;
 			end if;
@@ -160,14 +124,7 @@ begin
 	end process;
 
 	internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)))
-		when internal_bus_address.toplevel = '0' else b"00" &
-					control_register.blinkmode &	-- Bit 13
-					control_register.led0 &			-- Bit 12
-					control_register.led1 &			-- Bit 11
-					control_register.button1 &		-- Bit 10
-					control_register.button0 &		-- Bit  9
-					b"000000" &
-					control_register.number_of_pipelines; -- LSB
+		when internal_bus_address.toplevel = '0' else b"0000000000000" & control_register.number_of_pipelines; -- LSB
 
 	generate_pipelines:
 		for i in 0 to NUMBER_OF_PIPELINES - 1 generate
