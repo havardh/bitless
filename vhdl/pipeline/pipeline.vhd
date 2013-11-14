@@ -69,6 +69,7 @@ architecture behaviour of pipeline is
 			  sample_clk          : in std_logic; -- Reset signal, "large cycle" clock signal
 
 			  reset               : in std_logic; -- Resets the processor core
+	  		  proc_finished       : out std_logic := '0';
 			  
 			  -- Connection to instruction memory:
 			  instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
@@ -145,6 +146,9 @@ architecture behaviour of pipeline is
 	signal internal_device : std_logic_vector(15 downto 0);
 	signal internal_core : std_logic_vector(15 downto 0);
 
+	-- Processor clock signals:
+	signal processor_clock : std_logic_vector(0 to NUMBER_OF_CORES - 1);
+
 	-- Constant memory signals:
 	signal constmem_write_enable : std_logic := '0';
 	signal constmem_address_array : address_array(0 to NUMBER_OF_CORES - 1); -- Constant memory address array, from cores
@@ -174,7 +178,7 @@ architecture behaviour of pipeline is
 
 	-- Core control registers:
 	signal core_control_registers : core_control_register_array(0 to NUMBER_OF_CORES - 1) :=
-		(others => (reset => '0', stopmode => '0',
+		(others => (reset => '1', stopmode => '1',
 			instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)), deadline_missed => '0'));
 begin
 	-- Zero-extended internal signals:
@@ -336,12 +340,14 @@ begin
 			);
 
 		-- Core:
+		processor_clock(i) <= clk when core_control_registers(i).stopmode = '0' and control_register.stopmode = '0' else '0';
 		processor_core: core
 			port map(
-				clk => clk,
+				clk => processor_clock(i),
 				memclk => memory_clk,
 				sample_clk => sample_clk,
-				reset => '0',
+				reset => core_control_registers(i).reset,
+				proc_finished => open,
 				constant_addr => constmem_address_array(i),
 				constant_data => constmem_data_array(i),
 				instruction_addr => instr_read_address(i),

@@ -123,10 +123,8 @@ begin
 		end if;
 	end process;
 
---	internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)))
---		when internal_bus_address.toplevel = '0' else b"0000000000000" & control_register.number_of_pipelines; -- LSB
-
-	internal_bus_data_out <= x"ffff";
+	internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)))
+		when internal_bus_address.toplevel = '0' else b"0000000000000" & control_register.number_of_pipelines; -- LSB
 
 	generate_pipelines:
 		for i in 0 to NUMBER_OF_PIPELINES - 1 generate

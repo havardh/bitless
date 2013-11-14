@@ -175,6 +175,27 @@ begin
 		ebi_cs <= '1';
 		wait for EBI_CS_WAIT;
 
+		-- Write a sample to the input buffer, address 0:
+		-- Write the third instruction to memory of core 0:
+		report "Writing a sample into the input buffer of pipeline 0";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0010", b"00", b"00000000000000");
+		ebi_data <= x"beef";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		-- Disable the stopmode in the pipeline:
+		report "Disabling pipeline stopmode";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0000", b"00", b"00000000000000");
+		ebi_data <= (7 => '0', others => '0');
+		
+
 		wait;
 	end process;
 
