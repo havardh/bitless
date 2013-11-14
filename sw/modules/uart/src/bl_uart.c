@@ -4,13 +4,18 @@
 static USART_TypeDef           * uart   = UART0;
 static USART_InitAsync_TypeDef uartInit = USART_INITASYNC_DEFAULT;
 
-circularBuffer *rxBuf, *txBuf;
+const char     clearScreen[]    = "\033[2J";
+const uint32_t clearLen         = sizeof(clearScreen) - 1;
+const char     resetCursor[]    = "\033[1;1H";
+const uint32_t resetLen         = sizeof(resetCursor) - 1;
+
+circularBuffer rxBuf, txBuf = { {0}, 0, 0, 0, false };
 
 /******************************************************************************
 * @brief  uartSetup function
 *
 ******************************************************************************/
-void UART_Init(circularBuffer *rx, circularBuffer *tx) {
+void UART_Init(void) {
     /* Enable clock for HF peripherals */
     CMU_ClockEnable(cmuClock_HFPER, true);
     /* Enable clock for USART module */
@@ -20,9 +25,6 @@ void UART_Init(circularBuffer *rx, circularBuffer *tx) {
     /* Configure GPIO pins, uart location 0 */
     GPIO_PinModeSet(gpioPortF, 6, gpioModePushPull, 1); // TX
     GPIO_PinModeSet(gpioPortF, 7, gpioModeInput, 0);    // RX
-
-    rxBuf = rx;
-    txBuf = tx;
 
     /* Prepare struct for initializing UART in asynchronous mode*/
     uartInit.enable       = usartDisable;   /* Don't enable UART upon intialization */
@@ -54,7 +56,23 @@ void UART_Init(circularBuffer *rx, circularBuffer *tx) {
     USART_Enable(uart, usartEnable);
 }
 
+/********************************
+* Terminal controls
+********************************/
 
+void UART_ClearScreen(void) {
+    UART_PutData((uint8_t *) clearScreen, clearLen);
+}
+
+void UART_SetCursor(int row, int col) {
+    if (row > 0 && col > 0) {
+        char cursorPos[resetLen];
+        sprintf(cursorPos, "\033[%d;%dH", row, col);
+            UART_PutData((uint8_t *) cursorPos, resetLen);
+    } else {
+        UART_PutData((uint8_t *) resetCursor, resetLen);
+    }
+}
 
 /******************************************************************************
  * @brief  uartGetChar function
@@ -65,16 +83,16 @@ uint8_t UART_GetChar(void) {
     uint8_t ch;
 
     /* Check if there is a byte that is ready to be fetched. If no byte is ready, wait for incoming data */
-    if (rxBuf->pendingBytes < 1) {
-        while (rxBuf->pendingBytes < 1) ;
+    if (rxBuf.pendingBytes < 1) {
+        while (rxBuf.pendingBytes < 1) ;
     }
 
     /* Copy data from buffer */
-    ch        = rxBuf->data[rxBuf->rdI];
-    rxBuf->rdI = (rxBuf->rdI + 1) % BUFFERSIZE;
+    ch        = rxBuf.data[rxBuf.rdI];
+    rxBuf.rdI = (rxBuf.rdI + 1) % BUFFERSIZE;
 
     /* Decrement pending byte counter */
-    rxBuf->pendingBytes--;
+    rxBuf.pendingBytes--;
 
     return ch;
 }
@@ -85,20 +103,49 @@ uint8_t UART_GetChar(void) {
  *****************************************************************************/
 void UART_PutChar(uint8_t ch) {
     /* Check if Tx queue has room for new data */
-    if ((txBuf->pendingBytes + 1) > BUFFERSIZE) {
+    if ((txBuf.pendingBytes + 1) > BUFFERSIZE) {
         /* Wait until there is room in queue */
-        while ((txBuf->pendingBytes + 1) > BUFFERSIZE) ;
+        while ((txBuf.pendingBytes + 1) > BUFFERSIZE) ;
     }
 
     /* Copy ch into txBuffer */
-    txBuf->data[txBuf->wrI] = ch;
-    txBuf->wrI             = (txBuf->wrI + 1) % BUFFERSIZE;
+    txBuf.data[txBuf.wrI] = ch;
+    txBuf.wrI             = (txBuf.wrI + 1) % BUFFERSIZE;
 
     /* Increment pending byte counter */
-    txBuf->pendingBytes++;
+    txBuf.pendingBytes++;
 
     /* Enable interrupt on USART TX Buffer*/
     USART_IntEnable(uart, UART_IF_TXBL);
+}
+
+/******************************************************************************
+ * @brief  uartGetData function
+ *
+ *****************************************************************************/
+uint32_t UART_GetData(uint8_t * dataPtr, uint32_t dataLen) {
+    uint32_t i = 0;
+
+    /* Wait until the requested number of bytes are available */
+    if (rxBuf.pendingBytes < dataLen) {
+        while (rxBuf.pendingBytes < dataLen) ;
+    }
+
+    if (dataLen == 0) {
+        dataLen = rxBuf.pendingBytes;
+    }
+
+    /* Copy data from Rx buffer to dataPtr */
+    while (i < dataLen) {
+        *(dataPtr + i) = rxBuf.data[rxBuf.rdI];
+        rxBuf.rdI      = (rxBuf.rdI + 1) % BUFFERSIZE;
+        i++;
+    }
+
+    /* Decrement pending byte counter */
+    rxBuf.pendingBytes -= dataLen;
+
+    return i;
 }
 
 /******************************************************************************
@@ -115,54 +162,24 @@ void UART_PutData(uint8_t *dataPtr, uint32_t dataLen) {
     }
 
     /* Check if buffer has room for new data */
-    if ((txBuf->pendingBytes + dataLen) > BUFFERSIZE) {
+    if ((txBuf.pendingBytes + dataLen) > BUFFERSIZE) {
         /* Wait until room */
-        while ((txBuf->pendingBytes + dataLen) > BUFFERSIZE) ;
+        while ((txBuf.pendingBytes + dataLen) > BUFFERSIZE) ;
     }
 
     /* Fill dataPtr[0:dataLen-1] into txBuffer */
     while (i < dataLen) {
-        txBuf->data[txBuf->wrI] = *(dataPtr + i);
-        txBuf->wrI             = (txBuf->wrI + 1) % BUFFERSIZE;
+        txBuf.data[txBuf.wrI] = *(dataPtr + i);
+        txBuf.wrI             = (txBuf.wrI + 1) % BUFFERSIZE;
         i++;
     }
 
     /* Increment pending byte counter */
-    txBuf->pendingBytes += dataLen;
+    txBuf.pendingBytes += dataLen;
 
     /* Enable interrupt on USART TX Buffer*/
     USART_IntEnable(uart, UART_IF_TXBL);
 }
-
-/******************************************************************************
- * @brief  uartGetData function
- *
- *****************************************************************************/
-uint32_t UART_GetData(uint8_t * dataPtr, uint32_t dataLen) {
-    uint32_t i = 0;
-
-    /* Wait until the requested number of bytes are available */
-    if (rxBuf->pendingBytes < dataLen) {
-        while (rxBuf->pendingBytes < dataLen) ;
-    }
-
-    if (dataLen == 0) {
-        dataLen = rxBuf->pendingBytes;
-    }
-
-    /* Copy data from Rx buffer to dataPtr */
-    while (i < dataLen) {
-        *(dataPtr + i) = rxBuf->data[rxBuf->rdI];
-        rxBuf->rdI      = (rxBuf->rdI + 1) % BUFFERSIZE;
-        i++;
-    }
-
-    /* Decrement pending byte counter */
-    rxBuf->pendingBytes -= dataLen;
-
-    return i;
-}
-
 
 /**************************************************************************//**
  * @brief UART0 RX IRQ Handler
@@ -177,13 +194,13 @@ void UART0_RX_IRQHandler(void) {
     if (uart->STATUS & UART_STATUS_RXDATAV) {
         /* Copy data into RX Buffer */
         uint8_t rxData = USART_Rx(uart);
-        rxBuf->data[rxBuf->wrI] = rxData;
-        rxBuf->wrI             = (rxBuf->wrI + 1) % BUFFERSIZE;
-        rxBuf->pendingBytes++;
+        rxBuf.data[rxBuf.wrI] = rxData;
+        rxBuf.wrI             = (rxBuf.wrI + 1) % BUFFERSIZE;
+        rxBuf.pendingBytes++;
 
         /* Flag Rx overflow */
-        if (rxBuf->pendingBytes > BUFFERSIZE) {
-            rxBuf->overflow = true;
+        if (rxBuf.pendingBytes > BUFFERSIZE) {
+            rxBuf.overflow = true;
         }
 
         /* Clear RXDATAV interrupt */
@@ -200,15 +217,15 @@ void UART0_RX_IRQHandler(void) {
 void UART0_TX_IRQHandler(void) {
     /* Check TX buffer level status */
     if (uart->STATUS & UART_STATUS_TXBL) {
-        if (txBuf->pendingBytes > 0) {
+        if (txBuf.pendingBytes > 0) {
             /* Transmit pending character */
-            USART_Tx(uart, txBuf->data[txBuf->rdI]);
-            txBuf->rdI = (txBuf->rdI + 1) % BUFFERSIZE;
-            txBuf->pendingBytes--;
+            USART_Tx(uart, txBuf.data[txBuf.rdI]);
+            txBuf.rdI = (txBuf.rdI + 1) % BUFFERSIZE;
+            txBuf.pendingBytes--;
         }
 
         /* Disable Tx interrupt if no more bytes in queue */
-        if (txBuf->pendingBytes == 0) {
+        if (txBuf.pendingBytes == 0) {
             USART_IntDisable(uart, UART_IF_TXBL);
         }
     }
