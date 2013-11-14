@@ -284,27 +284,54 @@ BEGIN
 		wait for cpu_clk_period/2;
 		assert result = "11111111111111111111111111110011" report "Float_to_fix not working!";
 		
+--		--testing fp multiply, 5*3=15
+--		operation				<= ALU_FIXED_TO_FLOAT;
+--		cpu_input_register_1	<= x"0003"; 
+--		wait for cpu_clk_period/2;
+--		helper1 <= result;
+--		
+--		operation				<= ALU_FIXED_TO_FLOAT;
+--		cpu_input_register_1	<= x"0005"; 
+--		wait for cpu_clk_period/2;
+--		helper2 <= result;
+--		wait for cpu_clk_period;
+--		operation 				 <= FP_MUL;
+--		cpu_input_register_1  <= helper1(15 downto 0);
+--		cpu_input_register_2  <= helper2(15 downto 0);
+--		wait for cpu_clk_period/2;
+--		helper3 <= result;
+--		wait for cpu_clk_period;
+--		operation				<= ALU_FLOAT_TO_FIXED;
+--		cpu_input_register_1	<= helper3(15 downto 0);
+--		wait for cpu_clk_period/2;
+--		assert result = x"0000000F" report "Float_to_fix not working!";
+
 		--testing fp multiply, 5*3=15
 		operation				<= ALU_FIXED_TO_FLOAT;
 		cpu_input_register_1	<= x"0003"; 
 		wait for cpu_clk_period/2;
 		helper1 <= result;
 		
-		operation				<= ALU_FIXED_TO_FLOAT;
+		operation				<= ALU_FIXED_TO_FLOAT; 
 		cpu_input_register_1	<= x"0005"; 
 		wait for cpu_clk_period/2;
 		helper2 <= result;
 		wait for cpu_clk_period;
-		operation 				 <= FP_MUL;
-		cpu_input_register_1  <= helper1(15 downto 0);
-		cpu_input_register_2  <= helper2(15 downto 0);
+		
+		operation 				 <= FP_SUB;
+		cpu_input_register_1  <= ext(helper1(12 downto 0));
+		cpu_input_register_2  <= ext(helper2(12 downto 0));
 		wait for cpu_clk_period/2;
 		helper3 <= result;
-		wait for cpu_clk_period;
+		wait for cpu_clk_period*2;
+		
 		operation				<= ALU_FLOAT_TO_FIXED;
 		cpu_input_register_1	<= helper3(15 downto 0);
 		wait for cpu_clk_period/2;
-		assert result = x"0000000F" report "Float_to_fix not working!";
+		assert result = x"00000008" report "Float_to_fix not working!";
+
+
+		
 
 
       wait;

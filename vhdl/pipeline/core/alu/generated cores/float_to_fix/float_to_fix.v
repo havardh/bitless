@@ -7,12 +7,12 @@
 // \   \   \/     Version: M.81d
 //  \   \         Application: netgen
 //  /   /         Filename: float_to_fix.v
-// /___/   /\     Timestamp: Wed Nov 13 15:39:56 2013
+// /___/   /\     Timestamp: Thu Nov 14 10:36:07 2013
 // \   \  /  \ 
 //  \___\/\___\
 //             
 // Command	: -intstyle ise -w -sim -ofmt verilog ./tmp/_cg\float_to_fix.ngc ./tmp/_cg\float_to_fix.v 
-// Device	: 6slx16csg324-2
+// Device	: 6slx45csg324-2
 // Input file	: ./tmp/_cg/float_to_fix.ngc
 // Output file	: ./tmp/_cg/float_to_fix.v
 // # of Modules	: 1

@@ -185,7 +185,7 @@ begin
 				result	<= mul_result;
 				
 			when ALU_FPU_SELECT =>
-				result	<= cfpu_result_1&cfpu_result_2;
+				result	<= ext(cfpu_result_1, 32);
 				flags	<= cfpu_flags;
 				
 			when ALU_FIX_SELECT =>
