@@ -3,15 +3,15 @@
 
 #include "MainController.h"
 
-#include "Wavplayer.h"
-#include "FPGAProgrammer.h"
-#include "LiveFilter.h"
-#include "StoredFilter.h"
+//#include "Wavplayer.h"
+//#include "FPGAProgrammer.h"
+//#include "LiveFilter.h"
+//#include "StoredFilter.h"
 
-void programFPGA(void);
-void startADCtoDAC(void);
-void startSDtoSD(void);
-void startWAVPlayer(void);
+void programFPGA(uint8_t pin);
+void startADCtoDAC(uint8_t pin);
+void startSDtoSD(uint8_t pin);
+void startWAVPlayer(uint8_t pin);
 
 void callback(uint8_t pin);
 
@@ -24,6 +24,10 @@ void MainController_init(void)
 
 void MainController_run(void) 
 {
+
+	Board_t type = BITLESS;
+	Buttons_Init(type);
+	Leds_Init();
 
 	while(1) {
 		EMU_EnterEM3(true);
@@ -53,5 +57,5 @@ void startWAVPlayer(uint8_t pin)
 
 void callback(uint8_t pin)
 {
-	Leds_SetLeds(0x16);
+	Leds_SetLeds(0x10);
 }
