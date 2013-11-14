@@ -1,44 +1,44 @@
 --------------------------------------------------------------------------------
--- Company: 
+-- Company:
 -- Engineer:
 --
 -- Create Date:   15:42:47 11/14/2013
--- Design Name:   
+-- Design Name:
 -- Module Name:   M:/Github/tdt4295/vhdl/testbenches/tb_core.vhd
 -- Project Name:  tdt4295_core
--- Target Device:  
--- Tool versions:  
--- Description:   
--- 
+-- Target Device:
+-- Tool versions:
+-- Description:
+--
 -- VHDL Test Bench Created by ISE for module: core
--- 
+--
 -- Dependencies:
--- 
+--
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
 --
--- Notes: 
+-- Notes:
 -- This testbench has been automatically generated using types std_logic and
 -- std_logic_vector for the ports of the unit under test.  Xilinx recommends
 -- that these types always be used for the top-level I/O of a design in order
--- to guarantee that the testbench will bind correctly to the post-implementation 
+-- to guarantee that the testbench will bind correctly to the post-implementation
 -- simulation model.
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
- 
+
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
- 
+
 ENTITY tb_core IS
 END tb_core;
- 
-ARCHITECTURE behavior OF tb_core IS 
- 
+
+ARCHITECTURE behavior OF tb_core IS
+
     -- Component Declaration for the Unit Under Test (UUT)
- 
+
     COMPONENT core
     PORT(
          clk : IN  std_logic;
@@ -58,7 +58,7 @@ ARCHITECTURE behavior OF tb_core IS
          output_read_data : IN  std_logic_vector(31 downto 0)
         );
     END COMPONENT;
-    
+
 
    --Inputs
    signal clk : std_logic := '0';
@@ -81,7 +81,7 @@ ARCHITECTURE behavior OF tb_core IS
 
    -- Clock period definitions
    constant clk_period : time := 10 ns;
-   
+
    --Signal constants
 	constant zero32b : std_logic_vector(31 downto 0) := X"00000000";
 	constant wait_period : integer := 5; --Should be the clockcycles an instruction needs to propagate through the whole pipelined core
@@ -103,14 +103,14 @@ ARCHITECTURE behavior OF tb_core IS
 	--and all loads will have to check the register files and have the value ready on the inputlines on core when the instruction is run.
 
 	  --Store instructions
-	constant store_outpt_1 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"10101"&"00010"; --Store value in register 13 into the output address register 2's value points to
-	constant store_outpt_2 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"11111"&"00011"; --Store value in register 31 into the output address register 3's value points to
-	constant store_outpt_3 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00000"&"00100"; --Store value in register 0 into the output address register 4's value points to
-	constant store_outpt_4 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"01010"&"00101"; --Store value in register 8 into the output address register 5's value points to
-	constant store_outpt_5 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"11011"&"00110"; --Store value in register 27 into the output address register 6's value points to
-	constant store_outpt_6 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00100"&"00111"; --Store value in register 4 into the output address register 7's value points to
-	constant store_outpt_7 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00111"&"01000"; --Store value in register 7 into the output address register 8's value points to
-	constant store_outpt_8 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"11000"&"01001"; --Store value in register 24 into the output address register 9's value points to
+	constant store_outpt_1 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00010"&"10101"; --Store value in register 21 into the output address register 2's value points to
+	constant store_outpt_2 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00011"&"11111"; --Store value in register 31 into the output address register 3's value points to
+	constant store_outpt_3 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00100"&"00000"; --Store value in register 0 into the output address register 4's value points to
+	constant store_outpt_4 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00101"&"01010"; --Store value in register 8 into the output address register 5's value points to
+	constant store_outpt_5 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00110"&"11011"; --Store value in register 27 into the output address register 6's value points to
+	constant store_outpt_6 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"00111"&"00100"; --Store value in register 4 into the output address register 7's value points to
+	constant store_outpt_7 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"01000"&"00111"; --Store value in register 7 into the output address register 8's value points to
+	constant store_outpt_8 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_store &"01001"&"11000"; --Store value in register 24 into the output address register 9's value points to
 
 	  --Load instructions
 	constant load_inpt_1 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00010"&"00000"; --Load the value pointed to by the address in register 0 to register 2. Value loads to input buffer
@@ -121,9 +121,9 @@ ARCHITECTURE behavior OF tb_core IS
 	constant load_inpt_6 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"00111"&"00000"; --Load the value pointed to by the address in register 0 to register 7. Value loads to constant buffer
 	constant load_inpt_7 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"01000"&"00000"; --Load the value pointed to by the address in register 0 to register 8. Value loads to constant buffer
 	constant load_inpt_8 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"01001"&"00000"; --Load the value pointed to by the address in register 0 to register 9. Value loads to constant buffer
- 
+
 BEGIN
- 
+
 	-- Instantiate the Unit Under Test (UUT)
    uut: core PORT MAP (
           clk => clk,
@@ -151,11 +151,11 @@ BEGIN
 		clk <= '1';
 		wait for clk_period/2;
    end process;
- 
+
 
    -- Stimulus process
    stim_proc: process
-   begin		
+   begin
       -- hold reset state for 100 ns.
 	  reset <= '1';
       wait for 100 ns;
@@ -164,7 +164,7 @@ BEGIN
       wait for clk_period*10;
 
       -- insert stimulus here
-	  
+
 --		--When commands are run, you need one clockcycle between each command, like shown below
 --		--First instruction
 --		instruction_data <= instruction_1;
