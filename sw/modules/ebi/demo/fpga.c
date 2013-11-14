@@ -48,8 +48,6 @@ void write_data(volatile uint16_t *addr, uint32_t length, uint16_t data) {
 
 int main(void) {
     CHIP_Init();
-    if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while (1) ;
-
     EBIDriver_Init();
     Leds_Init();
 
@@ -68,6 +66,7 @@ int main(void) {
     char str[20];
     sprintf(str, "Test\n\r");
     UART_PutData((uint8_t*)str, strlen(str));
+
     while (1) {
         // UART_GetData((uint8_t*)str, 7);
         // UART_PutData((uint8_t*)str, strlen(str));
