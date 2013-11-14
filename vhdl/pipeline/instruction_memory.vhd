@@ -25,11 +25,11 @@ end instruction_memory;
 architecture behaviour of instruction_memory is
 	subtype memory_word is std_logic_vector(15 downto 0);
 	type memory_array is array(0 to size) of memory_word;
-	signal memory : memory_array;
+	signal memory : memory_array := (others => (others => '0'));
 begin
-	write_process: process(memclk)
+	write_process: process(clk)
 	begin
-		if rising_edge(memclk) then
+		if rising_edge(clk) then
 			if write_enable = '1' then
 				memory(to_integer(unsigned(write_address))) <= write_data;
 			end if;
