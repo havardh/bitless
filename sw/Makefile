@@ -114,16 +114,26 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
--I$(DIR)/modules/buttons/inc \
--I$(DIR)/modules/leds/inc \
--I$(DIR)/modules/main/inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
--I$(LIB)/kits/common/bsp \
+-I$(LIB)/kits/common/drivers \
 -I$(LIB)/kits/EFM32GG_bitless/config \
+-I$(LIB)/emdrv/gpiointerrupt/inc \
+-I$(LIB)/util/inc \
+-I$(LIB)/fatfs/inc \
+-I$(DIR)/modules/buttons/inc \
+-I$(DIR)/modules/leds/inc \
+-I$(DIR)/modules/main/inc \
 -I$(DIR)/modules/programs/inc \
--I$(LIB)/emdrv/gpiointerrupt/inc
+-I$(DIR)/modules/adc/inc \
+-I$(DIR)/modules/sdcard/inc \
+-I$(DIR)/modules/int/inc \
+-I$(DIR)/modules/dac/inc \
+-I$(DIR)/modules/dma/inc \
+-I$(DIR)/modules/prs/inc \
+-I$(DIR)/modules/mem/inc \
+-I$(DIR)/modules/fpga/inc
 
 ####################################################################
 # Files								   #
@@ -147,6 +157,11 @@ $(DIR)/modules/programs/src/LiveFilter.c \
 $(DIR)/modules/programs/src/Wavplayer.c \
 $(DIR)/modules/programs/src/StoredFilter.c \
 $(DIR)/modules/programs/src/FPGAProgrammer.c \
+$(DIR)/modules/adc/src/bl_adc.c \
+$(DIR)/modules/dac/src/bl_dma.c \
+$(DIR)/modules/dma/src/bl_dma.c \
+$(DIR)/modules/prs/src/bl_prs.c \
+$(DIR)/modules/mem/src/bl_mem.c \
 $(PROJECTNAME).c
 
 s_SRC +=
