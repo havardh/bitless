@@ -2027,9 +2027,6 @@
       <name>$PROJ_DIR$\..\libs\util\src\CircularBuffer.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\modules\sdcard\demo\copy-file.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\libs\util\src\Delay.c</name>
     </file>
     <file>

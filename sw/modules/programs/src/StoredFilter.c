@@ -30,6 +30,8 @@
 
 #include "StoredFilter.h"
 
+#define FPGA_BASE ((uint16_t*) 0x21000000)
+
 // How many samples to read for each interrupt
 static int bufferSize = 64;
 
@@ -39,6 +41,7 @@ static bool done = false;
 static void setupSD(void);
 static void setupTimer(void);
 static void setupMEM(void);
+static void setupFPGA(void);
 static void copySamples(void); 
 
 static void interleave(void);
@@ -51,6 +54,7 @@ void StoredFilter_Start(void)
   CMU_ClockEnable(cmuClock_GPIO, true);
 	SPI_setup(2, 0, true);
 	setupMEM();	
+	setupFPGA();
 
 	setupSD();
 
@@ -82,7 +86,7 @@ static void* GetOutBuffer(void)
 }
 
 
-/*
+
 void TIMER0_IRQHandler( void ) 
 {
 
@@ -90,7 +94,7 @@ void TIMER0_IRQHandler( void )
 
 	copySamples();
 }
-*/
+
 void setupSD(void)
 {
   SDConfig config = {
@@ -135,6 +139,16 @@ void setupTimer( void  )
 	NVIC_EnableIRQ( TIMER0_IRQn );
 	TIMER_TopBufSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 8000 );
 	TIMER_Init( TIMER0, &init );	
+}
+
+void setupFPGA( void ) 
+{
+	FPGAConfig config = {
+		.baseAddress = FPGA_BASE,
+		.numPipelines = 2,
+		.bufferSize = bufferSize
+	};
+	FPGADriver_Init( &config );
 }
 
 
