@@ -27,10 +27,10 @@ architecture behaviour of instruction_memory is
 	type memory_array is array(0 to size) of memory_word;
 	signal memory : memory_array := (others => (others => '0'));
 
-	signal p_write_addr, p_read_addr : std_logic_vector(15 downto 0);
+	signal p_write_addr, p_read_addr : std_logic_vector(log2(size) downto 0);
 begin
-	p_write_addr <= write_address and not std_logic_vector(to_unsigned(-log2(size), 16));
-	p_read_addr <= read_address and not std_logic_vector(to_unsigned(-log2(size), 16));
+	p_write_addr <= write_address(log2(size) downto 0);
+	p_read_addr <= read_address(log2(size) downto 0);
 
 	write_process: process(memclk)
 	begin
