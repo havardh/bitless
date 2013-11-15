@@ -1973,7 +1973,7 @@
       <name>$PROJ_DIR$\..\modules\leds\src\bl_leds.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\modules\ebi\demo\ebi_sram.c</name>
+      <name>$PROJ_DIR$\..\modules\ebi\demo\fpga.c</name>
     </file>
   </group>
 </project>
