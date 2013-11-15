@@ -1,16 +1,16 @@
 \section{System Overview}
 \subsection{System Architecture}
 
+\missingfigure{Insert image, needs basic architecture overview of the FPGA, MCU,
+and the input/output of the PCB.}
+
 The system is built around an I/O control unit that organizes all data movement
 on board. Analog audio signals enter the system through a minijack and gets
 routed to the hardware accelerator by the I/O controller for audio manipulation.
 At the same time, processed audio is routed back from the accelerator and to the
 output minijack.
 
-\missingfigure{Insert image.}
-
 \subsection{System Components}
-
 \subsubsection{MCU} The microcontroller unit is a Giant Gecko by Energy Micro
 (EFM32GG990F1024) which is an energy friendly MCU capable of shutting down
 components that are not in use. It does this by defining several levels of sleep
@@ -29,8 +29,22 @@ for changing FPGA behavior.\todo{review, rewrite}
 enable task parallelism. While this is great for performance, it comes at the
 cost of a more complex process architecture, which in turn increases the size of
 each core. This limits the number of cores available on the FPGA, but we were
-able to fit ten\todo{update with final number} cores which is enough to apply
-the filters we want.\todo{review, rewrite}
+able to comfortably fit 8 cores, which is enough to for the sound-manipulating
+filters we want.\todo{review, rewrite}
+On the FPGA, the processor was designed top-down for sound processing. Since
+sound processing often requires fourier transforms, several solutions were
+considered for how to implement hardware support for this.
+
+Designing a core specifically for doing the fourier transform and its inverse
+was considered, but would cause increased complexity when designing the audio
+processing pipelines. A variant of this idea was to equip the first and the last
+core of each audio pipeline with instructions accelerating the most computing
+intensive parts of the fourier transforms, but this would cause the processors
+to not be homogenous.
+
+In the end, implementing a simple floating point unit in each of the cores
+would not only allow acceleration of the fourier transforms, but also
+manipulation of the resulting samples in the frequency domain.
 
 \subsubsection{Memory} The MCU has an internal memory of 128KByte, which is not
 enough to work comfortably with audio files loaded from the SD-card, so a
@@ -38,10 +52,10 @@ decision was made to add more memory on the board. In addition, if something
 were to go wrong with the audio-in channel and SD-card, having extra memory can
 work as a third option for storing input.\todo{review, rewrite}
 
-\subsubsection{I/O} Adding input and output interfaces makes handling data easier
-as we do not have to go though the debug interface to insert and fetch data from
-the chip. Thus, we decided to add the following components to the
-board.\todo{review, rewrite}
+\subsubsection{I/O} Adding input and output interfaces makes handling data
+easier as we do not have to go though the debug interface to insert and fetch
+data from the chip. Thus, we decided to add the following components to the
+board. \todo{review, rewrite}
 
 \paragraph{Micro USB} USB \todo{review, rewrite}
 
@@ -52,5 +66,5 @@ output, as taking input from a recording og playback device is much easier if
 you can just plug it in rather than having to transfer data through a debugging
 interface, and the same goes for output.\todo{review, rewrite}
 
-\paragraph{Buttons and LEDs} What's there to say.. They're
-awesome.\todo{review, rewrite}
+\paragraph{Buttons and LEDs} What's there to say.. They're awesome.\todo{review,
+rewrite}
