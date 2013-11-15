@@ -1,7 +1,7 @@
 \FloatBarrier
-\section{Communication}\label{section:fpga-buses}
+\subsection{Communication}\label{section:fpga-buses}
 
-\subsection{The External Bus Interface}
+\subsubsection{The External Bus Interface}
 The microcontroller communicates with the FPGA design using the External Bus
 Interface (EBI) of the Giant Gecko microcontroller. The EBI is a parallel bus
 with a separate data and address bus in addition to the chip select and read and
@@ -18,14 +18,14 @@ the read enable signal is asserted, see figure \ref{fig:ebi_read}.
 \input{figures/fpga/communication-ebi-read}
 
 \FloatBarrier
-\subsection{The Internal Bus}
+\subsubsection{The Internal Bus}
 
 The internal bus is used to transfer data to and from modules in the FPGA.
 All transfers are initiated by the microcontroller on the EBI bus, and the
 EBI controller facilitates communication between the EBI and the
 internal bus.
 
-\subsubsection{The EBI controller}
+\paragraph{The EBI controller}
 The EBI controller module is used to handle EBI transfers initiated by the
 microcontroller. It consists of a simple state machine, illustrated in
 figure \ref{fig:ebi_ctrl_fsm}. When an EBI transfer is executed, the
@@ -38,7 +38,7 @@ a transfer is not active, allowing the MCU to have control of the EBI bus.
 \input{figures/fpga/communication-ebi-ctrl-fsm}
 
 \FloatBarrier
-\subsubsection{Addressing}
+\paragraph{Addressing}
 
 Modules in the FPGA is addressed using a simple addressing scheme, where the
 address is divided into several parts, as illustrated in figure \ref{fig:ebi_addresses}.
@@ -61,7 +61,7 @@ are listed in table \ref{tab:core_subdevices}.
 \input{figures/fpga/communication-core-subdevices}
 
 \FloatBarrier
-\subsubsection{Read Transfers}
+\paragraph{Read Transfers}
 
 A read transfer is initiated when the read enable line from the microcontroller
 goes low. The EBI controller sets up the internal address signals and asserts
@@ -69,12 +69,11 @@ the internal read enable signal. This causes the requested data to be available
 in the next clock cycle. The EBI controller switches to read state, where it
 remains until the chip select signal is deasserted.
 
-\subsubsection{Write Transfers}
+\paragraph{Write Transfers}
 
-Write transfers are initiated the same way as read transfers. As the 
-write-enable signal goes low, the destination address is latched into the 
-internal address bus and the internal data lines are set to the value of the 
+Write transfers are initiated the same way as read transfers. As the
+write-enable signal goes low, the destination address is latched into the
+internal address bus and the internal data lines are set to the value of the
 EBI data lines. The EBI controller enters write state and the internal
 write enable signal is asserted. The idle state is reentered when the chip
 select is deasserted.
-
