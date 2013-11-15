@@ -21,7 +21,7 @@ patch cable was soldered between pin 4 and 2.
 \missingfigure{picture with textual reference}
 
 The linear regulator was slightly more advanced as pin 1 and 5,
-and 2 and 4, had been swapped. The solution was to solder six
+and 2, 3 and 4, had been swapped. The solution was to solder six
 short patch cables on the pads themselves, and then match the
 feet of the linear regulator with the right cables. This
 resulted in the linear regulator being mounted about 1 cm above
@@ -29,9 +29,17 @@ the card. \missingfigure{photo, both physical and a schematic maybe?
 Remember textual reference.}
 
 In addition, there was also an actual connection error in the
-SRAM footprint. One of the two chip select inputs, CS1, was
+external RAM footprint. One of the two chip select inputs, CS1, was
 suppose to be grounded, but had mistakenly been connected to
 VCC33, resulting in the unit being stuck in off mode. To solve
 this the chip select pin was bent slightly upwards, and then
 connected with a patch cable to another pin nearby that was
 grounded. \missingfigure{photo. Textual reference.}
+
+Finally the data lines of the EBI bus was only connected to the
+MCU and external RAM, due to a typo in the schematic. Again this
+was solved by patch cables between the external RAM's data pins
+and all available FPGA GPIO pins. As a result we where able to 
+keep the bus as we originally inteded \todo{Making the assumption
+that the third try will work..} but we lost all other IO 
+opportunities on the FPGA. \missingfigure{photo of the hack}
