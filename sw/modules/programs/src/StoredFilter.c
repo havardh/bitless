@@ -20,6 +20,7 @@
 #include "bl_mem.h"
 #include "FPGAConfig.h"
 #include "FPGADriver.h"
+#include "spi.h"
 
 #include "bl_sd.h"
 
@@ -46,8 +47,10 @@ static void deinterleave(void);
 void StoredFilter_Start(void) 
 {
 	Leds_SetLeds(0x4);	
-
-	setupMEM();
+  CMU_ClockEnable(cmuClock_USART2, true);
+  CMU_ClockEnable(cmuClock_GPIO, true);
+	SPI_setup(2, 0, true);
+	setupMEM();	
 
 	setupSD();
 
@@ -58,7 +61,7 @@ void StoredFilter_Start(void)
 		if (done)
 			break;
 	}
-	
+	TIMER_Enable( TIMER0, false );
 	SDDriver_Finalize();
 	
 }
@@ -68,18 +71,18 @@ void StoredFilter_Start(void)
 //------------//
 
 // Callback for getting InBuffer
-void* GetInBuffer(void) 
+static void* GetInBuffer(void) 
 {
   return (void*) MEM_GetAudioInBuffer(true);
 }
 
-void* GetOutBuffer(void)
+static void* GetOutBuffer(void)
 {
   return (void*) MEM_GetAudioOutBuffer(true);
 }
 
 
-
+/*
 void TIMER0_IRQHandler( void ) 
 {
 
@@ -87,7 +90,7 @@ void TIMER0_IRQHandler( void )
 
 	copySamples();
 }
-
+*/
 void setupSD(void)
 {
   SDConfig config = {

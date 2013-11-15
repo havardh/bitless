@@ -18,7 +18,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=1482794213
+Checksum=1899900947
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -104,16 +104,17 @@ Bp3=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavde
 Bp4=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\copy-file.c}.106.7" 0 0 1 "" 0 "" 0
 Bp5=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c}.47.10" 0 0 1 "" 0 "" 0
 Bp6=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\dma\demo\wavdemo.c}.110.2" 0 0 1 "" 0 "" 0
-Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\main\src\MainController.c}.48.2" 0 0 1 "" 0 "" 0
-Bp8=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\main\src\MainController.c}.53.2" 0 0 1 "" 0 "" 0
-Bp9=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\main\src\MainController.c}.58.2" 0 0 1 "" 0 "" 0
-Bp10=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\main\src\MainController.c}.68.2" 0 0 1 "" 0 "" 0
-Bp11=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\modules\programs\src\StoredFilter.c}.88.2" 0 0 1 "" 0 "" 0
-Bp12=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\programs\src\Wavplayer.c}.71.2" 0 0 1 "" 0 "" 0
-Bp13=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\dma\src\bl_dma.c}.69.2" 0 0 1 "" 0 "" 0
-Bp14=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\modules\main\src\MainController.c}.38.2" 0 0 1 "" 0 "" 0
-Bp15=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\modules\programs\src\Wavplayer.c}.192.2" 0 0 1 "" 0 "" 0
-Count=16
+Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\MAIN\SRC\MainController.c}.51.2" 0 0 1 "" 0 "" 0
+Bp8=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\MAIN\SRC\MainController.c}.56.2" 0 0 1 "" 0 "" 0
+Bp9=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\MAIN\SRC\MainController.c}.61.2" 0 0 1 "" 0 "" 0
+Bp10=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\MAIN\SRC\MainController.c}.71.2" 0 0 1 "" 0 "" 0
+Bp11=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\PROGRAMS\SRC\Wavplayer.c}.71.2" 0 0 1 "" 0 "" 0
+Bp12=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\DMA\SRC\bl_dma.c}.69.2" 0 0 1 "" 0 "" 0
+Bp13=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\MAIN\SRC\MainController.c}.41.2" 0 0 1 "" 0 "" 0
+Bp14=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\PROGRAMS\SRC\Wavplayer.c}.192.2" 0 0 1 "" 0 "" 0
+Bp15=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\PROGRAMS\SRC\StoredFilter.c}.89.2" 0 0 1 "" 0 "" 0
+Bp16=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\PROGRAMS\SRC\StoredFilter.c}.64.2" 0 0 1 "" 0 "" 0
+Count=17
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

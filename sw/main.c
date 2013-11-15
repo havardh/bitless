@@ -1,6 +1,6 @@
 #include "MainController.h"
 
-int main( void ) {
+int mainn( void ) {
 
     MainController_init();
     MainController_run();
