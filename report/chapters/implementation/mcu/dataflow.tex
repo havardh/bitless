@@ -1,6 +1,6 @@
 % !TEX root = ../../report.tex
 
-\section{Dataflow}
+\subsection{Dataflow}
 
 When designing an energy efficient system, dataflow is of great
 importance. The software on the MCU has been designed to
@@ -12,13 +12,13 @@ close - maybe a new subsection? This has also been mentioned
 earlier in software architecture, so take a look there and see
 if that can be moved up here. -JK}
 
-\subsection{Peripherals} The MCU facilitates audio I/O from ADC,
+\subsubsection{Peripherals} The MCU facilitates audio I/O from ADC,
 DAC, SDCard and serial port interface to and from the FPGA.
 \todo{is serial audio I/O implemented?}
 \input{figures/sw/sample-flow} \todo[inline]{explain the figure
 and refer to it in the text -JK}
 
-\subsection{External Bus Interface} The MCU is connected to the
+\subsubsection{External Bus Interface} The MCU is connected to the
 FPGA and SRAM through the EBI. This leads to easy interfacing
 with these units as the EBI is memory mapped on the MCU.
 Communicating with the FPGA is done by reading and writing to
@@ -26,7 +26,7 @@ memory.
 
 \todo{more about how the bus is implemented on the MCU}
 
-\subsection{Direct Memory Access} DMA provides the ability to
+\subsubsection{Direct Memory Access} DMA provides the ability to
 move data without the intervention of the CPU. This is used
 extensively to implement the dataflow when the MCU is in a low
 energy mode. The CPU is only used to configure and refresh the
@@ -44,7 +44,7 @@ they are used as input and output, respectively. When SDCard is
 used, the contents of the files are read and written directly to
 and from RAM by the CPU.
 
-\subsubsection{Deinterleaving of Samples}
+\paragraph{Deinterleaving of Samples}
 
 When reading from both a WAV file and the ADC, samples from
 the right and left channels are interleaved. The FPGA handles
@@ -70,7 +70,7 @@ The DMA reading from the pipeline containing the left samples
 writes to the memory without a starting offset. The right
 channel DMA writes with a offset by one sample. \todo[inline]{Rewrite for better flow - JK}
 
-\subsubsection{Triggering Transfers}
+\paragraph{Triggering Transfers}
 
 All the DMA transfers are triggered by the use of one clock, the
 sample clock. This clock is run at the sample speed (11kHz
@@ -81,7 +81,7 @@ propagates through the system using the following scheme
 
 %\newpage %re-insert if figure breaks across pages
 \begin{verbatim}
-	
+
                         | Audio in
                         V
 +------+  +-----+    +------+   +-----+     +--------+
@@ -112,7 +112,7 @@ propagates through the system using the following scheme
                      +------+   +-----+     +--------+
                         |
                         V Audio out
-\end{verbatim} 
+\end{verbatim}
 
 Here both the DAC and ADC consumes the PRS signal originated
 from TIMER0. The DMA copying from the ADC to the RAM buffer and

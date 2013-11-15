@@ -1,6 +1,6 @@
 % !TEX root = ../../report.tex
-\subsection{Power Supply}
-\subsubsection{Overview}
+\paragraph{Power Supply}
+\paragraph{Overview}
 Being on the energy efficiency group, maximum power utilization has been one of
 our highest priorities. Therefore, we had to make sure that as little power as
 possible went to waste during the transformation from whatever input we got to
@@ -18,11 +18,11 @@ any input voltage ranging from 4.75V up to 18V with an efficiency of 83-90\%, se
 Appendix,\todo[inline]{add appendix sr10s3v3} so we copied most of their design
 except that we changed the current sensors, which is explained in detail below.
 
-\subsubsection{The design}
+\paragraph{The design}
 \paragraph{Switch-mode and linear regulators}
 The design consists of a switch-mode regulator for 3.3V, a linear regulator for
 1.2V and 1.8V, and two current sensors.\missingfigure{insert schematic drawing of
-power supply, or place a reference to where it is located} The switch-mode gets 
+power supply, or place a reference to where it is located} The switch-mode gets
 an input voltage typically at
 9V or 12V which is then transformed into 3.3V and kept stable with the help of
 some capacitors. This in turn supplies the 3.3V input for the linear voltage
@@ -41,16 +41,16 @@ sensitive enough for low voltages, which resulted in inaccurate measurements. To
 remedy this we simply changed the current sensor. Finding the right one took
 some research as most of the current sensors we could find were built for more
 power hungry systems and were not very delicate in terms of supply voltage and
-sensitivity. In general, measuring energy consumption at small scales 
-\todo{insert something concrete here? ex: "such as 100uA"} can be challenging. 
+sensitivity. In general, measuring energy consumption at small scales
+\todo{insert something concrete here? ex: "such as 100uA"} can be challenging.
 In our case, we needed one that could run on 3.3V and
 sense currents of the same range. Most current sensors need at least 5V supply,
 or were not sensitive enough.\todo[inline]{verify or re-write. Add measurements
 once tested on a working board.}
 
 The output from the current sensors can be read by the ADC on the MCU, but by
-measuring the current of the board using the MCU we are skewing the results, as 
-we would expect that reading the ADC increases power consumption. We have 
+measuring the current of the board using the MCU we are skewing the results, as
+we would expect that reading the ADC increases power consumption. We have
 therefore added measuring sockets allowing us to read the current sensor output
 on an external device, such as a dev board, allowing us to make a more accurate
 reading.
@@ -60,14 +60,14 @@ A feature we added from last year's group was the ability to power the board
 from USB. The USB 1.x and 2.0 standard specification specifies that a constant
 power draw of 500mA at 5.0V $\pm$ 5\% can be provided.
 \footnote{http://www.usb.org/developers/docs/usb\_20\_070113.zip}
-\todo[inline]{Add reference to the USB specification.} 
+\todo[inline]{Add reference to the USB specification.}
 This should suffice for normal operation.
 USB chargers will however in most cases provide support for current draws in
 the 1500mA to 2000mA range, using one of these we should definetly be able to
 power through the USB port.
 
-Even when we use the normal power socket as our primary power supply, parts 
-of the board will still be powered through USB. This includes the UART-USB 
-bridge and the related TX and RX LEDs. By doing it this way all parts related 
-to USB connectivity will be completely powered down when no USB cable is 
+Even when we use the normal power socket as our primary power supply, parts
+of the board will still be powered through USB. This includes the UART-USB
+bridge and the related TX and RX LEDs. By doing it this way all parts related
+to USB connectivity will be completely powered down when no USB cable is
 connected.
