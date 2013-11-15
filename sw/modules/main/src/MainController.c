@@ -1,3 +1,4 @@
+#include "em_chip.h"
 #include "bl_buttons.h"
 #include "bl_leds.h"
 
@@ -17,6 +18,8 @@ void callback(uint8_t pin);
 
 void MainController_init(void) 
 {
+	CHIP_Init();
+
 	Board_t type = BITLESS;
 	Buttons_Init(type);
 	Leds_Init();
@@ -35,6 +38,7 @@ void MainController_init(void)
 void MainController_run(void) 
 {
 
+	StoredFilter_Start();
 
 	while(1) {
 		EMU_EnterEM3(true);

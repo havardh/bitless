@@ -19,6 +19,7 @@
 
 #include "bl_mem.h"
 #include "FPGAConfig.h"
+#include "FPGADriver.h"
 
 #include "bl_sd.h"
 
@@ -37,19 +38,16 @@ static bool done = false;
 static void setupSD(void);
 static void setupTimer(void);
 static void setupMEM(void);
+static void copySamples(void); 
+
+static void interleave(void);
+static void deinterleave(void);
 
 void StoredFilter_Start(void) 
 {
-	Leds_SetLeds(0x8);	
-
-  CHIP_Init();
-
-  /* Enable clock for USART2 */
-  CMU_ClockEnable(cmuClock_USART2, true);
-  CMU_ClockEnable(cmuClock_GPIO, true);
+	Leds_SetLeds(0x4);	
 
 	setupMEM();
-	setupFPGA();
 
 	setupSD();
 
@@ -59,14 +57,10 @@ void StoredFilter_Start(void)
 		
 		if (done)
 			break;
-
 	}
 	
 	SDDriver_Finalize();
-
-	while(1);
-	return 0;
-
+	
 }
 
 //------------//
@@ -98,7 +92,7 @@ void setupSD(void)
 {
   SDConfig config = {
     .mode = INOUT,
-		inFile = "sweet1.wav",
+		.inFile = "sweet1.wav",
 		.outFile = "sweet2.wav",
 		.GetInputBuffer = GetInBuffer,
 		.GetOutputBuffer = GetOutBuffer,
@@ -115,11 +109,36 @@ void setupMEM( void )
 	MEM_Init( &config );
 }
 
+void setupTimer( void  ) 
+{
+	CMU_ClockEnable( cmuClock_HFPER, true );
+  CMU_ClockEnable( cmuClock_TIMER0, true);
+
+	TIMER_Init_TypeDef init = {
+		.enable = true,
+		.debugRun = true,
+		.prescale = timerPrescale1,
+		.clkSel = timerClkSelHFPerClk,
+		.fallAction = timerInputActionNone,
+		.riseAction = timerInputActionNone,
+		.mode = timerModeUp,
+		.dmaClrAct = false,
+		.quadModeX4 = false,
+		.oneShot = false,
+		.sync = false
+	};
+
+	TIMER_IntEnable( TIMER0, TIMER_IF_OF );
+	NVIC_EnableIRQ( TIMER0_IRQn );
+	TIMER_TopBufSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / 8000 );
+	TIMER_Init( TIMER0, &init );	
+}
+
+
 // 
 //
 //
-
-bool copySamples( void ) 
+static void copySamples( void ) 
 {
 	if (!SDDriver_Read()) {
 		
@@ -134,7 +153,7 @@ bool copySamples( void )
 
 }
 
-void deinterleave( void ) 
+static void deinterleave( void ) 
 {
 	int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
 	int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
@@ -151,7 +170,7 @@ void deinterleave( void )
 
 }
 
-void interleave( void ) 
+static void interleave( void ) 
 {
 	int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
 	int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
@@ -168,3 +187,4 @@ void interleave( void )
 	}
 	
 }
+

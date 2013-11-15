@@ -29,6 +29,7 @@ typedef struct {
     uint32_t coreDeviceSize;
     /* The address size for each of the core's different memories */
     uint32_t coreAddressSize;
+	uint32_t bufferSize;
 } FPGAConfig;
 
 #define DEFAULT_NUM_PIPELINES           2

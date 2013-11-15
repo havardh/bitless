@@ -1,6 +1,4 @@
-#include "wavplayer.h"
-
-
+#include "Wavplayer.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -23,9 +21,10 @@
 
 #include "bl_dac.h"
 #include "bl_mem.h"
+#include "FPGAConfig.h"
 #include "bl_dma.h"
-#include "bl_sd.h"
 
+#include "bl_sd.h"
 #include "sample_conversion.h"
 
 #include "ff.h"
@@ -45,7 +44,6 @@ static DMA_CB_TypeDef cb;
 static int bufferSize = 64;
 
 static bool done = false;
-static int called[8];
 
 static void* GetInBuffer(void) {
 	return (void*)MEM_GetAudioInBuffer(true);
@@ -98,13 +96,6 @@ static void setupTimer( uint32_t frequency )
   	PRS_SourceSignalSet(0, PRS_CH_CTRL_SOURCESEL_TIMER0, PRS_CH_CTRL_SIGSEL_TIMER0OF, prsEdgePos);
 
 	TIMER_TopBufSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / frequency );
-}
-
-void TIMER0_IRQHandler( void ) 
-{
-
-	TIMER_IntClear( TIMER0, TIMER_IF_OF );
-	
 }
 
 static void setupMEM( void ) 
@@ -196,36 +187,36 @@ static void setupDAC(void)
 	DACDriver_Init( &config );
 }
 
-
 void Wavplayer_Start( void ) 
 {
-	CHIP_Init();
-
-  	setupCMU();
-  	setupPRS();
-
-	setupSD();	
-
-	setupMEM();
-	setupDma();
-
-	DMAConfig config = { .mode = SD_TO_DAC };
-	DMADriver_Init( &config );
-
-	DAC_setup();
-
-	INTDriver_Init();
-	INTDriver_RegisterCallback(0, &onDACRequest);
-
-	setupTimer(8000);
-
-	while(1) {
-		if (done)
-			break;
-	}
+	Leds_SetLeds(0x8);
 	
-	SDDriver_Finalize();
-	DMA_Reset();
-	DAC_Reset(DAC0);
+	//setupCMU();
+	//setupPRS();
 
+	//setupSD();	
+
+	//setupMEM();
+	//setupDma();
+ 
+	//DMAConfig config = { .mode = SD_TO_DAC };
+	//DMADriver_Init( &config );
+
+	//DAC_setup();
+
+	//INTDriver_Init();
+	//INTDriver_RegisterCallback(0, &onDACRequest);
+
+	//setupTimer(8000);
+
+	//while(1) {
+	//	if (done)
+	//		break;
+	//}
+	
+	//SDDriver_Finalize();
+	//DMA_Reset();
+	//DAC_Reset(DAC0);
+	//MEM_Destroy();
+	
 }

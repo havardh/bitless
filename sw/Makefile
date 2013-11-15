@@ -144,12 +144,23 @@ $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
 $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_cmu.c \
 $(LIB)/emlib/src/em_ebi.c \
+$(LIB)/emlib/src/em_dma.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_emu.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
+$(LIB)/emlib/src/em_timer.c \
+$(LIB)/emlib/src/em_prs.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
+$(LIB)/kits/common/drivers/dmactrl.c \
+$(LIB)/kits/common/drivers/microsd.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+$(LIB)/fatfs/src/ff.c \
+$(LIB)/fatfs/src/diskio.c \
+$(LIB)/util/src/fatfs_file.c \
+$(LIB)/util/src/wav.c \
+$(LIB)/util/src/CircularBuffer.c \
 $(DIR)/modules/leds/src/bl_leds.c \
 $(DIR)/modules/main/src/MainController.c \
 $(DIR)/modules/buttons/src/bl_buttons.c \
@@ -157,11 +168,15 @@ $(DIR)/modules/programs/src/LiveFilter.c \
 $(DIR)/modules/programs/src/Wavplayer.c \
 $(DIR)/modules/programs/src/StoredFilter.c \
 $(DIR)/modules/programs/src/FPGAProgrammer.c \
+$(DIR)/modules/fpga/src/FPGAController.c \
+$(DIR)/modules/fpga/src/FPGADriver.c \
 $(DIR)/modules/adc/src/bl_adc.c \
+$(DIR)/modules/int/src/bl_int.c \
 $(DIR)/modules/dac/src/bl_dma.c \
-$(DIR)/modules/dma/src/bl_dma.c \
+$(DIR)/modules/dma/src/bl_dac.c \
 $(DIR)/modules/prs/src/bl_prs.c \
 $(DIR)/modules/mem/src/bl_mem.c \
+$(DIR)/modules/sdcard/src/bl_sd.c \
 $(PROJECTNAME).c
 
 s_SRC +=

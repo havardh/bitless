@@ -131,6 +131,8 @@ INCLUDEPATHS += \
 -I$(DIR)/modules/dac/inc \
 -I$(DIR)/modules/dma/inc \
 -I$(DIR)/modules/prs/inc \
+-I$(DIR)/modules/mem/inc \
+-I$(DIR)/modules/leds/inc \
 -I$(DIR)/modules/fpga/inc \
 -I$(DIR)/modules/sdcard/inc \
 -I$(LIB)/util/inc 
@@ -176,6 +178,7 @@ $(DIR)/modules/fpga/src/FPGADriver.c \
 $(LIB)/util/src/CircularBuffer.c \
 $(LIB)/util/src/spi.c \
 $(DIR)/modules/sdcard/src/bl_sd.c \
+$(DIR)/modules/leds/src/bl_leds.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 demo/$(PROJECTNAME).c
 

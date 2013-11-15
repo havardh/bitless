@@ -1,6 +1,6 @@
-#include "SDDriver.h"
+#include "bl_sd.h"
 #include "ff.h"
-
+ 
 static WAVFile *srcFile = 0;
 static WAVFile *dstFile = 0;
 
@@ -25,7 +25,7 @@ void SDDriver_Init( SDConfig *config )
 
 bool SDDriver_Read() 
 {
-	WAV_Read(srcFile, (*GetInputBuffer)(), 4*bufferSize);
+	WAV_Read(srcFile, (*GetInputBuffer)(), bufferSize); // 4*bufferSize
 
 	return WAV_EOF(srcFile);
 }
@@ -43,8 +43,6 @@ void SDDriver_Finalize()
 
 static void initFiles( SDConfig *config )
 {
-
-	FRESULT res = f_mkdir("test");
 
 	if (config->mode == IN || config->mode == INOUT) {
 		srcFile = (WAVFile*)malloc(sizeof(WAVFile));

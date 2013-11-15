@@ -14,6 +14,7 @@ typedef struct {
 #define MEM_DEFAULT { 512 }
 
 void MEM_Init( MEMConfig *config );
+void MEM_Destroy( void );
 uint16_t* MEM_GetAudioInBuffer( bool primary );
 int MEM_GetAudioInBufferSize( void );
 

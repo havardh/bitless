@@ -304,16 +304,22 @@
           <state>$PROJ_DIR$\..\libs\kits\common\drivers</state>
           <state>$PROJ_DIR$\..\libs\kits\common\bsp</state>
           <state>$PROJ_DIR$\..\libs\kits\EFM32GG_bitless\config</state>
+          <state>$PROJ_DIR$\..\libs\emdrv\gpiointerrupt\inc</state>
           <state>$PROJ_DIR$\..\libs\util\inc</state>
-          <state>$PROJ_DIR$\..\drivers\fpga\inc</state>
-          <state>$PROJ_DIR$\..\types\inc</state>
-          <state>$PROJ_DIR$\..\drivers\prs\inc</state>
-          <state>$PROJ_DIR$\..\drivers\int\inc</state>
-          <state>$PROJ_DIR$\..\drivers\adc\inc</state>
-          <state>$PROJ_DIR$\..\drivers\dac\inc</state>
-          <state>$PROJ_DIR$\..\drivers\mem\inc</state>
-          <state>$PROJ_DIR$\..\drivers\sdcard\inc</state>
-          <state>$PROJ_DIR$\..\drivers\dma\inc</state>
+          <state>$PROJ_DIR$\..\modules\fpga\inc</state>
+          <state>$PROJ_DIR$\..\modules\prs\inc</state>
+          <state>$PROJ_DIR$\..\modules\int\inc</state>
+          <state>$PROJ_DIR$\..\modules\adc\inc</state>
+          <state>$PROJ_DIR$\..\modules\dac\inc</state>
+          <state>$PROJ_DIR$\..\modules\mem\inc</state>
+          <state>$PROJ_DIR$\..\modules\sdcard\inc</state>
+          <state>$PROJ_DIR$\..\modules\dma\inc</state>
+          <state>$PROJ_DIR$\..\modules\buttons\inc</state>
+          <state>$PROJ_DIR$\..\modules\ebi\inc</state>
+          <state>$PROJ_DIR$\..\modules\leds\inc</state>
+          <state>$PROJ_DIR$\..\modules\main\inc</state>
+          <state>$PROJ_DIR$\..\modules\programs\inc</state>
+          <state>$PROJ_DIR$\..\modules\uart\inc</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -570,19 +576,25 @@
           <state>$PROJ_DIR$\..\libs\Device\EnergyMicro\EFM32GG\Include</state>
           <state>$PROJ_DIR$\..\libs\emlib\inc</state>
           <state>$PROJ_DIR$\..\libs\fatfs\inc</state>
-          <state>$PROJ_DIR$\..\drivers\int\inc</state>
-          <state>$PROJ_DIR$\..\drivers\sdcard\inc</state>
           <state>$PROJ_DIR$\..\libs\kits\common\drivers</state>
           <state>$PROJ_DIR$\..\libs\kits\common\bsp</state>
           <state>$PROJ_DIR$\..\libs\kits\EFM32GG_bitless\config</state>
           <state>$PROJ_DIR$\..\libs\util\inc</state>
-          <state>$PROJ_DIR$\..\drivers\fpga\inc</state>
-          <state>$PROJ_DIR$\..\types\inc</state>
-          <state>$PROJ_DIR$\..\drivers\prs\inc</state>
-          <state>$PROJ_DIR$\..\drivers\adc\inc</state>
-          <state>$PROJ_DIR$\..\drivers\dac\inc</state>
-          <state>$PROJ_DIR$\..\drivers\mem\inc</state>
-          <state>$PROJ_DIR$\..\drivers\dma\inc</state>
+          <state>$PROJ_DIR$\..\libs\emdrv\gpiointerrupt\inc</state>
+          <state>$PROJ_DIR$\..\modules\fpga\inc</state>
+          <state>$PROJ_DIR$\..\modules\prs\inc</state>
+          <state>$PROJ_DIR$\..\modules\int\inc</state>
+          <state>$PROJ_DIR$\..\modules\adc\inc</state>
+          <state>$PROJ_DIR$\..\modules\dac\inc</state>
+          <state>$PROJ_DIR$\..\modules\mem\inc</state>
+          <state>$PROJ_DIR$\..\modules\sdcard\inc</state>
+          <state>$PROJ_DIR$\..\modules\dma\inc</state>
+          <state>$PROJ_DIR$\..\modules\buttons\inc</state>
+          <state>$PROJ_DIR$\..\modules\ebi\inc</state>
+          <state>$PROJ_DIR$\..\modules\leds\inc</state>
+          <state>$PROJ_DIR$\..\modules\main\inc</state>
+          <state>$PROJ_DIR$\..\modules\programs\inc</state>
+          <state>$PROJ_DIR$\..\modules\uart\inc</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -1916,6 +1928,9 @@
       <name>$PROJ_DIR$\..\libs\kits\common\drivers\dmactrl.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\emdrv\gpiointerrupt\src\gpiointerrupt.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\libs\kits\common\drivers\microsd.c</name>
     </file>
   </group>
@@ -1946,6 +1961,9 @@
       <name>$PROJ_DIR$\..\libs\emlib\src\em_gpio.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\libs\emlib\src\em_int.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\libs\emlib\src\em_prs.c</name>
     </file>
     <file>
@@ -1970,46 +1988,82 @@
   <group>
     <name>Source</name>
     <file>
-      <name>$PROJ_DIR$\..\drivers\adc\src\ADCDriver.c</name>
+      <name>$PROJ_DIR$\..\modules\adc\src\bl_adc.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\buttons\src\bl_buttons.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\dac\src\bl_dac.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\dma\src\bl_dma.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\ebi\src\bl_ebi.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\int\src\bl_int.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\leds\src\bl_leds.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\mem\src\bl_mem.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\prs\src\bl_prs.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\sdcard\src\bl_sd.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\uart\src\bl_uart.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\libs\util\src\Blink.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\util\src\CircularBuffer.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\dac\src\DACDriver.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\drivers\dma\src\DMADriver.c</name>
+      <name>$PROJ_DIR$\..\libs\util\src\Delay.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\util\src\fatfs_file.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\fpga\src\FPGADriver.c</name>
+      <name>$PROJ_DIR$\..\modules\fpga\src\FPGAController.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\int\src\INTDriver.c</name>
+      <name>$PROJ_DIR$\..\modules\fpga\src\FPGADebug.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\mem\src\MEMDriver.c</name>
+      <name>$PROJ_DIR$\..\modules\fpga\src\FPGADriver.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\prs\src\PRSDriver.c</name>
+      <name>$PROJ_DIR$\..\modules\programs\src\FPGAProgrammer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\programs\src\LiveFilter.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\main.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\modules\main\src\MainController.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\util\src\sample_conversion.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\libs\util\src\spi.c</name>
+      <name>$PROJ_DIR$\..\modules\programs\src\StoredFilter.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\libs\util\src\wav.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\drivers\dma\demo\wavp.c</name>
+      <name>$PROJ_DIR$\..\modules\programs\src\Wavplayer.c</name>
     </file>
   </group>
 </project>
