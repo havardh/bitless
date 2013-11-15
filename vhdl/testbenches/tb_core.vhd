@@ -115,12 +115,12 @@ ARCHITECTURE behavior OF tb_core IS
 	  --Load instructions
 	constant load_inpt_1 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00010"&"00000"; --Load the value pointed to by the address in register 0 to register 2. Value loads to input buffer
 	constant load_inpt_2 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00011"&"00000"; --Load the value pointed to by the address in register 0 to register 3. Value loads to input buffer
-	constant load_inpt_3 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00100"&"00000"; --Load the value pointed to by the address in register 0 to register 4. Value loads to output buffer
-	constant load_inpt_4 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load2 &"00101"&"00000"; --Load the value pointed to by the address in register 0 to register 5. Value loads to output buffer
-	constant load_inpt_5 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load2 &"00110"&"00000"; --Load the value pointed to by the address in register 0 to register 6. Value loads to output buffer
-	constant load_inpt_6 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"00111"&"00000"; --Load the value pointed to by the address in register 0 to register 7. Value loads to constant buffer
-	constant load_inpt_7 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"01000"&"00000"; --Load the value pointed to by the address in register 0 to register 8. Value loads to constant buffer
-	constant load_inpt_8 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"01001"&"00000"; --Load the value pointed to by the address in register 0 to register 9. Value loads to constant buffer
+	constant load_inpt_3 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load1 &"00100"&"00000"; --Load the value pointed to by the address in register 0 to register 4. Value loads to input buffer
+	constant load_inpt_4 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"00101"&"00000"; --Load the value pointed to by the address in register 0 to register 5. Value loads to constant buffer
+	constant load_inpt_5 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load3 &"00110"&"00000"; --Load the value pointed to by the address in register 0 to register 6. Value loads to constant buffer
+	constant load_inpt_6 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load2 &"00111"&"00000"; --Load the value pointed to by the address in register 0 to register 7. Value loads to output buffer
+	constant load_inpt_7 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load2 &"01000"&"00000"; --Load the value pointed to by the address in register 0 to register 8. Value loads to output buffer
+	constant load_inpt_8 : std_logic_vector(15 downto 0) := gc_load_store & fc_load_store & oc_load2 &"01001"&"00000"; --Load the value pointed to by the address in register 0 to register 9. Value loads to output buffer
 
 BEGIN
 
@@ -190,6 +190,7 @@ BEGIN
 		--Check if register 2 has the above hex value, by checking the value on signal output_write_data
 		instruction_data <= store_outpt_1;
 		wait for clk_period*wait_period;
+		assert output_write_data = X"10101010" report "Data from register 2 is not correct!";
 
 		--Load value from input buffer to register 3
 		input_read_data <= X"01010101";
@@ -199,6 +200,7 @@ BEGIN
 		--Check if register 3 has the above hex value, by checking the value on signal output_write_data
 		instruction_data <= store_outpt_2;
 		wait for clk_period*wait_period;
+		assert output_write_data = X"01010101" report "Data from register 3 is not correct!";
 
 		--Load value from input buffer to register 4
 		input_read_data <= X"00001111";
@@ -208,26 +210,27 @@ BEGIN
 		--Check if register 4 has the above hex value, by checking the value on signal output_write_data
 		instruction_data <= store_outpt_3;
 		wait for clk_period*wait_period;
+		assert output_write_data = x"00001111" report "Data from register 4 is not correct!";
 
-		--Load value from input buffer to register 5
+		--EDIT------------
+		--The following tests were impossible because you can't load constants into registers. 
+		--They go straight to the ALU. You can however check to see if they are written to the ALU.
+		
+		--Load value from constant memory into ALU
 		constant_data <= X"10101010";
 		instruction_data <= load_inpt_4;
 		wait for clk_period*wait_period;
-
-		--Check if register 5 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= store_outpt_4;
-		wait for clk_period*wait_period;
-
-		--Load value from input buffer to register 6
+		--Check if C1 and C2 in the ALU has the above hex value
+		
+		--Load value from constant memory into ALU
 		constant_data <= X"01010101";
 		instruction_data <= load_inpt_5;
 		wait for clk_period*wait_period;
+		--Check if C1 and C2 in the ALU has the above hex value
+		--END EDIT------------------------
+	
 
-		--Check if register 6 has the above hex value, by checking the value on signal output_write_data
-		instruction_data <= store_outpt_5;
-		wait for clk_period*wait_period;
-
-		--Load value from input buffer to register 7
+		--Load value from output buffer to register 7
 		output_read_data <= X"10101010";
 		instruction_data <= load_inpt_6;
 		wait for clk_period*wait_period;
@@ -235,8 +238,9 @@ BEGIN
 		--Check if register 7 has the above hex value, by checking the value on signal output_write_data
 		instruction_data <= store_outpt_6;
 		wait for clk_period*wait_period;
+		assert output_write_data = X"10101010" report "Data from register 7 is not correct!";
 
-		--Load value from input buffer to register 8
+		--Load value from output buffer to register 8
 		output_read_data <= X"01010101";
 		instruction_data <= load_inpt_7;
 		wait for clk_period*wait_period;
@@ -244,14 +248,17 @@ BEGIN
 		--Check if register 8 has the above hex value, by checking the value on signal output_write_data
 		instruction_data <= store_outpt_7;
 		wait for clk_period*wait_period;
+		assert output_write_data = X"01010101" report "Data from register 8 is not correct!";
 
-		--Load value from input buffer to register 9
+		--Load value from output buffer to register 9
 		output_read_data <= X"00001111";
 		instruction_data <= load_inpt_8;
 		wait for clk_period*wait_period;
 
 		--Check if register 9 has the above hex value, by checking the value on signal output_write_data
 		instruction_data <= store_outpt_8;
+		wait for clk_period*wait_period;
+		assert output_write_data = X"00001111" report "Data from register 9 is not correct!";
 
       wait;
    end process;
