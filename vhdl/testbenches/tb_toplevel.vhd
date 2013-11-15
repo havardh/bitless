@@ -136,11 +136,10 @@ begin
 		ebi_cs <= '1';
 		wait for EBI_CS_WAIT;
 
-		-- Write the first instruction to memory of core 0:
-		report "Writing word 1 into core 0's instruction memory";
+		report "Writing no-op into core 0's instruction memory";
 		ebi_cs <= '0';
 		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000000");
-		ebi_data <= b"0111000001000000";
+		ebi_data <= x"0000";
 		wait for EBI_CS_WAIT;
 		ebi_we <= '0';
 		wait for EBI_WE_WAIT;
@@ -149,26 +148,110 @@ begin
 		ebi_cs <= '1';
 		wait for EBI_CS_WAIT;
 
-		-- Write some no-ops to the instruction memory:
---		for i in 0 to 4 loop
---			report "Writing no-op into core 0's instruction memory";
---			ebi_cs <= '0';
---			ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", std_logic_vector(unsigned(i)));
---			ebi_data <= x"0000";
---			wait for EBI_CS_WAIT;
---			ebi_we <= '0';
---			wait for EBI_WE_WAIT;
---			ebi_we <= '1';
---			wait for EBI_CS_WAIT;
---			ebi_cs <= '1';
---			wait for EBI_CS_WAIT;
---		end loop;
-
-		-- Write the second instruction to memory of core 0:
-		report "Writing word 2 into core 0's instruction memory";
+		-- Write the first instruction to memory of core 0:
+		report "Writing LOAD into core 0's instruction memory";
 		ebi_cs <= '0';
 		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000001");
-		ebi_data <= b"0111110001000000";
+--		ebi_data <= b"0111000001000000";
+		ebi_data <= b"0111000010000000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		report "Writing no-op into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000010");
+		ebi_data <= x"0000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+		
+		report "Writing no-op into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000011");
+		ebi_data <= x"0000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		report "Writing no-op into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000100");
+		ebi_data <= x"0000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		report "Writing no-op into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000101");
+		ebi_data <= x"0000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		-- Write the second instruction to memory of core 0:
+		report "Writing STORE into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000110");
+--		ebi_data <= b"0111110001000000";
+		ebi_data <= b"0111110010000000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		report "Writing no-op into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000111");
+		ebi_data <= x"0000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+		
+		report "Writing no-op into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000001000");
+		ebi_data <= x"0000";
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+		
+		report "Writing no-op into core 0's instruction memory";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000001001");
+		ebi_data <= x"0000";
 		wait for EBI_CS_WAIT;
 		ebi_we <= '0';
 		wait for EBI_WE_WAIT;
@@ -193,9 +276,9 @@ begin
 --		end loop;
 
 		-- Write the third instruction to memory of core 0:
-		report "Writing word 1 into core 0's instruction memory";
+		report "Writing END into core 0's instruction memory";
 		ebi_cs <= '0';
-		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000000010");
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"01", b"00000000001010");
 		ebi_data <= b"0011000000000000";
 		wait for EBI_CS_WAIT;
 		ebi_we <= '0';
@@ -206,7 +289,6 @@ begin
 		wait for EBI_CS_WAIT;
 
 		-- Write a sample to the input buffer, address 0:
-		-- Write the third instruction to memory of core 0:
 		report "Writing a sample into the input buffer of pipeline 0";
 		ebi_cs <= '0';
 		ebi_address <= make_ebi_address(false, b"00", b"0010", b"00", b"00000000000000");
@@ -219,15 +301,46 @@ begin
 		ebi_cs <= '1';
 		wait for EBI_CS_WAIT;
 
-		-- Disable the stopmode in the pipeline:
+		-- Disable the stopmode in the processor core:
 		report "Enabling processor!";
 		ebi_cs <= '0';
 		ebi_address <= make_ebi_address(false, b"00", b"0100", b"00", b"00000000000000");
-		ebi_data <= (7 => '0', others => '0');
+		ebi_data <= (others => '0');
 		wait for EBI_CS_WAIT;
 		ebi_we <= '0';
 		wait for EBI_WE_WAIT;
 		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		-- Wait a little while...
+		ebi_data <= (others => 'Z'); -- looks pretty in the wave graph...
+		wait for clk_period * 25;
+
+		-- Stop the pipeline:
+		report "Stopping processor!";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0100", b"00", b"00000000000000");
+		ebi_data <= (1 => '1', others => '0');
+		wait for EBI_CS_WAIT;
+		ebi_we <= '0';
+		wait for EBI_WE_WAIT;
+		ebi_we <= '1';
+		wait for EBI_CS_WAIT;
+		ebi_cs <= '1';
+		wait for EBI_CS_WAIT;
+
+		-- Read the output buffer:
+		report "Reading the output buffer...";
+		ebi_cs <= '0';
+		ebi_address <= make_ebi_address(false, b"00", b"0011", b"00", b"00000000000000");
+		ebi_data <= (others => 'Z');
+		wait for EBI_CS_WAIT;
+		ebi_re <= '0';
+		wait for EBI_RE_WAIT;
+		ebi_re <= '1';
+		assert ebi_data = x"beef" report "Pipeline does not work!" severity failure;
 		wait for EBI_CS_WAIT;
 		ebi_cs <= '1';
 		wait for EBI_CS_WAIT;
