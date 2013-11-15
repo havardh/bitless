@@ -12,7 +12,7 @@
           
           
           
-        <Column0>169</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>337</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -37,7 +37,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>sdcard</ExpandedNode><ExpandedNode>sdcard/CMSIS</ExpandedNode><ExpandedNode>sdcard/Source</ExpandedNode><ExpandedNode>sdcard/bsp</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>sdcard</ExpandedNode><ExpandedNode>sdcard/CMSIS</ExpandedNode><ExpandedNode>sdcard/Drivers</ExpandedNode><ExpandedNode>sdcard/Source</ExpandedNode><ExpandedNode>sdcard/bsp</ExpandedNode><ExpandedNode>sdcard/emlib</ExpandedNode><ExpandedNode>sdcard/fatfs</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -63,14 +63,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\SRC\DMADriver.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>93</YPos2><SelStart2>3382</SelStart2><SelEnd2>3382</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>132</YPos2><SelStart2>2958</SelStart2><SelEnd2>2958</SelEnd2></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>120</SelStart2><SelEnd2>120</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\UART\SRC\bl_uart.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>70</YPos2><SelStart2>3356</SelStart2><SelEnd2>3356</SelEnd2></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-010434f8><key>iaridepm.enu1</key></Toolbar-010434f8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>437</Bottom><Right>260</Right><x>-2</x><y>-2</y><xscreen>168</xscreen><yscreen>215</yscreen><sizeHorzCX>164063</sizeHorzCX><sizeHorzCY>313869</sizeHorzCY><sizeVertCX>255859</sizeVertCX><sizeVertCY>640876</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>203</Bottom><Right>1026</Right><x>-2</x><y>-2</y><xscreen>1028</xscreen><yscreen>205</yscreen><sizeHorzCX>1003906</sizeHorzCX><sizeHorzCY>299270</sizeHorzCY><sizeVertCX>164063</sizeVertCX><sizeVertCY>313869</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-02f82d28><key>iaridepm.enu1</key></Toolbar-02f82d28></Sizes></Row0><Row1><Sizes><Toolbar-0880c748><key>debuggergui.enu1</key></Toolbar-0880c748></Sizes></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>464</Bottom><Right>428</Right><x>-2</x><y>-2</y><xscreen>345</xscreen><yscreen>150</yscreen><sizeHorzCX>336914</sizeHorzCX><sizeHorzCY>218978</sizeHorzCY><sizeVertCX>419922</sizeVertCX><sizeVertCY>680292</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>176</Bottom><Right>1026</Right><x>-2</x><y>-2</y><xscreen>1028</xscreen><yscreen>178</yscreen><sizeHorzCX>1003906</sizeHorzCX><sizeHorzCY>259854</sizeHorzCY><sizeVertCX>336914</sizeVertCX><sizeVertCY>218978</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 
