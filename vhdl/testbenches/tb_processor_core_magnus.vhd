@@ -90,6 +90,8 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
 	constant finished_instruction : std_logic_vector(15 downto 0) := "0011000000000000";
 	
 	constant no_op_instruction : std_logic_vector(15 downto 0) := (others => '0');
+    
+    constant branch_instruction0 : std_logic_vector(15 downto 0) := "1100000000000001";
  
 BEGIN
  
@@ -137,26 +139,26 @@ BEGIN
 		instruction_data <= no_op_instruction;
 		wait for clk_period;
 		
-		instruction_data <= no_op_instruction;
-		wait for clk_period;
-		
-		instruction_data <= no_op_instruction;
-		wait for clk_period;
-		
-		instruction_data <= no_op_instruction;
-		wait for clk_period;
-		
-		instruction_data <= no_op_instruction;
-		wait for clk_period;
-		
-		instruction_data <= no_op_instruction;
-		wait for clk_period;
 		
 		instruction_data <= store_instruction0;
 		wait for clk_period;
 		
+        
+        instruction_data <= branch_instruction0;
+        
+        wait for clk_period;
+        
+        instruction_data <= load_instruction0;
+		wait for clk_period;
+        
+        instruction_data <= load_instruction0;
+		wait for clk_period;
+        
+        instruction_data <= load_instruction0;
+		wait for clk_period;
 		--instruction_data <= finished_instruction;
 		
+        instruction_data <= finished_instruction;
 		wait for clk_period;
 		
 

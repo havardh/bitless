@@ -112,7 +112,7 @@ architecture behaviour of core is
 	signal id_stop_processor        : std_logic;
 	signal id_instruction           : std_logic_vector(instruct_data_size-1 downto 0);
     -- data signals
-    signal id_imm_value         : std_logic_vector(memory_data_size-1 downto 0);
+    signal id_imm_value        : std_logic_vector(memory_data_size-1 downto 0);
 	signal id_branch_flags     : std_logic_vector(3 downto 0);
     signal id_reg_1_data       : std_logic_vector(reg_data_size-1 downto 0);
 	signal id_reg_1b_data      : std_logic_vector(reg_data_size-1 downto 0);
@@ -172,6 +172,7 @@ architecture behaviour of core is
     signal mem_reg_2_addr       : std_logic_vector( reg_addr_size-1 downto 0);
     
     -- control signals
+    signal mem_do_branch        : std_logic;
     signal mem_branch_enable    : std_logic;
     signal mem_stop_core_signal : std_logic;
     signal mem_alu_op           : alu_operation;
@@ -278,9 +279,11 @@ begin
                 proc_finished_reg <= proc_finished_reg;
                 id_stop_processor_reg <= '0';
             end if;
+            proc_finished <= proc_finished_reg;
+            id_stop_processor <= id_stop_processor_reg;
         end if;
-        proc_finished <= proc_finished_reg;
-        id_stop_processor <= id_stop_processor_reg;
+        
+        
      end process;
        
 	 
@@ -332,7 +335,8 @@ begin
     pipeline_if_id_reg : process(clk)
     begin
         if rising_edge(clk) then
-            if (id_stop_processor = '1' or restart_bubble = '1') then
+            if (id_stop_processor = '1' or restart_bubble = '1' 
+            or do_branch = '1' or mem_do_branch = '1') then
                 id_instruction <= (others => '0');
             else
                 id_instruction <= instruction_data;
@@ -386,6 +390,7 @@ begin
     begin
         if rising_edge(clk) then 
         
+            mem_do_branch   <= do_branch;
             mem_reg_1_data  <= id_reg_1_data;
             mem_reg_1b_data <= id_reg_1b_data;
             mem_reg_2_data  <= id_reg_2_data;
@@ -430,8 +435,8 @@ begin
     
 
     -- signal mapping
-	 output_write_data <= mem_fw_1b & mem_fw_1;
-	 output_we <= mem_output_we;
+	output_write_data <= mem_fw_1b & mem_fw_1;
+	output_we <= mem_output_we;
     input_read_addr <= mem_fw_2;
     output_read_addr <= mem_fw_2;
     output_write_addr <= mem_fw_2; 
@@ -439,8 +444,8 @@ begin
     
 -- Pipeline: EX
 
-	pipeline_mem_ex_reg : process(clk)
-   begin
+    pipeline_mem_ex_reg : process(clk)
+    begin
         if rising_edge(clk) then
 		    if (mem_add_imm ='1') then
                 ex_reg_2_data <= sxt(mem_reg_2_addr, 16);
