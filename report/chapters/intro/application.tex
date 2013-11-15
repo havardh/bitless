@@ -1,11 +1,19 @@
-\section{Application and effect on Architecture}
-
-\todo{This section is subject to change and movement and is mostly just notes}
+\section{Application and Architecture}
+\todo[inline]{Explain/show the big 20.000 feet overview picture of the system
+and architecture.}
 
 The application chosen for this project is audio processing. The MCU unit will
-provide audio samples to the FPGA which in turn will process the samples and
-return the result. As the FPGA contains multiple cores with multiple filters,
-transforms and effects will be executed in parallel.
+provide audio samples to the FPGA, which in turn will process the samples and
+return the result. As the FPGA contains multiple cores, the FPGA may run
+different filters, transforms, or effects in parallel on the audio samples.
+
+\todo[inline]{Continue by expaning on above paragraph and below figure.}
+
+\missingfigure{See todo above the above paragraph.}
+
+\section{Application and effect on Architecture}
+
+\todo{This section has to be moved or removed. Does \emph{NOT} belong here. (This to-do previously said this was mostly just notes. Moved the FFT part out and into the appendix.)}
 
 \subsection{Filters}
 
