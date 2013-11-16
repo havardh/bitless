@@ -1,0 +1,17 @@
+% !TEX root = ../../report.tex
+\subsection{Test plan}
+
+In order to ease the process of assembly after receiving the final PCB from
+production, we set up a test plan detailing step by step what we are planning
+to do. The main idea of the plan is to catch potential errors in the PCB design
+as early as possible so that if, and when, we run into a problem we can rule
+out as many sources as possible.
+
+\begin{enumerate}
+    \item Manually test important solder points using a multimeter. This includes connections between the power source and regulators, as well as the connections from oscillators and clock generators to their source pins on the microcontroller and the FPGA. After checking these points we can assume that the components will boot correctly.
+    \item After soldering the power supply we will need to check the provided voltage levels. This is an important point as sensitive components might be damaged if these are wrong. We are able to do this safely even after the major components are soldered as we have added headers allowing us to disconnect the power planes from the regulators. \todo{Is this last statement correct?}
+    \item  \todo[inline]{We should investigate JTag boundary scan as suggested by Gunnar}
+    \item After soldering the major components as well as the JTAG interfaces we should attempt to flash test programs. These programs will be provided by the FPGA and Software groups and will test both the respective component, the GPIO, as well as the interconnection between the two.
+    \item After soldering the entire board we are going to test the more advanced user interfaces. This includes the UART over USB, and also the audio input and output. Testing this will be done by a specially prepared program from the Software group.
+    \item Finally, after the FPGA and Software group have completed their work, or at least completed the design necessary to run any testing, we need to start measuring the overall power usage of the board. Using these measurements we will evaluate and possibly attempting to power our board using the 5V USB connection, as mentioned in section~\ref{psu:usb} - Power by USB.
+\end{enumerate}

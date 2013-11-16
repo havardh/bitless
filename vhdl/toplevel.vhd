@@ -25,7 +25,7 @@ entity toplevel is
 		ebi_cs		: in    std_logic;	-- EBI chip select (active low)
 
 		-- Miscellaneous lines:
-		ctrl_bus	  : inout std_logic_vector(2 downto 0) -- Control bus connected to the MCU
+		ctrl_bus	  : in std_logic_vector(2 downto 0) -- Control bus connected to the MCU
 	);
 end entity;
 
@@ -88,7 +88,7 @@ begin
 			memory_clock => memory_clk,
 			dsp_clock => open
 		);
-	sample_clk <= ctrl_bus(2);
+	sample_clk <= ctrl_bus(0);
 
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
@@ -114,7 +114,7 @@ begin
 		if rising_edge(system_clk) then
 			if internal_bus_write = '1' then
 				if internal_bus_address.toplevel = '1' then
-	
+
 					-- Write the writeable control register fields:
 					control_register.reset <= internal_bus_data_in(15);
 
@@ -123,10 +123,8 @@ begin
 		end if;
 	end process;
 
---	internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)))
---		when internal_bus_address.toplevel = '0' else b"0000000000000" & control_register.number_of_pipelines; -- LSB
-
-	internal_bus_data_out <= x"ffff";
+	internal_bus_data_out <= internal_pipeline_data_output(to_integer(unsigned(internal_bus_address.pipeline)))
+		when internal_bus_address.toplevel = '0' else b"0000000000000" & control_register.number_of_pipelines; -- LSB
 
 	generate_pipelines:
 		for i in 0 to NUMBER_OF_PIPELINES - 1 generate

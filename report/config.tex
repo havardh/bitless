@@ -12,6 +12,7 @@
 \usepackage{cite}
 \usepackage{url}
 \usepackage{hyperref} %Used for hyperlinking
+\usepackage{color}
 
 %formatting rules for hyperlinks---
 \hypersetup{
@@ -35,6 +36,20 @@
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 \newcommand{\normaltilde}{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}
 %end of formatting rules for subsubsubsection---
+
+%Formatting for Listings
+
+\input{listings}
+
+\lstset{literate=%
+{Ö}{{\"O}}1
+{Ä}{{\"A}}1
+{Ü}{{\"U}}1
+{ß}{{\ss}}2
+{ü}{{\"u}}1
+{ä}{{\"a}}1
+{ö}{{\"o}}1
+}
 
 % \usepackage{scrextend}
 % \usepackage{tabularx}
