@@ -7,7 +7,7 @@
 #include "dmactrl.h"
 #include "bl_mem.h"
 #include "FPGADriver.h"
-#include "INTDriver.h"
+#include "bl_int.h"
 #include <stdbool.h>
 
 typedef enum {

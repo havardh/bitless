@@ -9,10 +9,6 @@
 #include "em_gpio.h"
 #include "gpiointerrupt.h"
 
-typedef enum {
-    GG_STK3700, BITLESS
-} Board_t;
-
 #define NUM_BUTTONS         5
 #define BTN0                15
 #define BTN1                11
@@ -28,18 +24,14 @@ typedef enum {
     {gpioPortD, (BTN4)},    \
 }
 
-typedef struct {
-    GPIO_Port_TypeDef port;
-    uint32_t pin;
-} BTN_t;
+typedef struct { GPIO_Port_TypeDef port;  uint32_t pin; } BTN_t;
 
 /* Init and setup */
-void Buttons_Init(Board_t board);
-void STK3700_GpioSetup(void);
-void Bitless_GpioSetup(void);
+void Buttons_Init(void);
+void Buttons_Dispatch(void);
 
 /* Register callback functions for buttons */
-void Buttons_RegisterCallbacks(uint8_t buttons[], GPIOINT_IrqCallbackPtr_t *callbackPtrs, uint8_t numButtons);
-void Buttons_SetCallback(uint8_t button, GPIOINT_IrqCallbackPtr_t callbackPtr);
+//void Buttons_RegisterCallbacks(void *(*callbacks)(void));
+void Buttons_SetCallback(uint8_t button, void (*callback)());
 
 #endif /* _BUTTONS_H_ */

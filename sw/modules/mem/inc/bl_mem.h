@@ -3,9 +3,18 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "MEMConfig.h"
+#include "bl_mem.h"
+
+typedef struct {
+
+	int bufferSize;
+
+} MEMConfig;
+
+#define MEM_DEFAULT { 512 }
 
 void MEM_Init( MEMConfig *config );
+void MEM_Destroy( void );
 uint16_t* MEM_GetAudioInBuffer( bool primary );
 int MEM_GetAudioInBufferSize( void );
 

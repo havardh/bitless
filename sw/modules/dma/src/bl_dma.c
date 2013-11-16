@@ -144,7 +144,9 @@ void DMADriver_Init(DMAConfig *config)
 		setupFPGAOut(DMAREQ_DAC0_CH0);
 		break;
 	case SD_TO_DAC:
+                active = true;
 		setupDACBasic();
+                
 		
 		//setupFPGAIn(DMAREQ_DAC0_CH0);
 		//setupFPGAOut(DMAREQ_DAC0_CH0);
@@ -242,7 +244,8 @@ void setupDACBasic( void )
 	};
 	DMA_CfgDescr(DMA_AUDIO_OUT, true, &descrCfg);
 
-	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false,  dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
+	DMA_ActivateBasic(DMA_AUDIO_OUT, true, false,
+  dacAddress, audioOutBuffer, (bufferSize / 2) - 1);
 
 	active = true;
 
@@ -292,7 +295,8 @@ static void setupFPGAIn( uint32_t source )
   DMA_CfgChannel( DMA_FPGA_IN_LEFT,  &chnlCfgLeft );
 
 	DMA_CfgChannel_TypeDef chnlCfgRight = {
-    .highPri   = false,
+    .highPri   = false
+,
     .enableInt = true,
     .select    = source, //DMAREQ_DAC0_CH0, //DMAREQ_ADC0_SCAN,
     .cb        = &cbFpgaInRight

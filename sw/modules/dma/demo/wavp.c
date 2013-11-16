@@ -17,13 +17,12 @@
 #include "em_chip.h"
 #include "dmactrl.h"
 
-#include "DACConfig.h"
-#include "MEMConfig.h"
+#include "bl_dac.h"
+#include "bl_mem.h"
 #include "FPGAConfig.h"
-#include "DMAConfig.h"
+#include "bl_dma.h"
 
-#include "DMADriver.h"
-#include "SDDriver.h"
+#include "bl_sd.h"
 #include "spi.h"
 #include "sample_conversion.h"
 
@@ -48,7 +47,7 @@ int bufferSize = 64;
 static bool done = false;
 static int called[8];
 
-void* GetInBuffer(void) {
+static void* GetInBuffer(void) {
 	return (void*)MEM_GetAudioInBuffer(true);
 }
 
@@ -58,7 +57,7 @@ void setupSD()
 	config.mode = IN;
 	config.inFile = "sweet1.wav";
 	config.GetInputBuffer = GetInBuffer;
-	config.bufferSize = bufferSize;
+	config.bufferSize = bufferSize * 4;
 	SDDriver_Init( &config );
 }
 
@@ -81,7 +80,7 @@ void onDACRequest(void)
 
 		for (int i=0; i<2*MEM_GetAudioInBufferSize(); i++) {
 			tmp = buffer[i] + 0x8000;
-			tmp >>= 4;
+			tmp >>= 8;
 			buffer[i] = tmp;
 		}
 
@@ -101,12 +100,12 @@ void setupTimer( uint32_t frequency )
 	TIMER_TopBufSet( TIMER0, CMU_ClockFreqGet(cmuClock_HFPER) / frequency );
 }
 
-void TIMER0_IRQHandler( void ) 
+/*void TIMER0_IRQHandler( void ) 
 {
 
 	TIMER_IntClear( TIMER0, TIMER_IF_OF );
 	
-}
+	}*/
 
 void setupMEM( void ) 
 {

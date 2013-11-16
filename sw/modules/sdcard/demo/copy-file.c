@@ -17,10 +17,10 @@
 #include "em_chip.h"
 #include "dmactrl.h"
 
-#include "MEMConfig.h"
+#include "bl_mem.h"
 #include "FPGAConfig.h"
 
-#include "SDDriver.h"
+#include "bl_sd.h"
 #include "spi.h"
 
 #include "ff.h"
@@ -175,7 +175,8 @@ int main( void )
   /* Enable clock for USART2 */
   CMU_ClockEnable(cmuClock_USART2, true);
   CMU_ClockEnable(cmuClock_GPIO, true);
-  
+	Leds_Init();
+
 	SPI_setup(2, 0, true);
 
 	setupMEM();
@@ -193,8 +194,8 @@ int main( void )
 	}
 	
 	SDDriver_Finalize();
-
-	while(1);
+	Leds_SetLeds(0xff);
+	while(1) ;
 	return 0;
 
 }

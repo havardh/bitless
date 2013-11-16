@@ -24,7 +24,8 @@ LST_DIR = lst
 # Change path to the tools according to your system configuration
 # DO NOT add trailing whitespace chars, they do matter !
 WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2012q4
-LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
+LINUXCS		 ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
+#LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
 # /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
 
 LIB=../../libs
