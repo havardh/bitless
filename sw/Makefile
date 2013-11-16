@@ -160,6 +160,7 @@ $(LIB)/fatfs/src/ff.c \
 $(LIB)/fatfs/src/diskio.c \
 $(LIB)/util/src/fatfs_file.c \
 $(LIB)/util/src/wav.c \
+$(LIB)/util/src/spi.c \
 $(LIB)/util/src/CircularBuffer.c \
 $(DIR)/modules/leds/src/bl_leds.c \
 $(DIR)/modules/main/src/MainController.c \
