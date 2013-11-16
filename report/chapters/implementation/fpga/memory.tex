@@ -1,18 +1,18 @@
 %Should contain: Ringbuffer, Switch buffer, input/output buffers, constant memory, inst memory, read and write lines to the fpga from the ARM. Originally the ARM only needed access to the first and the last data buffer but for debugging purposes the ARM was given access to all buffers.
-\subsection{Memories}\label{subsec:fpga-memories}
+\subsection{Memory types}\label{subsec:fpga-memory}
 
 The internal block RAMs in the FPGA were used to implement the different kinds
 of memory inside the processor. Even though this is limited by the amount of
 memory available, it guarantees equal access time for all the different types
 of memory. It also precludes having to use external RAM, which would not be as
-fast, as well as consume more energy.
+fast, besides consuming more energy, making the project less energy-efficient.
 
-\subsubsection{Intruction memory}
+\subsubsection{Instruction memory}
 
 Each processor core has a separate instruction memory. This memory is filled
-with instructions defining the program which the processor core will run. Before
-the FPGA processors are run, the the MCU writes the programs for each core into
-these instruction memories.
+with instructions defining the program the processor core will run. Before the
+FPGA processor cores get set to run, the the MCU writes the programs for each
+core into these instruction memories.
 
 \subsubsection{Audio Pipeline Buffers}
 \todo[inline]{Describe the need for memory to behave as both ringbuffer/queues,
