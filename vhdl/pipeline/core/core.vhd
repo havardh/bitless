@@ -277,7 +277,7 @@ begin
                 id_stop_processor_reg <= '1';
             else
                 proc_finished_reg <= proc_finished_reg;
-                id_stop_processor_reg <= id_stop_processor;
+                id_stop_processor_reg <= id_stop_processor_reg;
             end if;
             
         end if;
