@@ -3,7 +3,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.std_logic_arith.all;
 
 library work;
 use work.core_constants.all;
@@ -11,7 +10,6 @@ use work.internal_bus.all;
 
 entity core is
     generic(
-        instruct_addr_size  : natural := 16;
         instruct_data_size  : natural := 16;
         reg_addr_size       : natural := 5;
         reg_data_size       : natural := 16;
@@ -27,23 +25,23 @@ entity core is
         
 		proc_finished       : out std_logic := '0';
         -- Connection to instruction memory:
-        instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
+        instruction_addr    : out std_logic_vector(IMEM_ADDR_SIZE - 1 downto 0);
         instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
         
         -- Connections to the constant memory controller:
-        constant_addr       : out std_logic_vector(memory_addr_size - 1 downto 0);
+        constant_addr       : out std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);
         constant_data       : in  std_logic_vector(memory_data_size - 1 downto 0);
 
         -- Connections to the input buffer:
-        input_read_addr     : out std_logic_vector(memory_addr_size - 1 downto 0);
+        input_read_addr     : out std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);
         input_read_data     : in  std_logic_vector(memory_data_size - 1 downto 0);
 
         -- Connections to the output buffer:
-        output_write_addr   : out std_logic_vector(memory_addr_size - 1 downto 0);
+        output_write_addr   : out std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);
         output_write_data   : out std_logic_vector(memory_data_size - 1 downto 0);
         output_we           : out std_logic;
         
-        output_read_addr    : out std_logic_vector(memory_addr_size - 1 downto 0);
+        output_read_addr    : out std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);
         output_read_data    : in  std_logic_vector(memory_data_size - 1 downto 0)
     );
 end entity;
@@ -62,10 +60,9 @@ architecture behaviour of core is
         );
     end component;
     --Pipeline registers for stage 1
-    signal pc_reg           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '1');
-    signal pc_inc           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '0');
+    signal pc_reg           : std_logic_vector(IMEM_ADDR_SIZE -1 downto 0):= (others => '1');
+    signal pc_inc           : std_logic_vector(IMEM_ADDR_SIZE -1 downto 0):= (others => '0');
     signal pc_we            : std_logic;
-    signal proc_finished_reg    : std_logic;
     
     signal restart_bubble   : std_logic;
 	signal do_branch        : std_logic;
@@ -76,7 +73,7 @@ architecture behaviour of core is
         port (  
             opt_code            : in    std_logic_vector (5 downto 0);
 		      
-			stop_core           : out STD_LOGIC;
+				stop_core           : out STD_LOGIC;
             alu_op              : out alu_operation;
             reg_write_e         : out register_write_enable;
             wb_src              : out wb_source;
@@ -108,8 +105,8 @@ architecture behaviour of core is
     end component register_file;
     
     -- signals
-    signal id_stop_processor_reg    : std_logic;
-	signal id_stop_processor        : std_logic;
+    signal id_stop_processor_reg    : std_logic := '0';
+	signal id_stop_processor        : std_logic := '0';
 	signal id_instruction           : std_logic_vector(instruct_data_size-1 downto 0);
     -- data signals
     signal id_imm_value        : std_logic_vector(memory_data_size-1 downto 0);
@@ -165,7 +162,7 @@ architecture behaviour of core is
     signal mem_fw_1             : std_logic_vector(reg_data_size-1 downto 0);
     signal mem_fw_1b            : std_logic_vector(reg_data_size-1 downto 0);
     signal mem_fw_2             : std_logic_vector(reg_data_size-1 downto 0);
-    signal mem_imm_value        : std_logic_vector(memory_data_size-1 downto 0);
+    signal mem_imm_value        : std_logic_vector(memory_data_size-1 downto 0) := (others =>'0');
     --signal mem_mem_value        : std_logic_vector(memory_data_size-1 downto 0);
     -- address signals
     signal mem_reg_1_addr       : std_logic_vector( reg_addr_size-1 downto 0);
@@ -228,7 +225,7 @@ architecture behaviour of core is
     signal ex_fw_1              : std_logic_vector(reg_data_size-1 downto 0);
     signal ex_fw_1b             : std_logic_vector(reg_data_size-1 downto 0);
     signal ex_fw_2              : std_logic_vector(reg_data_size-1 downto 0);
-    signal ex_imm_value         : std_logic_vector(memory_data_size-1 downto 0);
+    signal ex_imm_value         : std_logic_vector(memory_data_size-1 downto 0) := (others =>'0');
     signal ex_mem_value         : std_logic_vector(memory_data_size-1 downto 0);
     signal ex_alu_result        : std_logic_vector(memory_data_size-1 downto 0);
     signal ex_wb_data           : std_logic_vector(memory_data_size-1 downto 0);
@@ -263,39 +260,36 @@ architecture behaviour of core is
 begin
 	 
 	 
-	 stop_core : process(clk, proc_finished_reg, id_stop_processor_reg) 
+	 stop_core : process(clk, id_stop_processor_reg) 
 	 begin
-        if rising_edge(clk) then
+        if falling_edge(clk) then
             if reset = '1' then
-                proc_finished_reg <= '0';
-                id_stop_processor_reg <= '1';
-            elsif wb_stop_core_signal = '1' or pl_stop_core = '1' then
-                proc_finished_reg <= '1';
+                proc_finished <= '0';
+					 id_stop_processor_reg <= '0'; 
+				elsif wb_stop_core_signal = '1' then
+                proc_finished <= '1';
                 id_stop_processor_reg <= '1';
             elsif stop_core_signal = '1' then
-                proc_finished_reg <= '0';
+                proc_finished <= '0';
                 id_stop_processor_reg <= '1';
-            else
-                proc_finished_reg <= proc_finished_reg;
-                id_stop_processor_reg <= '0';
             end if;
-            proc_finished <= proc_finished_reg;
-            id_stop_processor <= id_stop_processor_reg;
+            
         end if;
-        
+        id_stop_processor <= id_stop_processor_reg;
         
      end process;
        
 	 
 --Pipeline: IF
-    pc_incrementer : adder
-    port map(
-        a       => pc_reg,
-        b       => x"0000",
-        c       => '1',
-        result  => pc_inc,
-		flags	=> open
-    );
+	pc_inc <= std_logic_vector(unsigned(pc_reg) + 1);
+--    pc_incrementer : adder
+--    port map(
+--        a       => pc_reg,
+--        b       => x"0000",
+--        c       => '1',
+--        result  => pc_inc,
+--		flags	=> open
+--    );
 	 
 	 evaluate_branch : process(id_branch_enable, wb_flags, id_branch_flags)
 	 begin
@@ -317,11 +311,14 @@ begin
     pc : process(clk)
     begin
         if rising_edge(clk) then
-            if id_stop_processor = '1' then
+            if id_stop_processor = '1' or reset = '1' then
                 pc_reg <= (others => '0');
                 restart_bubble <= '1';
+				elsif pl_stop_core = '1' then
+					pc_reg <= pc_reg;
+					restart_bubble <= '0';
             elsif do_branch = '1' then
-                pc_reg <= ext(branch_target, instruct_addr_size);
+                pc_reg <= std_logic_vector(resize(unsigned(branch_target), IMEM_ADDR_SIZE ));
                 restart_bubble <= '0';
             else
                 pc_reg <= pc_inc;
@@ -336,7 +333,7 @@ begin
     begin
         if rising_edge(clk) then
             if (id_stop_processor = '1' or restart_bubble = '1' 
-            or do_branch = '1' or mem_do_branch = '1') then
+            or do_branch = '1' or mem_do_branch = '1' or pl_stop_core = '1') then
                 id_instruction <= (others => '0');
             else
                 id_instruction <= instruction_data;
@@ -381,7 +378,7 @@ begin
 
     
     -- signal mappings
-    id_imm_value <= sxt(id_instruction(13 downto 0), 32);
+    id_imm_value <= std_logic_vector(resize(unsigned(id_instruction(13 downto 0)), 32));
 	id_reg_1_addr <= id_instruction(9 downto 5);
 	id_reg_2_addr <= id_instruction(4 downto 0);
 
@@ -437,10 +434,10 @@ begin
     -- signal mapping
 	output_write_data <= mem_fw_1b & mem_fw_1;
 	output_we <= mem_output_we;
-    input_read_addr <= mem_fw_2;
-    output_read_addr <= mem_fw_2;
-    output_write_addr <= mem_fw_2; 
-    constant_addr <= mem_fw_2;
+    input_read_addr <= mem_fw_2(IMEM_ADDR_SIZE-1 downto 0);
+    output_read_addr <= mem_fw_2(DMEM_ADDR_SIZE-1 downto 0);
+    output_write_addr <= mem_fw_2(DMEM_ADDR_SIZE-1 downto 0); 
+    constant_addr <= mem_fw_2(DMEM_ADDR_SIZE-1 downto 0);
     
 -- Pipeline: EX
 
@@ -448,7 +445,7 @@ begin
     begin
         if rising_edge(clk) then
 		    if (mem_add_imm ='1') then
-                ex_reg_2_data <= sxt(mem_reg_2_addr, 16);
+                ex_reg_2_data <= std_logic_vector(resize(unsigned(mem_reg_2_addr), 16));
 			else
                 ex_reg_2_data <= mem_fw_2;
 			end if;
