@@ -265,7 +265,7 @@ begin
 	 
 	 stop_core : process(clk, proc_finished_reg, id_stop_processor_reg) 
 	 begin
-        if rising_edge(clk) then
+        if falling_edge(clk) then
             if reset = '1' then
                 proc_finished_reg <= '0';
                 id_stop_processor_reg <= '1';
@@ -277,7 +277,7 @@ begin
                 id_stop_processor_reg <= '1';
             else
                 proc_finished_reg <= proc_finished_reg;
-                id_stop_processor_reg <= '0';
+                id_stop_processor_reg <= id_stop_processor;
             end if;
             proc_finished <= proc_finished_reg;
             id_stop_processor <= id_stop_processor_reg;
