@@ -25,7 +25,7 @@ entity toplevel is
 		ebi_cs		: in    std_logic;	-- EBI chip select (active low)
 
 		-- Miscellaneous lines:
-		ctrl_bus	  : inout std_logic_vector(2 downto 0) -- Control bus connected to the MCU
+		ctrl_bus	  : in std_logic_vector(2 downto 0) -- Control bus connected to the MCU
 	);
 end entity;
 
@@ -88,7 +88,7 @@ begin
 			memory_clock => memory_clk,
 			dsp_clock => open
 		);
-	sample_clk <= ctrl_bus(2);
+	sample_clk <= ctrl_bus(0);
 
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
