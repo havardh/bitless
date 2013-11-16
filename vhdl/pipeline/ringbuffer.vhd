@@ -18,7 +18,7 @@ entity ringbuffer is
 		window_size		: natural := 1     -- Size of the ring buffer window, in words
 	);
 	port(
-		--clk 			: in std_logic; -- Main clock ("small cycle" clock)
+		clk 		: in std_logic; -- Main clock ("small cycle" clock)
 		memclk		: in std_logic; -- Memory clock
 		sample_clk	: in std_logic; -- Sample clock ("large cycle" clock)
 
@@ -27,26 +27,18 @@ entity ringbuffer is
 		-- Data and address I/O for using the buffer as output buffer:
 		b_data_in     : in  std_logic_vector(data_width - 1 downto 0);    -- B data input
 		b_data_out    : out std_logic_vector(data_width - 1 downto 0);    -- B data output
-		b_off_address : in  std_logic_vector(mem_addr_size - 1 downto 0); -- Address offset for B-buffer
+		b_off_address : in  std_logic_vector(address_width - 1 downto 0); -- Address offset for B-buffer
 		b_we          : in  std_logic; -- Write enable for writing data from data_in to address address_in
 
 		-- Data and address I/O for using the buffer as input buffer:
 		a_data_out    : out std_logic_vector(data_width - 1 downto 0);    -- A data output
-		a_off_address : in  std_logic_vector(mem_addr_size - 1 downto 0); -- Address offset for the A-buffer
+		a_off_address : in  std_logic_vector(address_width - 1 downto 0); -- Address offset for the A-buffer
 
 		mode			: in ringbuffer_mode	-- Buffer mode
 	);
 end ringbuffer;
 
 architecture behaviour of ringbuffer is
-	component adder is
-		port (
-			a, b    : in std_logic_vector(15 downto 0);
-			c       : in std_logic;
-			result  : out std_logic_vector(15 downto 0);
-			flags   : out alu_flags
-		);
-	end component;
 
 	type memory_array is array(0 to buffer_size-1) of std_logic_vector(data_width - 1 downto 0);
 	signal memory			: memory_array := (others => (others => '0'));
@@ -61,40 +53,10 @@ architecture behaviour of ringbuffer is
 	signal b_incremented	: std_logic_vector(mem_addr_size - 1 downto 0);	--Incremented B-buffer base address.
 begin
 
---	--Calculating the actual A-buffer read address from base + offset
---	a_add : adder
---		port map(
---			a => a_base_address,
---			b => a_off_address,
---			c => '0',
---			result => a_address
---		);
-	a_address <= std_logic_vector(unsigned(a_base_address) + unsigned(a_off_address));
---	--Calculating the actual B-buffer read address from base + offset
---	b_add : adder
---		port map(
---			a => b_base_address,
---			b => b_off_address,
---			c => '0',
---			result => b_address
---		);
-	b_address <= std_logic_vector(unsigned(b_base_address) + unsigned(b_off_address));
---	--Incrementing base addresses (for ring buffer mode)
---	a_base_inc : adder
---		port map(
---			a => a_base_address,
---			b => std_logic_vector(to_unsigned(window_size, 16)),
---			c => '0',
---			result => a_incremented
---		);
+	a_address <= std_logic_vector(unsigned(a_base_address) + unsigned(a_off_address(mem_addr_size-1 downto 0)));
+	b_address <= std_logic_vector(unsigned(b_base_address) + unsigned(b_off_address(mem_addr_size-1 downto 0)));
+
 	a_incremented <= std_logic_vector(unsigned(a_base_address) + to_unsigned(window_size, mem_addr_size));
---	b_base_inc : adder
---		port map(
---			a => b_base_address,
---			b => std_logic_vector(to_unsigned(window_size, 16)),
---			c => '0',
---			result => b_incremented
---		);
 	b_incremented <= std_logic_vector(unsigned(b_base_address) + to_unsigned(window_size, mem_addr_size));
 	
 	-- Switch the buffer pointers according to the buffer mode:
