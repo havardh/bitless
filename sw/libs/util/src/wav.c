@@ -36,14 +36,14 @@ void setupDefaultHeader(WAV_Header_TypeDef* header)
 void WAV_Open(WAVFile *file, char *filename)
 {
 	
-file->header = (WAV_Header_TypeDef*)malloc(sizeof(WAV_Header_TypeDef));
+	file->header = (WAV_Header_TypeDef*)malloc(sizeof(WAV_Header_TypeDef));
 	open(file->fno, filename, file->mode);
 	file->position = 0;
 	file->eof = 0;
         
 	if (file->mode == READ) {
 		WAV_ReadHeader(file);
-	} else {
+	} else if (file->mode == WRITE) {
 		//setupDefaultHeader(file->header);
 		
 		WAV_WriteHeader(file);
@@ -102,7 +102,7 @@ void WAV_Close(WAVFile *file)
 	if (file->mode == WRITE) {
 		WAV_WriteHeader(file);
 	}
-
+	free(file->header);
 	close(file->fno);
 }
 

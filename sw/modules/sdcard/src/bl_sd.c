@@ -37,8 +37,18 @@ void SDDriver_Write()
 
 void SDDriver_Finalize()
 {
-	WAV_Close(srcFile);
-	WAV_Close(dstFile);
+
+
+	if (srcFile) {
+		WAV_Close(srcFile);
+		free(srcFile);
+	}
+
+	if (dstFile) {
+		WAV_Close(dstFile);
+		free(dstFile);
+	}
+
 }
 
 static void initFiles( SDConfig *config )

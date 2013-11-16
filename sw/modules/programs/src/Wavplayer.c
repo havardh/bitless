@@ -206,17 +206,17 @@ void Wavplayer_Start( void )
 
 	INTDriver_Init();
 	INTDriver_RegisterCallback(0, &onDACRequest);
-
+	done = false;
 	setupTimer(8000);
 
 	while(1) {
 		if (done)
 			break;
 	}
-	
+	DMADriver_StopDAC();
 	SDDriver_Finalize();
 	DMA_Reset();
 	DAC_Reset(DAC0);
 	MEM_Destroy();
-	
+	TIMER_Reset( TIMER0 );
 }

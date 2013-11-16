@@ -32,8 +32,9 @@ void FPGADriver_Destroy( void )
 {
   for (int i=0; i<numPipelines; i++) 
   {
-    free( inBuffers[i] );
-    free( outBuffers[i] );
+     CircularBuffer_Destroy( inBuffers[i] );
+     CircularBuffer_Destroy( outBuffers[i] );
+
   }
   free( inBuffers );
   free( outBuffers );

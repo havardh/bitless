@@ -10,6 +10,12 @@ CircularBuffer CircularBuffer_New(uint16_t *buffer, size_t size, int parts )
 	return cb;
 }
 
+void CircularBuffer_Destroy( CircularBuffer circularBuffer ) 
+{
+     free(circularBuffer->buffer);
+     free( circularBuffer );
+}
+
 uint16_t *CircularBuffer_GetBuffer( CircularBuffer circularBuffer )
 {
 	int index = circularBuffer->index;

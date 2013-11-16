@@ -57,7 +57,7 @@ void StoredFilter_Start(void)
 	setupFPGA();
 
 	setupSD();
-
+	done = false;
 	setupTimer();
 
 	while(1) {
@@ -66,6 +66,8 @@ void StoredFilter_Start(void)
 			break;
 	}
 	TIMER_Enable( TIMER0, false );
+	TIMER_Reset( TIMER0 );
+	FPGADriver_Destroy();
 	SDDriver_Finalize();
 	
 }
