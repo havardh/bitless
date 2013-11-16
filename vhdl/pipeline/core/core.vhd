@@ -262,21 +262,18 @@ architecture behaviour of core is
 begin
 	 
 	 
-	 stop_core : process(clk, proc_finished_reg, id_stop_processor_reg) 
+	 stop_core : process(clk, id_stop_processor_reg) 
 	 begin
         if falling_edge(clk) then
             if reset = '1' then
                 proc_finished <= '0';
-                id_stop_processor_reg <= '0';
-            elsif wb_stop_core_signal = '1' then
+					 id_stop_processor_reg <= '0'; 
+				elsif wb_stop_core_signal = '1' then
                 proc_finished <= '1';
                 id_stop_processor_reg <= '1';
             elsif stop_core_signal = '1' then
                 proc_finished <= '0';
                 id_stop_processor_reg <= '1';
-            else
-                proc_finished <= proc_finished;
-                id_stop_processor_reg <= id_stop_processor_reg;
             end if;
             
         end if;

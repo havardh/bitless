@@ -66,7 +66,7 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
    signal pl_stop_core : std_logic := '0';
    signal instruction_data : std_logic_vector(15 downto 0) := (others => '0');
    signal constant_data : std_logic_vector(31 downto 0) :=    "00000000000000000000000000000000";
-   signal input_read_data : std_logic_vector(31 downto 0) :=  "11111111111111111111111111111111";
+   signal input_read_data : std_logic_vector(31 downto 0) :=  "00000000000000000000000000000001";
    signal output_read_data : std_logic_vector(31 downto 0) := "00000000000000000000000000000010";
 
  	--Outputs
@@ -82,8 +82,8 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
    -- Clock period definitions
    constant clk_period : time := 10 ns;
 	
-	constant load_instruction0  : std_logic_vector(15 downto 0) := "0111000001000000";
-	
+	constant load_instruction0  : std_logic_vector(15 downto 0) := "0111000001000000"; -- load into 
+	constant load_instruction1	 : std_logic_vector(15 downto 0) := "0111010000100000";
 	
 	constant store_instruction0 : std_logic_vector(15 downto 0) := "0111110001000000";
 	
@@ -91,7 +91,9 @@ ARCHITECTURE behavior OF tb_processor_core_magnus IS
 	
 	constant no_op_instruction : std_logic_vector(15 downto 0) := (others => '0');
     
-    constant branch_instruction0 : std_logic_vector(15 downto 0) := "1100000000000001";
+   constant branch_instruction0 : std_logic_vector(15 downto 0) := "1100000000000001";
+	
+	constant add_instruction0	: std_logic_vector(15 downto 0) := "0000000000100010";
  
 BEGIN
  
@@ -130,67 +132,21 @@ BEGIN
       -- hold reset state for 100 ns.
 		reset <= '1';
       wait for clk_period*1.5;	
-
-      --wait for clk_period*10.5;
 		reset <= '0';
+		
 		instruction_data <= load_instruction0;
 		wait for clk_period;
-		
+		instruction_data <= load_instruction1;
+		wait for clk_period;
 		instruction_data <= no_op_instruction;
 		wait for clk_period;
-		
-		
-		instruction_data <= store_instruction0;
+		instruction_data <= add_instruction0;
 		wait for clk_period;
-		
-        
-        instruction_data <= branch_instruction0;
-        
-        wait for clk_period;
-        
-        instruction_data <= load_instruction0;
-		wait for clk_period;
-        
-        instruction_data <= load_instruction0;
-		wait for clk_period;
-        
-        instruction_data <= load_instruction0;
-		wait for clk_period;
-		
-		
-		pl_stop_core <= '1';
-		wait for clk_period*2;
-		pl_stop_core <= '0';
-
-		instruction_data <= load_instruction0;
-		wait for clk_period*3;
-		
 		instruction_data <= no_op_instruction;
 		wait for clk_period;
-		
-		
 		instruction_data <= store_instruction0;
 		wait for clk_period;
-		
-        
-      instruction_data <= branch_instruction0;
-        
-      wait for clk_period;
-        
-      instruction_data <= load_instruction0;
-		wait for clk_period;
-        
-      instruction_data <= load_instruction0;
-		wait for clk_period;
-        
-      instruction_data <= load_instruction0;
-		wait for clk_period;
-		--instruction_data <= finished_instruction;
-		
-        instruction_data <= finished_instruction;
-		wait for clk_period;
-		
-      -- insert stimulus here 
+		instruction_data <= finished_instruction;
 
       wait;
    end process;
