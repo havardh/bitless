@@ -10,3 +10,4 @@ Group Telephone Numbers
 - Terje Runde               - 992 34 693
 - Olav Emil Eiksund         - 90 91 35 89
 - Håvard Wormdal Høiby      - 959 33 245
+- Magnus Halvorsen          - 99437794
