@@ -65,7 +65,7 @@ architecture behaviour of core is
     signal pc_reg           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '1');
     signal pc_inc           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '0');
     signal pc_we            : std_logic;
-    signal proc_finished_reg    : std_logic;
+    signal proc_finished_reg    : std_logic := '0';
     
     signal restart_bubble   : std_logic;
 	signal do_branch        : std_logic;
@@ -108,8 +108,8 @@ architecture behaviour of core is
     end component register_file;
     
     -- signals
-    signal id_stop_processor_reg    : std_logic;
-	signal id_stop_processor        : std_logic;
+    signal id_stop_processor_reg    : std_logic := '0';
+	signal id_stop_processor        : std_logic := '0';
 	signal id_instruction           : std_logic_vector(instruct_data_size-1 downto 0);
     -- data signals
     signal id_imm_value        : std_logic_vector(memory_data_size-1 downto 0);
@@ -268,7 +268,7 @@ begin
         if falling_edge(clk) then
             if reset = '1' then
                 proc_finished_reg <= '0';
-                id_stop_processor_reg <= '1';
+                id_stop_processor_reg <= '0';
             elsif wb_stop_core_signal = '1' or pl_stop_core = '1' then
                 proc_finished_reg <= '1';
                 id_stop_processor_reg <= '1';
@@ -279,10 +279,10 @@ begin
                 proc_finished_reg <= proc_finished_reg;
                 id_stop_processor_reg <= id_stop_processor;
             end if;
-            proc_finished <= proc_finished_reg;
-            id_stop_processor <= id_stop_processor_reg;
+            
         end if;
-        
+        proc_finished <= proc_finished_reg;
+        id_stop_processor <= id_stop_processor_reg;
         
      end process;
        
