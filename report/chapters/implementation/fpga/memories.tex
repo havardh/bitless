@@ -1,19 +1,18 @@
 %Should contain: Ringbuffer, Switch buffer, input/output buffers, constant memory, inst memory, read and write lines to the fpga from the ARM. Originally the ARM only needed access to the first and the last data buffer but for debugging purposes the ARM was given access to all buffers.
-\subsection{Memories}\label{sec:fpga-memories}
-\todo[inline]{Short description?}
+\subsection{Memories}\label{subsec:fpga-memories}
 
-The internal block RAMs in the FPGA are used to implement all memories in the processor.
-Although this limits the amount of memory available, it makes it possible to have
-equal access time for all the different kinds of memories. It also precludes having
-to use external RAM which would be slower and consume more energy.
+The internal block RAMs in the FPGA were used to implement the different kinds
+of memory inside the processor. Even though this is limited by the amount of
+memory available, it guarantees equal access time for all the different types
+of memory. It also precludes having to use external RAM, which would not be as
+fast, as well as consume more energy.
 
 \subsubsection{Intruction memory}
-\todo[inline]{Describe the functionality and reasons behind decisions regarding
-the instruction memory.}
 
-Each processor core has a separate instruction memory. This memory is programmed
-with the programme for the processor core by the MCU before the processor core is
-started.
+Each processor core has a separate instruction memory. This memory is filled
+with instructions defining the program which the processor core will run. Before
+the FPGA processors are run, the the MCU writes the programs for each core into
+these instruction memories.
 
 \subsubsection{Audio Pipeline Buffers}
 \todo[inline]{Describe the need for memory to behave as both ringbuffer/queues,
@@ -23,14 +22,16 @@ in the best possible way.}
 
 \subsubsection{Constant memory}
 
-The constant memory is used to store constants that is read-only by the processor
-cores. Each audio pipeline contains a constant memory that is accessed by two
-cores in the pipeline. Which cores have access to the constant memory can be
-configured by the MCU in the pipeline control register.
+The constant memory is used to store constants needed for the \todo{Need to
+confirm this.}SD-FT transforms in each audio pipeline. This memory is by default
+read-only for the processor cores. Each audio pipeline contains a constant
+memory, and this memory is accessed by only two cores in the pipeline. The
+decision cores have access to the constant memory can be configured by the MCU
+in the pipeline control register.
 
-The reason for allowing only two processors to access the constant memory is
-that the internal block RAM in the FPGA have two independent read ports, allowing
-two simultaneous reads. If more processors were to have access to the constant
-memories an arbitration unit would have to be used, and the advantage of using
-the block RAM to ensure a one-cycle access time would be negated.
-
+The reason why only two cores are permitted access to the constant memory, is
+due to the internal block RAMs in the FPGA which only have have two independent
+read ports, permitting a maximum of two simultaneous reads. If more processors
+were to have access to the constant memories an arbitration unit would be
+needed, and the advantage of using the block RAM to ensure sincle-cycle access
+time would be lost.
