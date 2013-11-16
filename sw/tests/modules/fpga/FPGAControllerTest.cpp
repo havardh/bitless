@@ -91,7 +91,7 @@ TEST(FPGAController, core0_outputBuffer_should_be_smaller_than_core1_inputBuffer
     CHECK(c0->inputBuffer < c1->inputBuffer);
 }
 
-TEST(FPGAController, core0_outputbuffer_is_right) {
+TEST(FPGAController, core1_outputbuffer_is_right) {
     FPGA_Core *c1 = FPGA_GetCore(0, 1);
 
     POINTERS_EQUAL(CORE1_OUTPUT, c1->outputBuffer);
@@ -116,7 +116,7 @@ TEST(FPGAController, pipeline0_outputBuffer_should_be_right) {
     FPGA_Pipeline *p0 = FPGA_GetPipeline(0);
     uint16_t *outputBuffer = FPGAPipeline_GetOutputBuffer(p0);
 
-    POINTERS_EQUAL(outputBuffer, PIPELINE0_OUTPUT);
+    POINTERS_EQUAL(PIPELINE0_OUTPUT, outputBuffer);
 }
 
 TEST(FPGAController, pipeline1_inputbuffer_should_be_right) {
@@ -139,7 +139,7 @@ TEST(FPGAController, pipeline1_outputBuffer_should_be_right) {
     FPGA_Pipeline *p1 = FPGA_GetPipeline(1);
     uint16_t *outputBuffer = FPGAPipeline_GetOutputBuffer(p1);
 
-    POINTERS_EQUAL(outputBuffer, PIPELINE1_OUTPUT);
+    POINTERS_EQUAL(PIPELINE1_OUTPUT, outputBuffer);
 }
 
 TEST(FPGAController, core7_memory_addresses_is_right) {
