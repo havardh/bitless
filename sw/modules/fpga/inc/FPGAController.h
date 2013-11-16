@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "FPGAConfig.h"
-#include "em_gpio.h"
+// #include "em_gpio.h"
 
 typedef struct {
     uint32_t pos;
@@ -22,6 +22,8 @@ typedef struct {
     uint32_t pos;
     uint32_t numCores;
     uint16_t *address;
+    uint16_t *inputBuffer;
+    uint16_t *outputBuffer;
     FPGA_Core *cores;
 } FPGA_Pipeline;
 
@@ -36,6 +38,8 @@ typedef struct {
 #define CTRL_BLINK_ADDR     0x2000 // 0010 0000 0000 0000
 #define CTRL_LED0_ADDR      0x1000 // 0001 0000 0000 0000
 #define CTRL_LED1_ADDR      0x0800 // 0000 1000 0000 0000
+#define P_INPUT_ADDR        0x20000
+#define P_OUTPUT_ADDR       0x30000
 
 typedef struct {
     bool reset;
