@@ -96,13 +96,13 @@ FPGA_Core* FPGAPipeline_GetCore(FPGA_Pipeline *pipeline, uint32_t core) {
 }
 
 uint16_t* FPGAPipeline_GetInputBuffer(FPGA_Pipeline *pipeline) {
-    FPGA_Core *core = FPGA_GetCore(pipeline->pos, 0);
-    return core->inputBuffer;
+    // FPGA_Core *core = FPGA_GetCore(pipeline->pos, 0);
+    return pipeline->inputBuffer;
 }
 
 uint16_t* FPGAPipeline_GetOutputBuffer(FPGA_Pipeline *pipeline) {
-    FPGA_Core *core = FPGAPipeline_GetCore(pipeline, pipeline->numCores - 1);
-    return core->outputBuffer;   
+    // FPGA_Core *core = FPGAPipeline_GetCore(pipeline, pipeline->numCores - 1);
+    return pipeline->outputBuffer;   
 }
 
 /*******************************************
@@ -164,6 +164,8 @@ void FPGA_Init(FPGAConfig *config) {
 void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig *config) {
     pipeline->pos = pipelinePos;
     pipeline->address = fpga.baseAddress + pipelinePos * config->pipelineAddressSize;
+    pipeline->inputBuffer = (pipeline->address + P_INPUT_ADDR);
+    pipeline->outputBuffer = (pipeline->address + P_OUTPUT_ADDR);
 
     pipeline->numCores = config->numCores;
     pipeline->cores = (FPGA_Core *) malloc(sizeof(FPGA_Core) * pipeline->numCores);
@@ -200,21 +202,21 @@ void FPGA_Destroy(void) {
 * FPGA Control                             *
 *******************************************/
 
-void FPGA_Enable(void) 
-{
-	// Set the FPGA Sample Clock low
-	GPIO_PinOutClear(gpioPortF, 12);
+// void FPGA_Enable(void) 
+// {
+// 	// Set the FPGA Sample Clock low
+// 	GPIO_PinOutClear(gpioPortF, 12);
 	
 	
-}
+// }
 
-void FPGA_Disable(void)
-{
+// void FPGA_Disable(void)
+// {
 	
-}
+// }
 
-void FPGA_ToggleClock(void) 
-{
-	// Toggle the FPGA Sample Clock
-	GPIO_PinOutToggle(gpioPortF, 12);
-}
+// void FPGA_ToggleClock(void) 
+// {
+// 	// Toggle the FPGA Sample Clock
+// 	GPIO_PinOutToggle(gpioPortF, 12);
+// }

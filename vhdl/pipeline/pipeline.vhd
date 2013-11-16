@@ -55,15 +55,15 @@ architecture behaviour of pipeline is
 		);
 		port(
 			clk                 : in std_logic; -- Small cycle clock signal
-			  
-			pl_stop_core        : in std_logic;	
+
+			pl_stop_core        : in std_logic;
 			reset               : in std_logic; -- Resets the processor core
-			  
+
 			proc_finished       : out std_logic := '0';
 			-- Connection to instruction memory:
 			instruction_addr    : out std_logic_vector(IMEM_ADDR_SIZE - 1 downto 0);
 			instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
-			  
+
 			-- Connections to the constant memory controller:
 			constant_addr       : out std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);
 			constant_data       : in  std_logic_vector(memory_data_size - 1 downto 0);
@@ -76,7 +76,7 @@ architecture behaviour of pipeline is
 			output_write_addr   : out std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);
 			output_write_data   : out std_logic_vector(memory_data_size - 1 downto 0);
 			output_we           : out std_logic;
-			  
+			
 			output_read_addr    : out std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);
 			output_read_data    : in  std_logic_vector(memory_data_size - 1 downto 0)
 		);
@@ -125,7 +125,7 @@ architecture behaviour of pipeline is
 
 	-- Pipeline control register:
 	signal control_register : pipeline_control_register := (num_cores => std_logic_vector(to_unsigned(NUMBER_OF_CORES, 4)),
-		stopmode => '0', reset => '0', constcore_1 => b"0000", constcore_2 => b"0000");
+		stopmode => '1', reset => '0', constcore_1 => b"0000", constcore_2 => b"0000");
 
 	-- Zero-extended internal bus address:
 	signal internal_dest_address : std_logic_vector(15 downto 0);
@@ -163,11 +163,13 @@ architecture behaviour of pipeline is
 	signal output_write_data : data_array_32(0 to NUMBER_OF_CORES - 1);
 	signal output_write_enable : std_logic_vector(0 to NUMBER_OF_CORES - 1);
 
+	-- Sample clock reset pulse:
+	signal prev_sample_clk_value, reset_pulse : std_logic := '0';
+
 	-- Core control registers:
 	signal core_control_registers : core_control_register_array(0 to NUMBER_OF_CORES - 1) :=
-		(others => (reset => '1', stopmode => '1', instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)),
+		(others => (reset => '0', stopmode => '0', instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)),
 			finished => '0'));
-
 begin
 	-- Zero-extended internal signals:
 	internal_dest_address <= b"00" & int_address.address;
@@ -252,6 +254,20 @@ begin
 		end if;
 	end process;
 
+	resetter: process(clk)
+	begin
+		if rising_edge(clk) then
+			if reset_pulse = '1' then
+				reset_pulse <= '0';
+			elsif prev_sample_clk_value /= sample_clk then
+				reset_pulse <= '1';
+				prev_sample_clk_value <= sample_clk;
+			else
+				prev_sample_clk_value <= sample_clk;
+			end if;
+		end if;
+	end process resetter;
+
 	-- Instantiate the constant memory:
 	const_mem: constant_memory
 		generic map(size => 1024)
@@ -267,7 +283,7 @@ begin
 			read_data_b => constmem_read_data_b
 		);
 
-	-- Übermux controlling access to the constant memory:
+	-- Ãœbermux controlling access to the constant memory:
 	megamux: process(constmem_read_data_a, constmem_read_data_b,
 		constmem_address_array, constmem_data_array, control_register)
 	begin
@@ -295,15 +311,15 @@ begin
 	input_buffer: ringbuffer
 		port map(
 			memclk => memory_clk,
-			sample_clk => sample_clk,
-			reset => '0',
+			sample_clk => reset_pulse,
+			reset => control_register.reset,
 			b_data_in => input_write_data,
 			b_data_out => open,
 			b_off_address => internal_dest_address(DMEM_ADDR_SIZE-1 downto 0),
 			b_we => input_write_enable,
 			a_data_out => input_read_data(-1),
 			a_off_address => input_read_address(-1),
-			mode => RING_MODE
+			mode => NORMAL_MODE
 		);
 
 	-- Set up the output buffer signals:
@@ -323,7 +339,7 @@ begin
 			);
 
 		-- Core:
-		processor_reset(i) <= core_control_registers(i).reset or control_register.reset;
+		processor_reset(i) <= core_control_registers(i).reset or control_register.reset or reset_pulse;
 		processor_stop(i) <= core_control_registers(i).stopmode or control_register.stopmode;
 		processor_core: core
 			port map(
@@ -349,15 +365,15 @@ begin
 			generic map(data_width => 32, address_width => 16)
 			port map(
 				memclk => memory_clk,
-				sample_clk => sample_clk,
-				reset => '0',
+				sample_clk => reset_pulse,
+				reset => control_register.reset,
 				b_data_in => output_write_data(i),
 				b_data_out => output_read_data(i),
 				b_off_address => output_write_address(i),
 				b_we => output_write_enable(i),
 				a_data_out => input_read_data(i),
 				a_off_address => input_read_address(i),
-				mode => RING_MODE
+				mode => NORMAL_MODE
 			);
 	end generate;
 

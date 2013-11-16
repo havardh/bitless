@@ -47,8 +47,6 @@ def write_instruction(args):
 				print 'Missing core parameter'
 				sys.exit(1)
 
-
-
 		port = args.port
 		command = 'wi' + `args.pipeline` + `args.core`
 		data = read_file(args.instruction, INST_SIZE*2)
@@ -154,6 +152,9 @@ def serial_open(port):
 				sys.exit(1)
 		return ser
 
+def pad(data, num_bytes):
+		return data +  (chr(0x0) * (num_bytes - len(data)))
+
 def read_file(filename, num_bytes):
 
 		f = None
@@ -165,6 +166,9 @@ def read_file(filename, num_bytes):
 				sys.exit(1)
 		if f:
 				data = f.read(num_bytes);
+				if len(data) != num_bytes:
+						data = pad(data, num_bytes)
+				
 				f.close()
 		return data
 
