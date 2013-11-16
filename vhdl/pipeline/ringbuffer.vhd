@@ -13,12 +13,10 @@ entity ringbuffer is
 	generic(
 		data_width		: natural := 32;   -- Width of a buffer word
 		address_width	: natural := 16;   -- Width of the address inputs
-		mem_addr_size	: natural := 10;   -- Actual address space of the memory unit
 		buffer_size		: natural := 1024; -- Size of the buffer, in words
 		window_size		: natural := 1     -- Size of the ring buffer window, in words
 	);
 	port(
-		clk 		: in std_logic; -- Main clock ("small cycle" clock)
 		memclk		: in std_logic; -- Memory clock
 		sample_clk	: in std_logic; -- Sample clock ("large cycle" clock)
 
@@ -27,12 +25,12 @@ entity ringbuffer is
 		-- Data and address I/O for using the buffer as output buffer:
 		b_data_in     : in  std_logic_vector(data_width - 1 downto 0);    -- B data input
 		b_data_out    : out std_logic_vector(data_width - 1 downto 0);    -- B data output
-		b_off_address : in  std_logic_vector(address_width - 1 downto 0); -- Address offset for B-buffer
+		b_off_address : in  std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0); -- Address offset for B-buffer
 		b_we          : in  std_logic; -- Write enable for writing data from data_in to address address_in
 
 		-- Data and address I/O for using the buffer as input buffer:
 		a_data_out    : out std_logic_vector(data_width - 1 downto 0);    -- A data output
-		a_off_address : in  std_logic_vector(address_width - 1 downto 0); -- Address offset for the A-buffer
+		a_off_address : in  std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0); -- Address offset for the A-buffer
 
 		mode			: in ringbuffer_mode	-- Buffer mode
 	);
@@ -40,24 +38,24 @@ end ringbuffer;
 
 architecture behaviour of ringbuffer is
 
-	type memory_array is array(0 to buffer_size-1) of std_logic_vector(data_width - 1 downto 0);
+	type memory_array is array(0 to DMEM_SIZE-1) of std_logic_vector(data_width - 1 downto 0);
 	signal memory			: memory_array := (others => (others => '0'));
 
-	signal a_address		: std_logic_vector(mem_addr_size - 1 downto 0);	--Actual address as A-buffer.
-	signal b_address		: std_logic_vector(mem_addr_size - 1 downto 0);	--Actual address as B-buffer.
+	signal a_address		: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--Actual address as A-buffer.
+	signal b_address		: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--Actual address as B-buffer.
 
-	signal a_base_address	: std_logic_vector(mem_addr_size - 1 downto 0);	--A-buffer base address
-	signal b_base_address	: std_logic_vector(mem_addr_size - 1 downto 0);	--B-buffer base address
+	signal a_base_address	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--A-buffer base address
+	signal b_base_address	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--B-buffer base address
 
-	signal a_incremented	: std_logic_vector(mem_addr_size - 1 downto 0);	--Incremented A-buffer base address.
-	signal b_incremented	: std_logic_vector(mem_addr_size - 1 downto 0);	--Incremented B-buffer base address.
+	signal a_incremented	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--Incremented A-buffer base address.
+	signal b_incremented	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--Incremented B-buffer base address.
 begin
 
-	a_address <= std_logic_vector(unsigned(a_base_address) + unsigned(a_off_address(mem_addr_size-1 downto 0)));
-	b_address <= std_logic_vector(unsigned(b_base_address) + unsigned(b_off_address(mem_addr_size-1 downto 0)));
+	a_address <= std_logic_vector(unsigned(a_base_address) + unsigned(a_off_address));
+	b_address <= std_logic_vector(unsigned(b_base_address) + unsigned(b_off_address));
 
-	a_incremented <= std_logic_vector(unsigned(a_base_address) + to_unsigned(window_size, mem_addr_size));
-	b_incremented <= std_logic_vector(unsigned(b_base_address) + to_unsigned(window_size, mem_addr_size));
+	a_incremented <= std_logic_vector(unsigned(a_base_address) + 1);--;to_unsigned(window_size, DMEM_ADDR_SIZE));
+	b_incremented <= std_logic_vector(unsigned(b_base_address) + 1);--to_unsigned(window_size, DMEM_ADDR_SIZE));
 	
 	-- Switch the buffer pointers according to the buffer mode:
 	buffer_switch: process(sample_clk, mode, reset)

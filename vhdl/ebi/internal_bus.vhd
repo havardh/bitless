@@ -3,6 +3,8 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+library work;
+use work.core_constants.all;
 
 package internal_bus is
 
