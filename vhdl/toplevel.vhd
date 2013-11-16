@@ -114,7 +114,7 @@ begin
 		if rising_edge(system_clk) then
 			if internal_bus_write = '1' then
 				if internal_bus_address.toplevel = '1' then
-	
+
 					-- Write the writeable control register fields:
 					control_register.reset <= internal_bus_data_in(15);
 

@@ -64,15 +64,15 @@ architecture behaviour of pipeline is
 		);
 		port(
 			clk                 : in std_logic; -- Small cycle clock signal
-			  
-			pl_stop_core        : in std_logic;	
+
+			pl_stop_core        : in std_logic;
 			reset               : in std_logic; -- Resets the processor core
-			  
+
 			proc_finished       : out std_logic := '0';
 			-- Connection to instruction memory:
 			instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
 			instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
-			  
+
 			-- Connections to the constant memory controller:
 			constant_addr       : out std_logic_vector(memory_addr_size - 1 downto 0);
 			constant_data       : in  std_logic_vector(memory_data_size - 1 downto 0);
@@ -85,7 +85,7 @@ architecture behaviour of pipeline is
 			output_write_addr   : out std_logic_vector(memory_addr_size - 1 downto 0);
 			output_write_data   : out std_logic_vector(memory_data_size - 1 downto 0);
 			output_we           : out std_logic;
-			  
+
 			output_read_addr    : out std_logic_vector(memory_addr_size - 1 downto 0);
 			output_read_data    : in  std_logic_vector(memory_data_size - 1 downto 0)
 		);
@@ -285,7 +285,7 @@ begin
 			read_data_b => constmem_read_data_b
 		);
 
-	-- Übermux controlling access to the constant memory:
+	-- Ãœbermux controlling access to the constant memory:
 	megamux: process(constmem_read_data_a, constmem_read_data_b,
 		constmem_address_array, constmem_data_array, control_register)
 	begin
