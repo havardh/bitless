@@ -223,6 +223,22 @@ TEST(FPGAController, set_core_ctrl_reg) {
     CHECK_EQUAL(0x1, *c0->address);
 }
 
+TEST(FPGAController, get_core_ctrl_reg) {
+    FPGA_Core *c0 = FPGA_GetCore(0, 0);
+    FPGA_CoreControlRegister reg = CORE_CTRL_REG_DEFAULT,
+                             reg2;
+    reg.finished = true;
+    reg.stopMode = true;
+    reg.reset = true;
+
+    FPGACore_SetControlRegister(c0, reg);
+    reg2 = FPGACore_GetControlRegister(c0);
+
+    CHECK_EQUAL(reg.finished, reg2.finished);
+    CHECK_EQUAL(reg.stopMode, reg2.stopMode);
+    CHECK_EQUAL(reg.reset, reg2.reset);
+}
+
 TEST(FPGAController, set_pipieline_ctrl_reg) {
     FPGA_Pipeline *p0 = FPGA_GetPipeline(0);
     FPGA_PipelineControlRegister reg = PIPELINE_CTRL_REG_DEFAULT;
@@ -235,6 +251,25 @@ TEST(FPGAController, set_pipieline_ctrl_reg) {
 
     FPGAPipeline_SetControlRegister(p0, reg);
     CHECK_EQUAL(0x12c4, *p0->address);
+}
+
+TEST(FPGAController, get_pipeline_ctrl_register) {
+    FPGA_Pipeline *p0 = FPGA_GetPipeline(0);
+    FPGA_PipelineControlRegister reg = PIPELINE_CTRL_REG_DEFAULT,
+                                 reg2;
+    reg.firstCore = 4;
+    reg.secondCore = 9;
+    reg.numCores = 11;
+    reg.stopMode = true;
+    reg.reset = true;
+    FPGAPipeline_SetControlRegister(p0, reg);
+    reg2 = FPGAPipeline_GetControlRegister(p0);
+
+    CHECK_EQUAL(reg.firstCore, reg2.firstCore);
+    CHECK_EQUAL(reg.secondCore, reg2.secondCore);
+    CHECK_EQUAL(reg.numCores, reg2.numCores);
+    CHECK_EQUAL(reg.stopMode, reg2.stopMode);
+    CHECK_EQUAL(reg.reset, reg2.reset);
 }
 
 #include "FPGAController.c"

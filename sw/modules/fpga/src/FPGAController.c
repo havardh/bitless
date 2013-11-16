@@ -16,7 +16,7 @@ FPGA_ControlRegister FPGA_GetControlRegister(void) {
     uint16_t reg = *fpga.controlRegister;
 
     FPGA_ControlRegister ctrlReg = FPGA_CTRL_REG_DEFAULT;
-    ctrlReg.pipelines = 0x7 & reg; // Value of lower three bits
+    ctrlReg.pipelines = 0xf & reg; // Value of lower four bits
 
     return ctrlReg;
 }
@@ -72,11 +72,11 @@ FPGA_PipelineControlRegister FPGAPipeline_GetControlRegister(FPGA_Pipeline *pipe
     uint16_t regVal = *(pipeline->address);
 
     FPGA_PipelineControlRegister pReg;
-    pReg.firstCore  = regVal & 0xf000;
-    pReg.secondCore = regVal & 0x0f00;
+    pReg.firstCore  = 0x000f & (regVal >> 12);
+    pReg.secondCore = 0x000f & (regVal >> 8);
     pReg.stopMode   = BIT_HIGH(regVal, 7);
     pReg.reset      = BIT_HIGH(regVal, 6);
-    pReg.numCores   = regVal & 0x000f;
+    pReg.numCores   = 0x000f & regVal;
 
     return pReg;
 }
@@ -93,7 +93,7 @@ void FPGAPipeline_SetControlRegister(FPGA_Pipeline *pipeline, FPGA_PipelineContr
     if (reg.reset)
         regVal += 0x0040;
     
-    regVal += 0x7 & reg.numCores;
+    regVal += 0x000f & reg.numCores;
 
     *(pipeline->address) = (uint16_t)regVal;
 }
@@ -254,7 +254,7 @@ void FPGA_Destroy(void) {
 
 void FPGA_Enable(void) {
     // Set the FPGA Sample Clock low
-    // GPIO_PinOutClear(gpioPortF, 12);
+    GPIO_PinOutClear(gpioPortF, 12);
 
     for (uint32_t i = 0; i < fpga.numPipelines; i++) {
         FPGA_Pipeline *p = &fpga.pipelines[i];
@@ -281,5 +281,5 @@ void FPGA_Disable(void) {
 
 void FPGA_ToggleClock(void) {
     // Toggle the FPGA Sample Clock
-    // GPIO_PinOutToggle(gpioPortF, 12);
+    GPIO_PinOutToggle(gpioPortF, 12);
 }
