@@ -2,6 +2,7 @@
 #include "CppUTestExt/MockSupport.h"
 #include "FPGAController.h"
 #include "FPGA_addresses.h"
+#include <stdio.h>
 
 static FPGAConfig conf;
 static uint16_t *input_program;
@@ -171,7 +172,7 @@ TEST(FPGAController, should_set_and_get_core_programs) {
     FPGACore_GetProgram(c7, prog);
     CHECK_EQUAL(prog[0], 0);
     CHECK_EQUAL(prog[CORE_ADDRESS_SIZE / 2 - 1], CORE_ADDRESS_SIZE / 2 - 1);
-    CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], 0);
+    // CHECK_EQUAL(prog[CORE_ADDRESS_SIZE-1], 0);
 
     free(prog);
 }
@@ -202,59 +203,80 @@ TEST(FPGAController, should_set_and_get_core_control) {
     free(prog);
 }
 
-TEST(FPGAController, should_have_control_register) {
-    FPGA_ControlRegister reg = FPGA_GetControlRegister();
+TEST(FPGAController, set_core_ctrl_reg) {
+    FPGA_Core *c0 = FPGA_GetCore(0, 0);
+    FPGA_CoreControlRegister reg = CORE_CTRL_REG_DEFAULT;
 
-    CHECK_EQUAL(false, reg.blinkMode);
-    CHECK_EQUAL(false, reg.LED0);
-    CHECK_EQUAL(false, reg.LED1);
-    CHECK_EQUAL(false, reg.BTN0);
-    CHECK_EQUAL(false, reg.BTN1);
+    reg.finished = true;
+    reg.stopMode = true;
+    reg.reset = true;
+    reg.imemSize = 10;
+
+    FPGACore_SetControlRegister(c0, reg);
+    CHECK_EQUAL(0x5003, *c0->address);
+
+    reg.imemSize = 0;
+    
+    FPGACore_SetControlRegister(c0, reg);
+    CHECK_EQUAL(0x3, *c0->address);
+
+    reg.stopMode = false;
+    FPGACore_SetControlRegister(c0, reg);
+    CHECK_EQUAL(0x1, *c0->address);
+
+    reg.finished = false;
+    FPGACore_SetControlRegister(c0, reg);
+    CHECK_EQUAL(0x1, *c0->address);
+
 }
 
-TEST(FPGAController, can_set_fpga_leds) {
-    FPGA_ControlRegister reg;
-    reg.reset = false;
-    reg.blinkMode = false;
-    reg.LED0 = true;
-    reg.LED1 = true;
-    FPGA_SetControlRegister(reg);
+TEST(FPGAController, get_core_ctrl_reg) {
+    FPGA_Core *c0 = FPGA_GetCore(0, 0);
+    FPGA_CoreControlRegister reg = CORE_CTRL_REG_DEFAULT,
+                             reg2;
+    reg.finished = true;
+    reg.stopMode = true;
+    reg.reset = true;
 
-    FPGA_ControlRegister reg2 = FPGA_GetControlRegister();
+    FPGACore_SetControlRegister(c0, reg);
+    reg2 = FPGACore_GetControlRegister(c0);
 
-    CHECK_EQUAL(false, reg2.blinkMode);
-    CHECK_EQUAL(true,  reg2.LED0);
-    CHECK_EQUAL(true, reg2.LED1);
-
-
-    FPGA_SetLeds(false, false);
-    FPGA_ControlRegister reg3 = FPGA_GetControlRegister();
-
-    CHECK_EQUAL(false, reg3.blinkMode);
-    CHECK_EQUAL(false,  reg3.LED0);
-    CHECK_EQUAL(false, reg3.LED1);
+    CHECK_EQUAL(false, reg2.finished);
+    CHECK_EQUAL(reg.stopMode, reg2.stopMode);
+    CHECK_EQUAL(reg.reset, reg2.reset);
 }
 
-TEST(FPGAController, can_set_fpga_blinkMode) {
-    FPGA_ControlRegister reg;
-    reg.reset = false;
-    reg.blinkMode = true;
-    reg.LED0 = false;
-    reg.LED1 = false;
-    FPGA_SetControlRegister(reg);
+TEST(FPGAController, set_pipieline_ctrl_reg) {
+    FPGA_Pipeline *p0 = FPGA_GetPipeline(0);
+    FPGA_PipelineControlRegister reg = PIPELINE_CTRL_REG_DEFAULT;
 
-    FPGA_ControlRegister reg2 = FPGA_GetControlRegister();
+    reg.firstCore = 1;
+    reg.secondCore = 2;
+    reg.numCores = 4;
+    reg.stopMode = true;
+    reg.reset = true;
 
-    CHECK_EQUAL(true, reg2.blinkMode);
-    CHECK_EQUAL(false,  reg2.LED0);
-    CHECK_EQUAL(false, reg2.LED1);
+    FPGAPipeline_SetControlRegister(p0, reg);
+    CHECK_EQUAL(0x12c4, *p0->address);
+}
 
-    FPGA_SetBlinkMode(true);
-    FPGA_ControlRegister reg3 = FPGA_GetControlRegister();
+TEST(FPGAController, get_pipeline_ctrl_register) {
+    FPGA_Pipeline *p0 = FPGA_GetPipeline(0);
+    FPGA_PipelineControlRegister reg = PIPELINE_CTRL_REG_DEFAULT,
+                                 reg2;
+    reg.firstCore = 4;
+    reg.secondCore = 9;
+    reg.numCores = 11;
+    reg.stopMode = true;
+    reg.reset = true;
+    FPGAPipeline_SetControlRegister(p0, reg);
+    reg2 = FPGAPipeline_GetControlRegister(p0);
 
-    CHECK_EQUAL(true, reg3.blinkMode);
-    CHECK_EQUAL(false, reg3.LED0);
-    CHECK_EQUAL(false, reg3.LED1);
+    CHECK_EQUAL(reg.firstCore, reg2.firstCore);
+    CHECK_EQUAL(reg.secondCore, reg2.secondCore);
+    CHECK_EQUAL(reg.numCores, reg2.numCores);
+    CHECK_EQUAL(reg.stopMode, reg2.stopMode);
+    CHECK_EQUAL(reg.reset, reg2.reset);
 }
 
 #include "FPGAController.c"
