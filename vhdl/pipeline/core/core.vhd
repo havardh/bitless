@@ -65,7 +65,6 @@ architecture behaviour of core is
     signal pc_reg           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '1');
     signal pc_inc           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '0');
     signal pc_we            : std_logic;
-    signal proc_finished_reg    : std_logic := '0';
     
     signal restart_bubble   : std_logic;
 	signal do_branch        : std_logic;
@@ -76,7 +75,7 @@ architecture behaviour of core is
         port (  
             opt_code            : in    std_logic_vector (5 downto 0);
 		      
-			stop_core           : out STD_LOGIC;
+				stop_core           : out STD_LOGIC;
             alu_op              : out alu_operation;
             reg_write_e         : out register_write_enable;
             wb_src              : out wb_source;
@@ -263,25 +262,21 @@ architecture behaviour of core is
 begin
 	 
 	 
-	 stop_core : process(clk, proc_finished_reg, id_stop_processor_reg) 
+	 stop_core : process(clk, id_stop_processor_reg) 
 	 begin
         if falling_edge(clk) then
             if reset = '1' then
-                proc_finished_reg <= '0';
-                id_stop_processor_reg <= '0';
-            elsif wb_stop_core_signal = '1' or pl_stop_core = '1' then
-                proc_finished_reg <= '1';
+                proc_finished <= '0';
+					 id_stop_processor_reg <= '0'; 
+				elsif wb_stop_core_signal = '1' then
+                proc_finished <= '1';
                 id_stop_processor_reg <= '1';
             elsif stop_core_signal = '1' then
-                proc_finished_reg <= '0';
+                proc_finished <= '0';
                 id_stop_processor_reg <= '1';
-            else
-                proc_finished_reg <= proc_finished_reg;
-                id_stop_processor_reg <= id_stop_processor;
             end if;
             
         end if;
-        proc_finished <= proc_finished_reg;
         id_stop_processor <= id_stop_processor_reg;
         
      end process;
@@ -317,9 +312,12 @@ begin
     pc : process(clk)
     begin
         if rising_edge(clk) then
-            if id_stop_processor = '1' then
+            if id_stop_processor = '1' or reset = '1' then
                 pc_reg <= (others => '0');
                 restart_bubble <= '1';
+				elsif pl_stop_core = '1' then
+					pc_reg <= pc_reg;
+					restart_bubble <= '0';
             elsif do_branch = '1' then
                 pc_reg <= ext(branch_target, instruct_addr_size);
                 restart_bubble <= '0';
@@ -336,7 +334,7 @@ begin
     begin
         if rising_edge(clk) then
             if (id_stop_processor = '1' or restart_bubble = '1' 
-            or do_branch = '1' or mem_do_branch = '1') then
+            or do_branch = '1' or mem_do_branch = '1' or pl_stop_core = '1') then
                 id_instruction <= (others => '0');
             else
                 id_instruction <= instruction_data;
