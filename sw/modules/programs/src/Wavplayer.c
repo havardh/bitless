@@ -55,7 +55,7 @@ static void setupSD()
 	config.mode = IN;
 	config.inFile = "sweet1.wav";
 	config.GetInputBuffer = GetInBuffer;
-	config.bufferSize = bufferSize;
+	config.bufferSize = bufferSize*4;
 	SDDriver_Init( &config );
 }
 
@@ -191,32 +191,32 @@ void Wavplayer_Start( void )
 {
 	Leds_SetLeds(0x8);
 	
-	//setupCMU();
-	//setupPRS();
+	setupCMU();
+	setupPRS();
 
-	//setupSD();	
+	setupSD();	
 
-	//setupMEM();
-	//setupDma();
+	setupMEM();
+	setupDma();
  
-	//DMAConfig config = { .mode = SD_TO_DAC };
-	//DMADriver_Init( &config );
+	DMAConfig config = { .mode = SD_TO_DAC };
+	DMADriver_Init( &config );
 
-	//DAC_setup();
+	DAC_setup();
 
-	//INTDriver_Init();
-	//INTDriver_RegisterCallback(0, &onDACRequest);
+	INTDriver_Init();
+	INTDriver_RegisterCallback(0, &onDACRequest);
 
-	//setupTimer(8000);
+	setupTimer(8000);
 
-	//while(1) {
-	//	if (done)
-	//		break;
-	//}
+	while(1) {
+		if (done)
+			break;
+	}
 	
-	//SDDriver_Finalize();
-	//DMA_Reset();
-	//DAC_Reset(DAC0);
-	//MEM_Destroy();
+	SDDriver_Finalize();
+	DMA_Reset();
+	DAC_Reset(DAC0);
+	MEM_Destroy();
 	
 }
