@@ -1,5 +1,5 @@
 \chapter{Fourier-transform}
-\subsection{Transformations}
+\section{Transformations}
 Some audio filters are performed in the time domain, others are performed in the
 frequency domain. \todo{illustration} To convert the audio samples from a domain
 to the other a Fourier Transform or the inverse is usually employed. The
@@ -7,7 +7,7 @@ Discrete Fourier Transformed \todo{ref} is perfectly suited for the sample based
 nature of a audio processor. This method has numerous optimized implementation,
 most known is the Fast Fourier Transform\todo{ref}.
 
-\subsubsection{Fast Fourier Transform}
+\subsection{Fast Fourier Transform}
 The Fast Fourier Transform, FFT, takes a collection of N samples, $S$, as input
 and returns the frequencies of this window in time, $FW$. On this frequency
 window a frequency domain filter can be executed, which results in a filtered
@@ -17,7 +17,7 @@ The time complexity of the FFT is $O(n) = n*log(n)$, to get a smoother result
 the transform is usually performed on overlapping windows of the sample stream.
 \missingfigure{illustration of overlapping windows}
 
-\subsubsection{Sliding Discrete Fourier Transform}
+\subsection{Sliding Discrete Fourier Transform}
 The Sliding Discrete Fourier Transform\todo{ref} takes one sample, $s_1$, a
 frequency domain $FW_0$, and a historic sample $s_n$ as input along with some
 constant coefficients.
@@ -29,7 +29,7 @@ time complexity of the SDFT algorithm is $O(n) = n$. The inverse SDT takes the
 frequency window and the same constant coefficients as input and return exactly
 one sample $s_f$.
 
-\subsubsection{Integer Discrete Fourier Transform}
+\subsection{Integer Discrete Fourier Transform}
 Both the SDFT and FFT can be performed with both
 \todo{WRONG FOR THE SD-FT}integer and floating point arithmetic. The advantage
 of using integer is the speed of integer arithmetic compared to floating point.
