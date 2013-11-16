@@ -1,16 +1,17 @@
 \FloatBarrier
-
 \section{FPGA}\label{chapter:fpga}
 
-The processor core was implemented on a Xilinx Spartan-6 FPGA.
-It consists of several audio processing pipelines, each
-containing a set of homogenous processor cores and memories.
+The processor core design was implemented on a Xilinx Spartan-6 FPGA. It
+consists of two audio processing pipelines, each containing four homogenous
+processor cores. The homogenous processing core is a Turing-complete processing
+core connected to constant memory, input buffer, output buffer, and instruction
+memory. Except for the first and last core in each audio pipeline, all the cores
+are connected through the input/output-buffers, where the next core's input
+buffer is the last core's outputbuffer.
 
-\todo{We need a better introduction here. Review what was
-removed earlier and try to piece together something that is
-suited for a ``light'' intro. E.g. what role does the FPGA play in
-the system as a whole, why the chapter is structured the way it
-is, etc.}
+With this design, each pipeline of cores run a set of filters, say a
+Fourier-Transform, a frequency filter, an inverse Fourier-Transform, and a final
+non-filtering effect on the audio stream running through the audio pipeline.
 
 \input{chapters/implementation/fpga/pipelines}
 \input{chapters/implementation/fpga/communication}
