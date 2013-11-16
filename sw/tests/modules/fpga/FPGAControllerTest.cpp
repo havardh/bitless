@@ -210,17 +210,24 @@ TEST(FPGAController, set_core_ctrl_reg) {
     reg.finished = true;
     reg.stopMode = true;
     reg.reset = true;
+    reg.imemSize = 10;
 
     FPGACore_SetControlRegister(c0, reg);
-    CHECK_EQUAL(0x7, *c0->address);
+    CHECK_EQUAL(0x5003, *c0->address);
+
+    reg.imemSize = 0;
+    
+    FPGACore_SetControlRegister(c0, reg);
+    CHECK_EQUAL(0x3, *c0->address);
 
     reg.stopMode = false;
     FPGACore_SetControlRegister(c0, reg);
-    CHECK_EQUAL(0x5, *c0->address);
+    CHECK_EQUAL(0x1, *c0->address);
 
     reg.finished = false;
     FPGACore_SetControlRegister(c0, reg);
     CHECK_EQUAL(0x1, *c0->address);
+
 }
 
 TEST(FPGAController, get_core_ctrl_reg) {
@@ -234,7 +241,7 @@ TEST(FPGAController, get_core_ctrl_reg) {
     FPGACore_SetControlRegister(c0, reg);
     reg2 = FPGACore_GetControlRegister(c0);
 
-    CHECK_EQUAL(reg.finished, reg2.finished);
+    CHECK_EQUAL(false, reg2.finished);
     CHECK_EQUAL(reg.stopMode, reg2.stopMode);
     CHECK_EQUAL(reg.reset, reg2.reset);
 }

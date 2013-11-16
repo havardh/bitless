@@ -25,7 +25,7 @@ void FPGA_SetControlRegister(FPGA_ControlRegister reg) {
     uint32_t regVal = 0x0;
 
     if (reg.reset)
-        regVal += CTRL_RESET_ADDR;
+        regVal |= CTRL_RESET_ADDR;
 
     fpga.controlRegister[0] = (uint16_t) regVal;
 }
@@ -84,16 +84,16 @@ FPGA_PipelineControlRegister FPGAPipeline_GetControlRegister(FPGA_Pipeline *pipe
 void FPGAPipeline_SetControlRegister(FPGA_Pipeline *pipeline, FPGA_PipelineControlRegister reg) {
     uint32_t regVal = 0x0000;
 
-    regVal += 0xf000 & (reg.firstCore << 12);
-    regVal += 0x0f00 & (reg.secondCore << 8);
+    regVal |= 0xf000 & (reg.firstCore << 12);
+    regVal |= 0x0f00 & (reg.secondCore << 8);
     
     if (reg.stopMode)
-        regVal += 0x0080;
+        regVal |= 0x0080;
 
     if (reg.reset)
-        regVal += 0x0040;
+        regVal |= 0x0040;
     
-    regVal += 0x000f & reg.numCores;
+    regVal |= 0x000f & reg.numCores;
 
     *(pipeline->address) = (uint16_t)regVal;
 }
@@ -154,10 +154,10 @@ FPGA_CoreControlRegister FPGACore_GetControlRegister(FPGA_Core *core) {
     uint16_t regVal = *(core->address);
 
     FPGA_CoreControlRegister reg;
-    reg.imemSize  = regVal & 0xf800;
-    reg.finished   = BIT_HIGH(regVal, 2);
-    reg.stopMode   = BIT_HIGH(regVal, 1);
-    reg.reset      = BIT_HIGH(regVal, 0);
+    reg.imemSize = regVal & 0xf800;
+    reg.finished = BIT_HIGH(regVal, 2);
+    reg.stopMode = BIT_HIGH(regVal, 1);
+    reg.reset    = BIT_HIGH(regVal, 0);
 
     return reg;
 }
@@ -165,16 +165,13 @@ FPGA_CoreControlRegister FPGACore_GetControlRegister(FPGA_Core *core) {
 void FPGACore_SetControlRegister(FPGA_Core *core, FPGA_CoreControlRegister reg) {
     uint32_t regVal = 0x0000;
 
-    regVal = 0xf800 & reg.imemSize;
-
-    if (reg.finished)
-        regVal += 0x4;
+    regVal = 0xf800 & (reg.imemSize << 11);
 
     if (reg.stopMode)
-        regVal += 0x2;
+        regVal |= 0x2;
 
     if (reg.reset)
-        regVal += 0x1;
+        regVal |= 0x1;
 
     *(core->address) = (uint16_t) regVal;
 }
@@ -254,7 +251,7 @@ void FPGA_Destroy(void) {
 
 void FPGA_Enable(void) {
     // Set the FPGA Sample Clock low
-    GPIO_PinOutClear(gpioPortF, 12);
+    GPIO_PinOutClear(GPIO_PinOutClearPortF, 12);
 
     for (uint32_t i = 0; i < fpga.numPipelines; i++) {
         FPGA_Pipeline *p = &fpga.pipelines[i];
