@@ -82,20 +82,20 @@ FPGA_PipelineControlRegister FPGAPipeline_GetControlRegister(FPGA_Pipeline *pipe
 }
 
 void FPGAPipeline_SetControlRegister(FPGA_Pipeline *pipeline, FPGA_PipelineControlRegister reg) {
-    uint16_t regVal = 0x0000;
+    uint32_t regVal = 0x0000;
+
+    regVal += 0xf000 & (reg.firstCore << 12);
+    regVal += 0x0f00 & (reg.secondCore << 8);
+    
+    if (reg.stopMode)
+        regVal += 0x0080;
 
     if (reg.reset)
-        regVal = 0xffff;
-
-    // regVal +=  0xffff & reg.firstCore;
-    // regVal +=  0xffff & reg.secondCore;
-    // if (reg.stopMode)
-    //     regVal += 0xffff & 128;
-
-    // if (reg.reset)
-    //     regVal += 0xffff & 64;
+        regVal += 0x0040;
     
-    *(pipeline->address) = regVal;
+    regVal += 0x7 & reg.numCores;
+
+    *(pipeline->address) = (uint16_t)regVal;
 }
 
 void FPGAPipeline_WriteInputBuffer(FPGA_Pipeline *pipeline, uint16_t *data, uint32_t length) {
@@ -162,6 +162,37 @@ FPGA_CoreControlRegister FPGACore_GetControlRegister(FPGA_Core *core) {
     return reg;
 }
 
+void FPGACore_SetControlRegister(FPGA_Core *core, FPGA_CoreControlRegister reg) {
+    uint32_t regVal = 0x0000;
+
+    regVal = 0xf800 & reg.imemSize;
+
+    if (reg.finished)
+        regVal += 0x4;
+
+    if (reg.stopMode)
+        regVal += 0x2;
+
+    if (reg.reset)
+        regVal += 0x1;
+
+    *(core->address) = (uint16_t) regVal;
+}
+
+void FPGACore_Enable(FPGA_Core *core) {
+    FPGA_CoreControlRegister reg = CORE_CTRL_REG_DEFAULT;
+    reg.stopMode = false;
+
+    FPGACore_SetControlRegister(core, reg);
+}
+
+void FPGACore_Disable(FPGA_Core *core) {
+    FPGA_CoreControlRegister reg = CORE_CTRL_REG_DEFAULT;
+    reg.stopMode = true;
+
+    FPGACore_SetControlRegister(core, reg);
+}
+
 /*******************************************
 * FPGA Setup and teardown                  *
 *******************************************/
@@ -221,21 +252,34 @@ void FPGA_Destroy(void) {
 * FPGA Control                             *
 *******************************************/
 
-// void FPGA_Enable(void) 
-// {
-// 	// Set the FPGA Sample Clock low
-// 	GPIO_PinOutClear(gpioPortF, 12);
-	
-	
-// }
+void FPGA_Enable(void) {
+    // Set the FPGA Sample Clock low
+    // GPIO_PinOutClear(gpioPortF, 12);
 
-// void FPGA_Disable(void)
-// {
-	
-// }
+    for (uint32_t i = 0; i < fpga.numPipelines; i++) {
+        FPGA_Pipeline *p = &fpga.pipelines[i];
 
-// void FPGA_ToggleClock(void) 
-// {
-// 	// Toggle the FPGA Sample Clock
-// 	GPIO_PinOutToggle(gpioPortF, 12);
-// }
+        for (uint32_t j = 0; j < p->numCores; i++) {
+            FPGA_Core *c = &p->cores[i];
+
+            FPGACore_Enable(c);
+        }
+    }
+}
+
+void FPGA_Disable(void) {
+    for (uint32_t i = 0; i < fpga.numPipelines; i++) {
+        FPGA_Pipeline *p = &fpga.pipelines[i];
+
+        for (uint32_t j = 0; j < p->numCores; i++) {
+            FPGA_Core *c = &p->cores[i];
+
+            FPGACore_Disable(c);
+        }
+    }
+}
+
+void FPGA_ToggleClock(void) {
+    // Toggle the FPGA Sample Clock
+    // GPIO_PinOutToggle(gpioPortF, 12);
+}

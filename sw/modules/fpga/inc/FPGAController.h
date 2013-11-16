@@ -63,6 +63,13 @@ typedef struct {
     bool reset;
 } FPGA_CoreControlRegister;
 
+#define CORE_CTRL_REG_DEFAULT                       \
+{   0,      /* imemSize */                          \
+    false,  /* finished */                          \
+    false,  /* stopMode */                          \
+    false,  /* reset */                             \
+}
+
 #define PIPELINE_CTRL_REG_DEFAULT                   \
 {   0, /* firstCore */                              \
     0, /* secondCore */                             \
@@ -80,6 +87,7 @@ typedef struct {
 FPGA_Pipeline* FPGA_GetPipeline(uint32_t pipeline);
 FPGA_Core* FPGA_GetCore(uint32_t pipeline, uint32_t core);
 uint16_t* FPGA_GetBaseAddress(void);
+void FPGACore_SetControls(FPGA_Core *core, uint16_t *controls, uint32_t controlSize);
 FPGA_ControlRegister FPGA_GetControlRegister(void);
 void FPGA_SetControlRegister(FPGA_ControlRegister controlRegister);
 void FPGA_Reset(void);
@@ -98,6 +106,8 @@ void FPGACore_GetProgram(FPGA_Core *core, uint16_t *program);
 void FPGACore_SetProgram(FPGA_Core *core, uint16_t *program, uint32_t programSize);
 void FPGACore_GetControls(FPGA_Core *core, uint16_t *controls);
 void FPGACore_SetControls(FPGA_Core *core, uint16_t *controls, uint32_t controlSize);
+FPGA_CoreControlRegister FPGACore_GetControlRegister(FPGA_Core *core);
+void FPGACore_SetControlRegister(FPGA_Core *core, FPGA_CoreControlRegister reg);
 
 /* Setup and teardown */
 void FPGA_Init(FPGAConfig *config);
