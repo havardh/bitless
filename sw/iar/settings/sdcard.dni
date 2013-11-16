@@ -18,7 +18,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=-1667160325
+Checksum=-647565550
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -104,10 +104,13 @@ Bp3=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\DMA\DEMO\wavde
 Bp4=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\DRIVERS\SDCARD\DEMO\copy-file.c}.106.7" 0 0 1 "" 0 "" 0
 Bp5=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\sdcard\src\SDDriver.c}.47.10" 0 0 1 "" 0 "" 0
 Bp6=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\dma\demo\wavdemo.c}.110.2" 0 0 1 "" 0 "" 0
-Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\programs\src\Wavplayer.c}.71.2" 0 0 1 "" 0 "" 0
-Bp8=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\C\TDT4295\SW\MODULES\DMA\SRC\bl_dma.c}.69.2" 0 0 1 "" 0 "" 0
-Bp9=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\modules\main\src\MainController.c}.76.1" 0 0 1 "" 0 "" 0
-Count=10
+Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\main\src\MainController.c}.76.1" 0 0 1 "" 0 "" 0
+Bp8=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\buttons\src\bl_buttons.c}.11.2" 0 0 1 "" 0 "" 0
+Bp9=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\ebi\demo\fpga.c}.58.2" 0 0 1 "" 0 "" 0
+Bp10=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\ebi\demo\fpga.c}.71.2" 0 0 1 "" 0 "" 0
+Bp11=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\modules\ebi\demo\fpga.c}.84.2" 0 0 1 "" 0 "" 0
+Bp12=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\modules\programs\src\StoredFilter.c}.71.2" 0 0 1 "" 0 "" 0
+Count=13
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

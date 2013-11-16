@@ -12,10 +12,8 @@ void MEM_Init( MEMConfig *config )
 {
   bufferSize = config->bufferSize;
 
-	if (audioInBuffer == 0) 
-		audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
-	if (audioOutBuffer == 0) 
-		audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
+	audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
+	audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
 
 	memset(audioInBuffer, 0, 2*bufferSize*sizeof(uint16_t));
 	memset(audioOutBuffer, 0, 2*bufferSize*sizeof(uint16_t));

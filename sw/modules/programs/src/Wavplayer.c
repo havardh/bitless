@@ -23,6 +23,7 @@
 #include "bl_mem.h"
 #include "FPGAConfig.h"
 #include "bl_dma.h"
+#include "bl_uart.h"
 
 #include "bl_sd.h"
 #include "sample_conversion.h"
@@ -30,6 +31,7 @@
 #include "ff.h"
 #include "microsd.h"
 #include "diskio.h"
+#include <string.h>
 
 /*
  * This demo reads samples from the SDCard with a FAT file system.
@@ -37,6 +39,9 @@
  *
  * The samples are consumed by the DAC through DMA
  */
+
+
+#define PUT(x) { char * debug_string = x; UART_PutData((uint8_t*)debug_string, strlen(debug_string)); for (volatile int i=0; i<10000; i++);}
 
 #define DMA_MEM_CPY 0
 static DMA_CB_TypeDef cb;
@@ -71,7 +76,7 @@ static void onDACRequest(void)
 	DMA_ActivateAuto(DMA_MEM_CPY, true, (void*)MEM_GetAudioOutBuffer(true), (void*)MEM_GetAudioInBuffer(true), MEM_GetAudioInBufferSize()-1);
 
 	uint16_t tmp;
-
+	
 	if (!SDDriver_Read()) {
 
 		int16_t * buffer = MEM_GetAudioInBuffer(true);
@@ -190,29 +195,26 @@ static void setupDAC(void)
 void Wavplayer_Start( void ) 
 {
 	Leds_SetLeds(0x8);
-	
+
 	setupCMU();
 	setupPRS();
-
-	setupSD();	
-
+	setupSD();
 	setupMEM();
 	setupDma();
- 
 	DMAConfig config = { .mode = SD_TO_DAC };
 	DMADriver_Init( &config );
-
 	DAC_setup();
-
 	INTDriver_Init();
 	INTDriver_RegisterCallback(0, &onDACRequest);
 	done = false;
+
 	setupTimer(8000);
 
 	while(1) {
 		if (done)
 			break;
 	}
+
 	DMADriver_StopDAC();
 	SDDriver_Finalize();
 	DMA_Reset();

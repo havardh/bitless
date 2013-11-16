@@ -69,7 +69,7 @@ void StoredFilter_Start(void)
 	TIMER_Reset( TIMER0 );
 	FPGADriver_Destroy();
 	SDDriver_Finalize();
-	
+	MEM_Destroy();	
 }
 
 //------------//

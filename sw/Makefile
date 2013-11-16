@@ -129,6 +129,7 @@ INCLUDEPATHS += \
 -I$(DIR)/modules/adc/inc \
 -I$(DIR)/modules/sdcard/inc \
 -I$(DIR)/modules/int/inc \
+-I$(DIR)/modules/uart/inc \
 -I$(DIR)/modules/dac/inc \
 -I$(DIR)/modules/dma/inc \
 -I$(DIR)/modules/prs/inc \
@@ -174,6 +175,7 @@ $(DIR)/modules/fpga/src/FPGADriver.c \
 $(DIR)/modules/adc/src/bl_adc.c \
 $(DIR)/modules/int/src/bl_int.c \
 $(DIR)/modules/dac/src/bl_dma.c \
+$(DIR)/modules/uart/src/bl_uart.c \
 $(DIR)/modules/dma/src/bl_dac.c \
 $(DIR)/modules/prs/src/bl_prs.c \
 $(DIR)/modules/mem/src/bl_mem.c \
