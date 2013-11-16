@@ -269,7 +269,7 @@ begin
             if reset = '1' then
                 proc_finished_reg <= '0';
                 id_stop_processor_reg <= '0';
-            elsif wb_stop_core_signal = '1' or pl_stop_core = '1' then
+            elsif wb_stop_core_signal = '1' then
                 proc_finished_reg <= '1';
                 id_stop_processor_reg <= '1';
             elsif stop_core_signal = '1' then
