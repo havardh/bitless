@@ -25,6 +25,7 @@ typedef struct {
     uint16_t *address;
     uint16_t *inputBuffer;
     uint16_t *outputBuffer;
+    uint32_t bufferSize;
     FPGA_Core *cores;
 } FPGA_Pipeline;
 
@@ -86,6 +87,8 @@ void FPGA_Reset(void);
 /* FPGA Pipeline methods */
 uint16_t* FPGAPipeline_GetInputBuffer(FPGA_Pipeline *pipeline);
 uint16_t* FPGAPipeline_GetOutputBuffer(FPGA_Pipeline *pipeline);
+void FPGAPipeline_WriteInputBuffer(FPGA_Pipeline *pipeline, uint16_t *data, uint32_t length);
+void FPGAPipeline_ReadOutputBuffer(FPGA_Pipeline *pipeline, uint16_t *dest, uint32_t length);
 FPGA_Core* FPGAPipeline_GetCore(FPGA_Pipeline *pipeline, uint32_t core);
 FPGA_PipelineControlRegister FPGAPipeline_GetControlRegister(FPGA_Pipeline *pipeline);
 void FPGAPipeline_SetControlRegister(FPGA_Pipeline *pipeline, FPGA_PipelineControlRegister reg);

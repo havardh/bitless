@@ -61,12 +61,10 @@ FPGA_Core* FPGAPipeline_GetCore(FPGA_Pipeline *pipeline, uint32_t core) {
 }
 
 uint16_t* FPGAPipeline_GetInputBuffer(FPGA_Pipeline *pipeline) {
-    // FPGA_Core *core = FPGA_GetCore(pipeline->pos, 0);
     return pipeline->inputBuffer;
 }
 
 uint16_t* FPGAPipeline_GetOutputBuffer(FPGA_Pipeline *pipeline) {
-    // FPGA_Core *core = FPGAPipeline_GetCore(pipeline, pipeline->numCores - 1);
     return pipeline->outputBuffer;   
 }
 
@@ -100,6 +98,18 @@ void FPGAPipeline_SetControlRegister(FPGA_Pipeline *pipeline, FPGA_PipelineContr
     *(pipeline->address) = regVal;
 }
 
+void FPGAPipeline_WriteInputBuffer(FPGA_Pipeline *pipeline, uint16_t *data, uint32_t length) {
+    for (uint32_t i = 0; i < length; i++) {
+        pipeline->inputBuffer[i] = data[i];
+    }
+}
+
+void FPGAPipeline_ReadOutputBuffer(FPGA_Pipeline *pipeline, uint16_t *dest, uint32_t length) {
+    for (uint32_t i = 0; i < length; i++) {
+        dest[i] = pipeline->outputBuffer[i];
+    }
+}
+
 /*******************************************
 * FPGA Core methods                        *
 *******************************************/
@@ -115,11 +125,11 @@ void FPGACore_SetProgram(FPGA_Core *core, uint16_t *program, uint32_t programSiz
         core->imem[i] = program[i];
     }
     /* Set all remaining instruction memory to 0 */
-    if (programSize < core->imemSize) {
-        for (uint32_t i = programSize; i < core->imemSize; i++) {
-            core->imem[i] = 0;
-        }
-    }
+    // if (programSize < core->imemSize) {
+    //     for (uint32_t i = programSize; i < core->imemSize; i++) {
+    //         core->imem[i] = 0;
+    //     }
+    // }
 }
 
 void FPGACore_GetControls(FPGA_Core *core, uint16_t *controls) {
@@ -173,6 +183,7 @@ void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig
     pipeline->address = fpga.baseAddress + pipelinePos * config->pipelineAddressSize;
     pipeline->inputBuffer = (pipeline->address + P_INPUT_ADDR);
     pipeline->outputBuffer = (pipeline->address + P_OUTPUT_ADDR);
+    pipeline->bufferSize = config->coreAddressSize;
 
     pipeline->numCores = config->numCores;
     pipeline->cores = (FPGA_Core *) malloc(sizeof(FPGA_Core) * pipeline->numCores);
