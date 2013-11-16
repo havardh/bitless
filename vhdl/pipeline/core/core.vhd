@@ -65,7 +65,6 @@ architecture behaviour of core is
     signal pc_reg           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '1');
     signal pc_inc           : std_logic_vector(instruct_addr_size-1 downto 0):= (others => '0');
     signal pc_we            : std_logic;
-    signal proc_finished_reg    : std_logic := '0';
     
     signal restart_bubble   : std_logic;
 	signal do_branch        : std_logic;
@@ -267,21 +266,20 @@ begin
 	 begin
         if falling_edge(clk) then
             if reset = '1' then
-                proc_finished_reg <= '0';
+                proc_finished <= '0';
                 id_stop_processor_reg <= '0';
             elsif wb_stop_core_signal = '1' then
-                proc_finished_reg <= '1';
+                proc_finished <= '1';
                 id_stop_processor_reg <= '1';
             elsif stop_core_signal = '1' then
-                proc_finished_reg <= '0';
+                proc_finished <= '0';
                 id_stop_processor_reg <= '1';
             else
-                proc_finished_reg <= proc_finished_reg;
+                proc_finished <= proc_finished;
                 id_stop_processor_reg <= id_stop_processor_reg;
             end if;
             
         end if;
-        proc_finished <= proc_finished_reg;
         id_stop_processor <= id_stop_processor_reg;
         
      end process;
