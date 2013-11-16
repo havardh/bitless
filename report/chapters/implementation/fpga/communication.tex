@@ -18,6 +18,9 @@ signal is asserted, see figure \ref{fig:ebi_write}.
 For reads, the address is set up and the data line is put in high impedance mode
 before the read enable signal is asserted, see figure \ref{fig:ebi_read}.
 
+\todo[inline]{What do these ``[7, p.6]'' and ``[7, p.7]''  below the below
+figures mean??}
+
 \input{figures/fpga/communication-ebi-write}
 \input{figures/fpga/communication-ebi-read}
 
@@ -28,18 +31,20 @@ All transfers are initiated by the microcontroller on the EBI bus, and the EBI
 controller facilitates communication between the EBI and the internal bus.
 
 \paragraph{The EBI controller}
-The \emph{ebi_controller} module is used to handle EBI transfers initiated by
+The \textit{ebi\_controller} module is used to handle EBI transfers initiated by
 the microcontroller. It consists of a simple state machine, illustrated in
 figure \ref{fig:ebi_ctrl_fsm}. When an EBI transfer is executed, the internal
-bus is used to store or retrieve data from another module within the FPGA.
+bus is used to store or load data from another module within the FPGA.
 
-The \emph{ebi_controller} keeps the EBI data lines in high impedance mode
+The \textit{ebi\_controller} keeps the EBI data lines in high impedance mode
 whenever no transfer is active, allowing the MCU to have control of the EBI bus.
 
 \input{figures/fpga/communication-ebi-ctrl-fsm}
 
 \FloatBarrier
 \paragraph{Addressing}
+\todo[inline]{Revise this ``addressing'' section and see if it should moved to
+appendix.}
 
 The input/output, control registers, and piplelines in the FPGA are addressed
 using a simple addressing scheme, where the address is divided into several
