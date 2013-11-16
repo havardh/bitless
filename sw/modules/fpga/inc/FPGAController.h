@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "FPGAConfig.h"
+#include "em_gpio.h"
 
 typedef struct {
     uint32_t pos;
@@ -83,5 +84,10 @@ void FPGA_Init(FPGAConfig *config);
 void FPGA_Destroy(void);
 void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig *config);
 void FPGA_Core_New(FPGA_Core *core, uint32_t corePos, uint32_t pipelinePos, FPGAConfig *config);
+
+/* FPGA Control */
+void FPGA_Enable(void);
+void FPGA_Disable(void);
+void FPGA_ToggleClock(void);
 
 #endif /* _FPGACONTROLLER_H_ */
