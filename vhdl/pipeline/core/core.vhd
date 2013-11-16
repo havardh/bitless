@@ -76,7 +76,7 @@ architecture behaviour of core is
         port (  
             opt_code            : in    std_logic_vector (5 downto 0);
 		      
-			stop_core           : out STD_LOGIC;
+				stop_core           : out STD_LOGIC;
             alu_op              : out alu_operation;
             reg_write_e         : out register_write_enable;
             wb_src              : out wb_source;
@@ -317,9 +317,12 @@ begin
     pc : process(clk)
     begin
         if rising_edge(clk) then
-            if id_stop_processor = '1' then
+            if id_stop_processor = '1' or reset = '1' then
                 pc_reg <= (others => '0');
                 restart_bubble <= '1';
+				elsif pl_stop_core = '1' then
+					pc_reg <= pc_reg;
+					restart_bubble <= '0';
             elsif do_branch = '1' then
                 pc_reg <= ext(branch_target, instruct_addr_size);
                 restart_bubble <= '0';
@@ -336,7 +339,7 @@ begin
     begin
         if rising_edge(clk) then
             if (id_stop_processor = '1' or restart_bubble = '1' 
-            or do_branch = '1' or mem_do_branch = '1') then
+            or do_branch = '1' or mem_do_branch = '1' or pl_stop_core = '1') then
                 id_instruction <= (others => '0');
             else
                 id_instruction <= instruction_data;

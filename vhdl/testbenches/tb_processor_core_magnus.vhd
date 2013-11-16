@@ -156,12 +156,41 @@ BEGIN
         
         instruction_data <= load_instruction0;
 		wait for clk_period;
+		
+        instruction_data <= finished_instruction;
+		wait for clk_period*3;
+		
+		reset <= '1';
+		
+
+		instruction_data <= load_instruction0;
+		wait for clk_period*3;
+		
+		instruction_data <= no_op_instruction;
+		wait for clk_period;
+		
+		
+		instruction_data <= store_instruction0;
+		wait for clk_period;
+		
+        
+      instruction_data <= branch_instruction0;
+        
+      wait for clk_period;
+        
+      instruction_data <= load_instruction0;
+		wait for clk_period;
+        
+      instruction_data <= load_instruction0;
+		wait for clk_period;
+        
+      instruction_data <= load_instruction0;
+		wait for clk_period;
 		--instruction_data <= finished_instruction;
 		
         instruction_data <= finished_instruction;
 		wait for clk_period;
 		
-
       -- insert stimulus here 
 
       wait;
