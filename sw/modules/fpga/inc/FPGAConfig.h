@@ -43,7 +43,7 @@ typedef struct {
 #define FPGA_CONFIG_DEFAULT(baseAddress)\
 {   DEFAULT_NUM_PIPELINES,              \
     DEFAULT_NUM_CORES,                  \
-    baseAddress,                        \
+		(unsigned short*)baseAddress,				\
     DEFAULT_TOPLEVEL_ADDRESS,           \
     DEFAULT_PIPELINE_ADDRESS_SIZE,      \
     DEFAULT_CORE_DEVICE_ADDRESS,        \

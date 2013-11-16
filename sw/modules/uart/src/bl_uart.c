@@ -63,7 +63,7 @@ void UART_Init(void) {
 void UART_ClearScreen(void) {
     UART_PutData((uint8_t *) clearScreen, clearLen);
 }
-
+/*
 void UART_SetCursor(int row, int col) {
     if (row > 0 && col > 0) {
         char cursorPos[resetLen];
@@ -73,7 +73,7 @@ void UART_SetCursor(int row, int col) {
         UART_PutData((uint8_t *) resetCursor, resetLen);
     }
 }
-
+*/
 /******************************************************************************
  * @brief  uartGetChar function
  *  Note that if there are no pending characters in the receive buffer, this
