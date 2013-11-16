@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "FPGAConfig.h"
-// #include "em_gpio.h"
+#include "em_gpio.h"
 
 typedef struct {
     uint32_t pos;

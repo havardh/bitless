@@ -251,7 +251,7 @@ void FPGA_Destroy(void) {
 
 void FPGA_Enable(void) {
     // Set the FPGA Sample Clock low
-    // GPIO_PinOutClear(gpioPortF, 12);
+    GPIO_PinOutClear(gpioPortF, 12);
 
     for (uint32_t i = 0; i < fpga.numPipelines; i++) {
         FPGA_Pipeline *p = &fpga.pipelines[i];
@@ -278,5 +278,5 @@ void FPGA_Disable(void) {
 
 void FPGA_ToggleClock(void) {
     // Toggle the FPGA Sample Clock
-    // GPIO_PinOutToggle(gpioPortF, 12)
+    GPIO_PinOutToggle(gpioPortF, 12);
 }
