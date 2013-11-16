@@ -1,19 +1,4 @@
-\FloatBarrier
-\subsection{Audio Pipelines}\label{sec:audio_pipelines}
-
-\missingfigure{Overview of the pipeline structure, preferably use the same
-picture as in assignment.tex line 38. But in this one, specify the filters/
-effects so that they match what we're running in the demo. Instead of all of them
-saying ``could be this or that''.}
-
-The two aforementioned core-pipelines consist of a series of processors
-connected by buffers. The buffers operate either as ringbuffers or as buffers
-switching between two sets of data.
-Figure \ref{fig:pipeline_overview}\todo{fix reference} illustrates the
-layout of the pipelines.
-
-\subsubsection{Start-up}\label{subsection:fpga-pipeline-startup}
-\todo{This does not belong here, remove or move to the software chapter}
+\chapter{Starting up the FPGA}\label{appendix:starting-fpga}
 
 \todo[inline]{This is where we explain how the MCU sets up the pipeline, and
 how/what signals are set (and to what they are set) when the processor starts
@@ -42,3 +27,4 @@ buffers on each pipeline.
 Then what remains is the final stage of turning the stopmode bit back on, and
 the FPGA should be running as programmed.
 
+\todo[inline]{Finish, re-view, re-write.}
