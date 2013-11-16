@@ -46,12 +46,12 @@ void SDI_Start(void)
 
 void write_instruction(uint8_t command[])
 {
-	uint8_t pipeline = command[2];
-	uint8_t coreIndex = command[3];
+	uint8_t pipeline = command[2] - '0';
+	uint8_t coreIndex = command[3] - '0';
 
 	FPGA_Core *core = FPGA_GetCore(pipeline, coreIndex);
 
-	UART_GetData((uint8_t*)FPGA_ADDR_IMEM_CORE0, INST_SIZE*2);
+	UART_GetData((uint8_t*)core->imem, INST_SIZE*2);
 }
 
 static uint16_t *getBuffer(uint8_t pipeline, uint8_t memory)
@@ -69,22 +69,22 @@ static uint16_t *getBuffer(uint8_t pipeline, uint8_t memory)
 
 void write_data(uint8_t command[])
 {
-	uint8_t pipeline = command[2];
-	uint8_t memory = command[3];
+	uint8_t pipeline = command[2] - '0';
+	uint8_t memory = command[3] - '0';
 
 	uint16_t *mem = getBuffer(pipeline, memory);
 
-	UART_GetData((uint8_t*)FPGA_ADDR_INM_CORE0, DATA_SIZE*2);
+	UART_GetData((uint8_t*)mem, DATA_SIZE*2);
 }
 
 void read_data(uint8_t command[])
 {
-	uint8_t pipeline = command[2];
-	uint8_t memory = command[3];
+	uint8_t pipeline = command[2] - '0';
+	uint8_t memory = command[3] - '0';
 
 	uint16_t *mem = getBuffer(pipeline, memory);
 
-	UART_PutData((uint8_t*)FPGA_ADDR_OUM_CORE0, DATA_SIZE*2);
+	UART_PutData((uint8_t*)mem, DATA_SIZE*2);
 }
 /*
 static int parseIterations(uint8_t command[]) 

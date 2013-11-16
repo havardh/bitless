@@ -208,9 +208,9 @@ void FPGA_Init(FPGAConfig *config) {
 
 void FPGA_Pipeline_New(FPGA_Pipeline *pipeline, uint32_t pipelinePos, FPGAConfig *config) {
     pipeline->pos = pipelinePos;
-    pipeline->address = fpga.baseAddress + pipelinePos * config->pipelineAddressSize;
-    pipeline->inputBuffer = (pipeline->address + P_INPUT_ADDR);
-    pipeline->outputBuffer = (pipeline->address + P_OUTPUT_ADDR);
+    pipeline->address = (uint16_t*)((uint8_t*)fpga.baseAddress + pipelinePos * config->pipelineAddressSize);
+    pipeline->inputBuffer = (uint16_t*)((uint8_t*)pipeline->address + P_INPUT_ADDR);
+    pipeline->outputBuffer = (uint16_t*)((uint8_t*)pipeline->address + P_OUTPUT_ADDR);
     pipeline->bufferSize = config->coreAddressSize;
 
     pipeline->numCores = config->numCores;
@@ -227,13 +227,13 @@ void FPGA_Core_New(FPGA_Core *core, uint32_t corePos, uint32_t pipelinePos, FPGA
     core->ctrlSize = config->coreAddressSize;
 
     uint16_t *pipelineAddress = FPGA_GetPipeline(pipelinePos)->address;
-    uint16_t *coreAddress = (pipelineAddress + config->coreDeviceAddress + corePos * config->coreDeviceSize);
+    uint16_t *coreAddress = (uint16_t*)((uint8_t*)pipelineAddress + config->coreDeviceAddress + corePos * config->coreDeviceSize);
     
     core->address = coreAddress;
     core->ctrlmem = coreAddress;
-    core->imem = (core->ctrlmem + config->coreAddressSize);
-    core->inputBuffer = (core->imem + config->coreAddressSize);
-    core->outputBuffer = (core->inputBuffer + config->coreAddressSize);
+    core->imem = (uint16_t*)((uint8_t*)core->ctrlmem + config->coreAddressSize);
+    core->inputBuffer = (uint16_t*)((uint8_t*)core->imem + config->coreAddressSize);
+    core->outputBuffer = (uint16_t*)((uint8_t*)core->inputBuffer + config->coreAddressSize);
 }
 
 void FPGA_Destroy(void) {
@@ -251,7 +251,7 @@ void FPGA_Destroy(void) {
 
 void FPGA_Enable(void) {
     // Set the FPGA Sample Clock low
-    GPIO_PinOutClear(GPIO_PinOutClearPortF, 12);
+    GPIO_PinOutClear(gpioPortF, 12);
 
     for (uint32_t i = 0; i < fpga.numPipelines; i++) {
         FPGA_Pipeline *p = &fpga.pipelines[i];
