@@ -30,9 +30,8 @@ architecture behaviour of pipeline is
 	component adder is
 		port (
 			a, b   : in  std_logic_vector(15 downto 0);
-			c      : in  std_logic;
-			result : out std_logic_vector(15 downto 0);
-			flags  : out alu_flags
+			c_in      : in  std_logic;
+			s : out std_logic_vector(15 downto 0)
 		);
 	end component;
 
@@ -189,9 +188,8 @@ begin
 		port map(
 			a => internal_device,
 			b => not x"0004",
-			c => '1',
-			result => internal_core,
-			flags => open
+			c_in => '1',
+			s => internal_core
 		);
 
 	-- Internal bus read process:

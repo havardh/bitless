@@ -32,9 +32,8 @@ architecture behaviour of alu is
 	component adder is
 		port (
 			a, b	: in std_logic_vector(15 downto 0);
-			c 		: in std_logic;
-			result 	: out std_logic_vector(15 downto 0);
-			flags  	: out alu_flags
+			c_in 		: in std_logic;
+			s 	: out std_logic_vector(15 downto 0)
 		);
 	end component;
 --Adder signals
@@ -107,9 +106,8 @@ begin
 		port map (
 			a		=> cpu_input_register_1,
 			b		=> adder_input_b,
-			c		=> sub_enable,
-			result	=> adder_result,
-			flags	=> adder_flags
+			c_in		=> sub_enable,
+			s	=> adder_result
 		);
 
 	mul: multiplier
@@ -194,6 +192,8 @@ begin
 		end case;
 	end process result_mux;
 	
+	adder_flags.zero		<= '1' when adder_result = x"0000" else '0';
+	adder_flags.negative	<= adder_result(15); 
 	logic_flags.negative	<= logic_result(15);
 	logic_flags.carry		<= '0';
 	logic_flags.overflow	<= '0';

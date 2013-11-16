@@ -1,0 +1,15 @@
+# Output products list for <adder>
+_xmsgs\pn_parser.xmsgs
+adder.asy
+adder.gise
+adder.ngc
+adder.sym
+adder.v
+adder.veo
+adder.vhd
+adder.vho
+adder.xco
+adder.xise
+adder_flist.txt
+adder_readme.txt
+adder_xmdf.tcl

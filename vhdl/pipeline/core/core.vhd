@@ -56,9 +56,8 @@ architecture behaviour of core is
     component adder is
         port (
             a, b    : in    std_logic_vector(reg_data_size-1 downto 0);
-            c       : in    std_logic;
-            result  : out   std_logic_vector(reg_data_size-1 downto 0);
-            flags   : out   alu_flags
+            c_in       : in    std_logic;
+            s  : out   std_logic_vector(reg_data_size-1 downto 0)
         );
     end component;
     --Pipeline registers for stage 1
@@ -292,10 +291,9 @@ begin
     port map(
         a       => pc_reg,
         b       => x"0000",
-        c       => '1',
-        result  => pc_inc,
-		flags	=> open
-    );
+        c_in       => '1',
+        s		  => pc_inc
+	 );
 	 
 	 evaluate_branch : process(id_branch_enable, wb_flags, id_branch_flags)
 	 begin
