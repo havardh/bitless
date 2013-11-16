@@ -62,7 +62,7 @@ package internal_bus is
 			reset                   : std_logic;
 			stopmode                : std_logic;
 			instruction_memory_size : std_logic_vector(4 downto 0);
-			deadline_missed         : std_logic;
+			finished                : std_logic;
 		end record;
 	type core_control_register_array is array(integer range <>) of core_control_register;
 

@@ -61,36 +61,34 @@ architecture behaviour of pipeline is
 			reg_data_size       : natural := 16;
 			memory_data_size    : natural := 32;
 			memory_addr_size    : natural := 16
-		 );
-
-		 port(
-			  clk                 : in std_logic; -- Small cycle clock signal
-			  memclk              : in std_logic; -- Memory clock signal
-			  sample_clk          : in std_logic; -- Reset signal, "large cycle" clock signal
-
-			  reset               : in std_logic; -- Resets the processor core
-	  		  proc_finished       : out std_logic := '0';
+		);
+		port(
+			clk                 : in std_logic; -- Small cycle clock signal
 			  
-			  -- Connection to instruction memory:
-			  instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
-			  instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
+			pl_stop_core        : in std_logic;	
+			reset               : in std_logic; -- Resets the processor core
 			  
-			  -- Connections to the constant memory controller:
-			  constant_addr       : out std_logic_vector(memory_addr_size - 1 downto 0);
-			  constant_data       : in  std_logic_vector(memory_data_size - 1 downto 0);
-
-			  -- Connections to the input buffer:
-			  input_read_addr     : out std_logic_vector(memory_addr_size - 1 downto 0);
-			  input_read_data     : in  std_logic_vector(memory_data_size - 1 downto 0);
-
-			  -- Connections to the output buffer:
-			  output_write_addr   : out std_logic_vector(memory_addr_size - 1 downto 0);
-			  output_write_data   : out std_logic_vector(memory_data_size - 1 downto 0);
-			  output_we           : out std_logic;
+			proc_finished       : out std_logic := '0';
+			-- Connection to instruction memory:
+			instruction_addr    : out std_logic_vector(instruct_addr_size - 1 downto 0);
+			instruction_data    : in  std_logic_vector(instruct_data_size - 1 downto 0);
 			  
-			  output_read_addr    : out std_logic_vector(memory_addr_size - 1 downto 0);
-			  output_read_data    : in  std_logic_vector(memory_data_size - 1 downto 0)
-		 );
+			-- Connections to the constant memory controller:
+			constant_addr       : out std_logic_vector(memory_addr_size - 1 downto 0);
+			constant_data       : in  std_logic_vector(memory_data_size - 1 downto 0);
+
+			-- Connections to the input buffer:
+			input_read_addr     : out std_logic_vector(memory_addr_size - 1 downto 0);
+			input_read_data     : in  std_logic_vector(memory_data_size - 1 downto 0);
+
+			-- Connections to the output buffer:
+			output_write_addr   : out std_logic_vector(memory_addr_size - 1 downto 0);
+			output_write_data   : out std_logic_vector(memory_data_size - 1 downto 0);
+			output_we           : out std_logic;
+			  
+			output_read_addr    : out std_logic_vector(memory_addr_size - 1 downto 0);
+			output_read_data    : in  std_logic_vector(memory_data_size - 1 downto 0)
+		);
 	end component;
 
 	component instruction_memory is
@@ -138,7 +136,7 @@ architecture behaviour of pipeline is
 
 	-- Pipeline control register:
 	signal control_register : pipeline_control_register := (num_cores => std_logic_vector(to_unsigned(NUMBER_OF_CORES, 4)),
-		stopmode => '1', reset => '0', constcore_1 => b"0000", constcore_2 => b"0000");
+		stopmode => '0', reset => '0', constcore_1 => b"0000", constcore_2 => b"0000");
 
 	-- Zero-extended internal bus address:
 	signal internal_dest_address : std_logic_vector(15 downto 0);
@@ -146,8 +144,8 @@ architecture behaviour of pipeline is
 	signal internal_device : std_logic_vector(15 downto 0);
 	signal internal_core : std_logic_vector(15 downto 0);
 
-	-- Processor clock signals:
-	signal processor_clock : std_logic_vector(0 to NUMBER_OF_CORES - 1);
+	-- Processor control signals:
+	signal processor_reset, processor_stop : std_logic_vector(0 to NUMBER_OF_CORES - 1);
 
 	-- Constant memory signals:
 	signal constmem_write_enable : std_logic := '0';
@@ -178,8 +176,9 @@ architecture behaviour of pipeline is
 
 	-- Core control registers:
 	signal core_control_registers : core_control_register_array(0 to NUMBER_OF_CORES - 1) :=
-		(others => (reset => '1', stopmode => '1',
-			instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)), deadline_missed => '0'));
+		(others => (reset => '1', stopmode => '1', instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)),
+			finished => '0'));
+
 begin
 	-- Zero-extended internal signals:
 	internal_dest_address <= b"00" & int_address.address;
@@ -217,7 +216,7 @@ begin
 								when b"00" =>
 									int_data_out <=
 										core_control_registers(to_integer(unsigned(internal_core))).instruction_memory_size
-										& b"00000000" & core_control_registers(to_integer(unsigned(internal_core))).deadline_missed
+										& b"00000000" & core_control_registers(to_integer(unsigned(internal_core))).finished
 										& core_control_registers(to_integer(unsigned(internal_core))).stopmode
 										& core_control_registers(to_integer(unsigned(internal_core))).reset;
 								when others =>
@@ -340,14 +339,14 @@ begin
 			);
 
 		-- Core:
-		processor_clock(i) <= clk when core_control_registers(i).stopmode = '0' and control_register.stopmode = '0' else '0';
+		processor_reset(i) <= core_control_registers(i).reset or control_register.reset;
+		processor_stop(i) <= core_control_registers(i).stopmode or control_register.stopmode;
 		processor_core: core
 			port map(
-				clk => processor_clock(i),
-				memclk => memory_clk,
-				sample_clk => sample_clk,
-				reset => core_control_registers(i).reset,
-				proc_finished => open,
+				clk => clk,
+				reset => processor_reset(i),
+				pl_stop_core => processor_stop(i),
+				proc_finished => core_control_registers(i).finished,
 				constant_addr => constmem_address_array(i),
 				constant_data => constmem_data_array(i),
 				instruction_addr => instr_read_address(i),

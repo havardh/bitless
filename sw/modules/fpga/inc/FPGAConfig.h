@@ -23,7 +23,7 @@ typedef struct {
     uint32_t toplevelAddress;
     /* The address size of each pipeline */
     uint32_t pipelineAddressSize;
-    /* The address for the first core device in the pipeline (when DDDD is 0010)*/
+    /* The address for the first core device in the pipeline (when DDDD is 0100)*/
     uint32_t coreDeviceAddress;
     /* The size for one core */
     uint32_t coreDeviceSize;
@@ -35,15 +35,15 @@ typedef struct {
 #define DEFAULT_NUM_CORES               4
 #define DEFAULT_TOPLEVEL_ADDRESS        0x400000
 #define DEFAULT_PIPELINE_ADDRESS_SIZE   0x100000
-#define DEFAULT_CORE_DEVICE_ADDRESS     0x20000
-#define DEFAULT_CORE_DEVICE_SIZE        0x20000
+#define DEFAULT_CORE_DEVICE_ADDRESS     0x40000
+#define DEFAULT_CORE_DEVICE_SIZE        0x10000
 #define DEFAULT_CORE_ADDRESS_SIZE       0x4000
 #define DEFAULT_FPGA_ADDRESS_SIZE       0x800000
 
 #define FPGA_CONFIG_DEFAULT(baseAddress)\
 {   DEFAULT_NUM_PIPELINES,              \
     DEFAULT_NUM_CORES,                  \
-    baseAddress,                        \
+    (unsigned short*)baseAddress,       \
     DEFAULT_TOPLEVEL_ADDRESS,           \
     DEFAULT_PIPELINE_ADDRESS_SIZE,      \
     DEFAULT_CORE_DEVICE_ADDRESS,        \

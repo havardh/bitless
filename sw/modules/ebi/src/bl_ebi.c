@@ -100,19 +100,15 @@ void EBIDriver_Init(void) {
     /* --------------------------------------------------------- */
     /* Board FPGA registers, Bank 0, Base Address 0x84000000     */
     /* --------------------------------------------------------- */
-    ebiConfig.banks       = EBI_BANK0;
-    ebiConfig.csLines     = EBI_CS0;
-    ebiConfig.mode        = ebiModeD16A16ALE;;
-    // ebiConfig.alePolarity = ebiActiveHigh;
-    /* keep blEnable */
-    // ebiConfig.blEnable     = false;
-    // ebiConfig.addrHalfALE  = true;
-    // ebiConfig.readPrefetch = false;
-    // ebiConfig.noIdle       = true;
+    ebiConfig.mode         = ebiModeD16;
+    ebiConfig.banks        = EBI_BANK0;
+    ebiConfig.csLines      = EBI_CS0;
 
-    /* keep alow/ahigh configuration */
-    /* ebiConfig.aLow = ebiALowA0; - needs to be set for PSRAM */
-    /* ebiConfig.aHigh = ebiAHighA0; - needs to be set for PSRAM */
+    ebiConfig.csPolarity   = ebiActiveLow;
+
+    ebiConfig.aLow         = ebiALowA0;
+    ebiConfig.aHigh        = ebiAHighA22;
+    ebiConfig.location     = ebiLocation1;
 
     /* Address Setup and hold time */
     ebiConfig.addrHoldCycles  = 3;
