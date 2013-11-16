@@ -19,8 +19,9 @@ architecture behvaiour of blink_controller is
 	component adder is
 		port (
 			a, b : in std_logic_vector(15 downto 0);
-			c_in    : in std_logic;
-			s : out std_logic_vector(15 downto 0)
+			c    : in std_logic;
+			result : out std_logic_vector(15 downto 0);
+			flags  : out alu_flags
 		);
 	end component;
 
@@ -57,16 +58,18 @@ begin
 		port map(
 			a => counter1,
 			b => x"0001",
-			c_in => '0',
-			s => counter1_inc
+			c => '0',
+			result => counter1_inc,
+			flags => open
 		);
 
 	counter2_adder: adder
 		port map(
 			a => counter2,
 			b => x"0001",
-			c_in => '0',
-			s => counter2_inc
+			c => '0',
+			result => counter2_inc,
+			flags => open
 		);
 
 end behvaiour;
