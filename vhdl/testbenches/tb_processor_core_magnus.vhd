@@ -157,11 +157,10 @@ BEGIN
         instruction_data <= load_instruction0;
 		wait for clk_period;
 		
-        instruction_data <= finished_instruction;
-		wait for clk_period*3;
 		
-		reset <= '1';
-		
+		pl_stop_core <= '1';
+		wait for clk_period*2;
+		pl_stop_core <= '0';
 
 		instruction_data <= load_instruction0;
 		wait for clk_period*3;
