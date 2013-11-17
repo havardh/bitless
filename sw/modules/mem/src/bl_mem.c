@@ -1,31 +1,36 @@
 #include "bl_mem.h"
+#include <stdlib.h>
 
 static int bufferSize;
 static bool bufferPrimary;
 
-static uint16_t *audioInBuffer;
-static uint16_t *audioOutBuffer;
+static uint16_t *audioInBuffer = 0;
+static uint16_t *audioOutBuffer = 0;
 
-static uint16_t audioInBufferSecondary[64];
-static uint16_t audioOutBufferSecondary[64];
 
-void MEM_Init( void ) 
+void MEM_Init( MEMConfig *config ) 
 {
-  bufferSize = 64;
-  
-  audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
-  audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
+  bufferSize = config->bufferSize;
 
-	memset(audioInBuffer, 0, 64*2);
-	memset(audioOutBuffer, 0, 64*2);
+	audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
+	audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
 
-  //uint16_t *InBufferSecondary    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
-  //uint16_t *OutBufferSecondary   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
+	memset(audioInBuffer, 0, 2*bufferSize*sizeof(uint16_t));
+	memset(audioOutBuffer, 0, 2*bufferSize*sizeof(uint16_t));
 
-	//memset(audioInBufferSecondary, 0, 64*2);
-	//memset(audioOutBufferSecondary, 0, 64*2);
+  /*uint16_t *InBufferSecondary    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
+  uint16_t *OutBufferSecondary   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize));
+
+	memset(audioInBufferSecondary, 0, 64*2);
+	memset(audioOutBufferSecondary, 0, 64*2);*/
 
 
+}
+
+void MEM_Destroy( void ) 
+{
+	free(audioInBuffer);
+	free(audioOutBuffer);
 }
 
 uint16_t* MEM_GetAudioInBuffer( bool primary ) 
@@ -33,7 +38,7 @@ uint16_t* MEM_GetAudioInBuffer( bool primary )
 	if (primary) {
 		return audioInBuffer;
 	} else {
-		return audioInBufferSecondary;
+		return 0; //audioInBufferSecondary;
 	}
 }
 
@@ -47,8 +52,12 @@ uint16_t* MEM_GetAudioOutBuffer( bool primary )
 	if (primary) {
 		return audioOutBuffer;
 	} else {
-		return audioOutBufferSecondary;
+		return 0; //audioOutBufferSecondary;
 	}
+}
+
+uint16_t* MEM_GetCurrentOutBuffer( void ) {
+	return MEM_GetAudioOutBuffer(bufferPrimary);
 }
 
 int MEM_GetAudioOutBufferSize( void ) 
@@ -71,20 +80,5 @@ void cpucpy()
 		outBuf[i] = inBuf[i];
 	}
 
-}
-
-void dmacpyb()
-{
-	
-}
-
-void dmacpypp()
-{
-	
-}
-
-void PendSV_Handler(void)
-{
-	cpucpy();
 }
 

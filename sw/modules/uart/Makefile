@@ -112,14 +112,17 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
--Iinc/ \
+-Iinc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
 -I$(LIB)/kits/common/bsp \
--I$(LIB)/kits/common/drivers \
+-I$(LIB)/kits/EFM32GG_bitless/config \
 -I$(LIB)/kits/EFM32GG_STK3700/config \
--I$(LIB)/emdrv/gpiointerrupt/inc
+-I$(LIB)/kits/common/drivers \
+-I$(LIB)/emdrv/gpiointerrupt/inc \
+-I$(LIB)/glib \
+-I$(LIB)/util/inc
 
 ####################################################################
 # Files								   #
@@ -127,24 +130,21 @@ INCLUDEPATHS += \
 
 C_SRC +=  \
 $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
-$(LIB)/kits/common/bsp/bsp_bcc.c \
-$(LIB)/kits/common/bsp/bsp_stk.c \
-$(LIB)/kits/common/bsp/bsp_stk_leds.c \
-$(LIB)/kits/common/bsp/bsp_trace.c \
 $(LIB)/kits/common/drivers/retargetio.c \
 $(LIB)/kits/common/drivers/retargetserial.c \
+$(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_cmu.c \
-$(LIB)/emlib/src/em_ebi.c \
-$(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_dma.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_gpio.c \
-$(LIB)/emlib/src/em_int.c \
-$(LIB)/emlib/src/em_letimer.c \
-$(LIB)/emlib/src/em_pcnt.c \
-$(LIB)/emlib/src/em_system.c \
+$(LIB)/emlib/src/em_emu.c \
+$(LIB)/emlib/src/em_prs.c \
+$(LIB)/emlib/src/em_ebi.c \
+$(LIB)/emlib/src/em_timer.c \
 $(LIB)/emlib/src/em_usart.c \
-$(LIB)/emlib/src/em_leuart.c \
-$(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+$(LIB)/emlib/src/em_int.c \
+$(LIB)/emlib/src/em_system.c \
 src/bl_uart.c \
 demo/$(PROJECTNAME).c
 

@@ -1,0 +1,50 @@
+\FloatBarrier
+\subsection{Processor Core}\label{subsec:fpga-processor-core}
+\todo[inline]{How the processor is designed and why}
+
+\subsubsection{Considerations}
+
+The processor core was implemented with focus on being quick in order to process
+audio in real-time, as well as being power efficient to the degree permitted by
+the FPGA chip.
+
+In order for the core to be as efficient as possible, a pipelined
+processor design was implemented. The pipelined core design consists of the
+following stages:
+
+\todo[inline]{If someone has a better way to describe the processor core than
+giving a quick overview of the implementations for each pipeline stage, please,
+do edit.}
+
+\begin{enumerate}
+	\item Instruction Fetch \label{stage:if}
+	\item Instruction Decode \label{stage:id}
+	\item Execute \label{stage:ex}
+	\item Memory \label{stage:mem}
+	\item Writeback \label{stage:wb}
+\end{enumerate}
+
+\todo[inline]{Is the above list correct? Please someone re-view and edit it so
+that it is.}
+
+\subsubsection{Floating-point implementation design choices}
+
+Some audio filters are performed in the time domain, others are performed in the
+frequency domain. To convert the audio samples from one domain to the other, a
+Fourier-transform (FT) or its inverse is usually employed. A discrete FT is
+perfectly suited for the sample based nature of an audio processor. The FT we
+chose to utilize for our project is the
+Sliding-Discrete-Fourier-transform, detailed further in appendix section
+\ref{appendix:sd-ft}.
+
+With the goal of having a real-time sound processing system, the algorithmic
+complexity of the SD-FT would make it one of the more algorithmically
+time-complex operations the processor core would have to complete within the
+time window between two sample inputs.
+
+Realizing a SD-FT on a computing device requires floating point arithmetics.
+Therefore, to lower the algorithmic complexity required for the floationg point
+calculations the decision was made to lower the maximum size of the integers in
+the audio samples to 8-bits. The consequence of this is that the maximum sound
+frequency was reduced from the normal of 44 Kilo Hertz, down to ca. 11. Thereby
+reducing the range of sounds the processor core could alter/manipulate.

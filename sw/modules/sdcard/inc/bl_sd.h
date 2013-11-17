@@ -1,10 +1,9 @@
 #ifndef _SDDRIVER_H_
 #define _SDDRIVER_H_
 
-#include "bsp.h"
+//#include "bsp.h"
 #include "wav.h"
 #include "microsd.h"
-#include "SDConfig.h"
 #include <stdlib.h>
 
 typedef enum {

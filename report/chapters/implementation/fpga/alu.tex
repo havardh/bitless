@@ -1,0 +1,23 @@
+\FloatBarrier
+\subsection{ALU}\label{subsec:fpga-alu}
+
+Which operations were implemented in the ALU was decided based on behalf of what
+was neccessary for the Fourier-transform, sound processing, and on whether the
+instruction set had room for the encoding of the operations.
+
+Division was not implemented in hardware in order for all instructions to be
+single-cycle. However, division can be done using floating point multiplication
+or by a regular long division algorithm in software.
+
+The ALU implementation receives two 16-bit registers as inputs, and outputs a
+32-bit register. However, only the lower 16-bits are currently used. Previously,
+the intention was for multiplication operations to output all 32-bits.
+
+\subsubsection{Internal memory}
+
+Since the instruction words can only address two registers at the time, the ALU
+unit can store the values previously loaded from constant memory internally.
+``Multiply and accumulate'' is the longest critical path, and which is used
+during the SD-FT \ref{appendix:sd-ft}. This instruction needs the constant value
+previously loaded into the ALU with the ``Load from constant memory''
+instruction. Hence why the ALU can store a constant memory value internally.

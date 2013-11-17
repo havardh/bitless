@@ -9,8 +9,9 @@ typedef enum {
 
 void mount();
 void open(int fileindex, char *filename, FileMode mode);
-void read(int fileindex, void *buffer, uint32_t bytesToRead, uint32_t *bytesRead);
-void write(int fileindex, void *buffer, uint32_t bytesToWrite, uint32_t *bytesWritten);
+void read(int fileindex, void *buffer, uint16_t bytesToRead, uint16_t *bytesRead);
+void write(int fileindex, void *buffer, uint16_t bytesToWrite, uint16_t *bytesWritten);
+void seek(int fileindex, int position);
 void close(int fileindex);
 
 #endif /* _FILE_H_ */

@@ -16,7 +16,7 @@ typedef struct {
 typedef CircularBuffer_t* CircularBuffer;
 
 CircularBuffer CircularBuffer_New(uint16_t *buffer, size_t size, int parts );
-
+void CircularBuffer_Destroy( CircularBuffer circularBuffer );
 uint16_t *CircularBuffer_GetBuffer( CircularBuffer circularBuffer );
 void      CircularBuffer_MoveToNext( CircularBuffer circularBuffer );
 uint16_t *CircularBuffer_GetNextBuffer( CircularBuffer circularBuffer );

@@ -1,0 +1,54 @@
+\chapter{Filters}
+
+\begin{enumerate}
+	\item FIR - Finite impulse response filter
+	\item IRR - Infinite impulse response filter
+\end{enumerate}
+
+\begin{enumerate}
+	\item Low pass filter
+	\item High pass filter
+	\item Band filter
+\end{enumerate}
+
+\subsection{Audio Effects}
+
+\begin{enumerate}
+	\item Reverb
+	\item Echo
+	\item Distortion
+	\item Chorus
+\end{enumerate}
+
+\paragraph{Goal}
+- To make a pipelined MIMD with cores executing different transforms and
+filters.
+	E.g. Input $=>$ FFT $=>$ IIR $=>$ IFFT $=>$ Output
+
+\paragraph{Buffering}
+- The cores in the pipeline should have a shared memory in between each core to
+communicate
+	E.g. Mem $<=>$ Core $<=>$ Mem $<=>$ Core ... $<=>$ Mem
+
+\begin{itemize}
+	\item Insight A: FFT transforms a window of samples into a Frequency image
+for this window. The window is created by N samples.
+	\item Effect: Data will be transfered through the pipeline in big chunks. One
+new chunk will be transfered on each ADC cycle.
+	\item Proposed solution: Each shared memory should be divided in two equally
+sized pieces, A and B. $Core_i$ uses $A_{i-1}$ as input and $B_{i+1}$ as
+output on cycle $2j$ and $B_{i-1}$ as input and $A_{i+1}$ on cycle $2j+1$ for
+$j = 0,1,2,3,4$
+\end{itemize}
+
+\begin{itemize}
+	\item Insight $B_1$: If the a FFT is not applied a N
+	\todo{N is already used for the number of samples per transform} bit sample
+	will arrive at each ADC cycle.
+	\item Insight $B_2$: A filter needs historic samples.
+	\item Effect: Data will be transfered in small quantities, if the previously
+scheme is used for samples at the start of the buffer historic data will not be
+available.
+	\item Proposed solution: Converge the buffer design to a circular buffer
+design either at sample level or at some division of the buffer greater than 2.
+\end{itemize}

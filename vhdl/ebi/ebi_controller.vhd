@@ -37,7 +37,7 @@ architecture behaviour of ebi_controller is
 	-- transaction is started on the falling edge of CS.
 
 	type state is (idle, read_state, write_state);
-	signal current_state : state;
+	signal current_state : state := idle;
 
 	signal re_value, we_value : std_logic := '0';
 	signal transaction_finished, reset_finished : std_logic := '0';
@@ -45,18 +45,9 @@ begin
 	int_write_enable <= we_value;
 	int_read_enable <= re_value;
 
-	process(clk, ebi_read_enable, ebi_write_enable, ebi_cs, reset, reset_finished)
+	process(clk)
 	begin
-		if reset = '1' and reset_finished = '0' then
-			current_state <= idle;
-			ebi_data <= (others => 'Z');
-			we_value <= '0';
-			re_value <= '0';
-			transaction_finished <= '0';
-			reset_finished <= '1';
-		elsif reset = '0' and reset_finished = '1' then
-			reset_finished <= '0';
-		elsif falling_edge(clk) then
+		if rising_edge(clk) then
 			case current_state is
 				when idle =>
 					ebi_data <= (others => 'Z');

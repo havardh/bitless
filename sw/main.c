@@ -2,9 +2,10 @@
 
 int main( void ) {
 
-    MainController_init();
-    MainController_run();
+	MainController_init();
+	MainController_run();
 
-    while(1) ;
+	while(1) ;
+ 
 
 }

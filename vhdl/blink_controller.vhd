@@ -28,8 +28,8 @@ architecture behvaiour of blink_controller is
 	signal led0_value, led1_value : std_logic;
 	signal counter1, counter1_inc, counter2, counter2_inc : std_logic_vector(15 downto 0);
 begin
-	led0_blink <= led0_value;
-	led1_blink <= led1_value;
+	led0_blink <= led0_value and enable;
+	led1_blink <= led1_value and enable;
 
 	counter: process(system_clk, enable)
 	begin

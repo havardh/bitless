@@ -24,6 +24,7 @@ LST_DIR = lst
 # Change path to the tools according to your system configuration
 # DO NOT add trailing whitespace chars, they do matter !
 WINDOWSCS  ?= GNU Tools ARM Embedded\4.7 2012q4
+# LINUXCS		 ?= /usr/local/Cellar/gcc-arm-none-eabi/20121016
 LINUXCS	   ?= /opt/gcc-arm-none-eabi-4_7-2013q2
 # /cad/arm-embedded/gcc-arm-none-eabi-4_7-2012q4
 
@@ -113,6 +114,9 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -Iinc \
+-I../uart/inc \
+-I../ebi/inc \
+-I../leds/inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
@@ -138,6 +142,9 @@ $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
+../uart/src/bl_uart.c \
+../ebi/src/bl_ebi.c \
+../leds/src/bl_leds.c \
 src/FPGAController.c \
 demo/main.c
 

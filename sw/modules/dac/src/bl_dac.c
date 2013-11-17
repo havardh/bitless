@@ -17,6 +17,7 @@ static void init(const DACConfig *config)
 {
 	DAC_Init_TypeDef dacInit = DAC_INIT_DEFAULT;
 	dacInit.reference = dacRefVDD;
+	dacInit.prescale = DAC_PrescaleCalc(1000000, 0);
 	DAC_Init(DAC0, &dacInit);
 }
 
@@ -26,6 +27,10 @@ static void initChannel(const DACConfig *config)
 	dacChInit.enable = true;
 	dacChInit.prsSel = dacPRSSELCh0;
 	dacChInit.prsEnable = true;
+	
 	DAC_InitChannel(DAC0, &dacChInit, 0);
 	DAC_InitChannel(DAC0, &dacChInit, 1);
+
+	DAC_Enable(DAC0, 0, true);
+	DAC_Enable(DAC0, 1, true);
 }

@@ -1,0 +1,21 @@
+\FloatBarrier
+\subsection{Audio Pipelines}\label{subsec:audio_pipelines}
+
+\missingfigure{Overview of the pipeline structure, preferably use the same
+picture as in assignment.tex line 38. But in this one, specify the filters/
+effects so that they match what we're running in the demo. Instead of all of
+them saying ``could be this or that''.}
+
+The two aforementioned audio pipelines consist of a series of processors
+connected by buffers. The buffers operate either as ringbuffers or as buffers
+switching between two sets of data. Figure \todo{fix reference to above picture
+}XX illustrates the layout of the pipelines with an example of what programs the
+FPGA can run.
+
+The idea behind splitting up the processor cores into these two audio pipelines
+is that each audio pipeline can run each its own sound channel. With two
+audio pipelines the project can run stereo sound through the FPGA. With more
+resources on the FPGA, there would be nothing hindering the programming of
+sound manipulation for any number of sound channels simultaneously.
+
+\todo[inline]{Is this subsection done?? Does it need more??}

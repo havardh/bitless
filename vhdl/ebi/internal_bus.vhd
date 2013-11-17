@@ -3,6 +3,8 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+library work;
+use work.core_constants.all;
 
 package internal_bus is
 
@@ -45,8 +47,6 @@ package internal_bus is
 	type toplevel_control_register is
 		record
 			number_of_pipelines          : std_logic_vector(2 downto 0);
-			led0, led1, button0, button1 : std_logic;
-			blinkmode                    : std_logic;
 			reset                        : std_logic;
 		end record;
 
@@ -62,10 +62,11 @@ package internal_bus is
 	type core_control_register is
 		record
 			reset                   : std_logic;
-			running                 : std_logic;
+			stopmode                : std_logic;
 			instruction_memory_size : std_logic_vector(4 downto 0);
-			deadline_missed         : std_logic;
+			finished                : std_logic;
 		end record;
+	type core_control_register_array is array(integer range <>) of core_control_register;
 
 	-- Converts an integer to a pipeline address:
 	function make_pipeline_address(number : integer) return std_logic_vector;

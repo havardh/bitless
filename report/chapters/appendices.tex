@@ -1,9 +1,17 @@
 % !TEX root = ../report.tex
 
 \appendix
+\begin{appendix}
 
-%\addcontentsline{toc}{chapter}{Appendix}
-%\addtocontents{toc}\protect\contentsline{chapter}{Appendix:}{./appendices/pcb/SR10S3V3}
+\input{chapters/appendices/fpga-startup}
+\input{chapters/appendices/filters}
+\input{chapters/appendices/fourier-transform}
+\input{chapters/appendices/schematics}
 
-%The above line causes conflict with hyperlinking. It is probably the
-%\addtocontents command. Need to find a better way to do appendices.
+%VHDL code, should be at bottom, no?
+% \input{chapters/appendices/vhdl-code}
+
+% \clearpage
+% \lstinputlisting[language=C]{../sw/main.c}
+
+\end{appendix}
