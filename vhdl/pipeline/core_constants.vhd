@@ -13,16 +13,16 @@ package core_constants is
 	-- Total number of pipelines to generate:
 	constant NUMBER_OF_PIPELINES : integer := 2;
 	-- Total number of cores to generate:
-	constant NUMBER_OF_CORES : integer := 4;
+	constant NUMBER_OF_CORES : integer := 2;
 	-- Size of the instruction memories:
 	constant IMEM_SIZE : integer := 512;
 	constant DMEM_SIZE : integer := 512;
 	
-	constant IMEM_ADDR_SIZE : integer := 9;--log2(IMEM_SIZE);
-	constant DMEM_ADDR_SIZE : integer := 9;--log2(DMEM_SIZE);
+	constant IMEM_ADDR_SIZE : integer := 16;--log2(IMEM_SIZE);
+	constant DMEM_ADDR_SIZE : integer := 16;--log2(DMEM_SIZE);
 	
-	constant IMEM_DATA_SIZE : integer := 15;
-	constant DMEM_DATA_SIZE : integer := 15;
+	constant IMEM_DATA_SIZE : integer := 16;
+	constant DMEM_DATA_SIZE : integer := 16;
 
 	type alu_flags is
 		record
