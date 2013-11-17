@@ -2,13 +2,14 @@
 
 \todo[inline]{FIX THE BELOW REFERENCES!!!!}
 
-Since we use a microcontroller from Energy Micro, which in turn is a Cortex
-microcontroller, the software is based on the CMSIS \ref{CMSIS} codebase from
-ARM. The Giant Gecko MCU is supplied with a peripheral application programming
-interface (API), called emlib \ref{emlib} which builds upon CMSIS and can be
-used to initialize and control all attached peripherals. The code and
-programming model is based on how it is done in emlib, and have mostly used the
-emlib API for communicating and controlling the microcontoller.
+Since the microcontroller from Energy Micro which this project uses, in turn is
+a Cortex microcontroller, the software is based on the CMSIS \ref{CMSIS}
+codebase from ARM. The Giant Gecko MCU is supplied with a peripheral Application
+Programming Interface (API), called emlib \ref{emlib}, which builds upon CMSIS
+and can be used to both initialize and control all attached peripherals. The
+structure of the code and programming model is based on how emlib does it. The
+code and model have mostly used the emlib API for communicating and controlling
+the microcontoller.
 
 \input{figures/sw/software-stack}
 
