@@ -6,26 +6,38 @@
 
 The processor core was implemented with focus on being quick in order to process
 audio in real-time, as well as being power efficient to the degree permitted by
-the FPGA chip.
+the FPGA chip. The higher the throughput, the quicker the execution time before
+the whole system could be shut off again, and thus reducing the power
+consumption increasing the energy-efficiency. Thus, the processor core has been
+designed with focus on the following principles:
 
-In order for the core to be as efficient as possible, a pipelined
-processor design was implemented. The pipelined core design consists of the
-following stages:
+\begin{itemize}
+	\item As high throughput as possible.
+	\item Support the instructions needed to perform the audio manipulations.
+\end{itemize}
 
-\todo[inline]{If someone has a better way to describe the processor core than
-giving a quick overview of the implementations for each pipeline stage, please,
-do edit.}
+In order for the core to be as efficient as possible, a pipelined processor
+design was implemented. The pipelined core design consists of the following
+stages:
 
 \begin{enumerate}
 	\item Instruction Fetch \label{stage:if}
 	\item Instruction Decode \label{stage:id}
-	\item Execute \label{stage:ex}
 	\item Memory \label{stage:mem}
+	\item Execute \label{stage:ex}
 	\item Writeback \label{stage:wb}
 \end{enumerate}
 
-\todo[inline]{Is the above list correct? Please someone re-view and edit it so
-that it is.}
+A change from the classic pipelined processor desings, is that the memory
+pipeline stage comes before the execution stage. This is because the load/store
+instructions do not need the ALU during execution. Thus the project
+implementation is able to prevent load dependecies by simple forwarding, instead
+of wasting a pipeline clock-cycle on a no-operation.
+
+For simplicity, the core does not have a hazard control unit implemented for
+branching, but instead relies on the programmer to add two no-operations after a
+branch.\todo{Maybe we can have the assembly do this instead?? That would be
+great.}
 
 \subsubsection{Floating-point implementation design choices}
 
