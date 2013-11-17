@@ -1,24 +1,27 @@
 \clearpage
 \section{MCU} \label{section:mcu}
 
-The software implemented is run on an ARM Cortex-M3 supplied by Energy Micro.
-This chapter describes the modules that are executed on said chip. The
-responsibility of the software components are mainly to produce audio samples to
-the FPGA, and to receive the samples the FPGA produces as a result of the sound
-manipulation.
+The software implemented for this project is run on an ARM \todo{insert
+reference?}Cortex-M3 supplied by Energy Micro. This chapter describes the
+software modules executed on said chip. The responsibility of the software
+components are mainly to produce audio samples for the FPGA, and to receive the
+samples the FPGA produces as a result of the sound manipulation.
 
-It implements interfaces for the different I/O devices which the system as a
-whole use as sources and destinations for the data samples. These include the
-ADC and DAC connected to the minijack plugs on the card, or the MicroSD card
-connected to the SDCard slot. In addition, a serial port is available for
+The MCU also implements interfaces for the different I/O devices which the
+project uses as sources and destinations for the data samples. These include the
+following; the ADC and DAC connected to the minijack plugs on the card, and the
+MicroSD card in the SDCard slot. In addition, a serial port is available for
 communication with a PC.
 
-The MCU also handles general I/O such as buttons for controlling the behavior
-of the program at runtime and LEDs for visual feedback.
+Use of buttons controlling the behavior the programs at runtime, as well as LEDs
+for visual feedback is also controlled by the MCU.
 
-Another responsibility  of the MCU is to program the FPGA cores before the sound
-manipulation is initialized \ref{appendix:starting-fpga}. This is done when the
-MCU configures which filters are to be used on the FPGA. \todo[inline]{Most of this is too specific.
+Another responsibility of the MCU is to program the FPGA cores before the sound
+manipulation is initialized, detailed further in appendix
+\ref{appendix:starting-fpga}. This configuration of the sound manipulations
+filters on the FPGA is also performed by the MCU.
+
+ \todo[inline]{Most of this is too specific.
 It should be a ``light'' introduction; needs to be rewritten. E.g.
 give an overview of terminology (CPU vs MCU), what role the MCU
 plays in the system compared to the rest, and why the chapter
