@@ -49,7 +49,8 @@ audio pipeline. On the input side the samples need to de-interleaved and on
 output they are interleaved again. This is why two DMA channels are needed for
 the input, and two are needed for the output. A complementary version of this
 procedure is implemented on the CPU and power comparison plots which are
-included in the results chapter. \todo{Make sure they are. Rewrite for better flow - JK}
+included in the results chapter.
+\todo{Make sure they are. Rewrite for better flow - JK}
 
 \missingfigure{Figure showing deinterleaving and interleaving}
 
@@ -76,7 +77,6 @@ using the following scheme
 
 %\newpage %re-insert if figure breaks across pages
 \begin{verbatim}
-
                         | Audio in
                         V
 +------+  +-----+    +------+   +-----+     +--------+
