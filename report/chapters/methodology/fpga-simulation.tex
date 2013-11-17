@@ -1,9 +1,23 @@
-\section{FPGA simulation testing}
+\section{FPGA testing}
 \subsection{Simulation}
 \todo[inline]{Simluation description}
+\subsubsection{ALU}
+The testbench for the ALU is very straight forward. It tests every ALU operation with two or three different sets of test values and then looks at the output. The output consists of a result value and flags that represent how the ALU operation went. The input consists of values A, B, C, OPERATION and an enable signal. To test a simple integer operation you set OPERATION, A and B to desired values, for example ADD, 2 and 3, respectively. An assert would then check that the result signal equals 5 after a small waiting period. C and the enable signal are only used for certain floating-point operations.
+\\
+\\
+For all the integer operations only two or three sets of values were tested, ranging from easy operations, like the above example, to more complex operations. Additionally, there were also a few tests to validate the values of the zero and negative flags. For the floating-point operations a slightly different methodology was used. The conversions between integer and floating point was tested first. For these tests the floating point values were calculated by hand and then compared to the result. These operations were then used to simplify the rest of the floating point testing. Values were converted to floating point, added/subtracted/multiplied in the fpu, and then converted back before they were tested with an assert. 
+\\
+\\
+The C value with accompanying enable signal was used by the operation "multiply and accumulate". This operation takes a constant value from the constant memory in addition to the traditional A and B values. The ALU stores the C value internally and the enable signal activated the writing of the internal register in the ALU. To test the operation A, B, C and the enable signals were set to appropriate values and the result was tested to equal "A + B*C".
 
-\todo{Write up all the above testing, focus on reproducibility. (Don't forget to mention intent).}
-\subsection{Testing the FPGA implementation}\label{section:fpga-testing}
+
+
+
+\subsubsection{Core}
+something, something
+\subsubsection{Toplevel}
+something, something
+\subsection{Testing on the FPGA}\label{section:fpga-testing}
 
 \subsubsection{Tests\todo{insert more of these, along with descriptions and reasons.}}
 
