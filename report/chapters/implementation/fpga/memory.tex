@@ -22,12 +22,12 @@ in the best possible way.}
 
 \subsubsection{Constant memory}
 
-The constant memory is used to store constants needed for the \todo{Need to
-confirm this.}SD-FT transforms in each audio pipeline. This memory is by default
-read-only for the processor cores. Each audio pipeline contains a constant
-memory, and this memory is accessed by only two cores in the pipeline. The
-decision cores have access to the constant memory can be configured by the MCU
-in the pipeline control register.
+The constant memory is used to store constants needed for the SD-FT transforms
+in each audio pipeline. While this memory is read-only, each audio pipeline
+contains its own constant memory, and this memory can only be accessed by two
+audio pipeline processor cores simultaneously. It is the pipeline control
+register, which is configured by the MCU, which decides which cores can access
+the constant memory.
 
 The reason why only two cores are permitted access to the constant memory, is
 due to the internal block RAMs in the FPGA which only have have two independent
