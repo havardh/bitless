@@ -19,6 +19,24 @@ core into these instruction memories.
 and as switching buffers. Discuss why this is a good idea because of our
 intended functionality, and how we utilize the FPGAs resources to implement it
 in the best possible way.}
+Communication between cores happen through the main memory modules. Two
+consecutive cores have access to one shared memory module, which either operate
+as a ringbuffer, or as a switching buffer. Independent of the mode the upstream
+processor has read/write access, while the downstream one has read-only access.\\
+\\
+Samples from the time domain are stored in a ringbuffer, which rotates one slot
+per new sample. Half the memory is readable by the downstream processor, while
+the upstream one can read and write everywhere. Standard behaviour is to only
+write to the upper half, on order to prevent read/write hazards.\\ \todo{fix? need more opsys terminology}
+\\
+Data stored in the frequency domain uses every availiable memory address, and as
+such the downstream processor has to gain access to all newly written values.
+For this reason frequency domain memories has s switching mode, where the two
+processor cores switch base address at each sample arrival.\\
+\\
+Because the BRAM modules in the fpga only feature two in/out ports, only the
+first input and last output data memories are avaliable for the MCU to 
+write/read.
 
 \subsubsection{Constant memory}
 
@@ -30,7 +48,7 @@ register, which is configured by the MCU, which decides which cores can access
 the constant memory.
 
 The reason why only two cores are permitted access to the constant memory, is
-due to the internal block RAMs in the FPGA which only have have two independent
+that the internal block RAMs in the FPGA only have have two independent
 read ports, permitting a maximum of two simultaneous reads. If more processors
 were to have access to the constant memories an arbitration unit would be
 needed, and the advantage of using the block RAM to ensure sincle-cycle access
