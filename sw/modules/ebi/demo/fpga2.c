@@ -34,6 +34,39 @@ uint16_t imem_data[IMEM_LEN] = {
     0x0000,0x7080,0x0000,0x0000,0x0000,0x0000,0x7c80,0x0000,0x0000,0x0000,0x3000
 };
 
+void setLeds(uint16_t res) {
+    if (res & 0xf000) {
+        Leds_SetLed(0x0);
+    } else {
+        Leds_ClearLed(0x0);
+    }
+
+    if (res & 0x0f00) {
+        Leds_SetLed(0x1);
+    } else {
+        Leds_ClearLed(0x1);
+    }
+
+    if (res & 0x00f0) {
+        Leds_SetLed(0x2);
+    } else {
+        Leds_ClearLed(0x2);
+    }
+
+    if (res & 0x000f) {
+        Leds_SetLed(0x3);
+    } else {
+        Leds_ClearLed(0x3);
+    }
+
+    if (res != 0xfff) {
+        Leds_SetLed(0x10);
+    } else {
+        Leds_ClearLed(0x10);
+    }
+
+}
+
 void load_store2cores(void) 
 {
     FPGA_Pipeline *p0 = FPGA_GetPipeline(0);
@@ -65,13 +98,20 @@ void load_store2cores(void)
     uint16_t res;
     uint16_t *out = FPGAPipeline_GetOutputBuffer(p0);
     read(out, &res);
+    char str[20];
+    sprintf(str, "result: %d\n\r", res);
+    UART_PutData((uint8_t*)str, strlen(str));
 
+    setLeds(res);
     write_data(c0->address, 0x0002);
 }
 
 int main(void) {
     CHIP_Init();
+
+    Leds_Init();
     EBIDriver_Init();
+    UART_Init();
 
     FPGAConfig conf = FPGA_CONFIG_DEFAULT(fpga_address);
     FPGA_Init(&conf);
@@ -80,17 +120,8 @@ int main(void) {
 
     GPIO_PinModeSet(gpioPortF,  12, gpioModePushPull, 0);
     GPIO_PinOutClear(gpioPortF, 12);
-    // uint32_t addr0 = 0x4000;
-    // uint32_t addr1 = 0x40000;
-    // uint32_t toplevel_address = 0x400000;
-
     
     while (1) {
         load_store2cores();
-        // write_data(fpga_address, 1, 0);
-        //read((fpga_address), 1, fpga_res);
-        // read((fpga_address + number), 1, fpga_res);
-        // read((fpga_address + addr1), 1, fpga_res);
-        // read((fpga_address + toplevel_address), 1, fpga_res);
     }
 }

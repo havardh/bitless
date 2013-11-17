@@ -242,7 +242,7 @@ void FPGA_Destroy(void) {
         free(p->cores);
     }
     free(fpga.pipelines);
-    free(fpga.baseAddress);
+    // free(fpga.baseAddress);
 }
 
 /*******************************************

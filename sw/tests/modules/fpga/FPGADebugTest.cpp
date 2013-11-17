@@ -27,6 +27,7 @@ TEST_GROUP(FPGADebug) {
     }
     void teardown() {
         FPGA_Destroy();
+        free(conf.baseAddress);
         free(input_program);
         free(core_input_buffer);
         free(core_output_buffer);
