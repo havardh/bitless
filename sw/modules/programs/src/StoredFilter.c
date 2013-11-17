@@ -20,6 +20,7 @@
 #include "bl_mem.h"
 #include "FPGAConfig.h"
 #include "FPGADriver.h"
+#include "FPGAController.h"
 #include "spi.h"
 
 #include "bl_sd.h"
@@ -59,12 +60,13 @@ void StoredFilter_Start(void)
 	setupSD();
 	done = false;
 	setupTimer();
-
+	FPGA_Enable();
 	while(1) {
 		
 		if (done)
 			break;
 	}
+	FPGA_Disable();
 	TIMER_Enable( TIMER0, false );
 	TIMER_Reset( TIMER0 );
 	FPGADriver_Destroy();
@@ -91,10 +93,15 @@ static void* GetOutBuffer(void)
 
 void TIMER0_IRQHandler( void ) 
 {
-
 	TIMER_IntClear( TIMER0, TIMER_IF_OF );
+	
+	static int i = 0;
+	if (++i >= 64) {
+		copySamples();
+		i = 0;
+	} 
 
-	copySamples();
+	FPGA_ToggleClock();
 }
 
 void setupSD(void)
