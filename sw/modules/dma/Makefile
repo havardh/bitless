@@ -125,10 +125,14 @@ INCLUDEPATHS += \
 -I$(LIB)/emdrv/gpiointerrupt/inc \
 -I$(LIB)/glib \
 -I$(LIB)/util/inc \
+-I$(DIR)/modules/mem/inc \
 -I$(DIR)/modules/adc/inc \
 -I$(DIR)/modules/dac/inc \
 -I$(DIR)/modules/dma/inc \
--I$(DIR)/modules/prs/inc 
+-I$(DIR)/modules/prs/inc \
+-I$(DIR)/modules/fpga/inc \
+-I$(DIR)/modules/int/inc \
+-I$(DIR)/modules/sdcard/inc \
 -I$(LIB)/fatfs/inc 
 
 
@@ -163,16 +167,18 @@ $(LIB)/emlib/src/em_usart.c \
 $(LIB)/fatfs/src/ff.c \
 $(LIB)/fatfs/src/diskio.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
-$(DIR)/drivers/adc/src/ADCDriver.c \
-$(DIR)/drivers/dma/src/DMADriver.c \
-$(DIR)/drivers/dac/src/DACDriver.c \
-$(DIR)/drivers/prs/src/PRSDriver.c \
-$(DIR)/drivers/mem/src/MEMDriver.c \
-$(DIR)/drivers/sdcard/src/SDDriver.c \
-$(DIR)/drivers/fpga/src/FPGADriver.c \
-$(DIR)/drivers/int/src/INTDriver.c \
+$(DIR)/modules/adc/src/bl_adc.c \
+$(DIR)/modules/dma/src/bl_dma.c \
+$(DIR)/modules/dac/src/bl_dac.c \
+$(DIR)/modules/prs/src/bl_prs.c \
+$(DIR)/modules/mem/src/bl_mem.c \
+$(DIR)/modules/sdcard/src/bl_sd.c \
+$(DIR)/modules/fpga/src/FPGADriver.c \
+$(DIR)/modules/int/src/bl_int.c \
 $(LIB)/util/src/CircularBuffer.c \
 $(LIB)/util/src/sample_conversion.c \
+$(LIB)/util/src/wav.c \
+$(LIB)/util/src/fatfs_file.c \
 $(LIB)/util/src/Blink.c \
 demo/$(PROJECTNAME).c
 

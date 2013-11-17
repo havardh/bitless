@@ -37,6 +37,7 @@ architecture behaviour of toplevel is
 			clk			: in std_logic; -- Small cycle clock
 			sample_clk	: in std_logic; -- Large cycle clock
 			memory_clk  : in std_logic; -- Memory clock
+			bus_clk     : in std_logic;
 
 			-- Address of the pipeline, two bit number:
 			pipeline_address : in std_logic_vector(1 downto 0);
@@ -55,8 +56,7 @@ architecture behaviour of toplevel is
 		port(
 			clk_in       : in std_logic;  -- FPGA main clock input
 			system_clock : out std_logic; -- System clock output, used for the processor cores
-			memory_clock : out std_logic; -- Memory clock output, used for the memories
-			dsp_clock    : out std_logic  -- DSP clock output, used for DSPs
+			memory_clock : out std_logic  -- Memory clock output, used for the memories
 		);
 	end component;
 
@@ -85,14 +85,14 @@ begin
 		port map (
 			clk_in => fpga_clk,
 			system_clock => system_clk,
-			memory_clock => memory_clk,
-			dsp_clock => open
+			memory_clock => memory_clk
 		);
 	sample_clk <= ctrl_bus(0);
 
 	-- Instantiate the EBI controller:
 	ebi_ctrl: ebi_controller
 		port map (
+--			clk => fpga_clk,
 			clk => system_clk,
 			reset => control_register.reset,
 			ebi_address => ebi_address,
@@ -131,6 +131,7 @@ begin
 			pipeline_x: pipeline
 				port map (
 					clk => system_clk,
+					bus_clk => fpga_clk,
 					sample_clk => sample_clk,
 					memory_clk => memory_clk,
 					pipeline_address => make_pipeline_address(i),

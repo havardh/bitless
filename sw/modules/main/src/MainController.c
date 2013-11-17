@@ -1,5 +1,7 @@
+#include "em_chip.h"
 #include "bl_buttons.h"
 #include "bl_leds.h"
+#include <stdint.h>
 
 #include "MainController.h"
 
@@ -8,61 +10,67 @@
 #include "LiveFilter.h"
 #include "StoredFilter.h"
 
-void programFPGA(uint8_t pin);
-void startADCtoDAC(uint8_t pin);
-void startSDtoSD(uint8_t pin);
-void startWAVPlayer(uint8_t pin);
+static bool pressed = false;
 
-void callback(uint8_t pin);
+void programFPGA(void);
+void startADCtoDAC(void);
+void startSDtoSD(void);
+void startWAVPlayer(void);
+
+void callback(void);
+
 
 void MainController_init(void) 
 {
-	Board_t type = BITLESS;
-	Buttons_Init(type);
+	CHIP_Init();
+
+	Buttons_Init();
 	Leds_Init();
 
-	uint8_t btns[5] = { BTN0, BTN1, BTN2, BTN3, BTN4 };
-	GPIOINT_IrqCallbackPtr_t ptrs[5] = { 
-		programFPGA, 
-		startADCtoDAC, 
-		startSDtoSD, 
-		startWAVPlayer, 
-		callback 
-	};
-	Buttons_RegisterCallbacks( btns, ptrs, 5 );
+	
+	Buttons_SetCallback(BTN0, &programFPGA);
+	Buttons_SetCallback(BTN1, &startADCtoDAC);
+	Buttons_SetCallback(BTN2, &startSDtoSD);
+	Buttons_SetCallback(BTN3, &startWAVPlayer);
+	Buttons_SetCallback(BTN4, &callback );
+
+
+
 }
 
 void MainController_run(void) 
 {
 
-
 	while(1) {
+
+		Buttons_Dispatch();
+
 		EMU_EnterEM3(true);
 	}
 
 }
 
-void programFPGA(uint8_t pin) 
+void programFPGA(void) 
 {
 	FPGAProgrammer_Start();
 }
 
-void startADCtoDAC(uint8_t pin) 
+void startADCtoDAC(void) 
 {
 	LiveFilter_Start();
 }
 
-void startSDtoSD(uint8_t pin)
+void startSDtoSD(void)
 {
 	StoredFilter_Start();
 }
 
-void startWAVPlayer(uint8_t pin)
+void startWAVPlayer(void)
 {
 	Wavplayer_Start();
 }
 
-void callback(uint8_t pin)
+void callback(void)
 {
 	Leds_SetLeds(0x10);
 }

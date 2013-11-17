@@ -114,16 +114,27 @@ LIBS = -Wl,--start-group -lgcc -lc -lnosys   -Wl,--end-group
 
 INCLUDEPATHS += \
 -I. \
--I$(DIR)/modules/buttons/inc \
--I$(DIR)/modules/leds/inc \
--I$(DIR)/modules/main/inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
--I$(LIB)/kits/common/bsp \
+-I$(LIB)/kits/common/drivers \
 -I$(LIB)/kits/EFM32GG_bitless/config \
+-I$(LIB)/emdrv/gpiointerrupt/inc \
+-I$(LIB)/util/inc \
+-I$(LIB)/fatfs/inc \
+-I$(DIR)/modules/buttons/inc \
+-I$(DIR)/modules/leds/inc \
+-I$(DIR)/modules/main/inc \
 -I$(DIR)/modules/programs/inc \
--I$(LIB)/emdrv/gpiointerrupt/inc
+-I$(DIR)/modules/adc/inc \
+-I$(DIR)/modules/sdcard/inc \
+-I$(DIR)/modules/int/inc \
+-I$(DIR)/modules/uart/inc \
+-I$(DIR)/modules/dac/inc \
+-I$(DIR)/modules/dma/inc \
+-I$(DIR)/modules/prs/inc \
+-I$(DIR)/modules/mem/inc \
+-I$(DIR)/modules/fpga/inc
 
 ####################################################################
 # Files								   #
@@ -134,12 +145,24 @@ $(LIB)/Device/EnergyMicro/EFM32GG/Source/system_efm32gg.c \
 $(LIB)/emlib/src/em_assert.c \
 $(LIB)/emlib/src/em_cmu.c \
 $(LIB)/emlib/src/em_ebi.c \
+$(LIB)/emlib/src/em_dma.c \
+$(LIB)/emlib/src/em_dac.c \
 $(LIB)/emlib/src/em_emu.c \
 $(LIB)/emlib/src/em_gpio.c \
 $(LIB)/emlib/src/em_int.c \
+$(LIB)/emlib/src/em_timer.c \
+$(LIB)/emlib/src/em_prs.c \
 $(LIB)/emlib/src/em_system.c \
 $(LIB)/emlib/src/em_usart.c \
+$(LIB)/kits/common/drivers/dmactrl.c \
+$(LIB)/kits/common/drivers/microsd.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
+$(LIB)/fatfs/src/ff.c \
+$(LIB)/fatfs/src/diskio.c \
+$(LIB)/util/src/fatfs_file.c \
+$(LIB)/util/src/wav.c \
+$(LIB)/util/src/spi.c \
+$(LIB)/util/src/CircularBuffer.c \
 $(DIR)/modules/leds/src/bl_leds.c \
 $(DIR)/modules/main/src/MainController.c \
 $(DIR)/modules/buttons/src/bl_buttons.c \
@@ -147,6 +170,16 @@ $(DIR)/modules/programs/src/LiveFilter.c \
 $(DIR)/modules/programs/src/Wavplayer.c \
 $(DIR)/modules/programs/src/StoredFilter.c \
 $(DIR)/modules/programs/src/FPGAProgrammer.c \
+$(DIR)/modules/fpga/src/FPGAController.c \
+$(DIR)/modules/fpga/src/FPGADriver.c \
+$(DIR)/modules/adc/src/bl_adc.c \
+$(DIR)/modules/int/src/bl_int.c \
+$(DIR)/modules/dac/src/bl_dma.c \
+$(DIR)/modules/uart/src/bl_uart.c \
+$(DIR)/modules/dma/src/bl_dac.c \
+$(DIR)/modules/prs/src/bl_prs.c \
+$(DIR)/modules/mem/src/bl_mem.c \
+$(DIR)/modules/sdcard/src/bl_sd.c \
 $(PROJECTNAME).c
 
 s_SRC +=

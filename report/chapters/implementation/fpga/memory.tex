@@ -1,0 +1,37 @@
+%Should contain: Ringbuffer, Switch buffer, input/output buffers, constant memory, inst memory, read and write lines to the fpga from the ARM. Originally the ARM only needed access to the first and the last data buffer but for debugging purposes the ARM was given access to all buffers.
+\subsection{Memory types}\label{subsec:fpga-memory}
+
+The internal block RAMs in the FPGA were used to implement the different kinds
+of memory inside the processor. Even though this is limited by the amount of
+memory available, it guarantees equal access time for all the different types
+of memory. It also precludes having to use external RAM, which would not be as
+fast, besides consuming more energy, making the project less energy-efficient.
+
+\subsubsection{Instruction memory}
+
+Each processor core has a separate instruction memory. This memory is filled
+with instructions defining the program the processor core will run. Before the
+FPGA processor cores get set to run, the the MCU writes the programs for each
+core into these instruction memories.
+
+\subsubsection{Audio Pipeline Buffers}
+\todo[inline]{Describe the need for memory to behave as both ringbuffer/queues,
+and as switching buffers. Discuss why this is a good idea because of our
+intended functionality, and how we utilize the FPGAs resources to implement it
+in the best possible way.}
+
+\subsubsection{Constant memory}
+
+The constant memory is used to store constants needed for the \todo{Need to
+confirm this.}SD-FT transforms in each audio pipeline. This memory is by default
+read-only for the processor cores. Each audio pipeline contains a constant
+memory, and this memory is accessed by only two cores in the pipeline. The
+decision cores have access to the constant memory can be configured by the MCU
+in the pipeline control register.
+
+The reason why only two cores are permitted access to the constant memory, is
+due to the internal block RAMs in the FPGA which only have have two independent
+read ports, permitting a maximum of two simultaneous reads. If more processors
+were to have access to the constant memories an arbitration unit would be
+needed, and the advantage of using the block RAM to ensure sincle-cycle access
+time would be lost.
