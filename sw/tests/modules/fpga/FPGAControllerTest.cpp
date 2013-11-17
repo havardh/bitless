@@ -4,6 +4,8 @@
 #include "FPGA_addresses.h"
 #include <stdio.h>
 
+// #define malloc cpputest_malloc
+
 static FPGAConfig conf;
 static uint16_t *input_program;
 
@@ -25,6 +27,7 @@ TEST_GROUP(FPGAController) {
     void teardown() {
         FPGA_Destroy();
         free(input_program);
+        free(conf.baseAddress);
     }
 };
 
@@ -162,7 +165,7 @@ TEST(FPGAController, should_set_and_get_core_programs) {
     FPGACore_SetProgram(c0, input_program, CORE_ADDRESS_SIZE);
     FPGACore_SetProgram(c7, input_program, CORE_ADDRESS_SIZE / 2);
 
-    uint16_t *prog = (uint16_t *) malloc(sizeof(uint16_t) * CORE_ADDRESS_SIZE);
+    uint16_t *prog = (uint16_t *) malloc(sizeof(uint16_t)    * CORE_ADDRESS_SIZE);
     
     FPGACore_GetProgram(c0, prog);
     CHECK_EQUAL(prog[0], 0);
