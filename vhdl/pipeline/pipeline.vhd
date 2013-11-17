@@ -13,6 +13,7 @@ entity pipeline is
 		clk			: in std_logic; -- Small cycle clock
 		sample_clk	: in std_logic; -- Large cycle clock
 		memory_clk  : in std_logic; -- Memory clock
+		bus_clk     : in std_logic;
 
 		-- Address of the pipeline, two bit number:
 		pipeline_address : in std_logic_vector(1 downto 0);
@@ -46,12 +47,11 @@ architecture behaviour of pipeline is
 
 	component core is
 		generic(
-			instruct_addr_size  : natural := 16;
-			instruct_data_size  : natural := 16;
-			reg_addr_size       : natural := 5;
-			reg_data_size       : natural := 16;
-			memory_data_size    : natural := 32;
-			memory_addr_size    : natural := 16
+        instruct_data_size  : natural := 16;
+        reg_addr_size       : natural := 5;
+        reg_data_size       : natural := 16;
+        memory_data_size    : natural := 32;
+        memory_addr_size    : natural := 16
 		);
 		port(
 			clk                 : in std_logic; -- Small cycle clock signal
@@ -169,7 +169,7 @@ architecture behaviour of pipeline is
 	-- Core control registers:
 	signal core_control_registers : core_control_register_array(0 to NUMBER_OF_CORES - 1) :=
 		(others => (reset => '0', stopmode => '0', instruction_memory_size => std_logic_vector(to_unsigned(log2(IMEM_SIZE), 5)),
-			finished => '0'));
+			finished => 'Z'));
 begin
 	-- Zero-extended internal signals:
 	internal_dest_address <= b"00" & int_address.address;
@@ -179,9 +179,9 @@ begin
 	internal_core <= std_logic_vector(unsigned(internal_device) - x"0004");
 
 	-- Internal bus read process:
-	internal_bus_read: process(clk, int_re)
+	internal_bus_read: process(bus_clk, int_re)
 	begin
-		if falling_edge(clk) then
+		if falling_edge(bus_clk) then
 			if int_re = '1' then
 				if int_address.toplevel = '0' and int_address.pipeline = pipeline_address then
 					case int_address.device is
@@ -213,9 +213,9 @@ begin
 	end process;
 
 	-- Internal bus write process:
-	internal_bus_write: process(clk, int_we)
+	internal_bus_write: process(bus_clk, int_we)
 	begin
-		if rising_edge(clk) then
+		if rising_edge(bus_clk) then
 			if int_we = '1' then
 				if int_address.toplevel = '0' and int_address.pipeline = pipeline_address then
 					case int_address.device is
@@ -262,8 +262,6 @@ begin
 			elsif prev_sample_clk_value /= sample_clk then
 				reset_pulse <= '1';
 				prev_sample_clk_value <= sample_clk;
-			else
-				prev_sample_clk_value <= sample_clk;
 			end if;
 		end if;
 	end process resetter;
@@ -283,28 +281,34 @@ begin
 			read_data_b => constmem_read_data_b
 		);
 
-	-- Übermux controlling access to the constant memory:
-	megamux: process(constmem_read_data_a, constmem_read_data_b,
-		constmem_address_array, constmem_data_array, control_register)
+	-- Big mux controlling access to the constant memory:
+--	megamux: process(constmem_read_data_a, constmem_read_data_b,
+--		constmem_address_array, constmem_data_array, control_register)
+--	begin
+--		for i in 0 to NUMBER_OF_CORES - 1 loop
+--			if i = to_integer(unsigned(control_register.constcore_1)) then
+--				constmem_data_array(i) <= constmem_read_data_a;
+--				constmem_read_address_a <= constmem_address_array(i);
+--			elsif i = to_integer(unsigned(control_register.constcore_2)) then
+--				constmem_data_array(i) <= constmem_read_data_b;
+--				constmem_read_address_b <= constmem_address_array(i);
+--			else
+--				constmem_data_array(i) <= (others => '0');
+--				constmem_read_address_a <= (others => '0');
+--				constmem_read_address_b <= (others => '0');
+--			end if;
+--		end loop;
+--	end process;
+	
+	constmem_mux: process(control_register.constcore_1, control_register.constcore_2, constmem_read_data_a,
+		constmem_read_data_b, constmem_address_array)
 	begin
-		for i in 0 to NUMBER_OF_CORES - 1 loop
-			if i = to_integer(unsigned(control_register.constcore_1)) then
-				constmem_data_array(i) <= constmem_read_data_a;
-				constmem_read_address_a <= constmem_address_array(i);
-				--
-				constmem_read_address_b <= (others => '0');
-			elsif i = to_integer(unsigned(control_register.constcore_2)) then
-				constmem_data_array(i) <= constmem_read_data_b;
-				constmem_read_address_b <= constmem_address_array(i);
-				--
-				constmem_read_address_a <= (others => '0');
-			else
-				constmem_data_array(i) <= (others => '0');
-				constmem_read_address_a <= (others => '0');
-				constmem_read_address_b <= (others => '0');
-			end if;
-		end loop;
-	end process;
+		constmem_data_array <= (others => (others => '0'));
+		constmem_data_array(to_integer(unsigned(control_register.constcore_1))) <= constmem_read_data_a;
+		constmem_data_array(to_integer(unsigned(control_register.constcore_2))) <= constmem_read_data_b;
+		constmem_read_address_a <= constmem_address_array(to_integer(unsigned(control_register.constcore_1)));
+		constmem_read_address_b <= constmem_address_array(to_integer(unsigned(control_register.constcore_2)));
+	end process constmem_mux;
 
 	-- Instantiate the input buffer:
 	input_write_data <= x"0000" & int_data_in;
