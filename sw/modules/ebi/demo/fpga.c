@@ -99,6 +99,10 @@ void load_store2cores(void)
 	uint16_t res;
 	read((uint16_t*)(fpga_address + 0x30000), &res);
 	read((uint16_t*)(fpga_address + 0x30200), &res);
+	
+	char str[20];
+	sprintf(str, "res: %d\n\r", res);
+	UART_PutData((uint8_t*)str, strlen(str));
 
 	write_data((uint16_t*)(fpga_address + 0x40000), 0x0002);
 }
@@ -132,6 +136,7 @@ void add1(void)
 
 int main(void) {
 	CHIP_Init();
+	UART_Init();
 	EBIDriver_Init();
 	CMU_ClockEnable(cmuClock_GPIO, true);
 
@@ -143,6 +148,9 @@ int main(void) {
 
 	volatile uint16_t fpga_res[DATA_LENGTH];
 	
+	char str[20];
+    sprintf(str, "Test\n\r");
+    UART_PutData((uint8_t*)str, strlen(str));
 	
 	while (1) {
 		load_store2cores();

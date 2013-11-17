@@ -10,6 +10,9 @@
 #include "em_ebi.h"
 #include "em_gpio.h"
 
+#define BL_FPGA_BASE_ADDRESS        (uint16_t*)(0x80000000)
+#define BL_SRAM_BASE_ADDRESS        (uint16_t*)(0x84000000)
+
 void EBIDriver_Init(void); 
 void EBIDriver_Disable(void);
 
