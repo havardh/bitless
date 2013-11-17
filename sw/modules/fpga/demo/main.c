@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "FPGAController.h"
 #include "FPGAConfig.h"
+#include "bl_ebi.h"
 #include "bl_uart.h"
 #include "bl_leds.h"
 
@@ -58,7 +59,7 @@ int main() {
 
     UART_PutData((uint8_t*)"Test\n\r", 6);
 
-    FPGAConfig conf = FPGA_CONFIG_DEFAULT((uint16_t*) 0x80000000);
+    FPGAConfig conf = FPGA_CONFIG_DEFAULT(BL_FPGA_BASE_ADDRESS);
     FPGA_Init(&conf);
 
 
