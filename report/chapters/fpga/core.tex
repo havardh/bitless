@@ -4,12 +4,15 @@
 
 \subsection{Considerations}
 
-The processor core was implemented with focus on being quick
-in order to process audio in real-time, as well as being power
-efficient to the degree permitted by the FPGA chip.
+The only way to noticable reduce the power consumption by the FPGA is to reduce the amount of time it's active. Because of this the processor core has been designed with the following principles:
 
-In order for the core to be as efficient as possible, it was
-neccessary to make a pipelined processor design.
+1) Support the instructions needed to perform audio transformation and filtering.
+2) As high throughput as possible. Thus reducing both the run time for the programs and the power consumption. 
+
+Based on this we decided to design a five stage pipeline processor, with the following stages in order: instruction fetch, instruction decode, memory access, execute and write back. The memory stage is set before the execute state. This is done since our load/store instructions doesn't need the ALU to execute. Thus we're able to prevent load dependecies by simple forwarding, instead of wasting a cycle on a no op. 
+
+For simplicity we have not added a control hazard unit for branching, but instead require that the programmer add two no ops after a branch.  
+
 \todo{Describe the processor pipeline}
 
 \subsection{Floating-point implementation design choices}
