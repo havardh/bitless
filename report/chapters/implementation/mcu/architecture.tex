@@ -14,9 +14,11 @@ the microcontoller.
 \input{figures/sw/software-stack}
 
 The application code is structured into directories representing each of the
-modules, or peripherals, which we have written custom software for. Each module
-\todo{WHY?}contains three directories, \textit{inc}, \textit{src} and \textit{demo}. Each
-of these directories contains header files, source files and different demos or
-test programs for the modules, respectively. Each module is typically
-implemented as a combination of a driver and a controller for the specific
-device that it is designed for.
+modules or peripherals, whose software was explicity written for this project.
+Each directory contains three sub-directories, \textit{inc}, \textit{src} and
+\textit{demo}. These sub-directories contain either header files, source files,
+or different demos and test programs for each module, respectively. Each module
+is typically implemented as a combination of a driver and controller for the
+specific peripheral the module is designed for.
+
+\todo[inline]{THE ABOVE PHRASING SUCKS. NEEDS REVISION. -CC}
