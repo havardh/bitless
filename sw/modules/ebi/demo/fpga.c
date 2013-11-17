@@ -17,13 +17,13 @@
 
 #define fpga_address 0x80000000
 
-void read(volatile uint16_t *addr, volatile uint16_t *data) {
+static void read(volatile uint16_t *addr, volatile uint16_t *data) {
 
 	*data = *addr;
 	
 }
 
-void write_data(volatile uint16_t *addr, volatile uint16_t data) {
+static void write_data(volatile uint16_t *addr, volatile uint16_t data) {
 	*addr = data;
 }
 
@@ -83,23 +83,22 @@ void load_store2cores(void)
 	//Skriv data til input-buffer:
 	write_data((uint16_t*)(fpga_address + 0x20000), 0xbeef);
 
-	//Start kjerne 0:
-	write_data((uint16_t*)(fpga_address + 0x40000), 0x0000);
-	//Start kjerne 1:
-	write_data((uint16_t*)(fpga_address + 0x50000), 0x0000);
-
-	// Vent litt), send én puls på sample_clk), vent litt til.
-	
 	GPIO_PinOutToggle(gpioPortF, 12);
 
-	
-	//Stopp kjerne 0:
-	write_data((uint16_t*)(fpga_address + 0x40000), 0x0002);
-	//Stopp kjerne 1:
-	write_data((uint16_t*)(fpga_address + 0x50000), 0x0002);
+
+	// Start pipeline 0
+	write_data((uint16_t*)(fpga_address + 0x0), 0x0000);
+
+	GPIO_PinOutToggle(gpioPortF, 12);
+
+	// Stop pipeline 0
+	write_data((uint16_t*)(fpga_address + 0x0), 0x80);
+
+	GPIO_PinOutToggle(gpioPortF, 12);
 
 	uint16_t res;
 	read((uint16_t*)(fpga_address + 0x30000), &res);
+	read((uint16_t*)(fpga_address + 0x30200), &res);
 
 	write_data((uint16_t*)(fpga_address + 0x40000), 0x0002);
 }

@@ -115,6 +115,7 @@ INCLUDEPATHS += \
 -Iinc \
 -I../leds/inc \
 -I../uart/inc \
+-I../fpga/inc \
 -I$(LIB)/CMSIS/Include \
 -I$(LIB)/Device/EnergyMicro/EFM32GG/Include \
 -I$(LIB)/emlib/inc \
@@ -148,6 +149,7 @@ $(LIB)/emlib/src/em_leuart.c \
 $(LIB)/emdrv/gpiointerrupt/src/gpiointerrupt.c \
 ../leds/src/bl_leds.c \
 ../uart/src/bl_uart.c \
+../fpga/src/FPGAController.c \
 src/bl_ebi.c \
 demo/$(PROJECTNAME).c
 

@@ -2,7 +2,6 @@
 #define _BLINK_H_
 
 #include "Delay.h"
-#include "bsp.h"
 
 void BlinkLeds(int leds, int millis);
 

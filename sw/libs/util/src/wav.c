@@ -1,7 +1,8 @@
 #include "wav.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include <string.h>
 
 void setupDefaultHeader(WAV_Header_TypeDef* header)
 {
@@ -34,14 +35,15 @@ void setupDefaultHeader(WAV_Header_TypeDef* header)
 
 void WAV_Open(WAVFile *file, char *filename)
 {
-	file->header = (WAV_Header_TypeDef*)malloc(sizeof(WAV_Header_TypeDef));
+	
+	file->header = (WAV_Header_TypeDef*)malloc(sizeof(WAV_Header_TypeDef));
 	open(file->fno, filename, file->mode);
 	file->position = 0;
 	file->eof = 0;
-
+        
 	if (file->mode == READ) {
 		WAV_ReadHeader(file);
-	} else {
+	} else if (file->mode == WRITE) {
 		//setupDefaultHeader(file->header);
 		
 		WAV_WriteHeader(file);
@@ -51,6 +53,7 @@ void WAV_Open(WAVFile *file, char *filename)
 
 void WAV_ReadHeader(WAVFile *file)
 {
+	seek(file->fno, 0);
 	WAV_Read(file, file->header, sizeof(WAV_Header_TypeDef));
 }
 
@@ -99,7 +102,7 @@ void WAV_Close(WAVFile *file)
 	if (file->mode == WRITE) {
 		WAV_WriteHeader(file);
 	}
-
+	free(file->header);
 	close(file->fno);
 }
 

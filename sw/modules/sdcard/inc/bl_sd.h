@@ -4,7 +4,6 @@
 //#include "bsp.h"
 #include "wav.h"
 #include "microsd.h"
-#include "SDConfig.h"
 #include <stdlib.h>
 
 typedef enum {

@@ -1,18 +1,19 @@
 #include "bl_mem.h"
+#include <stdlib.h>
 
 static int bufferSize;
 static bool bufferPrimary;
 
-static uint16_t *audioInBuffer;
-static uint16_t *audioOutBuffer;
+static uint16_t *audioInBuffer = 0;
+static uint16_t *audioOutBuffer = 0;
 
 
 void MEM_Init( MEMConfig *config ) 
 {
   bufferSize = config->bufferSize;
 
-  audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
-  audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
+	audioInBuffer    = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
+	audioOutBuffer   = (uint16_t*)malloc((sizeof(uint16_t) * bufferSize*2));
 
 	memset(audioInBuffer, 0, 2*bufferSize*sizeof(uint16_t));
 	memset(audioOutBuffer, 0, 2*bufferSize*sizeof(uint16_t));
@@ -24,6 +25,12 @@ void MEM_Init( MEMConfig *config )
 	memset(audioOutBufferSecondary, 0, 64*2);*/
 
 
+}
+
+void MEM_Destroy( void ) 
+{
+	free(audioInBuffer);
+	free(audioOutBuffer);
 }
 
 uint16_t* MEM_GetAudioInBuffer( bool primary ) 
