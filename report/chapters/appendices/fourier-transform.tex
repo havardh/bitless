@@ -35,7 +35,7 @@ clock imposed a limit on the system. It was also preferable to find a FT that
 would enable us to have a real-time demonstration of the project.
 
 \subsection{Integer Fourier Transform}
-As this transform is to be realized on a embedded computer device (the FPGA), a
+As this transform is to be realized on an embedded computer device (the FPGA), a
 Fourier-transform utilizing only integers (and not floating point arithmetic)
 would be very advantageous. The bigggest algorithmical advantage of using this
 FT is the speed of integer arithmetic compared to floating point on a processing
@@ -56,7 +56,7 @@ It returns the frequency domain window, $FW_1$ as altered by adding the input
 sample, $s_1$ and removing the sample $s_n$. The frequency domain can be
 initialized to all zeros and the same with the historic sample. The $n$ value of
 the historic sample corresponds to the window size $n$ in the FFT algorithm.
-This fact permits the SD-FT to perform a FT on a everchanging FIFO queue of
+This fact permits the SD-FT to perform a FT on an everchanging FIFO queue of
 samples.
 
 The time complexity of the SD-FT algorithm is $O(n) = n$. The inverse SD-FT
