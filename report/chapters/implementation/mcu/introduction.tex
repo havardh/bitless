@@ -1,25 +1,14 @@
 % !TEX root = ../../report.tex
 
-The software is implemented on an ARM Cortex-M3 supplied by
-EnergyMicro. This chapter describes the modules that are
-executed on this chip. The responsibility of the software
-component is mainly producing samples that the FPGA consumes and
-to consume the samples the FPGA produces as results.
+The software is implemented on an Giant Gecko ARM Cortex-M3 microcontroller, 
+manufactured by Silicon Labs \todo{Mention EnergyMicro before this point}. 
+This MCU, Microcontroller Unit, is a complete miniature computer on a single chip. 
+The energy saving features, along with generally low power consumption, of this MCU 
+makes it a good fit for goal of this project, namly energy efficiency. 
 
-It implements interfaces to the different I/O devices that the
-system as a whole uses as source and destination for data
-samples. These include ADC and DAC connected to Jack plugs on
-the card and MicroSD card connected to the SDCard Slot. In
-addition a serial port is available for communication with a PC.
+This chapter describes the modules that execute on the MCU. The responsibility 
+of this component is to supply the FPGA core \todo{FPGA core name here} with audio 
+samples. It should also comsume the results after audio processing has taken 
+place. In order to provide samples the MCU controls a variety of Input/Output 
+peripherals. 
 
-This component also handles general I/O like buttons for
-controlling the behavior for of the program at runtime, and LEDs
-for visual feedback.
-
-The last responsibility is providing a way to program the FPGA
-cores. This functionality is used when the filters used on the
-FPGA are configured. \todo[inline]{Most of this is too specific.
-It should be a ``light'' introduction; needs to be rewritten. E.g.
-give an overview of terminology (CPU vs MCU), what role the MCU
-plays in the system compared to the rest, and why the chapter
-has been structured so and so. -JK}
