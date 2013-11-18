@@ -32,11 +32,10 @@ intended to disable the 1.8V domain entirely, running the whole board on 1.2V
 and 3.3V, but as the FPGA was changed midway to a slightly larger one, the FPGA
 flash also had to be changed and the new one required 1.8V.
 
-The setup
-delivers power at these three voltages, with high efficiency. Very little power
-goes to waste in the switch-mode regulator, and while the linear regulator
-transforms power into heat, transforming from 3.3V instead of, for example 9V,
-is a large improvement.
+The setup delivers power at these three voltages, with high efficiency. Very
+little power goes to waste in the switch-mode regulator, and while the linear
+regulator transforms power into heat, transforming from 3.3V instead of, for
+example 9V, is a large improvement.
 
 \paragraph{Current sensors} \label{psu:current_sensors}
 
@@ -47,28 +46,27 @@ placed on the 3.3V power plane, while the other sits just before the linear
 regulator. This way, it is possible to separate the 3.3V plane from the 1.2V and
 1.8V, which enables analysis of MCU and FPGA power consumption in comparison
 with the peripherals. In addition, the entire board consumption can be measured
-at the PWR\_SRC pins located right after the DC input connector, see Appendix~\ref{apx:schematics}
-(File: power\_supply.SchDoc).\todo{Refer to
+at the PWR\_SRC pins located right after the DC input connector, see
+Appendix~\ref{apx:schematics} (File: power\_supply.SchDoc).\todo{Refer to
 measurements section once it is completed for more details.}
 
-The output from
-the current sensors have each been connected to an ADC on the MCU, which makes
-it possible to perform on-the-go measurements on-chip. However, by performing
-measurements using the MCU the results are skewed, as reading the ADC increases
-power consumption. Therefore, measuring sockets have been added to allow for
-reading the current sensor output on an external device, such as a development
-board, making for more accurate readings.
+The output from the current sensors have each been connected to an ADC on the
+MCU, which makes it possible to perform on-the-go measurements on-chip. However,
+by performing measurements using the MCU the results are skewed, as reading the
+ADC increases power consumption. Therefore, measuring sockets have been added to
+allow for reading the current sensor output on an external device, such as a
+development board, making for more accurate readings.
 
 \paragraph{Power by USB} \label{psu:usb}
 
-An extra feature that was added was the ability to power the board
-from USB. The USB 1.x and 2.0 standard specifies that a constant
-power draw of 500mA at 5.0V $\pm$ 5\% can be provided.
-\footnote{http://www.usb.org/developers/docs/usb\_20\_070113.zip}
-\todo{reference to USB specification.} This should suffice for
-normal operation. USB chargers will in most cases provide support for
-current draws in the 1500mA to 2000mA range, so using one of these should
-definitely be enough to provide power through the USB port.
+An extra feature that was added was the ability to power the board from USB. The
+USB 1.x and 2.0 standard specifies that a constant power draw of 500mA at 5.0V
+$\pm$ 5\% can be provided. \footnote{
+http://www.usb.org/developers/docs/usb\_20\_070113.zip} \todo{reference to USB
+specification.} This should suffice for normal operation. USB chargers will in
+most cases provide support for current draws in the 1500mA to 2000mA range, so
+using one of these should definitely be enough to provide power through the USB
+port.
 
 Even when using the normal power socket as the primary power supply, parts of
 the board will still be powered through USB. This includes the UART-USB bridge
