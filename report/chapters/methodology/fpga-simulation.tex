@@ -39,7 +39,6 @@ Synthesize one processor core and review the synthesis report.
 There are few/none latches and an appropriate amount of DSP slices are used.
 \\
 
-
 \textbf{Functional Requirement 4}
 \\
 \textit{Conveniently observe power consumption over certain components.}
@@ -58,6 +57,7 @@ There are few/none latches and an appropriate amount of DSP slices are used.
 \\
 \textbf{Pass Criteria:}
 \\
+
 \textbf{Functional Requirement 6}
 \\
 \textit{The processor architecture shall utilize 16 bit processing cores.}
@@ -66,6 +66,7 @@ There are few/none latches and an appropriate amount of DSP slices are used.
 \\
 \textbf{Pass Criteria:}
 \\
+
 \textbf{Functional Requirement 7}
 \\
 \textit{EBI-bus for FPGA.}
@@ -74,13 +75,18 @@ There are few/none latches and an appropriate amount of DSP slices are used.
 \\
 \textbf{Pass Criteria:}
 \\
+
 \textbf{Functional Requirement 8}
 \\
 \textit{Ring buffer}
 \\
 \textbf{Test:}
+Create a program that needs a ring buffer. 
+Simulate the program in ModelSim on a pipeline to verify that the ring buffer is working correctly.
+Test the program on the FPGA and verify that the ring buffer works as in the simulation.
 \\
 \textbf{Pass Criteria:}
+The FPGA outputs correct results and utilizes at least one ring buffer.
 \\
 
 
