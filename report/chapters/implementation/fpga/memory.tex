@@ -3,59 +3,37 @@
 \subsection{Memory types}\label{subsec:fpga-memory}
 
 The internal block RAMs in the FPGA were used to implement the different kinds
-of memory inside the processor. Even though this is limited by the amount of
-memory available, it guarantees equal access time for all the different types
-of memory. It also precludes having to use external RAM, which would not be as
-fast, besides consuming more energy, making the project less energy-efficient.
+of memories inside the processor. Even though this limits the amount of
+memory available, it guarantees equal access time for all the different
+of memories. It also precludes having to use external RAM, which would not be as
+fast, nor energy-efficient.
 
 \subsubsection{Instruction memory}
-Each processor core has a separate instruction memory. This memory is filled
-with instructions defining the program the processor core will run. Before the
-FPGA processor cores get set to run, the the MCU writes the programs for each
-core into these instruction memories.
+Each processor core has a separate instruction memory. This memory is used to
+store the program that is run by a processor core.
 
 \subsubsection{Audio Pipeline Buffers}
-The audio pipeline buffers are used for inter-core communication. These memory
-modules are shared between two processing cores, except for the outermost cores
-in the pipeline, where they are the input and output for the audio pipeline. The
-memory modules can operate as ringbuffers or switching buffers. While the audio
-pipeline's input/output memory modules can only be operated as ringbuffers,
-while the rest of the memory modules might be operated in either manner.
+The audio pipeline buffers are used for passing data through the audio pipeline.
+Each core has an input buffer and an output buffer, which stores the samples
+that are processesed by the core and the result respectively. The processors
+have read-only access to their input buffers and read-write access to their
+output buffers.
 
-Since the BRAM modules in the fpga only feature two in/out ports, only the
-first input and last output data memories are avaliable for the MCU to
-write/read.
+The buffers have two different modes of operation. In the switching mode,
+the buffers are divided into two partitions. One partition is available
+as output buffer for a core, and the other partition is available as the
+input buffer for the next core. When the sample clock\todo{Sample clock?}
+changes, the buffer partitions are switched, thus passing data from the
+output of one core to the input of the next.
 
-Independently of the buffer mode, the previous processor in the audio pipeline
-has read and write access to the shared memory module, while the next core has
-read-only access.
-
-Memory modules communication data samples representing values in the frequency
-domain are operated as switching buffers. While miscellaneous samples and
-samples from the time domain stored in memory modules which are operated a
-ringbuffer. These memory modules rotate the ringbuffer one slot per new sample.
-Half of ringbuffer memory is readable by the next processor in the audio
-pipeline, while the previous one can read and write to the whole memory.
-Standard behaviour is to write only to the upper half, in order to prevent a
-Write After Read (WAR) and similar hazards.
-
-Data stored in the frequency domain uses every available memory address, and as
-such the next processor in the audio pipeline has to gain access to all recent
-values. For this reason, memory modules holding frequency values have a
-switching mode, where the two processor cores switch base address at each
-sample's arrival.
+When the ringbuffer mode is used, two sliding windows is used to partition
+the buffer. Each core has access to their own window. On each sample clock
+edge\todo{Sample clock again} the window is advanced by a predefined number
+of samples.
 
 \subsubsection{Constant memory}
-The constant memory is used to store constants needed for the SD-FT transforms
-in each audio pipeline. While this memory is read-only, each audio pipeline
-contains its own constant memory, and this memory can only be accessed by two
-audio pipeline processor cores simultaneously. It is the pipeline control
-register, which is configured by the MCU, which decides which cores can access
-the constant memory.
+The constant memory is used to store constants needed for computations. Each
+audio pipeline contains one constant memory which is shared between two
+configurable processors in the pipeline. This limitation is due to the block
+RAM on the FPGA used, which has only two available read ports.
 
-The reason why only two cores are permitted access to the constant memory, is
-that the internal block RAMs in the FPGA only have have two independent
-read ports, permitting a maximum of two simultaneous reads. If more processors
-were to have access to the constant memories an arbitration unit would be
-needed, and the advantage of using the block RAM to ensure sincle-cycle access
-time would be lost.
