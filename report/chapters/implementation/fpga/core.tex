@@ -4,7 +4,7 @@
 
 \subsubsection{Considerations}
 
-The processor core was designed to be able to perform audio processing in real-time, and well as being as power efficient as possible. Since the FPGAs power usage is close to constant, the best way to save power is to reduce the time the whole board is active. The best way for the core to contribute to this is to execute its programs as fast as possible. Thus, the processor core has been designed by the two following principles:
+The processor core was designed to be able to perform audio processing in real-time, as well as being as power efficient as possible. Since the power usage of the FPGA is close to constant, the best way to save power is to reduce the time the whole board is active. The best way for the processor cores to contribute to this is to execute their programs as fast as possible. Thus, the processor core has been designed according to the following two principles:
 
 \begin{itemize}
 	\item As high throughput as possible.
@@ -23,7 +23,7 @@ stages:
 	\item Write back \label{stage:wb}
 \end{enumerate}
 
-A change from the classic pipelined processor designs, is that the memory stage comes before the execution stage. This is because the load and store instructions does not need the ALU to calculate the memory address. Thus the processor is able to prevent \textit{all} data dependecies by forwarding data from the different stages.
+A change from the classic pipelined processor designs is that the memory stage comes before the execution stage. This is because the load and store instructions does not need the ALU to calculate the memory address. The processor is therefore able to prevent \textit{all} data dependecies by forwarding data from the different stages.
 
 For simplicity, the core does not have a hazard control unit implemented for
 branching, but instead relies on the programmer to add two no-operations after a
