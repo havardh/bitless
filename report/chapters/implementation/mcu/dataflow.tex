@@ -43,7 +43,7 @@ energy efficiency purposes, or the CPU. If the operation is performed
 by the CPU, the gains of speed and data-transfer analysis can be tested. Depending
 on the different types of input sources, the CPU is needed on some occasion, while
 on others a more energy efficient implementation through the use of DMA may be used.
-Comparions of the two implementations are included in the results section.
+Comparisons of the two implementations are included in the results section.
 
 The samples are deinterleaved in the DMA implementation by letting two DMA channels read from the
 same source and write the correct channel into the the correct pipeline for the correct channel.
@@ -55,7 +55,7 @@ continuously to the FPGA input buffers.
 In the code, this is set up with the DMA interface in {\bf emlib}, by configuring the DMA Descriptor.
 \todo{Check out the figure in drive/Rapport/SW Diagrams/Interleaving of samples! Makes sense?}
 This is implemented with two version. One using only the CPU and one using DMA transfers
-while the CPU is sleeping. Comparions of the two methods are included in the results section.
+while the CPU is sleeping. Comparisons of the two methods are included in the results section.
 
 \begin{lstlisting}
   DMA_CfgDescr_TypeDef descrCfg = {
