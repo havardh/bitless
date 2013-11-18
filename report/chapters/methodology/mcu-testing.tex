@@ -1,37 +1,42 @@
 \section{Testing the MCU Implementation}
 
 This section describes the test written in software, and the energy measurements
-done with {\bf energyAwareProfiler}. The software test can be divided into to
-groups, {\bf Unit Test} and {\bf Demo programs}.
+done with Silicon Lab's \textit{energyAware Profiler}. The software tests can be
+divided into to groups, Unit tests and Demo programs.
 
-\subsection{Unit Tests}
+\subsection{Unit tests}
 
-Unit tests was developed for the non-hardware dependent code. These are utility components
-which executes correctly independent on the underlying platform. The tests was written in
-the CppUTest framework\ref{} and executed on each developers own laptop.
+Unit tests were developed for the non-hardware dependent code. These are
+utility components which executes correctly independently of the underlying
+platform. The tests were written in the CppUTest framework \ref{} and executed
+on each developers own laptop.
 
-\subsection{Demo Program}
+\subsection{Demo Programs}
 
-While developing the software library used to control the hardware through {\bf emlib} and
-{\bf CMSIS}. These programs both verifies that the software operates correcly and that
-the underlying hardware devices connected according to the specifications. By running the
-program both on the produced circuit board and the development kits available at the lab.
+While developing the software library interfacing with the hardware using {\bf
+emlib} and {\bf CMSIS}, small demo programs where written. These programs verify
+two things; that the software runs correcly, and that the underlying hardware
+devices are connected according to the specifications. This was acccomplished by
+running the program on both the PCB and the development kits available at the
+lab.
 
 \subsubsection{Transfer from ADC to DAC with DMA}
-Location: sw/modules/adc/demo/ADD.c \\
-This demo sets up the ADC as a sample source and DAC as the sample output. It uses DMA
-to copy from the ADC to a input buffer in Internal RAM on the MCU. After 64 samples
-the CPU is interrupted and transfers the samples to output buffer. A second DMA channel
-copies from the output buffer to the DAC. This test verifies that this pipeline is set
-up correctly. It checks that the minijacks are connected the correct GPIO ports. As
-the ports are the same on the development kit \ref{} this test has been used to verify
-the PCB design and implementation.
+\paragraph{Testfile: sw/modules/adc/demo/ADD.c}
 
-Sets up a simple path from ADC to DAC.
+This test verifies that this pipeline is set up correctly. It confirms that the minijacks
+are connected the correct GPIO ports. As the ports are the same on the development kit \ref{}
+and the project's PCB, this test has been used to verify the PCB design and implementation.
+
+This demo program sets up the ADC as sample source and DAC as the sample output. DMA is
+used to copy from the ADC to an input buffer in the Internal RAM on the MCU. After 64 samples,
+the CPU is interrupted and transfers the samples to the output buffer. A second DMA channel
+copies from the output buffer to the DAC.
+
+\todo{Remove?}Sets up a simple path from ADC to DAC.
 Verifies that ADC, DAC are setup correctly.
 
 \subsubsection{Transfer from ADC to DAC Through FPGA Mock}
-Location: sw/modules/fpga/demo/fpga.c
+\paragraph{Testfile: sw/modules/fpga/demo/fpga.c}
 This demo is a copy of the previous test with the addition of deinterleaving and interleaving
 
 
