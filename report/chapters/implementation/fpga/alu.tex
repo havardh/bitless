@@ -1,7 +1,7 @@
 \FloatBarrier
-\subsection{ALU}\label{subsec:fpga-alu}
+\subsubsection{ALU}\label{subsec:fpga-alu}
 
-Which operations were implemented in the ALU was decided based on behalf of what
+Which operations were implemented in the ALU was decided based on what
 was neccessary for the Fourier-transform, sound processing, and on whether the
 instruction set had room for the encoding of the operations.
 
@@ -13,7 +13,28 @@ The ALU implementation receives two 16-bit registers as inputs, and outputs a
 32-bit register. However, only the lower 16-bits are currently used. Previously,
 the intention was for multiplication operations to output all 32-bits.
 
-\subsubsection{Internal memory}
+\paragraph{Floating-point Implementation Design Choices}
+
+Some audio filters are performed in the time domain, others are performed in the
+frequency domain. To convert the audio samples from one domain to the other, a
+fourier transform (FT) and its inverse is usually employed. A discrete FT is
+perfectly suited for the sample based nature of an audio processor. The FT we
+chose to utilize for our project is the
+sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:sd-ft}.
+
+With the goal of having a real-time sound processing system, the algorithmic
+complexity of the SDFT would make it one of the more algorithmically
+time-complex operations a processor core would have to complete within the
+time window between two sample inputs.
+
+Realizing an SDFT on a computing device requires floating point arithmetics.
+Therefore, to lower the algorithmic complexity required for the floating point
+calculations, a decision was made to lower the maximum size of the integers in
+the audio samples to 8 bits. The consequence of this is that the maximum sound
+frequency was reduced from the standard value of 44~KHz, down to approximately 11~KHz.
+This reduces the amount of samples the processor core can process.
+
+\paragraph{Internal memory}
 
 Since the instruction words can only address two registers at the time, the ALU
 unit can store the values previously loaded from constant memory internally.

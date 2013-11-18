@@ -1,13 +1,48 @@
-\section{FPGA simulation testing}
-\subsection{Simulation}
-\todo[inline]{Simluation description}
+\section{FPGA simulation testing}\label{section:fpga-simulation-testing}
 
-\todo{Write up all the above testing, focus on reproducibility. (Don't forget to mention intent).}
-\subsection{Testing the FPGA implementation}\label{section:fpga-testing}
+\subsection{ALU testing}
 
-\subsubsection{Tests\todo{insert more of these, along with descriptions and reasons.}}
+The testbench for the ALU is very straight forward. It tests every ALU operation
+with two or three different sets of test values and then looks at the output.
+The output consists of a result value and flags that represent how the ALU
+operation executed. The input consists of four values; A, B, C, OPERATION, as
+well as an enable signal. To test a simple integer operation you set OPERATION,
+A and B to the desired values, for example ADD, 2 and 3, respectively. An assert
+will then check that the result signal equals 5 after a small waiting period. C
+and the enable signal are only used for certain floating-point operations.
 
+\subsubsection{ALU test 1}
 
+For all the integer operations, two to three sets of values were tested, ranging
+from simple operations, like the above example, to the more complex operations.
+Additionally, there were also a few tests to validate the values of the status flags. For the floating-point
+operations, a slightly different testing methodology was used. The conversions
+between integer and floating point was tested first. For these tests the
+floating point values were calculated by hand and then compared to the result.
+These operations were then used to simplify the rest of the floating point
+testing. Values were converted to floating point, added, subtracted, or
+multiplied in the fpu, and then converted back before they were tested with an
+assert.
 
+The abovementioned C value with accompanying enable signal are used by the
+operation ``multiply and accumulate''. This operation needs a constant value
+previously loaded from the constant memory into the ALU, in addition to the
+traditional A and B values. The ALU stores the constant memory value as the C
+value internally. When the operation executes, the enable signal activates the
+writing of the internal register in the ALU. To test this operation A, B, C and
+the enable signals were set to appropriate values and the result was checked if
+equal ``A + B*C''.
 
+\subsection{Core testing}
+something, something
 
+\subsubsection{Core test 1}
+
+\subsubsection{Core test 2}
+
+\subsection{Toplevel testing}
+something, something
+
+\subsubsection{Toplevel test 1}
+
+\subsubsection{Toplevel test 2}

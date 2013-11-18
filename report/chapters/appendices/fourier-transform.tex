@@ -1,67 +1,90 @@
 \chapter{Transformations}
-\section{Fourier-transforms}
+\section{Fourier Transform in Digital Signal Processing}
 
-\begin{enumerate}
-\item DFT - Discrete Fourier Transform\footnote{There is no ``Discrete FT'',
-here we use the keyword ``discrete'' to denominate a class of FTs.}
-	\begin{itemize}
-		\item FFT - Fast Fourier Transform
-		\item IDFT - Integer Fourier Transform
-		\item SDFT - Sliding Discrete Fourier Transform
-	\end{itemize}
-\end{enumerate}
+In Digital Signal Processing the signal is regarded as a discrete stream of amplitudes in the
+time domain. The Fourier Transform is used to transform the signal from the time domain 
+to the frequency domain where filters which are hard to implement in the time domain are
+more easly implemented.
 
-Above are the different Fourier-transforms we considered for our project, and
-following in the same order is a short description and reasoning behind  each
-their use or lack thereof.
+\missingfigure{Time vs Freq}
 
-\subsection{Fast Fourier Transform}
-The Fast Fourier Transform (FFT), takes a collection of N samples, $S$, as input
-and returns the frequencies of this window in time, $FW$. On this frequency
-window a frequency domain filter can be executed, which results in a filtered
-window $FW_f$. This filtered window can then be transformed back to a collection
-of filtered samples $S_f$ by using the inverse Fast Fourier transform (IFFT).
-The time complexity of the FFT is $O(n) = n*log(n)$, so to get a smoother result
-the transform is usually performed on overlapping windows of the sample stream.
+\subsection{Cost efficient implementation of the Fourier Transform}
 
-The samples these windows consist of cannot be transformed independently of each
-other, so the FFT requires relatively big windows, of 256 samples or more to
-have any useful effect.
+Cost efficiency is importaint in embedded applications, both in space and time. 
+The algorithms mentioned in this appendix are selected based on these criterias.
+
+\subsection{Window size}
+
+The complexity of the algorithm is dependent on the window size. The window size
+denotes the number of samples used as input to the algorithm each time it is executed.
+
+\missingfigure{Window}
+
+The window size is given by equation \ref{eq:window_size}.
+
+
+\begin{equation} \label{eq:window_size}
+window\_size = \frac{samples\_frequency}{frequency\_resolution}	
+\end{equation}
+
+
+
+\subsubsection{Discrete Fourier Transform}
+
+The DFT approximates the Fourier Transform for a finite sized window, by assuming the 
+input samples are taken from a $n$-periodic function. Due to its complexity, $O(n^2)$, 
+it is seldom used in pratice but provides a basis for optimized algorithms. 
+
+%\begin{enumerate}
+%\item DFT - Discrete Fourier Transform
+%	\begin{itemize}
+%		\item FFT - Fast Fourier Transform
+%			+ god egnet for 
+%			+ godt dokumentert
+%			+ tilgjenngelig vhdl IP
+%			- kompleks i størrelse og tids
+%			- skaper en høyere komplesitet i FPGA cores
+%		\item IFFT - Integer Fast Fourier Transform
+%			+ unngår fp
+%			- dårlig dokumentert
+%		\item SDFT - Sliding Discrete Fourier Transform
+%			+ enkel å implementer
+%			+ godt egnet for strømma applikasjon
+%			+ lavere kompleksitet 
+%			- potensielt ustabil
+%
+%			
+%	\end{itemize}
+%\end{enumerate}
+
+
+\subsubsection{Fast Fourier Transform}\label{appendix:FFT}
+The Fast Fourier Transform takes a collection of N samples, $x$, as input
+and returns the frequencies of this window in time, $X$.
+The time complexity of the {\it FFT} is $O(n*log(n))$, therefore the transform is not 
+calculated for each new sample input. To avoid discontinuities the transform is performed 
+with overlapping windows of the sample stream, and discarding a portion of the output.
+The size of $n$ must be a power of 2 for the radix-2 implementation commonly used.
 
 \missingfigure{illustration of overlapping windows}
 
-This transform was not used, since it needed too big sample windows. The FPGA
-clock imposed a limit on the system. It was also preferable to find a FT that
-would enable us to have a real-time demonstration of the project.
+\subsubsection{Integer Fast Fourier Transform} \label{appendix:IntFFT}
+The FFT algorithm described above can also be implemented using only integer 
+arithmetic. Both the complexity of implementing and executing floating point
+arithmetic compared to their interger conterparts makes this a desired property.
+The algorithm has the same time complexity as the regular FFT, but the spacial 
+complexity increases as the dynamic range of a floating point number is bigger
+that that of a integer with the same amount of bits. This means that to get
+the same quality a larger word size must be used. The algorithmen suggests 
+using a lifting structure instead of the butterfly structure used for complex
+multiplication.
 
-\subsection{Integer Fourier Transform}
-As this transform is to be realized on an embedded computer device (the FPGA), a
-Fourier-transform utilizing only integers (and not floating point arithmetic)
-would be very advantageous. The bigggest algorithmical advantage of using this
-FT is the speed of integer arithmetic compared to floating point on a processing
-unit. This type of transforms also needed to transform the whole music file as
-one unit, it cannot transform a stream of samples.
+\subsubsection{Sliding Discrete Fourier Transform}\label{appendix:SDFT}
+The Sliding Discrete Fourier Transform takes one sample, $x_1$, a frequency
+domain $X_0$, a historic sample $x_n$ and the fourier coefficients as input.
+It returns the frequency domain window, $X_1$ as altered by adding the input
+sample, $x_1$ and removing the sample $x_n$. The time complexity of the {\it SDFT}
+algorithm is $O(n)$, yet requires that the transform is performed for each 
+new sample input. This makes the SDFT well suited for real-time applications.
 
-On the other hand, this type of FT requires much bigger integers than the
-8-bit integers our project deal with per data sample. It also needed big sample
-windows like the previously discussed FFT. Therefore this FT was no longer an
-option for us.
-
-\subsection{Sliding Discrete Fourier Transform}\label{appendix:sd-ft}
-The Sliding-Discrete-Fourier-Transform takes one sample, $s_1$, a frequency
-domain $FW_0$, and a historic sample $s_n$ as input along with some constant
-coefficients.
-
-It returns the frequency domain window, $FW_1$ as altered by adding the input
-sample, $s_1$ and removing the sample $s_n$. The frequency domain can be
-initialized to all zeros and the same with the historic sample. The $n$ value of
-the historic sample corresponds to the window size $n$ in the FFT algorithm.
-This fact permits the SD-FT to perform a FT on an everchanging FIFO queue of
-samples.
-
-The time complexity of the SD-FT algorithm is $O(n) = n$. The inverse SD-FT
-takes the frequency window and the same constant coefficients as input and
-return exactly one sample $s_f$.
-
-This ended up being the Fourier-Transform chosen for the project due to
-permitting the system to manipulate a live-stream of audio samples.
+\missingfigure{SDFT illustration}
