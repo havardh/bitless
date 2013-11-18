@@ -31,7 +31,7 @@
 
 #include "StoredFilter.h"
 
-#define FPGA_BASE ((uint16_t*) 0x21000000)
+#define FPGA_BASE (0x80000000)
 
 #define BITS_PER_SAMPLE 12
 #define BIT_SHIFT (16-BITS_PER_SAMPLE)
@@ -156,11 +156,28 @@ void setupTimer( void  )
 void setupFPGA( void ) 
 {
 	FPGAConfig config = {
-		.baseAddress = FPGA_BASE,
+		.baseAddress = (uint16_t*)FPGA_BASE,
 		.numPipelines = 2,
 		.bufferSize = bufferSize
 	};
 	FPGADriver_Init( &config );
+
+	FPGAConfig conf = FPGA_CONFIG_DEFAULT(FPGA_BASE);
+	FPGA_Init( &conf );
+	
+	FPGA_Core *c = FPGA_GetCore(0, 0);
+
+	uint16_t program[12] = {
+		0x0000, 
+		0x7080, 
+		0x0000, 
+		0x7c80, 
+		0x0000, 
+		0x3000, 
+	};
+
+	FPGACore_SetProgram(c, program, 12);
+	
 }
 
 
@@ -186,8 +203,8 @@ static void deinterleave( void )
 {
 	int16_t *audioInBuffer = (int16_t*)MEM_GetAudioInBuffer(true);
 	int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
-	volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
-	volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
+	volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)(FPGA_BASE + 0x20000);
+	volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)(FPGA_BASE + 0x120000);
 
 	uint16_t tmp;
 	for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
@@ -205,8 +222,8 @@ static void interleave( void )
 	int16_t *audioOutBuffer = (int16_t*)MEM_GetAudioOutBuffer(true);
 
 	// When FPGA core is implemented the OutputBuffers should be utilized
-	volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)FPGADriver_GetInBuffer(0);
-	volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)FPGADriver_GetInBuffer(1);
+	volatile uint16_t *fpgaLeftInBuffer   = (volatile uint16_t*)(FPGA_BASE + 0x20000);
+	volatile uint16_t *fpgaRightInBuffer  = (volatile uint16_t*)(FPGA_BASE + 0x120000);
 	//volatile uint16_t *fpgaLeftOutBuffer  = (volatile uint16_t*)FPGADriver_GetOutBuffer(0);
 	//volatile uint16_t *fpgaRightOutBuffer = (volatile uint16_t*)FPGADriver_GetOutBuffer(1);
 	

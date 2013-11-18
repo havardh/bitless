@@ -10,7 +10,7 @@ back from the output buffer of the last core.
 
 With this design, each pipeline of cores can run a set of filters, for instance
 a fourier transform, a frequency filter, an inverse fourier transform, and an
-effect on the audio data stream running through the audio pipelines in \textit{ChaosM}.
+effect on the audio data stream running through the audio pipelines of \textit{ChaosM}.
 
 \input{chapters/implementation/fpga/pipelines}
 \input{chapters/implementation/fpga/communication}
@@ -18,3 +18,10 @@ effect on the audio data stream running through the audio pipelines in \textit{C
 \input{chapters/implementation/fpga/memory}
 \input{chapters/implementation/fpga/core}
 
+\todo[inline]{Noen må dobbeltsjekke og si de er enige med avsnittet under... -CC}
+
+\subsection{Energy Efficiency}
+Since a Spartan-6 Xilinx processor draws approximately the same amount of current
+independently of the instructions \textit{ChaosM} have in its instruction registers,
+testing and designing \textit{ChaosM} for energy efficiency is something this project
+has not attempted to any serious degree.

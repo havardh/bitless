@@ -1,7 +1,7 @@
 % !TEX root = ../../../report.tex
 
 \FloatBarrier
-\subsection{Communication Between the MCU and the FPGA}\label{section:fpga-buses}
+\subsection{Communication Between the MCU and the \textit{ChaosM}}\label{section:fpga-buses}
 
 \textit{ChaosM} on the FPGA communicates with the microcontroller using the external bus interface
 (EBI) of the Giant Gecko microcontroller. Inside \textit{ChaosM}, an EBI controller is responsible
@@ -49,31 +49,49 @@ like illustrated in figure \ref{fig:fpga_memmap}
 	\begin{bytefield}[bitwidth=0.035\linewidth,rightcurly=.,rightcurlyspace=0pt,endianness=big]{23}
 		\bitheader{0-22}\\
 		\begin{rightwordgroup}{0x400000}
-			\bitbox{23}{Toplevel control register}
+			\bitbox{23}{\textbf{Toplevel control register}}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{...}
+			\bitbox{23}{(\textit{The rest of the cores in Pipeline 1})}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x144000}
+			\bitbox{23}{Pipeline 1 - Core 0 instruction memory}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x140000}
+			\bitbox{23}{Pipeline 1 - Core 0 control register}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x130000}
+			\bitbox{23}{Pipeline 1 Output buffer}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x120000}
+			\bitbox{23}{Pipeline 1 Input buffer}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x100000}
-			\bitbox[blr]{23}{Pipeline 1}
+			\bitbox[blr]{23}{\textbf{Pipeline 1 control register}}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{...}
+			\bitbox{23}{(\textit{The rest of the cores in Pipeline 0})}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x54000}
-			\bitbox{23}{Core 1 instruction memory}
+			\bitbox{23}{Pipeline 0 - Core 1 instruction memory}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x50000}
-			\bitbox{23}{Core 1 control register}
+			\bitbox{23}{Pipeline 0 Core 1 control register}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x44000}
-			\bitbox{23}{Core 1 instruction memory}
+			\bitbox{23}{Pipeline 0 - Core 0 instruction memory}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x40000}
-			\bitbox{23}{Core 1 control register}
+			\bitbox{23}{Pipeline 0 - Core 0 control register}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x30000}
-			\bitbox{23}{Output buffer}
+			\bitbox{23}{Pipeline 0 Output buffer}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x20000}
-			\bitbox{23}{Input buffer}
+			\bitbox{23}{Pipeline 0 Input buffer}
 		\end{rightwordgroup}\\
 		\begin{rightwordgroup}{0x00000}
-			\bitbox{23}{Pipeline 0 control register}
+			\bitbox{23}{\textbf{Pipeline 0 control register}}
 		\end{rightwordgroup}\\
 	\end{bytefield}
 

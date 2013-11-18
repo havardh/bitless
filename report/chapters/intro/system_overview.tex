@@ -9,14 +9,13 @@ output minijack.
 \subsection{System Components}
 \subsubsection{MCU}\label{intro:system-components-mcu}
 
-The MCU handles all I/O
-and is referred to as the I/O controller in much of the report, because it
-effectively acts as the link between the FPGA and the peripherals. Sound input
-is either gathered from a file on the SD-card or as a stream from the audio-in
-jack on the board, and then passed on to the FPGA. In addition, it is the unit
-controlling the FPGA, through writing the the instructions memory each
-processing core contains. This, provides a simple way in which to change the
-FPGA behavior.
+The MCU handles all I/O and is referred to as the I/O controller in much of the
+report, because it effectively acts as the link between the FPGA and the
+peripherals. Sound input is either gathered from a file on the SD-card or as a
+stream from the audio-in jack on the board, and then passed on to the FPGA. In
+addition, it is the unit controlling the FPGA, through writing the the
+instructions memory each processing core contains. This, provides a simple way
+in which to change the FPGA behavior.
 
 \subsubsection{FPGA}
 
@@ -29,7 +28,7 @@ filters we want.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=150px]{figures/fpga/system_components_general_pipeline.png}
+    \includegraphics[height=150px]{figures/fpga/system_components_general_pipeline_without_programs.png}
     \caption{A figure giving overview on how the different cores run
 different programs/transforms/effects in parallel on the FPGA processing cores.}
     \label{fig:general_pipeline}
