@@ -9,16 +9,12 @@ TEMPS = toc bbl blg log out lof lot lol aux pyg
 
 all:
 	$(LATEX) $(LATEXFLAGS) report.tex
+	$(BIBTEX) report.aux
+	$(LATEX) $(LATEXFLAGS) report.tex
 	$(LATEX) $(LATEXFLAGS) report.tex
 
 show: all
 	xdg-open $(REPORT).pdf
-
-# $(LATEX) $(LATEXFLAGS) $*.tex
-# $(BIBTEX) $*.aux
-#%.pdf:
-#	$(LATEX) $(LATEXFLAGS) $*.tex
-#	$(LATEX) $(LATEXFLAGS) $*.tex
 
 clean:
 	for s in $(TEMPS); do rm -f $(REPORT).$$s; done
