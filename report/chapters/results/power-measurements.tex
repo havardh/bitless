@@ -1,0 +1,21 @@
+% !TEX root = ../../report.tex
+\section{Power Measurements}
+
+As the energy group we have designed all components of our system
+with energy efficiency in mind. In order to measure the efficiency 
+of our design decisions a set of power measurements were performed.
+This section outlines the results of those measurements.
+
+\begin{table}
+    \begin{tabular}{lllll}
+	State & FPGA                         & Audio source & Sense3v3 & Sense1v8 \\
+	\hline \\
+	A     & Idle                         & -            & 140mA    & 75mA \\
+	B     & Computational simple filters & ADC          & -        & - \\
+	C     & Computational heavy filters  & ADC          & -        & - \\
+        D     & Computational simple filters & SD-card      & -        & - \\
+        E     & Computational heavy filters  & SD-card      & -        & -	
+    \end{tabular}
+\end{table}
+
+\todo{Preliminary results, will be fleshed out once we have a running system}
