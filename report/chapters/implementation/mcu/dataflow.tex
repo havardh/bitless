@@ -9,9 +9,9 @@ low power mode. The dataflow consist of four phases, as shown in figure \ref{sw_
 In phase 1 the MCU acquires input samples from an input device. These samples are 
 then transfered to the FPGA in phase 2. When the FPGA is finished processing the
 samples, they are transfered back to the MCU in phase 3. In the last phase the MCU
-sends the filtered samples to an output device.
-The phase 2 and 4 are constant, while
-the first and the last flow changes depending on the I/O devices selected. 
+sends the filtered samples to an output device. All these phases are executed 
+concurrenlty to ensure a constant flow of samples. The phase 2 and 4 are constant, 
+while the first and the last flow changes depending on the I/O devices selected. 
 
 \input{figures/sw/transfer-phases}
 
@@ -63,11 +63,11 @@ are read and written directly to and from RAM by the CPU.
 \subsubsection{Peripherals}
 
 \input{figures/sw/sample-flow}
-Figure \ref{fig:sw_sample_flow} shows all the peripherals included in sample dataflow. 
+Figure \ref{fig:sw_sample_flow} shows all the peripherals included in flow of sample. 
 These are ADC, DAC, SDCard and the FPGA. The ADC and DAC are connected to the Minijack
 audio ports on the circuit board and directly linked to GPIO ports on the MCU. The SDCard
 is mounted on the board and connected to the MCU through the SPI, Serial Peripheral Interface
-bus. Lastly the FPGA is connected to the ARM on the EBI.
+bus. Lastly the FPGA is connected to the MCU on the EBI.
 
 \subsubsection{External Bus Interface}
 The MCU is connected to the FPGA and External SRAM through the EBI. This is a standard

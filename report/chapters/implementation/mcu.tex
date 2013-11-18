@@ -1,17 +1,17 @@
 \clearpage
 \section{MCU} \label{section:mcu}
 
-The software is implemented on a Giant Gecko ARM Cortex-M3 microcontroller, 
-manufactured by Silicon Labs \todo{Mention EnergyMicro before this point}. 
-This MCU, Microcontroller Unit, is a complete miniature computer on a single chip. 
-The energy saving features, along with generally low power consumption, of this MCU 
-makes it a good fit for the overall goal of this project, namely energy efficiency. 
+This chapter describes the modules that execute on the MCU. The MCU is
+responsible for supplying the FPGA core \todo{FPGA core name here} with audio
+samples. It also has to receive the results coming from the FPGA core after the
+audio processing has taken place. In order to provide the samples from input and
+output, the MCU controls a variety of input/output peripherals.
 
-This chapter describes the modules that execute on the MCU. The responsibility 
-of this component is to supply the FPGA core \todo{FPGA core name here} with audio 
-samples. It should also comsume the results after audio processing has taken 
-place. In order to provide samples, the MCU controls a variety of Input/Output 
-peripherals. 
+The software responsible for this is implemented on a Giant Gecko ARM Cortex-M3
+microcontroller, manufactured by Silicon Labs. This MCU is a complete miniature
+computer on a single chip. Due to the energy saving features, along with a
+generally low power consumption, of this MCU is a good fit with the overall goal
+of this project, namely energy efficiency.
 
 
 \input{chapters/implementation/mcu/energy-efficient-software}
