@@ -2,14 +2,19 @@
 \subsection{Processor Core}\label{subsec:fpga-processor-core}
 \todo[inline]{How the processor is designed and why}
 
-\subsubsection{Considerations}
+\subsubsection{Design Considerations}
 
-The processor core was designed to be able to perform audio processing in real-time, as well as being as power efficient as possible. Since the power usage of the FPGA is close to constant, the best way to save power is to reduce the time the whole board is active. The best way for the processor cores to contribute to this is to execute their programs as fast as possible. Thus, the processor core has been designed according to the following two principles:
+The processor core is designed to be able to perform audio processing in real-time, and well as being as power efficient as possible. 
+Since the FPGAs power usage is close to constant, the best way to save power is to reduce the time the whole board is active. 
+The best way for the core to contribute to this is to execute its programs as fast as possible. Thus, the processor core has been designed by the two following principles:
+
 
 \begin{itemize}
 	\item As high throughput as possible.
 	\item Support the instructions needed to perform the audio processing.
 \end{itemize}
+
+\subsubsection{Implementation}
 
 In order for the core to be as efficient as possible, a pipelined processor
 design was implemented. The pipelined core design consists of the following
@@ -23,34 +28,14 @@ stages:
 	\item Write back \label{stage:wb}
 \end{enumerate}
 
-A change from the classic pipelined processor designs is that the memory stage comes before the execution stage. This is because the load and store instructions does not need the ALU to calculate the memory address. The processor is therefore able to prevent \textit{all} data dependecies by forwarding data from the different stages.
+A change from the classic pipelined processor designs, is that the memory stage comes before the execution stage. 
+This is because the load and store instructions does not need the ALU to calculate the memory address. 
+Thus the processor is able to prevent \textit{all} data dependecies by forwarding data from the different stages.
 
 For simplicity, the core does not have a hazard control unit implemented for
-branching, but instead relies on the programmer to add two no-operations after a
-branch.\todo{Maybe we can have the assembly do this instead?? That would be
-great.}
+branching. Instead it relies on the programmer to add two no-operations after a branch.
 
-\todo{Maybe we can have the assembly do this instead?? That would be
-great.}
 
-\subsubsection{Floating-point Implementation Design Choices}
 
-Some audio filters are performed in the time domain, others are performed in the
-frequency domain. To convert the audio samples from one domain to the other, a
-fourier transform (FT) and its inverse is usually employed. A discrete FT is
-perfectly suited for the sample based nature of an audio processor. The FT we
-chose to utilize for our project is the
-sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:sd-ft}.
 
-With the goal of having a real-time sound processing system, the algorithmic
-complexity of the SDFT would make it one of the more algorithmically
-time-complex operations a processor core would have to complete within the
-time window between two sample inputs.
-
-Realizing an SDFT on a computing device requires floating point arithmetics.
-Therefore, to lower the algorithmic complexity required for the floating point
-calculations, a decision was made to lower the maximum size of the integers in
-the audio samples to 8 bits. The consequence of this is that the maximum sound
-frequency was reduced from the standard value of 44~KHz, down to approximately 11~KHz.
-This reduces the amount of samples the processor core can process.
-
+\input{chapters/implementation/fpga/alu}
