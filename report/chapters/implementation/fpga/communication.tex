@@ -1,18 +1,18 @@
 % !TEX root = ../../../report.tex
 
 \FloatBarrier
-\subsection{Communication Between the MCU and the \textit{ChaosM}}\label{section:fpga-buses}
+\subsection{Communication Between the I/O controller and the \textit{ChaosM}}\label{section:fpga-buses}
 
-\textit{ChaosM} on the FPGA communicates with the microcontroller using the external bus interface
-(EBI) of the Giant Gecko microcontroller. Inside \textit{ChaosM}, an EBI controller is responsible
-for servicing requests from the microcontroller and driving the internal bus, which
+\textit{ChaosM} on the FPGA communicates with the I/O controller using the external bus interface
+(EBI). Inside \textit{ChaosM}, an EBI controller is responsible
+for servicing requests from the I/O controller and driving the internal bus, which
 is used for transferring data to and from modules in the FPGA.
 
 \subsubsection{The EBI Bus}
 The EBI\cite{efm_ebi} is a parallel bus with a separate data and address bus, in
 addition to chip select, read-enable, and write-enable signals.
 
-The communication between the MCU and the FPGA uses 23 address lines and 16 data
+The communication between the I/O controller and the FPGA uses 23 address lines and 16 data
 lines. All transfers are initiated when the chip select signal goes low. For
 write transfers, the data and address lines are set up and the write enable
 signal is asserted, see figure \ref{fig:ebi_write}.
@@ -23,7 +23,7 @@ before the read enable signal is asserted, see figure \ref{fig:ebi_read}.
 \input{figures/fpga/communication-ebi-write}
 \input{figures/fpga/communication-ebi-read}
 
-All data transfers are initiated by the microcontroller, which works as bus
+All data transfers are initiated by the I/O controller, which works as bus
 master for the EBI bus. The EBI controller facilitates communication between
 the EBI bus and the internal bus.
 
@@ -42,7 +42,7 @@ control register is accessible. If the T bit is not set, the pipeline field is
 used to select which pipeline to address. In a pipeline, the device
 and subdevice fields are used to select which module in the pipeline to address.
 
-Using this addressing scheme, the memory map, as seen from the MCU, becomes
+Using this addressing scheme, the memory map, as seen from the I/O controller, becomes
 like illustrated in figure \ref{fig:fpga_memmap}
 
 \begin{figure}

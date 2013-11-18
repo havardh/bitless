@@ -1,3 +1,5 @@
+% !TEX root = ../../report.tex
+
 \clearpage
 \section{MCU} \label{section:mcu}
 
@@ -5,12 +7,12 @@ This chapter describes the modules that execute on the MCU. The MCU is
 responsible for supplying \textit{ChaosM} with audio samples. It also has to
 receive the results coming from the FPGA core after the audio processing has
 taken place. In order to provide the samples from input and output, the MCU
-controls a variety of input/output peripherals.
+controls a variety of input/output peripherals, which is why it also is referred to as the I/O controller throughout the report.
 
 The software responsible for this is implemented on a Giant Gecko ARM Cortex-M3
 microcontroller, manufactured by Silicon Labs. This MCU is a complete miniature
 computer on a single chip. Due to the energy saving features, along with a
-generally low power consumption, of this MCU is a good fit with the overall goal
+generally low power consumption, this MCU is a good fit with the overall goal
 of this project, namely energy efficiency.
 
 
