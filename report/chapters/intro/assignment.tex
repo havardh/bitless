@@ -73,12 +73,28 @@ FPGA chip will hereafter be referred to as the FPGA. The processor design
 written in VHDL and implemented on the FPGA is hereafter referred to as
 Concurrent Homogenous Audio Optimized Streaming Microprocessor (\textit{ChaosM}).
 
-\todo[inline]{Move and rewrite the following paragraph to Implementation---Energy
-Considerations or similar.}
-While a Xilinx Spartan-6\cite{fpga-chip} processing core does not have a large
+\subsection{Energy Efficiency}
+Since this project belongs to the energy efficiency group of the TDT4295 course,
+an important focus during the planning, implementation, and testing of this system
+has been energy efficiency.
+
+While a Xilinx Spartan-6\cite{fpga-chip} processing core does not have much
 potential for energy efficiency, the aim is to program the design and simulate
-energy efficiency through the VHDL code on the FPGA, as well as in the
+energy efficiency through \textit{ChaosM} on the FPGA, as well as in the
 programming on the MCU, and in the design of the PCB.
+
+The MCU is branded as an ``energy friendly microprocessor'', with many features
+which when implemented correctly can hold immense potential for energy savings
+compared to most other microprocessor units on the market.
+
+The PCBs in previous TDT4295 projects have often been the culprit at the root of
+energy inefficiency. Thus, in this project there has been a lot of focus on making
+the source of all the energy work as energy efficiently as possible, as well as
+utilizing components in an energy efficient manner.
+
+More details on how the different parts of the system utilizes energy efficient
+implementations for this project, can be found in their respective sub-sections
+of chapter \ref{chapter:implementation}.
 
 \subsection{Multiple Instruction, Multiple Data}
 
