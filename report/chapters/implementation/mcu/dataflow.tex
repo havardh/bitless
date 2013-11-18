@@ -10,8 +10,7 @@ In phase 1 the MCU acquires input samples from an input device. These samples ar
 then transfered to the FPGA in phase 2. When the FPGA is finished processing the
 samples, they are transfered back to the MCU in phase 3. In the last phase the MCU
 sends the filtered samples to an output device. All these phases are executed 
-concurrenlty to ensure a constant flow of samples. The phase 2 and 4 are constant, 
-while the first and the last flow changes depending on the I/O devices selected. 
+concurrenlty to ensure a constant flow of samples. 
 
 \input{figures/sw/transfer-phases}
 
@@ -29,7 +28,7 @@ the FPGA, and back to Internal RAM on the MCU. This dataflow path is illustrated
 
 \paragraph{Deinterleaving of Samples}
 When reading from both a WAV file or the ADC, samples from the stereo channels
-are interleaved. The FPGA handles each channel in separate pipelines. As shown 
+are interleaved. The FPGA handles each channel in a separate pipeline. As shown 
 in figure \ref{fig_sw_main_dataflow}. 
 When reading the samples they have to be deinterleave. Deinterleaving is the
 process of splitting the samples for each channels in to two separate streams. 
@@ -47,6 +46,25 @@ copies the samples for the left stero channel, and start without a offset. The
 second DMA copies the samples for the right stereo channel and start with an
 offset of one sample. Both DMAs read only every second sample and writes them
 continuously to the FPGA input buffers.
+
+In code this is setup with the DMA interface in {\bf emlib}. 
+\begin{lstlisting}
+  DMA_CfgDescr_TypeDef descrCfg = {
+    .dstInc  = dmaDataInc2,
+    .srcInc  = dmaDataInc4,
+    .size    = dmaDataSize2
+  };
+  DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true,  &descrCfg );
+  DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true,  &descrCfg );
+\end{lstlisting}
+To understand what this will result in, imagine two pointers, {\bf dst} and {\bf src}. 
+At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}. After each
+iterations the {\bf src} pointer is incremented by {\bf srcInc} bytes and the {\bf dst}
+pointer is incremented by {\bf dstInc}. 
+
+After the DMA channel is configured with a descriptor it can be started with a 
+a source and destination pointer and the number of transfers to be executed. 
+When the transfer has finished the CPU is interrupted and can start the next transfer.
 
 The interleaving process on output side works in the same way. The DMA reading
 from the pipeline containing the left stereo channel samples writes to the
@@ -92,8 +110,8 @@ ADC, Analog to Digital Converter, on the MCU. The ADC measures the the
 All the DMA transfers are triggered by the use of one clock, the sample clock.
 This clock is run at the sample speed 11 kilohertz when using the DAC or ADC. Or
 an arbitrary frequency when sampling from SD to SD. The clock signal is fed into
-the Peripheral Reflex System (PRS) of the MCU and propagates through the system
-using the following scheme
+the Peripheral Reflex System \todo{Refere to manual} (PRS) of the MCU and propagates through the system
+using the following scheme.
 
 %\newpage %re-insert if figure breaks across pages
 \begin{verbatim}
