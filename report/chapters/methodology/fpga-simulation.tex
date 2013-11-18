@@ -1,7 +1,5 @@
 \section{FPGA simulation testing}\label{section:fpga-simulation-testing}
 
-\todo[inline]{Simluation description (How simulation testing is performed).}
-
 \subsection{ALU testing}
 
 The testbench for the ALU is very straight forward. It tests every ALU operation
@@ -17,8 +15,7 @@ and the enable signal are only used for certain floating-point operations.
 
 For all the integer operations, two to three sets of values were tested, ranging
 from simple operations, like the above example, to the more complex operations.
-Additionally, there were also a few tests to validate the values of the zero and
-negative \todo{skal det stå ``status flags'' her?} flags. For the floating-point
+Additionally, there were also a few tests to validate the values of the status flags. For the floating-point
 operations, a slightly different testing methodology was used. The conversions
 between integer and floating point was tested first. For these tests the
 floating point values were calculated by hand and then compared to the result.

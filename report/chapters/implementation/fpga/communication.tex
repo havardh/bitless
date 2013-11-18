@@ -44,5 +44,44 @@ control register is accessible. If the T bit is not set, the pipeline field is
 used to select which pipeline to address. In a pipeline, the device
 and subdevice fields are used to select which module in the pipeline to address.
 
-\todo{Insert memory map figure}
+Using this addressing scheme, the memory map, as seen from the MCU, becomes
+like illustrated in figure \ref{fig:fpga_memmap}
+
+\begin{figure}
+	\begin{bytefield}[bitwidth=0.035\linewidth,rightcurly=.,rightcurlyspace=0pt,endianness=big]{23}
+		\bitheader{0-22}\\
+		\begin{rightwordgroup}{0x400000}
+			\bitbox{23}{Toplevel control register}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x100000}
+			\bitbox[blr]{23}{Pipeline 1}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x54000}
+			\bitbox{23}{Core 1 instruction memory}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x50000}
+			\bitbox{23}{Core 1 control register}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x44000}
+			\bitbox{23}{Core 1 instruction memory}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x40000}
+			\bitbox{23}{Core 1 control register}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x30000}
+			\bitbox{23}{Output buffer}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x20000}
+			\bitbox{23}{Input buffer}
+		\end{rightwordgroup}\\
+		\begin{rightwordgroup}{0x00000}
+			\bitbox{23}{Pipeline 0 control register}
+		\end{rightwordgroup}\\
+	\end{bytefield}
+
+	\caption{FPGA memory map overview}
+	\label{fig:fpga_memmap}
+\end{figure}
+
+\FloatBarrier
 
