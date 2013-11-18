@@ -47,7 +47,7 @@ second DMA copies the samples for the right stereo channel and start with an
 offset of one sample. Both DMAs read only every second sample and writes them
 continuously to the FPGA input buffers.
 
-In code this is setup with the DMA interface in {\bf emlib}. 
+In code this is setup with the DMA interface in {\bf emlib}, by configuring the DMA Descriptor. 
 \begin{lstlisting}
   DMA_CfgDescr_TypeDef descrCfg = {
     .dstInc  = dmaDataInc2,
@@ -97,11 +97,12 @@ The EBI bus is initialized by the {\it emlib} software library.
 \subsubsection{Serial Peripheral Interface}
 The SPI bus is a general bus interface used by many embedded applications. It is used
 for the communication bewteen the MCU and a MicroSD memory card connected to the slot
-on the board \ref{} \todo{Har vi bilde av bitless?}. 
+on the board \ref{} \todo{Har vi bilde av bitless?}.
 
 \subsubsection{General Purpose Input/Output}
 To capture a audio stream from the input Minijack, one GPIO pin is connected to a 
-ADC, Analog to Digital Converter, on the MCU. The ADC measures the the 
+ADC, Analog to Digital Converter, on the MCU. The ADC measures the difference between
+
 
 \todo{more about how the bus is implemented on the MCU}
 
