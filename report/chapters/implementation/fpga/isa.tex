@@ -1,73 +1,24 @@
 % !TEX root = ../../report.tex
 \subsection{Instruction Set Architecture}\label{section:fpga-isa}
 
-The instruction set of the processor cores where designed before work
-started on the processor cores themselves. This was done in order
-to build the processor core based on which operations were actually
-needed. This resulted in two distinct drafts of the instruction set
-architecture.
+The processor was designed in a top-down fashion, starting with
+the instruction set. In order to support as many different filters
+and effects as possible, the processor supports all normal arithmetic
+operations. Due to the requirements of doing fourier transforms on the
+processor, support for some floating point instructions was also included.
 
-\subsubsection{First Draft}
-The first draft of the ISA was devised early in the design process.
-It was decided to use a processor architecture with 16-bit instruction words
-and 32 general purpose registers. The instructions are divided in three
-different classes: load/store instructions, arithmetic instructions, and
-miscellaneous instructions.
-
-All instructions have a common group field in the two most significant bits,
-which is used to select between one of four instruction groups, as shown in
-table \ref{tab:group_fmt}.
-
-For our ALU operations, it was decided to use four condition flags, listed in
-table \ref{tab:condition_flags}. These are stored in a dedicated status and
-control register.
-
-\input{figures/fpga/isa-group-format}
-\input{figures/fpga/isa-condition-flags}
-
-\paragraph{Load/store instructions}
-The format of our load/store instructions is illustrated in figure
-\ref{fig:ls_instr_format}, and the instructions considered for this format
-are listed in table \ref{tab:ls_instrs}.
-
-\input{figures/fpga/isa-load-store-format}
-\input{figures/fpga/isa-load-store-instruction}
-
-\paragraph{Arithmetic instructions}
-The format of the arithmetic instructions is illustrated in figure
-\ref{fig:arith_instr_format}.
-Implemented instructions are listed in table \ref{tab:arith_instrs}. In order
-to support other variants of the same basic instructions, such as add-with-carry
-or multiply-and-accumulate. The operations are implemented such that the result
-of an operation is written back to the first operand register, $ra = ra~op~rb$.
-
-\input{figures/fpga/isa-arithmetic-instruction}
-\input{figures/fpga/isa-arithmetic-implemented}
-
-\paragraph{Miscellaneous instructions}
-The format of the miscellaneous instructions is illustrated in figure
-\ref{fig:misc_instr_format}. The implemented instructions are listed in table
-\ref{tab:misc_instrs}.
-
-\input{figures/fpga/isa-misc-instruction}
-\input{figures/fpga/isa-misc-implemented}
-
-\FloatBarrier
-\subsubsection{Second Draft}
-
-Due to the requirements of doing an FFT on the processor, floating point
-instructions for addition, multiplication and subtraction were added.
-In addition, most instructions were moved into the group previously called
-arithmetic operations. Some new data movement instructions were added, in part
-because of the addition of a separate memory area for storing constants.
+To make the decoding of instructions as easy as possible, instructions
+were divided into three different instruction groups.
 
 \subsubsection{Register-based instructions}
 
-The group previously named arithmetic operations now contains most of the
-implemented instructions, including load/store instructions. They all have
-in common tat they have at least one register as operand. The format of the
+The register-based instructions are instructions were both operands are
+primarily registers. The group also includes a few instructions where
+the second operand is an immediate value. The format of the
 instructions are illustrated in figure \ref{fig:regbased_instrs_format}. The
 implemented functions can be found in table \ref{tab:regbased_instrs}.
+
+\todo{Fiks instruksjonstabellen}
 
 \input{figures/fpga/isa-regbased-format}
 \input{figures/fpga/isa-regbased-instructions}
@@ -75,12 +26,12 @@ implemented functions can be found in table \ref{tab:regbased_instrs}.
 \subsubsection{Load immediate instruction}
 The load immediate instruction is used to load an immediate constant into a
 register. The format of the instruction can be found in figure
-\ref{fig:ldi_format}. The value is loaded into register \texttt{\$ri}.
+\ref{fig:ldi_format}. The value is loaded into register \texttt{\$r1}.
 
 \input{figures/fpga/isa-ldi-format}
 
 \subsubsection{Branch instruction}
-The branch instruction checks the condition flags and jumps accordingly. By
+The branch instruction checks condition flags and jumps accordingly. By
 checking for various combinations of the condition flags, many different
 conditions can be checked for. The format of the instruction is illustrated
 in figure \ref{fig:new_branch_format}. List for the encoding of the flags field
@@ -99,3 +50,4 @@ The list of defined special registers can be found in table \ref{tab:specregs}.
 The register number for these registers have not yet been determined.
 
 \input{figures/fpga/isa-special-registers}
+
