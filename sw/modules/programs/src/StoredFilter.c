@@ -99,7 +99,7 @@ void TIMER0_IRQHandler( void )
 	TIMER_IntClear( TIMER0, TIMER_IF_OF );
 	
 	static int i = 0;
-	if (++i >= 64) {
+	if (++i >= bufferSize) {
 		copySamples();
 		i = 0;
 	} 
