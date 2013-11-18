@@ -39,7 +39,7 @@ effort put into the project.
 
 \section{Assignment}\label{intro:our-assignment-interpretation}
 
-\paragraph{Our interpretation of the assignment}
+\paragraph{Assignment Interpretation}
 Our interpretation of the assignment is to design a hardware system for a
 specific application domain with two main components. First, it must have a
 microcontroller. Second, it must have a Field Programmable Gate Array (``FPGA'')
@@ -53,7 +53,7 @@ Another design requirement given from the assignment description is energy
 efficiency. The hardware configuration with a general processor and a
 specialized set of processors has become increasingly popular since power
 consumption became an issue, and is ubiquitous in today's computing systems.
-Being on the energy efficiency group motivates us to leverage such energy-aware
+Being on the energy efficiency group motivates us to leverage such energy aware
 concepts and design a system with energy efficency in mind.
 
 \missingfigure{A figure giving a ``20k feet view from above'' of the PCB, MCU,
@@ -63,16 +63,21 @@ The application chosen for this project is audio processing. The MCU unit will
 provide audio samples from a source on the PCB to the FPGA, which in turn will
 process the samples and return the result. As the FPGA contains multiple cores,
 the FPGA may run different filters, transforms, and effects in parallel on the
-audio samples.
+audio samples. For the rest of this report, we will refer to the MCU as the IO
+controller and the FPGA as the audio accelerator \todo{make sure this is
+actually the case}.
 
 The above figure\todo[inline]{Insert reference} shows how the FPGA processor
-design can run different programs with a MIMD architecture. While a Xilinx
-Spartan-6\cite{fpga-chip} processing core does not have a large potential for
-energy-efficiency, we aim to program our design and simulate energy efficiency
-through the VHDL code on the FPGA, as well as in the programming on the MCU, and
-in the design of the PCB.
+design can run different programs with a MIMD architecture.
 
-\subsection{Multiple Input, Multiple Data}
+\todo[inline]{Move and rewrite the following paragraph to Implementation->Energy
+Considerations or similar.}
+While a Xilinx Spartan-6\cite{fpga-chip} processing core does not have a large
+potential for energy efficiency, we aim to program our design and simulate
+energy efficiency through the VHDL code on the FPGA, as well as in the
+programming on the MCU, and in the design of the PCB.
+
+\subsection{Multiple Instruction, Multiple Data}
 
 As stated in the the original assignment text, part of the requirements for this
 assignment is to implement a processor design on the FPGA based on a MIMD
