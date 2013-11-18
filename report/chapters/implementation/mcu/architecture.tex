@@ -1,15 +1,12 @@
 \subsection{Software Architecture}
 
-\todo[inline]{FIX THE BELOW REFERENCES!!!!}
-
-Since the microcontroller from Energy Micro which this project uses, in turn is
-a Cortex microcontroller, the software is based on the CMSIS \ref{CMSIS}
-codebase from ARM. The Giant Gecko MCU is supplied with a peripheral Application
-Programming Interface (API), called emlib \ref{emlib}, which builds upon CMSIS
-and can be used to both initialize and control all attached peripherals. The
-structure of the code and programming model is based on how emlib does it. The
-code and model have mostly used the emlib API for communicating and controlling
-the microcontoller.
+Since the MCU used for this project, in turn uses an ARM Cortex-M processor
+core, the software for this project is based on the CMSIS \ref{CMSIS} codebase
+supplied from ARM. The Giant Gecko MCU from Silicon Labs is supplied with an API
+called emlib \ref{emlib}, which builds upon CMSIS, and can be used to both
+initialize and control all attached peripherals. The structure of the code and
+programming model is based on the interface with emlib. The code and models
+mostly used the emlib API for communicating and controlling the microcontoller.
 
 \input{figures/sw/software-stack}
 
@@ -20,6 +17,3 @@ Each directory contains three sub-directories, \textit{inc}, \textit{src} and
 or different demos and test programs for each module, respectively. Each module
 is typically implemented as a combination of a driver and controller for the
 specific peripheral the module is designed for.
-
-\todo[inline]{THE ABOVE PHRASING SUCKS. NEEDS REVISION. -CC}
-\todo[inline]{THE ABOVE COMMENT IS INSULTING, GET A GRIP! }
