@@ -4,16 +4,11 @@
 
 \subsubsection{Considerations}
 
-The processor core was implemented with focus on being quick in order to process
-audio in real-time, as well as being power efficient to the degree permitted by
-the FPGA chip. The higher the throughput, the quicker the execution time before
-the whole system could be shut off again, thus reducing the power
-consumption and increasing the energy-efficiency. As such, the processor core has been
-designed with focus on the following principles:
+The processor core was designed to be able to perform audio processing in real-time, and well as being as power efficient as possible. Since the FPGAs power usage is close to constant, the best way to save power is to reduce the time the whole board is active. The best way for the core to contribute to this is to execute its programs as fast as possible. Thus, the processor core has been designed by the two following principles:
 
 \begin{itemize}
 	\item As high throughput as possible.
-	\item Support the instructions needed to perform the audio manipulations.
+	\item Support the instructions needed to perform the audio processing.
 \end{itemize}
 
 In order for the core to be as efficient as possible, a pipelined processor
@@ -25,21 +20,20 @@ stages:
 	\item Instruction Decode \label{stage:id}
 	\item Memory \label{stage:mem}
 	\item Execute \label{stage:ex}
-	\item Writeback \label{stage:wb}
+	\item Write back \label{stage:wb}
 \end{enumerate}
 
-A change from the classic pipelined processor desings, is that the memory
-pipeline stage comes before the execution stage. This is because the load/store
-instructions do not need the ALU during execution. Thus the project
-implementation is able to prevent load dependecies by simple forwarding, instead
-of wasting a pipeline clock-cycle by inserting a no-operation.
+A change from the classic pipelined processor designs, is that the memory stage comes before the execution stage. This is because the load and store instructions does not need the ALU to calculate the memory address. Thus the processor is able to prevent \textit{all} data dependecies by forwarding data from the different stages.
 
 For simplicity, the core does not have a hazard control unit implemented for
 branching, but instead relies on the programmer to add two no-operations after a
 branch.\todo{Maybe we can have the assembly do this instead?? That would be
 great.}
 
-\subsubsection{Floating-point implementation design choices}
+\todo{Maybe we can have the assembly do this instead?? That would be
+great.}
+
+\subsubsection{Floating-point Implementation Design Choices}
 
 Some audio filters are performed in the time domain, others are performed in the
 frequency domain. To convert the audio samples from one domain to the other, a
