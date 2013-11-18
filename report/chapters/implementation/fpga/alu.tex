@@ -20,7 +20,7 @@ frequency domain. To convert the audio samples from one domain to the other, a
 fourier transform (FT) and its inverse is usually employed. A discrete FT is
 perfectly suited for the sample based nature of an audio processor. The FT we
 chose to utilize for our project is the
-sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:sd-ft}.
+sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:SDFT}.
 
 With the goal of having a real-time sound processing system, the algorithmic
 complexity of the SDFT would make it one of the more algorithmically
@@ -34,11 +34,11 @@ the audio samples to 8 bits. The consequence of this is that the maximum sound
 frequency was reduced from the standard value of 44~KHz, down to approximately 11~KHz.
 This reduces the amount of samples the processor core can process.
 
-\paragraph{Internal Memory}
+\paragraph{Internal ALU Memory}
 
 Since the instruction words can only address two registers at the time, the ALU
 unit can store the values previously loaded from constant memory internally.
 ``Multiply and accumulate'' is the longest critical path, and which is used
-during the SD-FT \ref{appendix:sd-ft}. This instruction needs the constant value
+during the SD-FT \ref{appendix:SDFT}. This instruction needs the constant value
 previously loaded into the ALU with the ``Load from constant memory''
 instruction. Hence why the ALU can store a constant memory value internally.

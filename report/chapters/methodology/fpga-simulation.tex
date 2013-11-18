@@ -2,136 +2,91 @@
 
 \subsection{High}
 
-\textbf{Functional Requirement 1}
-\\
+\subsubsection*{Functional Requirement 1}
 \textit{The processors should consume different data and instruction stream}
-\\
-\textbf{Test:}
+\subsubsection*{Test:}
 Create a program that requires cores to run multiple instructions on multiple data. 
 Run this program in ModelSim to verify that the cores simulate correctly. 
 Finally, run the same program on the FPGA embedded in the system and verify that it produces the same results as the simulation.
-\\
-\textbf{Pass Criteria:}
+\subsubsection*{Pass Criteria:}
 The cores run different instructions on different data and produce the correct results according to the program. 
-\\
 
-\textbf{Functional Requirement 2}
-\\
+
+\subsubsection*{Functional Requirement 2}
 \textit{The processor cores should be arranged in a pipeline, each pipeline representing one audio channel. Filter at least two audio channels.}
-\\
-\textbf{Test:}
+\subsubsection*{Test:}
 Create a program that requires two pipelines with at least one core in each pipeline. 
 Simulate the program in ModelSim and verify that the output reflects the desired results.
 Run the program on the FPGA embedded in the system and verify that the result is the same as in the simulation.
-\\
-\textbf{Pass Criteria:}
+\subsubsection*{Pass Criteria:}
 At least two pipelines run one audio channel each and produce the correct results according to the program.
-\\
 
-\textbf{Functional Requirement 3}
-\\
+\subsubsection*{Functional Requirement 3}
 \textit{Use the built-in DSP hardware efficiently.}
-\\
-\textbf{Test:}
+\subsubsection*{Test:}
 Synthesize one processor core and review the synthesis report. 
-\\ 
-\textbf{Pass Criteria:}
+\subsubsection*{Pass Criteria:}
 There are few/none latches and an appropriate amount of DSP slices are used.
-\\
 
-\textbf{Functional Requirement 4}
-\\
+
+\subsubsection*{Functional Requirement 4}
 \textit{Conveniently observe power consumption over certain components.}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
 
 
-\textbf{Functional Requirement 5}
-\\
+\subsubsection*{Functional Requirement 5}
 \textit{Real time filtering on two distinct channels, audio quality (8-bit 44.1kHz).}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
 
-\textbf{Functional Requirement 6}
-\\
+\subsubsection*{Functional Requirement 6}
 \textit{The processor architecture shall utilize 16 bit processing cores.}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
 
-\textbf{Functional Requirement 7}
-\\
+
+\subsubsection*{Functional Requirement 7}
 \textit{EBI-bus for FPGA.}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
 
-\textbf{Functional Requirement 8}
-\\
+
+\subsubsection*{Functional Requirement 8}
 \textit{Ring buffer}
-\\
-\textbf{Test:}
+\subsubsection*{Test:}
 Create a program that needs a ring buffer. 
 Simulate the program in ModelSim on a pipeline to verify that the ring buffer is working correctly.
 Test the program on the FPGA and verify that the ring buffer works as in the simulation.
-\\
-\textbf{Pass Criteria:}
-The FPGA outputs correct results and utilizes at least one ring buffer.
-\\
+\subsubsection*{Pass Criteria:}
+The FPGA outputs correct results and utilizes 
 
 
 \subsection{Medium}
-\textbf{Functional Requirement 9}
-\\
+\subsubsection*{Functional Requirement 9}
 \textit{Hardware-accelerate Fast Fourier Transform on the FPGA.}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
-\textbf{Functional Requirement 10}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
+
+\subsubsection*{Functional Requirement 10}
 \textit{SD card interface (SPI mode), in addition to serial port}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
-\textbf{Functional Requirement 11}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
+
+\subsubsection*{Functional Requirement 11}
 \textit{There should be buttons and LEDs (for status and control).}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
 
 
 \subsection{Low}
-\textbf{Functional Requirement 12}
-\\
+\subsubsection*{Functional Requirement 12}
 \textit{Take both digital and analog signals as input}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
-\textbf{Functional Requirement 13}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
+
+\subsubsection*{Functional Requirement 13}
 \textit{USB interface}
-\\
-\textbf{Test:}
-\\
-\textbf{Pass Criteria:}
-\\
+\subsubsection*{Test:}
+\subsubsection*{Pass Criteria:}
 

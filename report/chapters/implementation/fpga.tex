@@ -1,17 +1,16 @@
 \FloatBarrier
 \section{FPGA}\label{chapter:fpga}
 
-The processor design was implemented on a Xilinx Spartan-6 FPGA. It consists of
-two audio processing pipelines, each containing four homogenous processor cores.
-The processor cores are turing complete processing units connected to
-constant memory, an input buffer, an output buffer, and instruction memory.
-Each core exchanges data through the input/output buffers. Data from the MCU
-is written into the input buffer of the first core, and read back from the
-output buffer of the last core.
+\textit{ChaosM} consists of two audio processing pipelines, each containing four
+homogenous processor cores. The processor cores are turing complete processing
+units connected to constant memory, an input buffer, an output buffer, and
+instruction memory. Each core exchanges data through the input/output buffers.
+Data from the MCU is written into the input buffer of the first core, and read
+back from the output buffer of the last core.
 
-With this design, each pipeline of cores run a set of filters, for instance
+With this design, each pipeline of cores can run a set of filters, for instance
 a fourier transform, a frequency filter, an inverse fourier transform, and an
-effect on the stream running through the audio pipeline.
+effect on the audio data stream running through the audio pipelines in \textit{ChaosM}.
 
 \input{chapters/implementation/fpga/pipelines}
 \input{chapters/implementation/fpga/communication}
