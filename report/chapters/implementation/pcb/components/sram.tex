@@ -2,11 +2,17 @@
 
 \subsubsection{SRAM}
 
-To extend the memory of the MCU an external memory module was added to the board. During the evaluation of SRAM vs DRAM, SRAM came off as the chip of choice
-due to several reasons. While DRAM is cheaper than SRAM, it was possible to stay
-within the budget buying SRAM\todo{check once budget is complete},
-and unlike DRAM, which is synchronous, SRAM is asynchronous, which means there is no need to worry about the propagation of signals and clock synchronization, making read/writes easier. This was the main reason for choosing SRAM. As
-an added bonus, however, SRAM is more energy efficient since DRAM consumes
+To extend the memory of the MCU, an external memory module was added to the
+board. During the evaluation of SRAM vs DRAM, SRAM came off as the chip of
+choice due to several reasons. While DRAM is cheaper than SRAM, it was possible
+to stay within the budget buying SRAM\todo{check once budget is complete},
+and unlike DRAM, which is synchronous, SRAM is asynchronous, which means there
+is no need to worry about the propagation of signals and clock synchronization,
+making read/writes easier.
+
+This is the main reason for why SRAM was chosen.
+
+As an added bonus however, SRAM is more energy efficient since DRAM consumes
 energy on regular intervals when it refreshes the memory values, while SRAM does
 not refresh anything. This also makes SRAM faster.
 

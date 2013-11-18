@@ -2,30 +2,25 @@
 
 \subsection{Schematics}
 
-The development tool used to design the PCB was Altium Designer
-2013. Each sheet contains components relevant to what is routed
-in it, which means that large components that consist of
-several blocks, such as the FPGA and MCU, are spread out across
-different schematics. This was done because it was found to be
-more intuitive to have as many involved components as possible
-on the same sheet instead of connecting loads of cables across
-sheets. The schematics themselves can be viewed in
+The development tool used to design the PCB was Altium Designer 2013. Each sheet
+contains components relevant to what is routed in it, consequently, large
+components which consist of several block, are spread out across different
+schematics. This was done because it was found to be more  intuitive to have as
+many involved components as possible on the same sheet instead of connecting
+loads of cables across sheets. The schematics themselves can be viewed in
 Appendix~\ref{apx:schematics}.
 
-From early on it was strongly advised to make things as easy as
-possible, so many designs have been copied from other sources as
-it was safe to assume those were already tested and confirmed to
-work. Designs like the opamp circuit for the \emph{audio
-in}-port, and the power supply, have been copied from the Energy
-Micro development board and the energy efficiency group of 2012,
-respectively. Component datasheets have also influenced much of
-the design, since they provide a recipe for everything needed
-for the relevant component.
+From early on it was strongly advised to make things as easy as possible, so
+many designs have been copied from other sources as it was safe to assume those
+were already tested and confirmed to work. Designs like the opamp circuit for
+the \emph{audio input}-port, and the power supply, have been copied from the
+Silicon Labs development board and the energy efficiency group of 2012,
+respectively. Component datasheets have also influenced much of the design,
+since they provide a recipe for everything needed for the relevant component.
 
-Another thing that has been prioritized is adding backup
-solutions and debugging options in case something would fail
-due to PCB errors. \todo{add more about being able to
-fall back on other protocols should one fail, and the mapping of
+Another thing that has been prioritized is adding backup solutions and debugging
+options in case something would fail due to PCB errors. \todo{add more about
+being able to fall back on other protocols should one fail, and the mapping of
 unused pins..}
 
 \input{chapters/implementation/pcb/schematics/programming}
