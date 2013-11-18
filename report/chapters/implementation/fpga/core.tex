@@ -7,8 +7,8 @@
 The processor core was implemented with focus on being quick in order to process
 audio in real-time, as well as being power efficient to the degree permitted by
 the FPGA chip. The higher the throughput, the quicker the execution time before
-the whole system could be shut off again, and thus reducing the power
-consumption increasing the energy-efficiency. Thus, the processor core has been
+the whole system could be shut off again, thus reducing the power
+consumption and increasing the energy-efficiency. As such, the processor core has been
 designed with focus on the following principles:
 
 \begin{itemize}
@@ -32,7 +32,7 @@ A change from the classic pipelined processor desings, is that the memory
 pipeline stage comes before the execution stage. This is because the load/store
 instructions do not need the ALU during execution. Thus the project
 implementation is able to prevent load dependecies by simple forwarding, instead
-of wasting a pipeline clock-cycle on a no-operation.
+of wasting a pipeline clock-cycle by inserting a no-operation.
 
 For simplicity, the core does not have a hazard control unit implemented for
 branching, but instead relies on the programmer to add two no-operations after a
@@ -43,20 +43,20 @@ great.}
 
 Some audio filters are performed in the time domain, others are performed in the
 frequency domain. To convert the audio samples from one domain to the other, a
-Fourier-transform (FT) or its inverse is usually employed. A discrete FT is
+fourier transform (FT) and its inverse is usually employed. A discrete FT is
 perfectly suited for the sample based nature of an audio processor. The FT we
 chose to utilize for our project is the
-Sliding-Discrete-Fourier-transform, detailed further in appendix section
-\ref{appendix:sd-ft}.
+sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:sd-ft}.
 
 With the goal of having a real-time sound processing system, the algorithmic
-complexity of the SD-FT would make it one of the more algorithmically
-time-complex operations the processor core would have to complete within the
+complexity of the SDFT would make it one of the more algorithmically
+time-complex operations a processor core would have to complete within the
 time window between two sample inputs.
 
-Realizing a SD-FT on a computing device requires floating point arithmetics.
-Therefore, to lower the algorithmic complexity required for the floationg point
-calculations the decision was made to lower the maximum size of the integers in
-the audio samples to 8-bits. The consequence of this is that the maximum sound
-frequency was reduced from the normal of 44 Kilo Hertz, down to ca. 11. Thereby
-reducing the range of sounds the processor core could alter/manipulate.
+Realizing an SDFT on a computing device requires floating point arithmetics.
+Therefore, to lower the algorithmic complexity required for the floating point
+calculations, a decision was made to lower the maximum size of the integers in
+the audio samples to 8 bits. The consequence of this is that the maximum sound
+frequency was reduced from the standard value of 44~KHz, down to approximately 11~KHz.
+This reduces the amount of samples the processor core can process.
+
