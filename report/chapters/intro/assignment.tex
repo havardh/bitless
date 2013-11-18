@@ -1,4 +1,5 @@
 \section{Original Assignment Text}\label{intro:original-text}
+
 \paragraph{Task: Construct a Multiple Program, Multiple Data}
 The performance increase available from harvesting Instruction Level Parallelism
 (ILP) from the serial instruction stream is limited because we have reached the
@@ -37,17 +38,17 @@ the work as well as a prototype demonstration. One grade will be given to the
 group as a whole, unless there are significant variations in the amount of
 effort put into the project.
 
-\section{Assignment}\label{intro:our-assignment-interpretation}
+\section{Assignment}
 
-\paragraph{Assignment Interpretation}
-Our interpretation of the assignment is to design a hardware system for a
+\paragraph{Assignment Interpretation}\label{intro:our-assignment-interpretation}
+Our interpretation of the assignment is to design a hardware prototype system for a
 specific application domain with two main components. First, it must have a
-microcontroller. Second, it must have a Field Programmable Gate Array (``FPGA'')
-implementing a MIMD architecture processor. It must be designed to fit on a
-Printed Circuit Board (``PCB'') designed for this project. From this
-information, it is natural to make the MCU manage the peripherals and drive the
-system, while the FPGA is being used as a hardware accelerator, i.e. to speed up
-execution of programs.
+microcontroller. Second, it must have a Field Programmable Gate Array (FPGA)
+implementing a MIMD architecture processor. The project design must fit on a custom
+made Printed Circuit Board (PCB) developed for this project. On behalf of these
+requirements, this results in a convenient divison of labour where the MCU manages
+the peripherals and drives the system, while the FPGA is being used as a hardware
+accelerator, i.e. to speed up execution of programs.
 
 Another design requirement given from the assignment description is energy
 efficiency. The hardware configuration with a general processor and a
@@ -63,17 +64,17 @@ The application chosen for this project is audio processing. The MCU will
 provide audio samples from a source on the PCB to the FPGA, which in turn will
 process the samples and return the result. As the FPGA contains multiple cores,
 the FPGA may run different filters, transforms, and effects in parallel on the
-audio samples. For the rest of this report, we will refer to the MCU as the IO
-controller and the FPGA as the audio accelerator \todo{make sure this is
-actually the case}.
+audio samples. For the rest of this report, the Giant Gecko microcontroller unit
+from Silicon Labs is hereafter referred to as the MCU, and the Spartan-6 Xilinx
+FPGA chip will hereafter be referred to as the FPGA.
 
-The above figure\todo[inline]{Insert reference} shows how the FPGA processor
+The above \todo{Insert reference}figure shows how the FPGA processor
 design can run different programs with a MIMD architecture.
 
 \todo[inline]{Move and rewrite the following paragraph to Implementation---Energy
 Considerations or similar.}
 While a Xilinx Spartan-6\cite{fpga-chip} processing core does not have a large
-potential for energy efficiency, we aim to program our design and simulate
+potential for energy efficiency, the aim is to program the  design and simulate
 energy efficiency through the VHDL code on the FPGA, as well as in the
 programming on the MCU, and in the design of the PCB.
 
