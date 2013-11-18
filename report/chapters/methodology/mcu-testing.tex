@@ -1,23 +1,40 @@
-\section{Testing the MCU implementation}
+\section{Testing the MCU Implementation}
 
-Throughout the development of the software modules and libraries, tests in the form
-of demo programs and separate unit tests have been used.
+This section describes the test written in software, and the energy measurements
+done with {\bf energyAwareProfiler}. The software test can be divided into to
+groups, {\bf Unit Test} and {\bf Demo programs}.
 
-\subsection{Unit tests}
+\subsection{Unit Tests}
 
-Unit tests was developed for the non-hardware dependent code. These include the
-{\bf Circular Buffer} and {\bf FPGA} module.
+Unit tests was developed for the non-hardware dependent code. These are utility components
+which executes correctly independent on the underlying platform. The tests was written in
+the CppUTest framework\ref{} and executed on each developers own laptop.
 
 \subsection{Demo Program}
-The following demo programs were developed to test each component in separation.
 
+While developing the software library used to control the hardware through {\bf emlib} and
+{\bf CMSIS}. These programs both verifies that the software operates correcly and that
+the underlying hardware devices connected according to the specifications. By running the
+program both on the produced circuit board and the development kits available at the lab.
 
-\subsubsection{ADD.c}
+\subsubsection{Transfer from ADC to DAC with DMA}
+Location: sw/modules/adc/demo/ADD.c \\
+This demo sets up the ADC as a sample source and DAC as the sample output. It uses DMA
+to copy from the ADC to a input buffer in Internal RAM on the MCU. After 64 samples
+the CPU is interrupted and transfers the samples to output buffer. A second DMA channel
+copies from the output buffer to the DAC. This test verifies that this pipeline is set
+up correctly. It checks that the minijacks are connected the correct GPIO ports. As
+the ports are the same on the development kit \ref{} this test has been used to verify
+the PCB design and implementation.
+
 Sets up a simple path from ADC to DAC.
 Verifies that ADC, DAC are setup correctly.
 
-\subsubsection{fpga.c}
-Sets up a path from ADC through FGPA mock input register to DAC.
+\subsubsection{Transfer from ADC to DAC Through FPGA Mock}
+Location: sw/modules/fpga/demo/fpga.c
+This demo is a copy of the previous test with the addition of deinterleaving and interleaving
+
+
 Verifies that deinterleaving and interleaving works.
 
 \subsubsection{copy-file.c}

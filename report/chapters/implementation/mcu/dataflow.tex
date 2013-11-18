@@ -1,53 +1,62 @@
 %!TEX root = ../../../report.tex
 
 \subsection{Dataflow}
-\newpage
 When designing an energy efficient system, dataflow is of great importance. The
-software on the MCU has been designed to minimize the number of data stores and
-movements. When possible, DMA was utilized to move the data while running in a
-low power mode. The dataflow consist of four phases, as shown in figure \ref{sw_transfer_phases}. 
-In phase 1 the MCU acquires input samples from an input device. These samples are 
-then transfered to the FPGA in phase 2. When the FPGA is finished processing the
-samples, they are transfered back to the MCU in phase 3. In the last phase the MCU
-sends the filtered samples to an output device. All these phases are executed 
-concurrenlty to ensure a constant flow of samples. 
+software on the MCU has been designed to minimize the number of data-stores and
+-movements. When possible, DMA is utilized to move the data while running the
+MCU in a low power mode. The dataflow consist of four phases, as shown in figure
+\ref{sw_transfer_phases}.
+
+In phase 1 the MCU acquires input samples from an input device. These samples
+are then transferred to the FPGA in phase 2. When the FPGA is finished
+processing the samples, they are transferred back to the MCU in phase 3. In the
+last phase, the MCU sends the filtered samples to an output device. All these
+phases are executed concurrently to ensure a constant flow of samples.
 
 \input{figures/sw/transfer-phases}
 
-\subsubsection{Direct Memory Access} DMA provides the ability to move data
+\subsubsection{Direct Memory Access}
+Drect Memory Access (DMA) provides the ability to move data
 without the intervention of the CPU. This is used extensively to implement the
 dataflow when the MCU is running in a low energy mode. The CPU is only used to configure
 and refresh the DMA channels in between transfers. The MCU provides 12
 independent DMA channels which can move data between peripherals, Internal RAM, and
 devices connected to EBI, like the FPGA.
 
-The main flow of data goes from Internal RAM on the MCU to the buffers on
-the FPGA, and back to Internal RAM on the MCU. This dataflow path is illustrated in figure.
+The main flow of data goes from Internal RAM in the MCU to the buffers on
+the FPGA, and back to Internal RAM in the MCU. This dataflow path is illustrated in \todo{which figure??}figure.
 
 % \input{figures/sw/ram-fpga-ram}
 
 \paragraph{Deinterleaving of Samples}
 When reading from both a WAV file or the ADC, samples from the stereo channels
-are interleaved. The FPGA handles each channel in a separate pipeline. As shown 
-in figure \ref{fig_sw_main_dataflow}. 
-When reading the samples they have to be deinterleave. Deinterleaving is the
-process of splitting the samples for each channels in to two separate streams. 
-The complementary operation of interleaving the samples is performed before the samples 
+are interleaved. The FPGA handles each channel in a separate pipeline as shown
+in figure \ref{fig_sw_main_dataflow}.
+When reading the samples they have to be deinterleaved. Deinterleaving is the
+process of splitting the samples for each channel into separate streams.
+The complementary operation of interleaving the samples is performed before the samples
 are moved to the output peripherals.
 \missingfigure{Figure showing deinterleaving and interleaving}
+
+The interleaving and deinterleaving operations are either done by the DMA for
+energy efficiency purposes, or the CPU on the MCU. If the operation is performed
+by the CPU, the gains of speed and data-transfer analysis can be tested. Depending
+on the different types of input sources, the CPU is needed on some occasion, while
+on others a more energy efficient implementation through the use of DMA may be used.
+Comparions of the two implementations are included in the results section.
+
+The samples are deinterleaved in the DMA implementation by letting two DMA channels read from the
+same source and write the correct channel into the the correct pipeline for the correct channel.
+The first DMA copies the samples for the left stereo channel, and starts without a offset. The
+second DMA copies the samples for the right stereo channel and starts with an
+offset of one sample. Both DMAs read every other sample and writes them
+continuously to the FPGA input buffers.
+
+In the code, this is set up with the DMA interface in {\bf emlib}, by configuring the DMA Descriptor.
 \todo{Check out the figure in drive/Rapport/SW Diagrams/Interleaving of samples! Makes sense?}
 This is implemented with two version. One using only the CPU and one using DMA transfers
 while the CPU is sleeping. Comparions of the two methods are included in the results section.
-\todo{Make sure they are. Rewrite for better flow - JK}
 
-The samples are de-interleaved by letting two DMA channels read from the same
-source and write to the correct pipeline for the correct channel. The first DMA
-copies the samples for the left stero channel, and start without a offset. The
-second DMA copies the samples for the right stereo channel and start with an
-offset of one sample. Both DMAs read only every second sample and writes them
-continuously to the FPGA input buffers.
-
-In code this is setup with the DMA interface in {\bf emlib}. 
 \begin{lstlisting}
   DMA_CfgDescr_TypeDef descrCfg = {
     .dstInc  = dmaDataInc2,
@@ -57,51 +66,50 @@ In code this is setup with the DMA interface in {\bf emlib}.
   DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true,  &descrCfg );
   DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true,  &descrCfg );
 \end{lstlisting}
-To understand what this will result in, imagine two pointers, {\bf dst} and {\bf src}. 
+To understand what this will result in, imagine two pointers, {\bf dst} and {\bf src}.
 At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}. After each
 iterations the {\bf src} pointer is incremented by {\bf srcInc} bytes and the {\bf dst}
-pointer is incremented by {\bf dstInc}. 
+pointer is incremented by {\bf dstInc}.
 
-After the DMA channel is configured with a descriptor it can be started with a 
-a source and destination pointer and the number of transfers to be executed. 
+After the DMA channel is configured with a descriptor, it can be started with a
+a source pointer, destination pointer, and the number of transfers to be executed.
 When the transfer has finished the CPU is interrupted and can start the next transfer.
 
-The interleaving process on output side works in the same way. The DMA reading
-from the pipeline containing the left stereo channel samples writes to the
-memory without a starting offset. The right channel DMA writes with an offset by
-one sample.
-\todo[inline]{Rewrite for better flow - JK}
+The interleaving process on the output side of the FPGA works in the same way. The DMA reading
+the audio pipeline containing the left stereo channel, writes the samples to even numbered
+addresses in the memory, while the DMA reading the right audio pipeline channel writes
+to odd numbered addresses.
 
-\paragraph{}
+\paragraph*{}
 In addition, a DMA is assigned for each ADC and DAC whenever they are used as
-input and output, respectively. When SDCard is used, the contents of the files
-are read and written directly to and from RAM by the CPU.
-
+input and output. When a SDCard is used, the contents of the files are read and
+written directly to and from RAM by the CPU.
 
 \subsubsection{Peripherals}
 
 \input{figures/sw/sample-flow}
-Figure \ref{fig:sw_sample_flow} shows all the peripherals included in flow of sample. 
-These are ADC, DAC, SDCard and the FPGA. The ADC and DAC are connected to the Minijack
-audio ports on the circuit board and directly linked to GPIO ports on the MCU. The SDCard
-is mounted on the board and connected to the MCU through the SPI, Serial Peripheral Interface
+
+Figure \ref{fig:sw_sample_flow} shows all the peripherals included in the flow of samples.
+The ADC and DAC are connected to the minijack audio ports on the circuit board and directly
+linked to GPIO ports on the MCU. The SDCard
+is mounted on the PCB and connected to the MCU through the Serial Peripheral Interface (SPI)
 bus. Lastly the FPGA is connected to the MCU on the EBI.
 
 \subsubsection{External Bus Interface}
-The MCU is connected to the FPGA and External SRAM through the EBI. This is a standard
-bus interface provided by the MCU. Utilizing the EBI leads to a
-simple interface with these units as the bus is memory mapped on the MCU.
-Communicating with the FPGA is done by reading and writing to memory.
-The EBI bus is initialized by the {\it emlib} software library.
+The MCU is connected to the FPGA and External SRAM through the EBI. The EBI bus
+is initialized by the {\it emlib} software library. Utilizing
+the EBI leads to a simple interface with these units since the bus is memory
+mapped on the MCU. Communicating with the FPGA is done by reading and writing to memory.
 
 \subsubsection{Serial Peripheral Interface}
-The SPI bus is a general bus interface used by many embedded applications. It is used
-for the communication bewteen the MCU and a MicroSD memory card connected to the slot
-on the board \ref{} \todo{Har vi bilde av bitless?}. 
+<<<<<<< HEAD
+The SPI bus is a general bus interface used in many embedded applications. It is used
+for communicating between the MCU and a MicroSD memory card connected to the slot
+on the PCB \ref{} \todo{Har vi bilde av bitless?}.
 
 \subsubsection{General Purpose Input/Output}
-To capture a audio stream from the input Minijack, one GPIO pin is connected to a 
-ADC, Analog to Digital Converter, on the MCU. The ADC measures the the 
+To capture an audio stream from the input minijack, one GPIO pin is connected to an
+ADC on the MCU. The ADC measures the the difference between
 
 \todo{more about how the bus is implemented on the MCU}
 
@@ -109,9 +117,9 @@ ADC, Analog to Digital Converter, on the MCU. The ADC measures the the
 
 All the DMA transfers are triggered by the use of one clock, the sample clock.
 This clock is run at the sample speed 11 kilohertz when using the DAC or ADC. Or
-an arbitrary frequency when sampling from SD to SD. The clock signal is fed into
-the Peripheral Reflex System \todo{Refere to manual} (PRS) of the MCU and propagates through the system
-using the following scheme.
+an arbitrary frequency when sampling from SDCard to SDCard. The clock signal is fed into
+the Peripheral Reflex System \todo{Refere to manual} (PRS) of the MCU and propagates
+through the system using the following scheme.
 
 %\newpage %re-insert if figure breaks across pages
 \begin{verbatim}
@@ -148,10 +156,10 @@ using the following scheme.
 \end{verbatim}
 
 Here, both the DAC and ADC consumes the PRS signal originated from TIMER0. The
-DMA copying from the ADC to the RAM buffer, and the two DMAs performing the
-de-interleaving of the input samples, receive a pulse each time the ADC has
-buffered $N$ samples. They then perform a sequence of copy actions resulting
-in the input samples ending up inside the pipeline buffers of the FPGA. On the
-other side the DAC sends a pulse to the DMA that feeds it samples in conjunction
+DMA copying from the ADC to the RAM buffer, as well as the two DMAs performing the
+deinterleaving of the input samples, both receive a pulse each time the ADC has
+buffered $N$ samples. They then perform a sequence of copy actions on the input
+samples so that these end up inside the pipeline bufferrs of the FPGA. On the
+other side, the DAC sends a pulse to the DMA that feeds it samples in conjunction
 with the two DMAs performing the interleaving of the samples returned from the
 FPGA pipelines.

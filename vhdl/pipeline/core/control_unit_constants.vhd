@@ -100,6 +100,8 @@ package control_unit_constants is
 				constant multi_sub_fp		: STD_LOGIC_VECTOR := "11";
 				
 				-- shift
+				constant fp_mad;			: STD_LOGIC_VECTOR := "10";
+				constant fp_msd				: STD_LOGIC_VECTOR := "11";
 				constant halt				: STD_LOGIC_VECTOR := "00";
 			
 			-- ** register based 2 **
