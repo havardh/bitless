@@ -20,6 +20,7 @@
 #include "bl_mem.h"
 #include "FPGAConfig.h"
 #include "FPGADriver.h"
+#include "FPGAController.h"
 #include "spi.h"
 
 #include "bl_sd.h"
@@ -31,6 +32,9 @@
 #include "StoredFilter.h"
 
 #define FPGA_BASE ((uint16_t*) 0x21000000)
+
+#define BITS_PER_SAMPLE 12
+#define BIT_SHIFT (16-BITS_PER_SAMPLE)
 
 // How many samples to read for each interrupt
 static int bufferSize = 64;
@@ -59,12 +63,13 @@ void StoredFilter_Start(void)
 	setupSD();
 	done = false;
 	setupTimer();
-
+	FPGA_Enable();
 	while(1) {
 		
 		if (done)
 			break;
 	}
+	FPGA_Disable();
 	TIMER_Enable( TIMER0, false );
 	TIMER_Reset( TIMER0 );
 	FPGADriver_Destroy();
@@ -91,10 +96,15 @@ static void* GetOutBuffer(void)
 
 void TIMER0_IRQHandler( void ) 
 {
-
 	TIMER_IntClear( TIMER0, TIMER_IF_OF );
+	
+	static int i = 0;
+	if (++i >= bufferSize) {
+		copySamples();
+		i = 0;
+	} 
 
-	copySamples();
+	FPGA_ToggleClock();
 }
 
 void setupSD(void)
@@ -182,8 +192,8 @@ static void deinterleave( void )
 	uint16_t tmp;
 	for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
 
-		fpgaLeftInBuffer[j]  = (audioInBuffer[i  ] + 0x8000) >> 4;
-		fpgaRightInBuffer[j] = (audioInBuffer[i+1] + 0x8000) >> 4;
+		fpgaLeftInBuffer[j]  = (audioInBuffer[i  ] + 0x8000) >> BIT_SHIFT;
+		fpgaRightInBuffer[j] = (audioInBuffer[i+1] + 0x8000) >> BIT_SHIFT;
 
 	}
 
@@ -201,8 +211,8 @@ static void interleave( void )
 	//volatile uint16_t *fpgaRightOutBuffer = (volatile uint16_t*)FPGADriver_GetOutBuffer(1);
 	
 	for (int i=0, j=0; i<bufferSize*2; i+=2, j++) {
-		audioOutBuffer[i  ] = (fpgaLeftInBuffer[j]  - 0x80); // << 4;
-		audioOutBuffer[i+1] = (fpgaRightInBuffer[j] - 0x80); // << 4;
+		audioOutBuffer[i  ] = (fpgaLeftInBuffer[j]  << BIT_SHIFT) - 0x8000;
+	  audioOutBuffer[i+1] = (fpgaRightInBuffer[j] << BIT_SHIFT) - 0x8000;
 	}
 	
 }
