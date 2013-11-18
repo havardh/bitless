@@ -7,7 +7,7 @@ solutions\cite{olukotun}. Consequently, there is a significant interest in
 single-chip parallel processor solutions (e.g. \cite{bell,kongetira}). The
 processor cores in commercial multi-core chips are conventional designs and
 therefore reasonably complex. In this work, your task is to design a
-multiprocessor,Multiple Instruction, Multiple Data streams (MIMD). A processor
+multiprocessor, Multiple Instruction, Multiple Data streams (MIMD). A processor
 classified MIMD include a multiple- instruction stream
 organizations\cite{flynn}. Such processors can executing different instructions,
 i.e. minimum 2 independent programs, on different (independent) data.
@@ -40,12 +40,21 @@ effort put into the project.
 \section{Assignment}\label{intro:our-assignment-interpretation}
 
 \paragraph{Our interpretation of the assignment}
-Our interpretation of the assignment is to design a MIMD architecture processor
-in VHDL, implement it on an Field Programmable Gate Array (hereafter referred to
-as the ``FPGA''), and get a program to run a successfully on the FPGA-chip
-implemented on a Printed Circuit Board (hereafter referred to as the ``PCB'').
-To help with the running of the FPGA on the PCB, we can utilize a
-Micro Controller Unit (hereafter referred to as the ``MCU'').
+Our interpretation of the assignment is to design a hardware system for a
+specific application domain with two main components. First, it must have a
+microcontroller. Second, it must have a Field Programmable Gate Array (``FPGA'')
+implementing a MIMD architecture processor. It must be designed to fit on a
+Printed Circuit Board (``PCB'') designed for this project. From this
+information, it is natural to make the MCU manage the peripherals and drive the
+system, while the FPGA is being used as a hardware accelerator, i.e. to speed up
+execution of programs.
+
+Another design requirement given from the assignment description is energy
+efficiency. The hardware configuration with a general processor and a
+specialized set of processors has become increasingly popular since power
+consumption became an issue, and is ubiquitous in today's computing systems.
+Being on the energy efficiency group motivates us to leverage such energy-aware
+concepts and design a system with energy efficency in mind.
 
 \missingfigure{A figure giving a ``20k feet view from above'' of the PCB, MCU,
 and FPGA.}
@@ -62,3 +71,22 @@ Spartan-6\cite{fpga-chip} processing core does not have a large potential for
 energy-efficiency, we aim to program our design and simulate energy efficiency
 through the VHDL code on the FPGA, as well as in the programming on the MCU, and
 in the design of the PCB.
+
+\subsection{Multiple Input, Multiple Data}
+
+As stated in the the original assignment text, part of the requirements for this
+assignment is to implement a processor design on the FPGA based on a MIMD
+architecture. MIMD architecture is an extension of the Single Instruction,
+Multiple Data (SIMD) architecture. In a SIMD architecture, each processor core
+shares instruction memory, so in effect, all the processor cores in the
+processor run the same program, but on different sets of data. Like for example
+in a graphics pipeline.
+
+A MIMD architecture however differs from the SIMD in that each processor core
+has its own instruction memory, with the effect that each processor core can
+perform a different task, and execute it on a different set of data than any
+other core.
+
+So for this project to successfully meet the requirements, it has to implement
+an architecture with multiple processing cores, where each core can work on any
+set of data with any set of instructions independently of any other core.

@@ -1,4 +1,5 @@
-%Should contain: Ringbuffer, Switch buffer, input/output buffers, constant memory, inst memory, read and write lines to the fpga from the ARM. Originally the ARM only needed access to the first and the last data buffer but for debugging purposes the ARM was given access to all buffers.
+%!TEX root = ../../../report.tex
+
 \subsection{Memory types}\label{subsec:fpga-memory}
 
 The internal block RAMs in the FPGA were used to implement the different kinds
@@ -8,38 +9,43 @@ of memory. It also precludes having to use external RAM, which would not be as
 fast, besides consuming more energy, making the project less energy-efficient.
 
 \subsubsection{Instruction memory}
-
 Each processor core has a separate instruction memory. This memory is filled
 with instructions defining the program the processor core will run. Before the
 FPGA processor cores get set to run, the the MCU writes the programs for each
 core into these instruction memories.
 
 \subsubsection{Audio Pipeline Buffers}
-\todo[inline]{Describe the need for memory to behave as both ringbuffer/queues,
-and as switching buffers. Discuss why this is a good idea because of our
-intended functionality, and how we utilize the FPGAs resources to implement it
-in the best possible way.}
-Communication between cores happen through the main memory modules. Two
-consecutive cores have access to one shared memory module, which either operate
-as a ringbuffer, or as a switching buffer. Independent of the mode the upstream
-processor has read/write access, while the downstream one has read-only access.\\
-\\
-Samples from the time domain are stored in a ringbuffer, which rotates one slot
-per new sample. Half the memory is readable by the downstream processor, while
-the upstream one can read and write everywhere. Standard behaviour is to only
-write to the upper half, on order to prevent read/write hazards.\\ \todo{fix? need more opsys terminology}
-\\
-Data stored in the frequency domain uses every availiable memory address, and as
-such the downstream processor has to gain access to all newly written values.
-For this reason frequency domain memories has s switching mode, where the two
-processor cores switch base address at each sample arrival.\\
-\\
-Because the BRAM modules in the fpga only feature two in/out ports, only the
-first input and last output data memories are avaliable for the MCU to 
+The audio pipeline buffers are used for inter-core communication. These memory
+modules are shared between two processing cores, except for the outermost cores
+in the pipeline, where they are the input and output for the audio pipeline. The
+memory modules can operate as ringbuffers or switching buffers. While the audio
+pipeline's input/output memory modules can only be operated as ringbuffers,
+while the rest of the memory modules might be operated in either manner.
+
+Since the BRAM modules in the fpga only feature two in/out ports, only the
+first input and last output data memories are avaliable for the MCU to
 write/read.
 
-\subsubsection{Constant memory}
+Independently of the buffer mode, the previous processor in the audio pipeline
+has read and write access to the shared memory module, while the next core has
+read-only access.
 
+Memory modules communication data samples representing values in the frequency
+domain are operated as switching buffers. While miscellaneous samples and
+samples from the time domain stored in memory modules which are operated a
+ringbuffer. These memory modules rotate the ringbuffer one slot per new sample.
+Half of ringbuffer memory is readable by the next processor in the audio
+pipeline, while the previous one can read and write to the whole memory.
+Standard behaviour is to write only to the upper half, in order to prevent a
+Write After Read (WAR) and similar hazards.
+
+Data stored in the frequency domain uses every available memory address, and as
+such the next processor in the audio pipeline has to gain access to all recent
+values. For this reason, memory modules holding frequency values have a
+switching mode, where the two processor cores switch base address at each
+sample's arrival.
+
+\subsubsection{Constant memory}
 The constant memory is used to store constants needed for the SD-FT transforms
 in each audio pipeline. While this memory is read-only, each audio pipeline
 contains its own constant memory, and this memory can only be accessed by two

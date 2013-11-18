@@ -8,11 +8,11 @@ output minijack.
 
 \subsection{System Components}
 \subsubsection{MCU}\label{intro:system-components-mcu}
-The microcontroller unit is a Giant Gecko by Energy Micro (EFM32GG990F1024)
-which is an energy friendly MCU capable of shutting down components that are not
-in use. It does this by defining several levels of sleep mode where the outer
-stage has everything on, and for each step inwards a new set of components are
-shut off.
+The microcontroller unit is a Giant Gecko EFM32GG990F1024, by Silicon Labs
+(formerly known as Energy Micro). The EFM32GG990F1024 is an energy friendly MCU
+capable of shutting down components which are not in use. It does this by
+defining several levels of sleep mode where the topmost level has everything
+turned on, and for each step ``down'' a new set of components are shut off.
 
 \missingfigure{add the fancy energy circle figure?}
 
@@ -34,8 +34,13 @@ core. This limits the number of cores available on the FPGA, but we were able to
 comfortably fit 8 cores, which is enough to implement the sound-manipulating
 filters we want.
 
-\missingfigure{A figure giving overview on how the different cores may run
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=150px]{figures/fpga/system_components_general_pipeline.png}
+    \caption{A figure giving overview on how the different cores run
 different programs/transforms/effects in parallel on the FPGA processing cores.}
+    \label{fig:general_pipeline}
+\end{figure}
 
 Since sound processing often requires fourier transforms, several solutions were
 considered for how to implement hardware support for this.
