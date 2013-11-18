@@ -59,7 +59,7 @@ concepts and design a system with energy efficency in mind.
 \missingfigure{A figure giving a ``20k feet view from above'' of the PCB, MCU,
 and FPGA.}
 
-The application chosen for this project is audio processing. The MCU unit will
+The application chosen for this project is audio processing. The MCU will
 provide audio samples from a source on the PCB to the FPGA, which in turn will
 process the samples and return the result. As the FPGA contains multiple cores,
 the FPGA may run different filters, transforms, and effects in parallel on the
@@ -70,7 +70,7 @@ actually the case}.
 The above figure\todo[inline]{Insert reference} shows how the FPGA processor
 design can run different programs with a MIMD architecture.
 
-\todo[inline]{Move and rewrite the following paragraph to Implementation->Energy
+\todo[inline]{Move and rewrite the following paragraph to Implementation---Energy
 Considerations or similar.}
 While a Xilinx Spartan-6\cite{fpga-chip} processing core does not have a large
 potential for energy efficiency, we aim to program our design and simulate
