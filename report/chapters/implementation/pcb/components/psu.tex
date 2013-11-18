@@ -14,15 +14,14 @@ terms of power saving as it utilizes only a fraction of the input power.
 
 Fortunately, the energy efficiency group of 2012 did a solid job on their power
 supply, using a switch-mode regulator that is able to output 3.3V from any input
-voltage ranging from 4.75V up to 18V with an efficiency of 83-90\% \todo{add
-reference to sr10s3v3 datasheet}. This is very efficient, so most of the design
+voltage ranging from 4.75V up to 18V with an efficiency of 83-90\%~\cite{ds:sr10s3v3}. This is very efficient, so most of the design
 was copied except for a change in current sensors, which is explained in detail
 below.
 
 \paragraph{Voltage Regulators}
 
 The design is based on a switch-mode regulator that transforms DC input into
-3.3V\todo{sr10s3v3 reference}, and a linear regulator\todo{linreg reference}
+3.3V~\cite{ds:sr10s3v3}, and a linear regulator\todo{linreg reference}
 that transforms 3.3V into 1.2V and 1.8V, see power\_supply schematics in Appendix~\ref{apx:schematics}. The switch-mode gets an input voltage between 4.75V
 and 18V which, as mentioned, is transformed into 3.3V and kept stable by
 capacitors. This in turn supplies the 3.3V input for the linear voltage
