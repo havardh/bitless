@@ -3,7 +3,7 @@ Each group have implemented and tested
 
 \begin{description}
     \item[Functional requirement 1] \hfill \\
-        \textit{The audio cores must consume different data and instruction streams. } \\
+        \textit{The audio cores must consume different data and instruction streams.} \\
         \textbf{Test:} Initialize the audio processor with at least two pipelines
         containing one core. Program the two cores with two different programs and feed
         each pipeline with different data.\\
@@ -15,7 +15,7 @@ Each group have implemented and tested
         \textbf{Test:} \\
         \textbf{Pass:} \\
     \item[Functional requirement 3] \hfill \\
-        \textit{The audio processor must consist of at least two audio channels. } \\
+        \textit{The audio processor must consist of at least two audio channels.} \\
         \textbf{Test:} Initialize the audio processor with two pipelines, where each of the 
         pipelines does calculations on an audio channel. Use a stereo wav-file and send
         the left channel through the first pipeline and the right channel through the
@@ -23,15 +23,15 @@ Each group have implemented and tested
         \textbf{Pass:} The data received from the the output buffer is equal to the
         data sent to the input buffer. \\
     \item[Functional requirement 4] \hfill \\
-        \textit{The processor architecture should utilize 16 bit processing cores. } \\
+        \textit{The processor architecture should utilize 16 bit processing cores.} \\
         \textbf{Test:} \\
         \textbf{Pass:} \\
     \item[Functional requirement 5] \hfill \\
-        \textit{The built-in DSP hardware on the FPGA must be utilized efficiently. } \\
+        \textit{The built-in DSP hardware on the FPGA must be utilized efficiently.} \\
         \textbf{Test:} \\
         \textbf{Pass:} \\
     \item[Functional requirement 6] \hfill \\
-        \textit{The cores in the audio pipelines should share data with each other} \\
+        \textit{The cores in the audio pipelines should share data with each other through a ring-buffer.} \\
         \textbf{Test:} \\
         \textbf{Pass:} \\
     \item[Functional requirement 7] \hfill \\
@@ -39,11 +39,13 @@ Each group have implemented and tested
         \textbf{Test:} \\
         \textbf{Pass:} \\
     \item[Functional requirement 8] \hfill \\
-        \textit{The audio system should perform real time filtering on} \\
+        \textit{The audio system should perform real time filtering on
+        two distinct channels, with an audio quality of 8-bits and a frequency 44.1kHz.} \\
         \textbf{Test:} \\
         \textbf{Pass:} \\
     \item[Functional requirement 9] \hfill \\
-        \textit{The microcontroller and the audio processor should communicate via ARMs} \\
+        \textit{The microcontroller and the audio processor should communicate via ARMs
+        External Bus Interface.} \\
         \textbf{Test:} \\
         \textbf{Pass:} \\
     \item[Functional requirement 10] \hfill \\
