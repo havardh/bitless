@@ -253,10 +253,12 @@ void FPGA_Enable(void) {
     // Set the FPGA Sample Clock low
     GPIO_PinOutClear(gpioPortF, 12);
 
+		*((uint16_t*)0x80000000) = 0;
+
     for (uint32_t i = 0; i < fpga.numPipelines; i++) {
         FPGA_Pipeline *p = &fpga.pipelines[i];
 
-        for (uint32_t j = 0; j < p->numCores; i++) {
+        for (uint32_t j = 0; j < p->numCores; j++) {
             FPGA_Core *c = &p->cores[i];
 
             FPGACore_Enable(c);
@@ -268,7 +270,7 @@ void FPGA_Disable(void) {
     for (uint32_t i = 0; i < fpga.numPipelines; i++) {
         FPGA_Pipeline *p = &fpga.pipelines[i];
 
-        for (uint32_t j = 0; j < p->numCores; i++) {
+        for (uint32_t j = 0; j < p->numCores; j++) {
             FPGA_Core *c = &p->cores[i];
 
             FPGACore_Disable(c);

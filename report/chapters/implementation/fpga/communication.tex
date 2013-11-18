@@ -3,8 +3,8 @@
 \FloatBarrier
 \subsection{Communication Between the MCU and the FPGA}\label{section:fpga-buses}
 
-The FPGA communicates with the microcontroller using the external bus interface
-(EBI) of the Giant Gecko microcontroller. In the FPGA, an EBI controller is responsible
+\textit{ChaosM} on the FPGA communicates with the microcontroller using the external bus interface
+(EBI) of the Giant Gecko microcontroller. Inside \textit{ChaosM}, an EBI controller is responsible
 for servicing requests from the microcontroller and driving the internal bus, which
 is used for transferring data to and from modules in the FPGA.
 
@@ -15,7 +15,7 @@ addition to chip select, read-enable, and write-enable signals.
 The communication between the MCU and the FPGA uses 23 address lines and 16 data
 lines. All transfers are initiated when the chip select signal goes low. For
 write transfers, the data and address lines are set up and the write enable
-signal is asserted, see figure \ref{fig:ebi_write}.	
+signal is asserted, see figure \ref{fig:ebi_write}.
 
 For reads, the address is set up and the data lines are put in high impedance mode
 before the read enable signal is asserted, see figure \ref{fig:ebi_read}.
@@ -29,8 +29,6 @@ the EBI bus and the internal bus.
 
 \FloatBarrier
 \paragraph{Addressing}
-\todo[inline]{Revise this ``addressing'' section and see if it should moved to
-appendix.}
 
 The input/output, control registers, and pipelines in the FPGA are addressed
 using a simple addressing scheme, where the address is divided into several
@@ -82,6 +80,4 @@ like illustrated in figure \ref{fig:fpga_memmap}
 	\caption{FPGA memory map overview}
 	\label{fig:fpga_memmap}
 \end{figure}
-
 \FloatBarrier
-

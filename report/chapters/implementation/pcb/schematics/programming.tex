@@ -1,4 +1,4 @@
-% !TEX root = ../../../report.tex
+% !TEX root = ../../../../report.tex
 
 \subsubsection{Programming Interfaces}
 
@@ -9,7 +9,7 @@ Spartan-6 FPGA Configuration User Guide. To avoid ruining the programmability, a
 decision was made to go for the simplest and less error-prone configuration; a
 JTAG interface directly to the chip.
 
-However, JTAG programming does not provide persistence - the FPGA would have to
+However, JTAG programming does not provide persistence -- the FPGA would have to
 be reprogrammed every time it powered up. This was not an ideal solution, so a
 FPGA configuration flash memory was added, from which the FPGA could read its
 initial configuration at startup. Xilinx provides schematics to daisy-chain the
@@ -25,4 +25,4 @@ The 20-pin ARM debug pinout is well documented in application notes and is
 simple to set up.
 
 In addition to programming the MCU, the debug header permits tracing of running
-programs, as well as make use of the energy profiler provided by Energy Micro.
+programs, as well as allowing the use of the energy profiler provided by Silicon Labs.

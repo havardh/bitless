@@ -3,10 +3,10 @@
 
 \subsubsection{Design Considerations}
 
-The processor core is designed to be able to perform audio processing in real-time, and well as being as power efficient as possible.
+The processor core in \textit{ChaosM} is designed to be able to perform audio processing in real-time, and well as being as power efficient as possible.
 Since the FPGAs power usage is close to constant, the best way to save power is to reduce the time the whole board is active.
-The best way for the core to contribute to this is to execute its programs as fast as possible. Thus, the processor core has been designed by the two following principles:
-
+The best way for the core to contribute to this is, to execute the programs as fast as possible.
+Thus, the processor core has been designed by the two following principles:
 
 \begin{itemize}
 	\item As high throughput as possible.
@@ -31,10 +31,7 @@ A change from the classic pipelined processor designs, is that the memory stage 
 This is because the load and store instructions does not need the ALU to calculate the memory address.
 Thus the processor is able to prevent \textit{all} data dependecies by forwarding data from the different stages.
 
-For simplicity, the core does not have a hazard control unit implemented for
-branching. Instead it relies on the programmer to add two no-operations after a branch.
-
-
-
+For simplicity, the core does not have a hazard control unit implemented for branching.
+\todo{Confirm this in the final edition of the code}Instead it relies on the programmer to add two no-operations after a branch.
 
 \input{chapters/implementation/fpga/alu}
