@@ -1,5 +1,13 @@
 \section{System Testing}
-Each group have implemented and tested 
+Each group have implemented, tested, debugged and simulated all the
+software and VHDL during development. This section lists some of the
+functional requirements shown in Section \ref{intro:requirements},
+and how we planned to test each of them. Not all the requirements
+is listed here because many of them overlap each other.
+
+This is simple black-box tests used to verify and proof that
+the requirements is met. They do not go into any deep details about
+how the different parts of the system is \textit{actually} tested.
 
 \begin{description}
     \item[Functional requirement 1] \hfill \\
@@ -9,11 +17,6 @@ Each group have implemented and tested
         each pipeline with different data.\\
         \textbf{Pass:} The cores in each pipeline is able to read data from the input buffer,
         perform operations on the data and write the result to the pipelines output buffer.\\
-    \item[Functional requirement 2] \hfill \\
-        \textit{The processor cores should be arranged in different pipelines,
-        each pipeline representing an audio channel.} \\
-        \textbf{Test:} \\
-        \textbf{Pass:} \\
     \item[Functional requirement 3] \hfill \\
         \textit{The audio processor must consist of at least two audio channels.} \\
         \textbf{Test:} Initialize the audio processor with two pipelines, where each of the 
@@ -22,18 +25,14 @@ Each group have implemented and tested
         second one. \\
         \textbf{Pass:} The data received from the the output buffer is equal to the
         data sent to the input buffer. \\
-    \item[Functional requirement 4] \hfill \\
-        \textit{The processor architecture should utilize 16 bit processing cores.} \\
-        \textbf{Test:} \\
-        \textbf{Pass:} \\
-    \item[Functional requirement 5] \hfill \\
-        \textit{The built-in DSP hardware on the FPGA must be utilized efficiently.} \\
-        \textbf{Test:} \\
-        \textbf{Pass:} \\
     \item[Functional requirement 6] \hfill \\
         \textit{The cores in the audio pipelines should share data with each other through a ring-buffer.} \\
-        \textbf{Test:} \\
-        \textbf{Pass:} \\
+        \textbf{Test:} Create a program that needs a ring buffer. 
+        Simulate the program in ModelSim on a pipeline to verify that
+        the ring buffer is working correctly.
+        Test the program on the FPGA and verify that the ring buffer
+        works as in the simulation. \\
+        \textbf{Pass:} The FPGA outputs correct results and utilizes at least one ring buffer.\\
     \item[Functional requirement 7] \hfill \\
         \textit{It must be possible to observe power consumption over certain components.} \\
         \textbf{Test:} \\
