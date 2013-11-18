@@ -1,11 +1,10 @@
 \FloatBarrier
 \subsection{Processor Core}\label{subsec:fpga-processor-core}
-\todo[inline]{How the processor is designed and why}
 
 \subsubsection{Design Considerations}
 
-The processor core is designed to be able to perform audio processing in real-time, and well as being as power efficient as possible. 
-Since the FPGAs power usage is close to constant, the best way to save power is to reduce the time the whole board is active. 
+The processor core is designed to be able to perform audio processing in real-time, and well as being as power efficient as possible.
+Since the FPGAs power usage is close to constant, the best way to save power is to reduce the time the whole board is active.
 The best way for the core to contribute to this is to execute its programs as fast as possible. Thus, the processor core has been designed by the two following principles:
 
 
@@ -28,8 +27,8 @@ stages:
 	\item Write back \label{stage:wb}
 \end{enumerate}
 
-A change from the classic pipelined processor designs, is that the memory stage comes before the execution stage. 
-This is because the load and store instructions does not need the ALU to calculate the memory address. 
+A change from the classic pipelined processor designs, is that the memory stage comes before the execution stage.
+This is because the load and store instructions does not need the ALU to calculate the memory address.
 Thus the processor is able to prevent \textit{all} data dependecies by forwarding data from the different stages.
 
 For simplicity, the core does not have a hazard control unit implemented for
