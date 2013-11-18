@@ -6,8 +6,13 @@ time domain. The Fourier Transform is used to transform the signal from the time
 to the frequency domain where filters which are hard to implement in the time domain are
 more easly implemented.
 
-\missingfigure{Time vs Freq}
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=150px]{figures/theory/ft_conceptual}
+    \caption{Concept art of the discrete fourier transform}
+    \label{fig:ft_conceptual}
+\end{figure}
+\todo{Make better this more awesome yet?}
 \subsection{Cost efficient implementation of the Fourier Transform}
 
 Cost efficiency is importaint in embedded applications, both in space and time. 
@@ -18,7 +23,12 @@ The algorithms mentioned in this appendix are selected based on these criterias.
 The complexity of the algorithm is dependent on the window size. The window size
 denotes the number of samples used as input to the algorithm each time it is executed.
 
-\missingfigure{Window}
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=50px]{figures/theory/dft_window}
+    \caption{The window consists of the samples included in one calculation of the transform.}
+    \label{fig:dft_window}
+\end{figure}
 
 The window size is given by equation \ref{eq:window_size}.
 
@@ -66,7 +76,13 @@ calculated for each new sample input. To avoid discontinuities the transform is 
 with overlapping windows of the sample stream, and discarding a portion of the output.
 The size of $n$ must be a power of 2 for the radix-2 implementation commonly used.
 
-\missingfigure{illustration of overlapping windows}
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=50px]{figures/theory/fft_window_overlap}
+    \caption{The illustration shows how the FFT uses overlapping windows to provide a smoother transition. }
+    \label{fig:fft_window_overlap}
+\end{figure}
+\todo{this might be wrong...}
 
 \subsubsection{Integer Fast Fourier Transform} \label{appendix:IntFFT}
 The FFT algorithm described above can also be implemented using only integer 
@@ -75,7 +91,7 @@ arithmetic compared to their interger conterparts makes this a desired property.
 The algorithm has the same time complexity as the regular FFT, but the spacial 
 complexity increases as the dynamic range of a floating point number is bigger
 that that of a integer with the same amount of bits. This means that to get
-the same quality a larger word size must be used. The algorithmen suggests 
+the same quality a larger word size must be used. The algorithm suggests 
 using a lifting structure instead of the butterfly structure used for complex
 multiplication.
 
@@ -87,4 +103,9 @@ sample, $x_1$ and removing the sample $x_n$. The time complexity of the {\it SDF
 algorithm is $O(n)$, yet requires that the transform is performed for each 
 new sample input. This makes the SDFT well suited for real-time applications.
 
-\missingfigure{SDFT illustration}
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=150px]{figures/theory/sdft_window_slide}
+    \caption{The SDFT's window slides one sample per time unit.}
+    \label{fig:sdft_window_slide}
+\end{figure}

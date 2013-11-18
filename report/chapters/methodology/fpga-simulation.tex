@@ -1,48 +1,137 @@
-\section{FPGA simulation testing}\label{section:fpga-simulation-testing}
+\section{Test Design}
 
-\subsection{ALU testing}
+\subsection{High}
 
-The testbench for the ALU is very straight forward. It tests every ALU operation
-with two or three different sets of test values and then looks at the output.
-The output consists of a result value and flags that represent how the ALU
-operation executed. The input consists of four values; A, B, C, OPERATION, as
-well as an enable signal. To test a simple integer operation you set OPERATION,
-A and B to the desired values, for example ADD, 2 and 3, respectively. An assert
-will then check that the result signal equals 5 after a small waiting period. C
-and the enable signal are only used for certain floating-point operations.
+\textbf{Functional Requirement 1}
+\\
+\textit{The processors should consume different data and instruction stream}
+\\
+\textbf{Test:}
+Create a program that requires cores to run multiple instructions on multiple data. 
+Run this program in ModelSim to verify that the cores simulate correctly. 
+Finally, run the same program on the FPGA embedded in the system and verify that it produces the same results as the simulation.
+\\
+\textbf{Pass Criteria:}
+The cores run different instructions on different data and produce the correct results according to the program. 
+\\
 
-\subsubsection{ALU test 1}
+\textbf{Functional Requirement 2}
+\\
+\textit{The processor cores should be arranged in a pipeline, each pipeline representing one audio channel. Filter at least two audio channels.}
+\\
+\textbf{Test:}
+Create a program that requires two pipelines with at least one core in each pipeline. 
+Simulate the program in ModelSim and verify that the output reflects the desired results.
+Run the program on the FPGA embedded in the system and verify that the result is the same as in the simulation.
+\\
+\textbf{Pass Criteria:}
+At least two pipelines run one audio channel each and produce the correct results according to the program.
+\\
 
-For all the integer operations, two to three sets of values were tested, ranging
-from simple operations, like the above example, to the more complex operations.
-Additionally, there were also a few tests to validate the values of the status flags. For the floating-point
-operations, a slightly different testing methodology was used. The conversions
-between integer and floating point was tested first. For these tests the
-floating point values were calculated by hand and then compared to the result.
-These operations were then used to simplify the rest of the floating point
-testing. Values were converted to floating point, added, subtracted, or
-multiplied in the fpu, and then converted back before they were tested with an
-assert.
+\textbf{Functional Requirement 3}
+\\
+\textit{Use the built-in DSP hardware efficiently.}
+\\
+\textbf{Test:}
+Synthesize one processor core and review the synthesis report. 
+\\ 
+\textbf{Pass Criteria:}
+There are few/none latches and an appropriate amount of DSP slices are used.
+\\
 
-The abovementioned C value with accompanying enable signal are used by the
-operation ``multiply and accumulate''. This operation needs a constant value
-previously loaded from the constant memory into the ALU, in addition to the
-traditional A and B values. The ALU stores the constant memory value as the C
-value internally. When the operation executes, the enable signal activates the
-writing of the internal register in the ALU. To test this operation A, B, C and
-the enable signals were set to appropriate values and the result was checked if
-equal ``A + B*C''.
+\textbf{Functional Requirement 4}
+\\
+\textit{Conveniently observe power consumption over certain components.}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
 
-\subsection{Core testing}
-something, something
 
-\subsubsection{Core test 1}
+\textbf{Functional Requirement 5}
+\\
+\textit{Real time filtering on two distinct channels, audio quality (8-bit 44.1kHz).}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
 
-\subsubsection{Core test 2}
+\textbf{Functional Requirement 6}
+\\
+\textit{The processor architecture shall utilize 16 bit processing cores.}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
 
-\subsection{Toplevel testing}
-something, something
+\textbf{Functional Requirement 7}
+\\
+\textit{EBI-bus for FPGA.}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
 
-\subsubsection{Toplevel test 1}
+\textbf{Functional Requirement 8}
+\\
+\textit{Ring buffer}
+\\
+\textbf{Test:}
+Create a program that needs a ring buffer. 
+Simulate the program in ModelSim on a pipeline to verify that the ring buffer is working correctly.
+Test the program on the FPGA and verify that the ring buffer works as in the simulation.
+\\
+\textbf{Pass Criteria:}
+The FPGA outputs correct results and utilizes at least one ring buffer.
+\\
 
-\subsubsection{Toplevel test 2}
+
+\subsection{Medium}
+\textbf{Functional Requirement 9}
+\\
+\textit{Hardware-accelerate Fast Fourier Transform on the FPGA.}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
+\textbf{Functional Requirement 10}
+\\
+\textit{SD card interface (SPI mode), in addition to serial port}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
+\textbf{Functional Requirement 11}
+\\
+\textit{There should be buttons and LEDs (for status and control).}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
+
+
+\subsection{Low}
+\textbf{Functional Requirement 12}
+\\
+\textit{Take both digital and analog signals as input}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
+\textbf{Functional Requirement 13}
+\\
+\textit{USB interface}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
+

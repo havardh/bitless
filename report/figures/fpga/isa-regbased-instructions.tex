@@ -20,9 +20,11 @@
 		& \texttt{0b01} & \texttt{fmul \$ra, \$rb} & Multiply registers (FP) & $\$ra \leftarrow \$ra * \$rb$ \\
 		& \texttt{0b10} & \texttt{fmla \$ra, \$rb} & Multiply-and-accumulate (FP) & $\$ra \leftarrow \$ra + \$rb * \$rc$ \\
 		& \texttt{0b11} & \texttt{fmls \$ra, \$rb} & Multiply-and-subtract (FP) & $\$ra \leftarrow \$ra - \$rb * \$rc$ \\
-	\multirow{2}{*}{\texttt{0b11}}
-		& \texttt{0b00} & \texttt{shl \$ra, imm} & Shift left & $\$ra \leftarrow \$ra << imm$ \\
-		& \texttt{0b01} & \texttt{shr \$ra, imm} & Shift right & $\$ra \leftarrow \$ra >> imm$\\
+	\multirow{4}{*}{\texttt{0b11}}
+		& \texttt{0b00} & \texttt{halt} & Stop processor &  \\
+		& \texttt{0b01} & \texttt{halt} & Stop processor & \\
+		& \texttt{0b10} & \texttt{fmla \$ra, \$rb} & Multiply-and-accumulate (FP) & $\$ra \leftarrow \$ra + \$rb * \$rd$ \\
+		& \texttt{0b11} & \texttt{fmls \$ra, \$rb} & Multiply-and-subtract (FP) & $\$ra \leftarrow \$ra - \$rb * \$rd$ \\
 	\hline
 	\multicolumn{5}{|c|}{Group \texttt{0b01}} \\
 	\hline
@@ -41,7 +43,7 @@
 	\multirow{4}{*}{\texttt{0b11}}
 		& \texttt{0b00} & \texttt{lda \$ra, [\$rb]} & Load from input & $\$ra \leftarrow [\$rb]$ \\
 		& \texttt{0b01} & \texttt{ldb \$ra, [\$rb]} & Load from output & $\$ra \leftarrow [\$rb]$ \\
-		& \texttt{0b10} & \texttt{ldc \$ra, [\$rb]} & Load from constant buffer & $\$ra \leftarrow [\$rb]$ \\
+		& \texttt{0b10} & \texttt{ldc \$ra, [\$rb]} & Load from constant buffer & $\$rd\ and\ \$rc \leftarrow [\$rb]$ \\
 		& \texttt{0b11} & \texttt{stb \$ra, [\$rb]} & Store to output & $[\$rb] \leftarrow \$ra$ \\
 	\hline
 	\end{tabular}
