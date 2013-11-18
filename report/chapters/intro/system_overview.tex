@@ -14,10 +14,8 @@ capable of shutting down components which are not in use. It does this by
 defining several levels of sleep mode where the topmost level has everything
 turned on, and for each step ``down'' a new set of components are shut off.
 
-\missingfigure{add the fancy energy circle figure?}
-
 This enables the MCU to keep I/O components working while shutting off the
-processor unit on the chip.\todo{review, rewrite}
+processor unit on the chip.
 
 The MCU handles all I/O, effectively acting as the link between the FPGA and the
 peripherals. Sound input is either gathered from a file on the SD-card or as a
@@ -36,7 +34,7 @@ filters we want.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=150px]{figures/fpga/system_components_general_pipeline.png}
+    \includegraphics[height=150px]{figures/fpga/system_components_general_pipeline_without_programs.png}
     \caption{A figure giving overview on how the different cores run
 different programs/transforms/effects in parallel on the FPGA processing cores.}
     \label{fig:general_pipeline}
