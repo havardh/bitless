@@ -1,26 +1,26 @@
 \section{Testing the MCU Implementation}
 
 This section describes the test written in software, and the energy measurements
-done with {\bf energyAwareProfiler}. The software test can be divided into to
+done with {\bf energyAwareProfiler}. The software test can be divided into two
 groups, {\bf Unit Test} and {\bf Demo programs}.
 
 \subsection{Unit Tests}
 
-Unit tests was developed for the non-hardware dependent code. These are utility components
-which executes correctly independent on the underlying platform. The tests was written in
+Unit tests were developed for the non-hardware dependent code. These are utility components
+which executes correctly independent on the underlying platform. The tests were written in
 the CppUTest framework\ref{} and executed on each developers own laptop.
 
 \subsection{Demo Program}
 
 While developing the software library used to control the hardware through {\bf emlib} and
-{\bf CMSIS}. These programs both verifies that the software operates correcly and that
+{\bf CMSIS}\todo{there is something wrong with this sentence}. These programs both verifies that the software operates correctly and that
 the underlying hardware devices connected according to the specifications. By running the
-program both on the produced circuit board and the development kits available at the lab.
+program both on the produced circuit board and the development kits available at the lab.\todo{there is something wrong with this sentence}
 
 \subsubsection{Transfer from ADC to DAC with DMA}
 Location: sw/modules/adc/demo/ADD.c \\
-This demo sets up the ADC as a sample source and DAC as the sample output. It uses DMA
-to copy from the ADC to a input buffer in Internal RAM on the MCU. After 64 samples
+This demo sets up the ADC as a sample source and the DAC as a sample output. It uses DMA
+to copy from the ADC to an input buffer in the Internal RAM on the MCU. After 64 samples
 the CPU is interrupted and transfers the samples to output buffer. A second DMA channel
 copies from the output buffer to the DAC. This test verifies that this pipeline is set
 up correctly. It checks that the minijacks are connected the correct GPIO ports. As
