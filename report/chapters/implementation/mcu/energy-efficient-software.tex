@@ -1,22 +1,25 @@
 \subsection{Energy Efficient Software}
 
 The software layer provides the most potential for energy savings, as the best
-way to save power is to turn off the system completely. This descision is made
-by the algorithm used. Still, a few techniques ensures that savings are posible even when the system 
-is running. The most commonly know technique are {\bf interrupts}, in contrast to busy 
-waiting. {\bf Sleep modes} are used for turning of parts of the system while still enabling 
-some processing. {\bf DMA}, Direct Memory Access, enables movement of data while the
-CPU is sleeping. 
+way to save power is to turn off the system completely. This is decided by the
+algorithm the software runs. Still, there are some techniques which can ensure
+a level of energy saving, even while the system is running. The most commonly
+know technique is {\bf interrupts}, in contrast to busy waiting. {\bf Sleep
+modes} are used for turning of parts of the system while still enabling some
+processing. {\bf DMA}, Direct Memory Access, enables movement of data while the
+CPU is sleeping.
 
-The Giant Gecko provides 5 execution modes, where 4 modes are different levels of sleep. 
-For this project sleep modes EM0, EM1 and EM3 was utilized.
+The Giant Gecko provides 5 execution modes, where 4 modes are different levels
+of sleep. For this project sleep modes EM0, EM1 and EM3 was utilized.
 
 
 \begin{description}
 	\item[Energy Mode 0] - Run Mode \hfill \\
-		Fully operational with all features available, used when handling interrupts and while reading from SDCard.
+		Fully operational with all features available, used when handling
+interrupts and while reading from SDCard.
 	\item[Energy Mode 1] - Sleep Mode \hfill \\
-		CPU turned off, used when the system is performing filtering, required by EBI.
+		CPU turned off, used when the system is performing filtering, required
+by EBI.
 	\item[Energy Mode 3] - Stop Mode \hfill \\
 		Deepest sleep mode without reset required, used when Bitless is idle.
 \end{description}
