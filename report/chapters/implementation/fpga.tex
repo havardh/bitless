@@ -3,15 +3,15 @@
 
 The processor design was implemented on a Xilinx Spartan-6 FPGA. It consists of
 two audio processing pipelines, each containing four homogenous processor cores.
-The homogenous processing core is a Turing-complete processing core connected to
-constant memory, input buffer, output buffer, and instruction memory. Except for
-the first and last core in each audio pipeline, all the cores are connected
-through the input/output-buffers, where the next core's input buffer is the
-previous core's outputbuffer.
+The processor cores are turing complete processing units connected to
+constant memory, an input buffer, an output buffer, and instruction memory.
+Each core exchanges data through the input/output buffers. Data from the MCU
+is written into the input buffer of the first core, and read back from the
+output buffer of the last core.
 
-With this design, each pipeline of cores run a set of filters, say a
-Fourier-Transform, a frequency filter, an inverse Fourier-Transform, and a final
-non-filtering effect on the audio stream running through the audio pipeline.
+With this design, each pipeline of cores run a set of filters, for instance
+a fourier transform, a frequency filter, an inverse fourier transform, and an
+effect on the stream running through the audio pipeline.
 
 \input{chapters/implementation/fpga/pipelines}
 \input{chapters/implementation/fpga/communication}
