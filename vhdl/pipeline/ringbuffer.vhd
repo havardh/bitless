@@ -47,15 +47,10 @@ architecture behaviour of ringbuffer is
 	signal a_base_address	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--A-buffer base address
 	signal b_base_address	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--B-buffer base address
 
-	signal a_incremented	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--Incremented A-buffer base address.
-	signal b_incremented	: std_logic_vector(DMEM_ADDR_SIZE - 1 downto 0);	--Incremented B-buffer base address.
 begin
 
 	a_address <= std_logic_vector(unsigned(a_base_address) + unsigned(a_off_address));
 	b_address <= std_logic_vector(unsigned(b_base_address) + unsigned(b_off_address));
-
-	a_incremented <= std_logic_vector(unsigned(a_base_address) + 1);--;to_unsigned(window_size, DMEM_ADDR_SIZE));
-	b_incremented <= std_logic_vector(unsigned(b_base_address) + 1);--to_unsigned(window_size, DMEM_ADDR_SIZE));
 	
 	-- Switch the buffer pointers according to the buffer mode:
 	buffer_switch: process(sample_clk, mode, reset)
@@ -73,11 +68,11 @@ begin
 			else
 				case mode is
 					when NORMAL_MODE =>
-						b_base_address	<= a_base_address;
 						a_base_address	<= b_base_address;
+						b_base_address	<= a_base_address;
 					when RING_MODE =>
-						b_base_address	<= b_incremented;
-						a_base_address	<= a_incremented;
+						a_base_address	<= std_logic_vector(unsigned(a_base_address) + 1);--Incremented A-buffer base address.
+						b_base_address	<= std_logic_vector(unsigned(b_base_address) + 1);--Incremented B-buffer base address.
 				end case;
 			end if;
 		end if;
