@@ -1,40 +1,54 @@
 \section{Test Design}
 
 \subsection{High}
+
 \textbf{Functional Requirement 1}
-The processors should consume different data and instruction stream, (MIMD).
+\textit{The processors should consume different data and instruction stream}
 \textbf{Test:}
+Create a program that requires cores to run multiple instructions on multiple data. 
+Run this program in ModelSim to verify that the cores simulate correctly. 
+Finally, run the same program on the FPGA embedded in the system and verify that it produces the same results as the simulation.
 \textbf{Pass Criteria:}
+The cores run different instructions on different data and produce the correct results according to the program. 
+
 \textbf{Functional Requirement 2}
-The processor cores should be arranged in a pipeline, each pipeline representing one audio channel.
+\textit{The processor cores should be arranged in a pipeline, each pipeline representing one audio channel.}
 \textbf{Test:}
+Create a program that requires two pipelines with at least one core in each pipeline. 
+Simulate the program in ModelSim and verify that the output reflects the desired results.
+Run the program on the FPGA embedded in the system and verify that the result is the same as in the simulation.
 \textbf{Pass Criteria:}
+Two pipelines run one audio channel each and produce the correct results according to the program.
+
+
 \textbf{Functional Requirement 3}
-Use the built-in DSP hardware efficiently.
+\textit{Use the built-in DSP hardware efficiently.}
 \textbf{Test:}
 \textbf{Pass Criteria:}
+
+
 \textbf{Functional Requirement 4}
-Conveniently observe power consumption over certain components.
+\textit{Conveniently observe power consumption over certain components.}
 \textbf{Test:}
 \textbf{Pass Criteria:}
 \textbf{Functional Requirement 5}
-Filter at least two audio channels.
+\textit{Filter at least two audio channels.}
 \textbf{Test:}
 \textbf{Pass Criteria:}
 \textbf{Functional Requirement 6}
-Real time filtering on two distinct channels, audio quality (8-bit 44.1kHz).
+\textit{Real time filtering on two distinct channels, audio quality (8-bit 44.1kHz).}
 \textbf{Test:}
 \textbf{Pass Criteria:}
 \textbf{Functional Requirement 7}
-The processor architecture shall utilize 16 bit processing cores.
+\textit{The processor architecture shall utilize 16 bit processing cores.}
 \textbf{Test:}
 \textbf{Pass Criteria:}
 \textbf{Functional Requirement 8}
-EBI-bus for FPGA.
+\textit{EBI-bus for FPGA.}
 \textbf{Test:}
 \textbf{Pass Criteria:}
 \textbf{Functional Requirement 9}
-Ring buffer
+\textit{Ring buffer}
 \textbf{Test:}
 \textbf{Pass Criteria:}
 
