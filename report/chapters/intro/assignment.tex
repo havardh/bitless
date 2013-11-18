@@ -7,7 +7,7 @@ solutions\cite{olukotun}. Consequently, there is a significant interest in
 single-chip parallel processor solutions (e.g. \cite{bell,kongetira}). The
 processor cores in commercial multi-core chips are conventional designs and
 therefore reasonably complex. In this work, your task is to design a
-multiprocessor,Multiple Instruction, Multiple Data streams (MIMD). A processor
+multiprocessor, Multiple Instruction, Multiple Data streams (MIMD). A processor
 classified MIMD include a multiple- instruction stream
 organizations\cite{flynn}. Such processors can executing different instructions,
 i.e. minimum 2 independent programs, on different (independent) data.
@@ -40,12 +40,21 @@ effort put into the project.
 \section{Assignment}\label{intro:our-assignment-interpretation}
 
 \paragraph{Our interpretation of the assignment}
-Our interpretation of the assignment is to design a MIMD architecture processor
-in VHDL, implement it on an Field Programmable Gate Array (hereafter referred to
-as the ``FPGA''), and get a program to run a successfully on the FPGA-chip
-implemented on a Printed Circuit Board (hereafter referred to as the ``PCB'').
-To help with the running of the FPGA on the PCB, we can utilize a
-Micro Controller Unit (hereafter referred to as the ``MCU'').
+Our interpretation of the assignment is to design a hardware system for a
+specific application domain with two main components. First, it must have a
+microcontroller. Second, it must have a Field Programmable Gate Array (``FPGA'')
+implementing a MIMD architecture processor. It must be designed to fit on a
+Printed Circuit Board (``PCB'') designed for this project. From this
+information, it is natural to make the MCU manage the peripherals and drive the
+system, while the FPGA is being used as a hardware accelerator, i.e. to speed up
+execution of programs.
+
+Another design requirement given from the assignment description is energy
+efficiency. The hardware configuration with a general processor and a
+specialized set of processors has become increasingly popular since power
+consumption became an issue, and is ubiquitous in today's computing systems.
+Being on the energy efficiency group motivates us to leverage such energy-aware
+concepts and design a system with energy efficency in mind.
 
 \missingfigure{A figure giving a ``20k feet view from above'' of the PCB, MCU,
 and FPGA.}
