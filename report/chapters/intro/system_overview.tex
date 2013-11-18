@@ -8,16 +8,9 @@ output minijack.
 
 \subsection{System Components}
 \subsubsection{MCU}\label{intro:system-components-mcu}
-The microcontroller unit is a Giant Gecko EFM32GG990F1024, by Silicon Labs
-(formerly known as Energy Micro). The EFM32GG990F1024 is an energy friendly MCU
-capable of shutting down components which are not in use. It does this by
-defining several levels of sleep mode where the topmost level has everything
-turned on, and for each step ``down'' a new set of components are shut off.
 
-This enables the MCU to keep I/O components working while shutting off the
-processor unit on the chip.
-
-The MCU handles all I/O, effectively acting as the link between the FPGA and the
+The MCU handles all I/O and is referred to as the I/O controller in much of the
+report, because it effectively acts as the link between the FPGA and the
 peripherals. Sound input is either gathered from a file on the SD-card or as a
 stream from the audio-in jack on the board, and then passed on to the FPGA. In
 addition, it is the unit controlling the FPGA, through writing the the
@@ -25,6 +18,7 @@ instructions memory each processing core contains. This, provides a simple way
 in which to change the FPGA behavior.
 
 \subsubsection{FPGA}
+
 The FPGA is programmed with a MIMD architecture design, with the purpose of
 enabling task parallelism. While this improves performance, it comes at the cost
 of a more complex process architecture, which in turn increases the size of each
@@ -55,6 +49,7 @@ would not only allow acceleration of the fourier transforms, but also
 manipulation of the resulting samples in the frequency domain.
 
 \subsubsection{Memory}
+
 The MCU has an internal memory of 128KByte, which is not sufficient for working
 comfortably with audio files loaded from the SD-card, so the decision was made
 to add more memory onto the board. In addition, if something were to go wrong
@@ -62,6 +57,7 @@ with the audio-in channel and SD-card, having extra memory can work as a third
 option for storing input.
 
 \subsubsection{I/O}
+
 Adding input and output interfaces makes handling data easier as we do not have
 to go though the debug interface to insert and fetch data from the chip. Thus,
 we decided to add the following components to the board.
@@ -74,18 +70,21 @@ we decided to add the following components to the board.
 \end{enumerate}
 
 \paragraph{Micro USB and Micro SD}
+
 The Micro USB was implemented with respect to energy efficiency. If we could get
 the whole project to run on the power supplied by a regular USB connection, we
 would have reached a low level of energy consumption. The Micro SD card was
 added as mentioned earlier in the subsection\ref{intro:system-components-mcu}.
 
 \paragraph{Minijacks}
+
 We added two jack channels, one for input and one for output, since taking input
 from a recording or playback device is much easier if you can just plug it in
 rather than having to transfer data through a debugging interface. The same also
 goes for output.
 
 \paragraph{Buttons and LEDs}
+
 The buttons and LEDs were added for ease of controlling/reading what is
 happening on the PCB. We have two reset buttons for the FPGA and USB, and five
 general purpose ones which the MCU controls. There's also eight LEDs, where
