@@ -3,78 +3,129 @@
 \subsection{High}
 
 \textbf{Functional Requirement 1}
+\\
 \textit{The processors should consume different data and instruction stream}
+\\
 \textbf{Test:}
 Create a program that requires cores to run multiple instructions on multiple data. 
 Run this program in ModelSim to verify that the cores simulate correctly. 
 Finally, run the same program on the FPGA embedded in the system and verify that it produces the same results as the simulation.
+\\
 \textbf{Pass Criteria:}
 The cores run different instructions on different data and produce the correct results according to the program. 
+\\
 
 \textbf{Functional Requirement 2}
-\textit{The processor cores should be arranged in a pipeline, each pipeline representing one audio channel.}
+\\
+\textit{The processor cores should be arranged in a pipeline, each pipeline representing one audio channel. Filter at least two audio channels.}
+\\
 \textbf{Test:}
 Create a program that requires two pipelines with at least one core in each pipeline. 
 Simulate the program in ModelSim and verify that the output reflects the desired results.
 Run the program on the FPGA embedded in the system and verify that the result is the same as in the simulation.
+\\
 \textbf{Pass Criteria:}
-Two pipelines run one audio channel each and produce the correct results according to the program.
-
+At least two pipelines run one audio channel each and produce the correct results according to the program.
+\\
 
 \textbf{Functional Requirement 3}
+\\
 \textit{Use the built-in DSP hardware efficiently.}
+\\
 \textbf{Test:}
+Synthesize one processor core and review the synthesis report. 
+\\ 
 \textbf{Pass Criteria:}
+There are few/none latches and an appropriate amount of DSP slices are used.
+\\
 
 
 \textbf{Functional Requirement 4}
+\\
 \textit{Conveniently observe power consumption over certain components.}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
+\\
+
+
 \textbf{Functional Requirement 5}
-\textit{Filter at least two audio channels.}
-\textbf{Test:}
-\textbf{Pass Criteria:}
-\textbf{Functional Requirement 6}
+\\
 \textit{Real time filtering on two distinct channels, audio quality (8-bit 44.1kHz).}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
-\textbf{Functional Requirement 7}
+\\
+\textbf{Functional Requirement 6}
+\\
 \textit{The processor architecture shall utilize 16 bit processing cores.}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
-\textbf{Functional Requirement 8}
+\\
+\textbf{Functional Requirement 7}
+\\
 \textit{EBI-bus for FPGA.}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
-\textbf{Functional Requirement 9}
+\\
+\textbf{Functional Requirement 8}
+\\
 \textit{Ring buffer}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
+\\
 
 
 \subsection{Medium}
+\textbf{Functional Requirement 9}
+\\
+\textit{Hardware-accelerate Fast Fourier Transform on the FPGA.}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
 \textbf{Functional Requirement 10}
-Hardware-accelerate Fast Fourier Transform on the FPGA.
+\\
+\textit{SD card interface (SPI mode), in addition to serial port}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
+\\
 \textbf{Functional Requirement 11}
-SD card interface (SPI mode), in addition to serial port
+\\
+\textit{There should be buttons and LEDs (for status and control).}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
-\textbf{Functional Requirement 12}
-There should be buttons and LEDs (for status and control).
-\textbf{Test:}
-\textbf{Pass Criteria:}
+\\
 
 
 \subsection{Low}
+\textbf{Functional Requirement 12}
+\\
+\textit{Take both digital and analog signals as input}
+\\
+\textbf{Test:}
+\\
+\textbf{Pass Criteria:}
+\\
 \textbf{Functional Requirement 13}
-Take both digital and analog signals as input
+\\
+\textit{USB interface}
+\\
 \textbf{Test:}
+\\
 \textbf{Pass Criteria:}
-\textbf{Functional Requirement 14}
-USB interface
-\textbf{Test:}
-\textbf{Pass Criteria:}
+\\
 
