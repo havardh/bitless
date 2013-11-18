@@ -1,31 +1,20 @@
 \clearpage
 \section{MCU} \label{section:mcu}
 
-The software implemented for this project is run on an ARM \todo{insert
-reference?}Cortex-M3 supplied by Energy Micro. This chapter describes the
-software modules executed on said chip. The responsibility of the software
-components are mainly to produce audio samples for the FPGA, and to receive the
-samples the FPGA produces as a result of the sound manipulation.
+The software is implemented on a Giant Gecko ARM Cortex-M3 microcontroller, 
+manufactured by Silicon Labs \todo{Mention EnergyMicro before this point}. 
+This MCU, Microcontroller Unit, is a complete miniature computer on a single chip. 
+The energy saving features, along with generally low power consumption, of this MCU 
+makes it a good fit for the overall goal of this project, namely energy efficiency. 
 
-The MCU also implements interfaces for the different I/O devices which the
-project uses as sources and destinations for the data samples. These include the
-following; the ADC and DAC connected to the minijack plugs on the card, and the
-MicroSD card in the SDCard slot. In addition, a serial port is available for
-communication with a PC.
+This chapter describes the modules that execute on the MCU. The responsibility 
+of this component is to supply the FPGA core \todo{FPGA core name here} with audio 
+samples. It should also comsume the results after audio processing has taken 
+place. In order to provide samples, the MCU controls a variety of Input/Output 
+peripherals. 
 
-Use of buttons controlling the behavior the programs at runtime, as well as LEDs
-for visual feedback is also controlled by the MCU.
 
-Another responsibility of the MCU is to program the FPGA cores before the sound
-manipulation is initialized, detailed further in appendix
-\ref{appendix:starting-fpga}. This configuration of the sound manipulations
-filters on the FPGA is also performed by the MCU.
-
- \todo[inline]{Most of this is too specific.
-It should be a ``light'' introduction; needs to be rewritten. E.g.
-give an overview of terminology (CPU vs MCU), what role the MCU
-plays in the system compared to the rest, and why the chapter
-has been structured so and so. -JK}
+\input{chapters/implementation/mcu/energy-efficient-software}
 
 \input{chapters/implementation/mcu/architecture}
 % application
