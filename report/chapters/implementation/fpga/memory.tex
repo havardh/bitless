@@ -1,6 +1,6 @@
 %!TEX root = ../../../report.tex
 
-\subsection{Memory types}\label{subsec:fpga-memory}
+\subsection{Memory Types}\label{subsec:fpga-memory}
 
 The internal block RAMs in the FPGA were used to implement the different kinds
 of memories inside the processor. Even though this limits the amount of
@@ -8,7 +8,7 @@ memory available, it guarantees equal access time for all the different
 of memories. It also precludes having to use external RAM, which would not be as
 fast, nor energy-efficient.
 
-\subsubsection{Instruction memory}
+\subsubsection{Instruction Memory}
 Each processor core has a separate instruction memory. This memory is used to
 store the program that is run by a processor core.
 
@@ -31,7 +31,7 @@ the buffer. Each core has access to their own window. On each sample clock
 edge\todo{Sample clock again} the window is advanced by a predefined number
 of samples.
 
-\subsubsection{Constant memory}
+\subsubsection{Constant Memory}
 The constant memory is used to store constants needed for computations. Each
 audio pipeline contains one constant memory which is shared between two
 configurable processors in the pipeline. This limitation is due to the block
