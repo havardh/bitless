@@ -76,22 +76,3 @@ While a Xilinx Spartan-6\cite{fpga-chip} processing core does not have a large
 potential for energy efficiency, we aim to program our design and simulate
 energy efficiency through the VHDL code on the FPGA, as well as in the
 programming on the MCU, and in the design of the PCB.
-
-\subsection{Multiple Instruction, Multiple Data}
-
-As stated in the the original assignment text, part of the requirements for this
-assignment is to implement a processor design on the FPGA based on a MIMD
-architecture. MIMD architecture is an extension of the Single Instruction,
-Multiple Data (SIMD) architecture. In a SIMD architecture, each processor core
-shares instruction memory, so in effect, all the processor cores in the
-processor run the same program, but on different sets of data. Like for example
-in a graphics pipeline.
-
-A MIMD architecture however differs from the SIMD in that each processor core
-has its own instruction memory, with the effect that each processor core can
-perform a different task, and execute it on a different set of data than any
-other core.
-
-So for this project to successfully meet the requirements, it has to implement
-an architecture with multiple processing cores, where each core can work on any
-set of data with any set of instructions independently of any other core.
