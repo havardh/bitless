@@ -1,16 +1,17 @@
-\begin{table}[h]
-	\centering
-	\begin{tabular}{|l l|}
+\begin{centering}[h]
+	\begin{tabular}{|l p{10.5cm}|}
 		\hline
 		\textbf{Register name} & \textbf{Register purpose} \\
 		\hline
 		\texttt{r0} & Zero register, hard coded to always contain 0 \\
-		\texttt{ri} & Immediate register, contains the result of an \textsc{ldi} instruction\\
-		\texttt{rc} & Constant register, provides operand to \textsc{fmla} and \textsc{fmls} instructions \\
+		\texttt{r1} & Immediate register, contains the result of an \textsc{ldi} instruction\\
+		\texttt{rc} & Constant register, provides operand to \textsc{fmla} and \textsc{fmls} instructions. Lies within the ALU. \\
+		\texttt{rc} & Constant register, provides operand to \textsc{fmla} and \textsc{fmls} instructions. Lies within the ALU. \\
 		\hline
 	\end{tabular}
 
-	\caption{List of special registers}
 	\label{tab:specregs}
-\end{table}
+	%\caption{List of special registers}
+	
+\end{centering}
 
