@@ -21,7 +21,9 @@ implemented functions can be found in table \ref{tab:regbased_instrs}.
 \todo{Fiks instruksjonstabellen}
 
 \input{figures/fpga/isa-regbased-format}
+\FloatBarrier
 \input{figures/fpga/isa-regbased-instructions}
+\FloatBarrier
 
 \subsubsection{Load Immediate Instruction}
 The load immediate instruction is used to load an immediate constant into a
@@ -29,6 +31,7 @@ register. The format of the instruction can be found in figure
 \ref{fig:ldi_format}. The value is loaded into register \texttt{\$r1}.
 
 \input{figures/fpga/isa-ldi-format}
+\FloatBarrier
 
 \subsubsection{Branch Instruction}
 The branch instruction checks condition flags and jumps accordingly. By
@@ -38,6 +41,7 @@ in figure \ref{fig:new_branch_format}. List for the encoding of the flags field
 is coming later.
 
 \input{figures/fpga/isa-branch-format}
+\FloatBarrier
 
 \paragraph{Special Registers}
 
@@ -50,4 +54,4 @@ The list of defined special registers can be found in table \ref{tab:specregs}.
 The register number for these registers have not yet been determined.
 
 \input{figures/fpga/isa-special-registers}
-
+\FloatBarrier
