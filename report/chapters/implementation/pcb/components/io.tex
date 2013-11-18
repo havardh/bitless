@@ -1,9 +1,15 @@
 % !TEX root = ../../../../report.tex
 
-\subsubsection{USB-UART}
+\subsubsection{I/O}
+
+I/O on the board is realized through micro-USB, microSD, buttons, LEDs, as
+well as the audio circuits mentioned above, and a UART interface. The micro-USB was chosen for the
+size, as it offers all the same features as the alternative USB and mini-USB ports. The same goes for the
+microSD reader. LEDs were picked from stock SMD components at Farnell, and the
+buttons were found on the lab.
 
 As a backup solution for communication with the MCU other than the debug port,
-a UART interface was added in form of a header. Should all other things fail,
+the UART interface was added in form of a header. Should all other things fail,
 UART, being a simple serial interface, would be a viable fallback solution, both
 for debugging as well as piping sound in and out, although not in realtime. In
 order to improve usability of the serial interface, a USB-UART bridge chip was
