@@ -1,25 +1,19 @@
 \subsection{Software Architecture}
 
-\todo[inline]{FIX THE BELOW REFERENCES!!!!}
-
-Since the microcontroller from Energy Micro which this project uses, in turn is
-a Cortex microcontroller, the software is based on the CMSIS \ref{CMSIS}
-codebase from ARM. The Giant Gecko MCU is supplied with a peripheral Application
-Programming Interface (API), called emlib \ref{emlib}, which builds upon CMSIS
-and can be used to both initialize and control all attached peripherals. The
-structure of the code and programming model is based on how emlib does it. The
-code and model have mostly used the emlib API for communicating and controlling
-the microcontoller.
+All the software used in the project is based on the CMSIS \cite{cmsisapi} code
+base from ARM. The Giant Gecko MCU is supplied with a peripheral API, called
+emlib \cite{emlibapi} which builds upon CMSIS and can be used to initialize and
+control all attached peripherals. The project code and programming model is
+based on the structure in emlib, see Figure \ref{fig:software-stack}.
 
 \input{figures/sw/software-stack}
 
 The application code is structured into directories representing each of the
-modules or peripherals, whose software was explicity written for this project.
-Each directory contains three sub-directories, \textit{inc}, \textit{src} and
-\textit{demo}. These sub-directories contain either header files, source files,
-or different demos and test programs for each module, respectively. Each module
-is typically implemented as a combination of a driver and controller for the
-specific peripheral the module is designed for.
+modules, or peripherals, which have custom software written for it. Each module
+contains three directories, \textit{inc}, \textit{src} and \textit{demo}.
+These directories contains header files, source files, and different demos and
+test programs for the modules. Each module is typically implemented as a
+combination of a driver and a controller, for the peripheral it is designed for.
 
-\todo[inline]{THE ABOVE PHRASING SUCKS. NEEDS REVISION. -CC}
-\todo[inline]{THE ABOVE COMMENT IS INSULTING, GET A GRIP! }
+The custom library for Bitless includes code for setting up and controlling
+all the peripherals described in the following sections.
