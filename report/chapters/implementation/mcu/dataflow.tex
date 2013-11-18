@@ -2,7 +2,7 @@
 
 \subsection{Dataflow}
 When designing an energy efficient system, dataflow is of great importance. The
-software on the MCU has been designed to minimize the number of data-stores and
+software on the MCU has been designed to minimize the number of data -stores and
 -movements. When possible, DMA is utilized to move the data while running the
 MCU in a low power mode. The dataflow consist of four phases, as shown in figure
 \ref{sw_transfer_phases}.
@@ -17,18 +17,18 @@ phases are executed concurrently to ensure a constant flow of samples.
 
 \subsubsection{Direct Memory Access}
 Drect Memory Access (DMA) provides the ability to move data
-without the intervention of the CPU. This is used extensively to implement the
-dataflow when the MCU is running in a low energy mode. The CPU is only used to configure
-and refresh the DMA channels in between transfers. The MCU provides 12
-independent DMA channels which can move data between peripherals, Internal RAM, and
-devices connected to EBI, like the FPGA.
+without the intervention of the CPU. This is used extensively to move the
+dataflow while the MCU is running in a low energy mode. The CPU on the MCU is
+only used to configure and refresh the DMA channels in between transfers. The
+MCU provides 12 independent DMA channels which can move data between
+peripherals, Internal RAM, and devices connected to EBI, like the FPGA.
 
 The main flow of data goes from Internal RAM in the MCU to the buffers on
 the FPGA, and back to Internal RAM in the MCU. This dataflow path is illustrated in \todo{which figure??}figure.
 
 % \input{figures/sw/ram-fpga-ram}
 
-\paragraph{Deinterleaving of Samples}
+\subsubsection{Deinterleaving the samples}
 When reading from both a WAV file or the ADC, samples from the stereo channels
 are interleaved. The FPGA handles each channel in a separate pipeline as shown
 in figure \ref{fig_sw_main_dataflow}.
@@ -39,7 +39,7 @@ are moved to the output peripherals.
 \missingfigure{Figure showing deinterleaving and interleaving}
 
 The interleaving and deinterleaving operations are either done by the DMA for
-energy efficiency purposes, or the CPU on the MCU. If the operation is performed
+energy efficiency purposes, or the CPU. If the operation is performed
 by the CPU, the gains of speed and data-transfer analysis can be tested. Depending
 on the different types of input sources, the CPU is needed on some occasion, while
 on others a more energy efficient implementation through the use of DMA may be used.
@@ -80,8 +80,10 @@ the audio pipeline containing the left stereo channel, writes the samples to eve
 addresses in the memory, while the DMA reading the right audio pipeline channel writes
 to odd numbered addresses.
 
-\paragraph*{}
-In addition, a DMA is assigned for each ADC and DAC whenever they are used as
+\todo[inline]{Need a better way than the ``paragraph'' command to split the
+above and below paragraphs.}
+
+Additionally, a DMA is assigned for each ADC and DAC whenever they are used as
 input and output. When a SDCard is used, the contents of the files are read and
 written directly to and from RAM by the CPU.
 
@@ -102,7 +104,6 @@ the EBI leads to a simple interface with these units since the bus is memory
 mapped on the MCU. Communicating with the FPGA is done by reading and writing to memory.
 
 \subsubsection{Serial Peripheral Interface}
-<<<<<<< HEAD
 The SPI bus is a general bus interface used in many embedded applications. It is used
 for communicating between the MCU and a MicroSD memory card connected to the slot
 on the PCB \ref{} \todo{Har vi bilde av bitless?}.
@@ -113,7 +114,7 @@ ADC on the MCU. The ADC measures the the difference between
 
 \todo{more about how the bus is implemented on the MCU}
 
-\paragraph{Triggering Transfers}
+\subsubsection{Triggering Transfers}
 
 All the DMA transfers are triggered by the use of one clock, the sample clock.
 This clock is run at the sample speed 11 kilohertz when using the DAC or ADC. Or
