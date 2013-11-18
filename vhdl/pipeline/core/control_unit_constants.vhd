@@ -69,7 +69,7 @@ package control_unit_constants is
 			constant add 				: STD_LOGIC_VECTOR := "00";
 			constant sub_or_cmp			: STD_LOGIC_VECTOR := "01";
 			constant multi				: STD_LOGIC_VECTOR := "10";
-			constant shift				: STD_LOGIC_VECTOR := "11";
+			constant halt_or_mad		: STD_LOGIC_VECTOR := "11";
 			
 			-- register based 2
 			constant and_logic 			: STD_LOGIC_VECTOR := "00";
@@ -100,10 +100,9 @@ package control_unit_constants is
 				constant multi_sub_fp		: STD_LOGIC_VECTOR := "11";
 				
 				-- shift
-				constant shift_lft			: STD_LOGIC_VECTOR := "00";
-				constant shift_rht			: STD_LOGIC_VECTOR := "01";
-				constant shift_undefined	: STD_LOGIC_VECTOR := "10";
-				constant shift_undefined2	: STD_LOGIC_VECTOR := "11";
+				constant fp_mad;			: STD_LOGIC_VECTOR := "10";
+				constant fp_msd				: STD_LOGIC_VECTOR := "11";
+				constant halt				: STD_LOGIC_VECTOR := "00";
 			
 			-- ** register based 2 **
 				
