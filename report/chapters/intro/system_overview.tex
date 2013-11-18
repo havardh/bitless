@@ -8,11 +8,11 @@ output minijack.
 
 \subsection{System Components}
 \subsubsection{MCU}\label{intro:system-components-mcu}
-The microcontroller unit is a Giant Gecko by Energy Micro (EFM32GG990F1024)
-which is an energy friendly MCU capable of shutting down components that are not
-in use. It does this by defining several levels of sleep mode where the outer
-stage has everything on, and for each step inwards a new set of components are
-shut off.
+The microcontroller unit is a Giant Gecko EFM32GG990F1024, by Silicon Labs
+(formerly known as Energy Micro). The EFM32GG990F1024 is an energy friendly MCU
+capable of shutting down components which are not in use. It does this by
+defining several levels of sleep mode where the topmost level has everything
+turned on, and for each step ``down'' a new set of components are shut off.
 
 \missingfigure{add the fancy energy circle figure?}
 
