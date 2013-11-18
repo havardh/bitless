@@ -1,0 +1,58 @@
+
+\begin{table}[H]
+\centering
+    \begin{tabular}{| l | p{8cm} | l |}
+    \hline
+    \textbf{Name} & \textbf{Requirement} & \textbf{Priority}\\
+    \hline \hline
+    \textbf{FR1} 
+        & The audio cores must consume different data and instruction streams. 
+        & High\\
+    \textbf{FR2} 
+        & The processor cores should be arranged in different pipelines,
+        each pipeline representing an audio channel. 
+        & High\\
+    \textbf{FR3} 
+        & The audio processor must consist of at least two audio channels. 
+        & High\\
+    \textbf{FR4} 
+        & The processor architecture should utilize 16 bit processing cores. 
+        & High\\
+    \textbf{FR5} 
+        & The built-in DSP hardware on the FPGA must be utilized efficiently. 
+        & High\\
+    \textbf{FR6}
+        & The cores in the audio pipelines should share data with each other
+        through a ring-buffer.
+        & High\\
+    \textbf{FR7} 
+        & It must be possible to observe power consumption over certain components.
+        & High\\
+    \textbf{FR8} 
+        & The audio system should perform real time filtering on
+        two distinct channels, with an audio quality of 8-bits and a frequency 44.1kHz.
+        & High\\
+    \textbf{FR9} 
+        & The microcontroller and the audio processor should communicate via ARMs
+        External Bus Interface.
+        & High\\
+    \textbf{FR10}
+        & The audio processor should be able to perform Hardware-accelerated FFTs.
+        & Medium \\
+    \textbf{FR11}
+        & The MCU must have an SD card interface and a UART serial port.
+        & Medium \\
+    \textbf{FR12}
+        & The board should have buttons and LEDs.
+        & Medium \\
+    \textbf{FR13}
+        & The audio system should be able to process both digital and analog signals.
+        & Low \\
+    % \textbf{FR14}
+    %     & USB Interface
+    %     & Low \\
+    \hline
+    \end{tabular}
+    \caption{The functional requirements and their priority}
+    \label{tab:funref}
+\end{table}
