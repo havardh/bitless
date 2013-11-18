@@ -167,12 +167,14 @@ begin
 						end case;
 					when halt_or_mad =>
 						case opt is
-							when multi_acc_fp =>
+							when fp_mad =>
+								stop_core <= '0';
 								alu_op <= fp_mad;
 								reg_write_e <= REG_A_WRITE;
 								mem_src <= MEM_INPUT;
 								add_imm <= '0';
-							when multi_sub_fp =>
+							when fp_msd =>
+								stop_core <= '0';
 								alu_op <= fp_msd;
 								reg_write_e <= REG_A_WRITE;
 								mem_src <= MEM_INPUT;

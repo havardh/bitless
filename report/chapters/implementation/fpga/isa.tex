@@ -10,7 +10,7 @@ processor, support for some floating point instructions was also included.
 To make the decoding of instructions as easy as possible, instructions
 were divided into three different instruction groups.
 
-\subsubsection{Register-based instructions}
+\subsubsection{Register-based Instructions}
 
 The register-based instructions are instructions were both operands are
 primarily registers. The group also includes a few instructions where
@@ -23,14 +23,14 @@ implemented functions can be found in table \ref{tab:regbased_instrs}.
 \input{figures/fpga/isa-regbased-format}
 \input{figures/fpga/isa-regbased-instructions}
 
-\subsubsection{Load immediate instruction}
+\subsubsection{Load Immediate Instruction}
 The load immediate instruction is used to load an immediate constant into a
 register. The format of the instruction can be found in figure
 \ref{fig:ldi_format}. The value is loaded into register \texttt{\$r1}.
 
 \input{figures/fpga/isa-ldi-format}
 
-\subsubsection{Branch instruction}
+\subsubsection{Branch Instruction}
 The branch instruction checks condition flags and jumps accordingly. By
 checking for various combinations of the condition flags, many different
 conditions can be checked for. The format of the instruction is illustrated
@@ -39,7 +39,7 @@ is coming later.
 
 \input{figures/fpga/isa-branch-format}
 
-\paragraph{Special registers}
+\paragraph{Special Registers}
 
 Due to the limited space in instruction words, only two registers at most can be
 specified in an instruction. Some instructions, such as the load immediate and

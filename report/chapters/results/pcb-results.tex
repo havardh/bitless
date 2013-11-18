@@ -1,20 +1,22 @@
 % !TEX root = ../../report.tex
 
-\subsection{PCB results (fixes)}
+\subsection{PCB Results (fixes)}
 
-As the group had never designed a PCB before, and since there are so many things
-that can go wrong, obviously something was bound to not work as intended.
+Due to the manual work involved in designing the PCB, and because it was fairly
+unfamiliar ground for everyone involved, there were many things that could go
+wrong. This section describes everything that was wrong with the PCB along with
+what was done to fix it.
 
-After receiving the PCB and soldering up the power supply, smoke appeared from
-the linear regulator upon plugging in the power source. It turned out that the
-footprint was miss-matched with the pinout of the component. The footprint had
-been fixed early on in the process, but unfortunately the schematics had not
-been updated. The same turned out to have happened with the low frequency
-crystal connected to the MCU.
+The first thing to happen was smoke appearing from the linear regulator upon
+plugging in the power source. As it turned out, the footprint was miss-matched
+with the pinout of the component. The footprint had been fixed early on in the
+process, but unfortunately the schematics had not been updated. The same turned
+out to have happened with the low frequency crystal connected to the MCU,
+although this component did not produce any smoke.
 
-Both of the above problems where solved by extra wiring. For the crystal, pin 1
-and 4 was suppose to be used, but instead pin 1 and 2 were used in the design.
-As 2 and 3 are unconnected, a patch cable was soldered between pin 4 and 2.
+Both of the above problems where solved by extra wiring. For the crystal, where
+pin 1 and 4 was suppose to be used, pin 1 and 2 were used instead. As pins 2 and
+3 were unconnected, a patch cable was soldered between pin 4 and 2.
 \missingfigure{picture with textual reference}
 
 The linear regulator was slightly more advanced as pin 1 and 5, and 2, 3 and 4,
@@ -24,16 +26,17 @@ cables. This resulted in the linear regulator being mounted about 1 cm above the
 card. \missingfigure{photo, both physical and a schematic maybe? Remember
 textual reference.}
 
-In addition, there was also an actual connection error in the external RAM
-footprint. One of the two chip select inputs, CS1, was suppose to be grounded,
-but had mistakenly been connected to VCC33, resulting in the unit being stuck in
-off mode. To solve this the chip select pin was bent slightly upwards, and then
-connected with a patch cable to another pin nearby that was grounded.
-\missingfigure{photo. Textual reference.}
+In addition, there was an actual connection error in the external RAM footprint.
+One of the two chip select inputs, CS1, was suppose to be grounded, but had
+mistakenly been connected to VCC33, resulting in the unit being stuck in off
+mode. To solve this, the chip select pin was bent slightly upwards and then
+connected with a patch cable to a GND pin nearby. \missingfigure{photo. Textual
+reference.}
 
-Finally the data lines of the EBI bus was only connected to the MCU and external
-RAM, due to a typo in the schematic. Again this was solved by patch cables
-between the external RAM's data pins and all available FPGA GPIO pins. As a
-result we where able to keep the bus as we originally inteded \todo{Making the
-assumption that the third try will work..} but we lost all other IO
-opportunities on the FPGA. \missingfigure{photo of the hack}
+Finally, due to a typo in the schematic, the data lines of the EBI bus were only
+connected to the MCU and external RAM, not to the FPGA. Again, this was solved
+by patch cables between the external RAM's data pins and all available FPGA GPIO
+pins. The result was a fully functional bus as was originally intended, at the
+expense of all other I/O opportunities on the FPGA. All 12 GPIO pins were used,
+as well as two buttons and two LED's, adding up to 16 bits.\missingfigure{photo
+of the hack}

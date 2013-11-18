@@ -19,7 +19,7 @@ reference to sr10s3v3 datasheet}. This is very efficient, so most of the design
 was copied except for a change in current sensors, which is explained in detail
 below.
 
-\paragraph{Voltage regulators}
+\paragraph{Voltage Regulators}
 
 The design is based on a switch-mode regulator that transforms DC input into
 3.3V\todo{sr10s3v3 reference}, and a linear regulator\todo{linreg reference}
@@ -38,7 +38,7 @@ little power goes to waste in the switch-mode regulator, and while the linear
 regulator transforms power into heat, transforming from 3.3V instead of, for
 example 9V, is a large improvement.
 
-\paragraph{Current sensors} \label{psu:current_sensors}
+\paragraph{Current Sensors} \label{psu:current_sensors}
 
 The main problem with the original design was that the current sensors were not
 sensitive enough for low voltages, which resulted in inaccurate measurements. To
