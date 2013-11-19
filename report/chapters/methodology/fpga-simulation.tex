@@ -1,72 +1,71 @@
 \section{System Testing}
-Each group have implemented, tested, debugged and simulated all the
-software and VHDL during development. This section lists some of the
-functional requirements shown in Section \ref{intro:requirements},
-and how we planned to test each of them. Not all the requirements
-is listed here because many of them overlap each other.
 
-This is simple black-box tests used to verify and proof that
-the requirements is met. They do not go into any deep details about
-how the different parts of the system is \textit{actually} tested.
+This section elaborates on some of the functional requirements shown in Section
+\ref{intro:requirements}, and how we planned to test each of them. Not all the
+requirements are listed here since many of them overlap each other.
+
+This is simple black-box tests used to verify and proof that the requirements is
+met. They do not go into any deep details about how the different parts of the
+system is \textit{actually} tested.
 
 \begin{description}
     \item[Functional requirement 1] \hfill \\
-        \textit{The audio cores must consume different data and instruction streams.} \\
+        \textit{The audio pipelines must receive and execute different data and instruction streams.} \\
         \textbf{Test:} Initialize the audio processor with at least two pipelines
-        containing one core. Program the two cores with two different programs and feed
+        containing one core each. Program the two cores with two different programs and feed
         each pipeline with different data.\\
-        \textbf{Pass:} The cores in each pipeline is able to read data from the input buffer,
-        perform operations on the data and write the result to the pipelines output buffer.
+        \textbf{Expected result:} The cores in each pipeline are able to read data from the input buffer,
+        perform operations on the data and write the result to the pipeline's output buffers.
     \item[Functional requirement 3] \hfill \\
         \textit{The audio processor must consist of at least two audio channels.} \\
-        \textbf{Test:} Initialize the audio processor with two pipelines, where each of the 
-        pipelines does calculations on an audio channel. Use a stereo wav-file and send
+        \textbf{Test:} Initialize the audio processor with two pipelines, where each of the
+        pipelines perform calculations on an audio channel. Use a stereo wav-file to send
         the left channel through the first pipeline and the right channel through the
         second one. \\
-        \textbf{Pass:} The data received from the the output buffer is equal to the
-        data sent to the input buffer. 
+        \textbf{Expected result:} The data received from the the output buffer is equal to the
+        data sent to the input buffer.
     \item[Functional requirement 6] \hfill \\
         \textit{The cores in the audio pipelines should share data with each other through a ring-buffer.} \\
-        \textbf{Test:} Create a program that needs a ring buffer. 
+        \textbf{Test:} Create a program that needs a ring buffer.
         Simulate the program in ModelSim on a pipeline to verify that
         the ring buffer is working correctly.
         Test the program on the FPGA and verify that the ring buffer
         works as in the simulation. \\
-        \textbf{Pass:} The FPGA outputs correct results and utilizes at least one ring buffer.
+        \textbf{Expected result:} The FPGA outputs correct results and utilizes at least one ring buffer.
     \item[Functional requirement 7] \hfill \\
         \textit{It must be possible to observe power consumption over certain components.} \\
         \textbf{Test:} The PCB must be equipped with current sensors. Run programs
         on both the MCU and the FPGA, and measure the current passing through the sensors. \\
-        \textbf{Pass:} The measured results approximates the expected results.
+        \textbf{Expected result:} The measured results approximates the expected results.
     \item[Functional requirement 8] \hfill \\
         \textit{The audio system should perform real time filtering on
         two distinct channels, with an audio quality of 8-bits and a frequency 44.1kHz.} \\
         \textbf{Test:} Setup the audio processor with two pipelines, each one with a core
         that filters the data passing through. Send the filtered audio to the DAC, with the
         right frequency. \\
-        \textbf{Pass:} The output sound is nice to listen to :-)
+        \textbf{Expected result:} The output sound has passable quality :-)
     \item[Functional requirement 9] \hfill \\
         \textit{The microcontroller and the audio processor should communicate via ARMs
         External Bus Interface.} \\
         \textbf{Test:} Let the audio processor respond to every response with all 16 bits set
         to high (0xffff) and read from the EBI-bank associated with the audio processor. \\
-        \textbf{Pass:} The read value is as expected. This verifies that every data line
+        \textbf{Expected result:} The read value is as expected. This verifies that every data line
         is connected to both the FPGA and the MCU.
     \item[Functional requirement 11] \hfill \\
         \textit{The MCU must have an SD card interface and a UART serial port.} \\
         \textbf{Test:} Copy a file to the SD card with the MCU, read the data on the SD card
         from an external device. Connect to the board with UART and write to an external device.\\
-        \textbf{Pass:} The file is copied correctly and the external device receives the 
-        transmitted data. 
+        \textbf{Expected result:} The file is copied correctly and the external device receives the
+        transmitted data.
     \item[Functional requirement 12] \hfill \\
         \textit{The board should have buttons and LEDs.} \\
         \textbf{Test:} Write a small program that read the button status and sets
         the corresponding LED high. \\
-        \textbf{Pass:} All the LEDs is lighting up when the corresponding buttons is pressed.
+        \textbf{Expected result:} All the LEDs is lighting up when the corresponding buttons is pressed.
     \item[Functional requirement 13] \hfill \\
         \textit{The audio system should be able to process both digital and analog signals.} \\
         \textbf{Test:} Run the audio processor with input data from a Micro SD card, and
         with data from an ADC. \\
-        \textbf{Pass:} The PCB is equipped with both a Micro SD port and and ADC, and the
+        \textbf{Expected result:} The PCB is equipped with both a Micro SD port and and ADC, and the
         MCU is able to fully control both of the peripherals.\\
 \end{description}
