@@ -1,16 +1,23 @@
 \FloatBarrier
-\section{FPGA}\label{chapter:fpga}
+\section{\textit{ChaosM}}\label{chapter:fpga}
 
 \textit{ChaosM} consists of two audio processing pipelines, each containing four
 homogenous processor cores. The processor cores are Turing complete processing
 units connected to constant memory, an input buffer, an output buffer, and
 instruction memory. Each core exchanges data through the input/output buffers.
-Data from the I/O controller is written into the input buffer of the first core, and read
-back from the output buffer of the last core.
+Data from the I/O controller is written into the input buffer of the first core,
+and read back from the output buffer of the last core.
 
 With this design, each pipeline of cores can run a set of filters, for instance
 a fourier transform, a frequency filter, an inverse fourier transform, and an
-effect on the audio data stream running through the audio pipelines of \textit{ChaosM}.
+effect on the audio data stream running through the audio pipelines of
+\textit{ChaosM}.
+
+The rest of this section details several aspects of \textit{ChaosM}; the audio
+pipelines, how \textit{ChaosM} communicates with the rest of the system, the
+instruction set architecture, the different types of memory, the homogenous
+processor core, the energy efficient implementations, and finally the assembler
+used for programs that are run on \textit{ChaosM}.
 
 \input{chapters/implementation/fpga/pipelines}
 \input{chapters/implementation/fpga/communication}

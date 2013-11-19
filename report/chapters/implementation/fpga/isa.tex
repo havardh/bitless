@@ -1,8 +1,10 @@
 % !TEX root = ../../report.tex
 \subsection{Instruction Set Architecture}\label{section:fpga-isa}
 
-The processor was designed in a top-down fashion, starting with
-the instruction set. In order to support as many different filters
+The processor was designed in a top-down fashion, starting with the instruction
+set. The MIPS instruction set architecture used in the \textit{Computer
+Design}\cite{tdt4255} course was a good starting point for the instruction set
+architecture used in this project. In order to support as many different filters
 and effects as possible, the processor supports all normal arithmetic
 operations. Due to the requirements of doing fourier transforms on the
 processor, support for some floating point instructions was also included.
@@ -15,8 +17,8 @@ were divided into three different instruction groups.
 The register-based instructions are instructions were both operands are
 primarily registers. The group also includes a few instructions where
 the second operand is an immediate value. The format of the
-instructions are illustrated in figure \ref{fig:regbased_instrs_format}. The
-implemented functions can be found in table \ref{tab:regbased_instrs}.
+instructions are illustrated in Figure \ref{fig:regbased_instrs_format}. The
+implemented functions can be found in Table \ref{tab:regbased_instrs}.
 
 \input{figures/fpga/isa-regbased-format}
 \FloatBarrier
@@ -35,7 +37,7 @@ register. The format of the instruction can be found in figure
 The branch instruction checks condition flags and jumps accordingly. By
 checking for various combinations of the condition flags, many different
 conditions can be checked for. The format of the instruction is illustrated
-in figure \ref{fig:new_branch_format}. 
+in Figure \ref{fig:new_branch_format}.
 
 \input{figures/fpga/isa-branch-format}
 \FloatBarrier
@@ -47,7 +49,7 @@ specified in an instruction. Some instructions, such as the load immediate and
 load constant instructions do not specify any registers, only an immediate
 offset constant.
 
-The list of defined special registers can be found in table \ref{tab:specregs}.
+The list of defined special registers can be found in Table \ref{tab:specregs}.
 
 \input{figures/fpga/isa-special-registers}
 \FloatBarrier

@@ -31,7 +31,7 @@ the FPGA, and back to Internal RAM in the MCU. This dataflow path is illustrated
 \subsubsection{Deinterleaving the samples}
 When reading from both a WAV file or the ADC, samples from the stereo channels
 are interleaved. The FPGA handles each channel in a separate pipeline as shown
-in figure \ref{fig_sw_main_dataflow}.
+in Figure \ref{fig_sw_main_dataflow}.
 When reading the samples they have to be deinterleaved. Deinterleaving is the
 process of splitting the samples for each channel into separate streams.
 The complementary operation of interleaving the samples is performed before the samples

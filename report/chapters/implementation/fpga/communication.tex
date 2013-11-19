@@ -15,10 +15,10 @@ addition to chip select, read-enable, and write-enable signals.
 The communication between the I/O controller and the FPGA uses 23 address lines and 16 data
 lines. All transfers are initiated when the chip select signal goes low. For
 write transfers, the data and address lines are set up and the write enable
-signal is asserted, see figure \ref{fig:ebi_write}.
+signal is asserted, see Figure \ref{fig:ebi_write}.
 
 For reads, the address is set up and the data lines are put in high impedance mode
-before the read enable signal is asserted, see figure \ref{fig:ebi_read}.
+before the read enable signal is asserted, see Figure \ref{fig:ebi_read}.
 
 \input{figures/fpga/communication-ebi-write}
 \input{figures/fpga/communication-ebi-read}
@@ -32,7 +32,7 @@ the EBI bus and the internal bus.
 
 The input/output, control registers, and pipelines in the FPGA are addressed
 using a simple addressing scheme, where the address is divided into several
-parts, as illustrated in figure \ref{fig:ebi_addresses}.
+parts, as illustrated in Figure \ref{fig:ebi_addresses}.
 
 \input{figures/fpga/communication-ebi-addresses}
 
@@ -43,7 +43,7 @@ used to select which pipeline to address. In a pipeline, the device
 and subdevice fields are used to select which module in the pipeline to address.
 
 Using this addressing scheme, the memory map, as seen from the I/O controller, becomes
-like illustrated in figure \ref{fig:fpga_memmap}
+like illustrated in Figure \ref{fig:fpga_memmap}
 
 \begin{figure}
 	\begin{bytefield}[bitwidth=0.035\linewidth,rightcurly=.,rightcurlyspace=0pt,endianness=big]{23}
