@@ -6,11 +6,11 @@ was neccessary for the Fourier-transform, sound processing, and on whether the
 instruction set had room for the encoding of the operations.
 
 Division was not implemented in hardware in order for all instructions to be
-single-cycle. However, division can be done using floating point multiplication
+single-cycle. Instead, division can be done using floating point multiplication
 or by a regular long division algorithm in software.
 
 The ALU implementation receives two 16-bit registers as inputs, and outputs a
-32-bit register. However, only the lower 16-bits are currently used. Previously,
+32-bit signal. Only the lower 16-bits are currently used though
 the intention was for multiplication operations to output all 32-bits.
 
 \paragraph{Floating-point Implementation Design Choices}
@@ -22,23 +22,18 @@ perfectly suited for the sample based nature of an audio processor. The FT we
 chose to utilize for our project is the
 sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:SDFT}.
 
-With the goal of having a real-time sound processing system, the algorithmic
-complexity of the SDFT would make it one of the more algorithmically
-time-complex operations a processor core would have to complete within the
-time window between two sample inputs.
-
 Realizing an SDFT on a computing device requires floating point arithmetics.
 Therefore, to lower the algorithmic complexity required for the floating point
 calculations, a decision was made to lower the maximum size of the integers in
 the audio samples to 8 bits. The consequence of this is that the maximum sound
 frequency was reduced from the standard value of 44~KHz, down to approximately 11~KHz.
-This reduces the amount of samples the processor core can process.
+This reduces the amount of samples the processor core has to process.
 
 \paragraph{Internal ALU Memory}
 
 Since the instruction words can only address two registers at the time, the ALU
 unit can store the values previously loaded from constant memory internally.
-``Multiply and accumulate'' is the longest critical path, and which is used
+``Multiply and accumulate'' is the longest critical path, and is used
 during the SD-FT \ref{appendix:SDFT}. This instruction needs the constant value
 previously loaded into the ALU with the ``Load from constant memory''
-instruction. Hence why the ALU can store a constant memory value internally.
+instruction, which is why the ALU can store a constant memory value internally.
