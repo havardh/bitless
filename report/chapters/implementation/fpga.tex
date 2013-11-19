@@ -2,7 +2,7 @@
 \section{FPGA}\label{chapter:fpga}
 
 \textit{ChaosM} consists of two audio processing pipelines, each containing four
-homogenous processor cores. The processor cores are turing complete processing
+homogenous processor cores. The processor cores are Turing complete processing
 units connected to constant memory, an input buffer, an output buffer, and
 instruction memory. Each core exchanges data through the input/output buffers.
 Data from the I/O controller is written into the input buffer of the first core, and read
@@ -17,10 +17,5 @@ effect on the audio data stream running through the audio pipelines of \textit{C
 \input{chapters/implementation/fpga/isa}
 \input{chapters/implementation/fpga/memory}
 \input{chapters/implementation/fpga/core}
-
-\subsection{Energy Efficiency}
-\todo[inline]{Noen må dobbeltsjekke og si de er enige med avsnittet under... -CC}
-Since a Spartan-6 Xilinx processor draws approximately the same amount of current
-independently of the instructions \textit{ChaosM} have in its instruction registers,
-testing and designing \textit{ChaosM} for energy efficiency is something this project
-has not prioritized.
+\input{chapters/implementation/fpga/energy_efficiency}
+\input{chapters/implementation/fpga/assembler}
