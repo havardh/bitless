@@ -30,18 +30,20 @@ card.
 \input{figures/results/pcb/linear-regulator}
 
 
-In addition, there was an actual connection error in the external RAM footprint.
+In addition, due to a typo in the schematic, the data lines of the EBI bus were
+only connected to the MCU and external RAM, not to the FPGA. Again, this was
+solved by patch cables between the external RAM's data pins and all available
+FPGA GPIO pins. The result was a fully functional bus as was originally
+intended, at the expense of all other I/O opportunities on the FPGA. All 12 GPIO
+pins were used, as well as two buttons and two LED's, adding up to 16 bits.
+
+\input{figures/results/pcb/bus}
+
+
+Finally, there was an actual connection error in the external RAM footprint.
 One of the two chip select inputs, CS1, was suppose to be grounded, but had
 mistakenly been connected to VCC33, resulting in the unit being stuck in off
 mode. To solve this, the chip select pin was bent slightly upwards and then
-connected with a patch cable to a GND pin nearby. \missingfigure{photo. Textual
-reference.}
+connected with a patch cable to a GND pin nearby. However, due to the bus
+workaround the SRAM was completely disabled and not used.
 
-Finally, due to a typo in the schematic, the data lines of the EBI bus were only
-connected to the MCU and external RAM, not to the FPGA. Again, this was solved
-by patch cables between the external RAM's data pins and all available FPGA GPIO
-pins. The result was a fully functional bus as was originally intended, at the
-expense of all other I/O opportunities on the FPGA. All 12 GPIO pins were used,
-as well as two buttons and two LED's, adding up to 16 bits.
-
-\input{figures/results/pcb/bus}
