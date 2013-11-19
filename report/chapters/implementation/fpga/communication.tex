@@ -1,18 +1,18 @@
 % !TEX root = ../../../report.tex
 
 \FloatBarrier
-\subsection{Communication Between the I/O controller and the \textit{ChaosM}}\label{section:fpga-buses}
+\subsection{ChaosM Communication Interface}\label{section:fpga-buses}
 
 \textit{ChaosM} on the FPGA communicates with the I/O controller using the external bus interface
 (EBI). Inside \textit{ChaosM}, an EBI controller is responsible
 for servicing requests from the I/O controller and driving the internal bus, which
-is used for transferring data to and from modules in the FPGA.
+is used for transferring data to and from modules in the \textit{ChaosM}.
 
 \subsubsection{The EBI Bus}
 The EBI\cite{efm_ebi} is a parallel bus with a separate data and address bus, in
 addition to chip select, read-enable, and write-enable signals.
 
-The communication between the I/O controller and the FPGA uses 23 address lines and 16 data
+The communication between the I/O controller and the \textit{ChaosM} uses 23 address lines and 16 data
 lines. All transfers are initiated when the chip select signal goes low. For
 write transfers, the data and address lines are set up and the write enable
 signal is asserted, see Figure \ref{fig:ebi_write}.
@@ -30,7 +30,7 @@ the EBI bus and the internal bus.
 \FloatBarrier
 \paragraph{Addressing}
 
-The input/output, control registers, and pipelines in the FPGA are addressed
+The input/output, control registers, and pipelines in the \textit{ChaosM} are addressed
 using a simple addressing scheme, where the address is divided into several
 parts, as illustrated in Figure \ref{fig:ebi_addresses}.
 
