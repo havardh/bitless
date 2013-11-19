@@ -56,10 +56,26 @@ as a hardware accelerator, i.e. to speed up execution of programs.
 The application chosen for this project is audio processing.
 Figure~\ref{fig:audio_path_overview} shows how the system works as a whole. By the use of analog to digital -, and digital to analog converters, input is processed by running it through the audio processor.
 
+<<<<<<< HEAD
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.4]{figures/intro/intro_audio_analog_digital.png}
     \caption{An abstract view of the audio processing}
+=======
+Another design requirement given from the assignment description is energy
+efficiency. The hardware configuration with a general processor and a
+specialized set of processors has become increasingly popular since power
+consumption became an issue, and is ubiquitous in today's computing systems.
+Being on the energy efficiency group motivates us to leverage such energy aware
+concepts and design a system with energy efficiency in mind.
+
+\missingfigure{A figure giving a ``20k feet view from above'' of the PCB, MCU,
+and FPGA.}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/intro/intro_audio_analog_digital.png}
+    \caption{An abstract view of the audio processing options.}
+>>>>>>> 3403ad6806556e297ae85d8345403e38fa7f9dec
     \label{fig:audio_path_overview}
 \end{figure}
 
