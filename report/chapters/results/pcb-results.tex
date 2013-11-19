@@ -8,7 +8,7 @@ wrong. This section describes everything that was wrong with the PCB along with
 what was done to fix it.
 
 The first thing to happen was smoke appearing from the linear regulator upon
-plugging in the power source. As it turned out, the footprint was miss-matched
+plugging in the power source. As it turned out, the footprint was mismatched
 with the pinout of the component. The footprint had been fixed early on in the
 process, but unfortunately the schematics had not been updated. The same turned
 out to have happened with the low frequency crystal connected to the MCU,
@@ -23,8 +23,10 @@ The linear regulator was slightly more advanced as pin 1 and 5, and 2, 3 and 4,
 had been swapped. The solution was to solder six short patch cables on the pads
 themselves, and then match the feet of the linear regulator with the right
 cables. This resulted in the linear regulator being mounted about 1 cm above the
-card. \missingfigure{photo, both physical and a schematic maybe? Remember
-textual reference.}
+card.
+
+\input{figures/results/pcb/linear-regulator}
+
 
 In addition, there was an actual connection error in the external RAM footprint.
 One of the two chip select inputs, CS1, was suppose to be grounded, but had
