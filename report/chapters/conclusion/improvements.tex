@@ -1,5 +1,27 @@
 \section{Potential Improvements}
 
-\todo[inline]{The way forward}
+There have been several improvements we have considered for this project, and
+below we will detail on the most prominent improvements that we were unable to
+implement.
 
-%reduce pcb cost by only using drill holes
+\subsection{\textit{ChaosM} improvements}
+\subsubsection{Further optimize the floating point operations}
+If the floating point operations had been optimized further, the pipeline inside of the core could have run faster too.
+Thereby increasing the speed of \textit{ChaosM}, and consequently also being more energy efficient, since the programs can finish faster on the FPGA.
+
+\subsubsection{Spend more efforts on timing simulations}
+Timing simulations differ critically from behavourial simulations.
+The key difference between is that timing simulations simulate how the system will work on the FPGA with signal propagations,
+in addtion to accounting for the time it takes for signals to propagate through the logic circuits.
+This can reveal locations in the VHDL design where a signal might become undefined, or have the wrong value at the right time, where a behavourial simulation would not reveal these problems.
+This is discussed more in section \ref{conclusion:pitfalls}.
+
+
+\subsection{I/O controller improvements}
+There are no functional improvements to the I/O controller which were not implemented into the project.
+But beyond functional improvements, there was a wish to write a program which would show
+real-time graphs of the the audio spectrums going into and out of the FPGA chip.
+
+\subsection{PCB improvements}
+reduce pcb cost by only using drill holes -
+
