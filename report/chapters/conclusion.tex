@@ -2,10 +2,18 @@
 
 \chapter{Conclusion}
 
+This chapter contains our conclusion, as well as our opinion of the project,
+pitfalls we believe later generations can avoid by keeping in mind from early on
+in the project, and finally our budget.
+
+\clearpage
+\section{Project conclusion}
 \todo[inline]{Repeat the main results of our work (repeat and summarize results from result chapter)}
 
+\clearpage
 \input{chapters/conclusion/improvements}
 
+\clearpage
 \section{Our opinion of the project}
 
 This project has been immensely demanding, requiring a lot of hard work and many
@@ -17,24 +25,34 @@ all three of the subgroups, many many manhours were spent on just learning our
 respective fields. While previous reports were made available to us, 40+ pages
 is too much for any new group which have never programmed a Silicon Labs
 microcontroller, used Altium design a PCB, or created processor design in VHDL
-before. If those responsible for the course, or the reports of previous groups,
-could compile a summarized list of ``how to avoid these pitfalls'' (especially
-those that every new generation fall into), that would be of immense help
-throughout the project. Both the design phase at the beginning could be
-completed with more self-assurance, and less hassle and hacks at the end when
-the deadline is up for having completed a working demo.
+before.
 
+On behalf of the FPGA subgroup in this project, we strongly feel that VHDL needs
+to have been learned before attempting this project. That we had the course
+TDT4255\cite{tdt4255} simultaneously with this course was both a huge boon and a
+painful curse. An example of why this is so, is that our attempts at Timing
+Simulations (insufficiently explained in the compendium\cite{tdt4255-compendium}
+of TDT4255), were not started until there were less than 4 days left of this
+project. TDT4255 is a great course for learning VHDL and how it is used, but our
+opinion is that it should be held an earlier semester.
+
+If those responsible for the course, or the reports of previous groups, could
+compile a summarized list of ``how to avoid these pitfalls'' (especially those
+that every new generation fall into), that would be of immense help throughout
+the project. Both the design phase at the beginning could be completed with more
+self-assurance, and less hassle and hacks at the end when the deadline is up for
+having completed a working demo.
 
 \subsection{Pitfalls to be avoided}\label{conclusion:pitfalls}
-Below we have compiled a list of issues we believe new groups should keep in mind when starting out on the TDT4295 adventure:
+
+Below we have compiled a list of issues we believe new groups should keep in
+mind when starting out on the TDT4295 adventure:
+
 \todo[inline]{Fyll inn listen under for senere generasjoner sin skyld.}
 \begin{itemize}
 	\item FPGA
 	\begin{itemize}
-		\item Learn VHDL a semester earlier. The subject TDT4255 should have been a subject students could take earlier.
-But it should most definitively not be held at the same time as TDT4295.
-		\item Timing simulations to ensure the correct working of design needs to be explained better.
-Our only resource on how to do this is the TDT4255 compendium\cite{tdt4255-compendium}, which explains this with different software than what we currently have access to at the lab.
+		\item
 	\end{itemize}
 	\item Software
 	\begin{itemize}
@@ -46,6 +64,7 @@ Our only resource on how to do this is the TDT4255 compendium\cite{tdt4255-compe
 	\end{itemize}
 \end{itemize}
 
+\clearpage
 \section{Expenses}
 The project expenses are listed in Table~\ref{tab:budget}. The budget was exceeded by 884 NOK.
 
