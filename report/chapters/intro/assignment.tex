@@ -120,6 +120,14 @@ has its own instruction memory, with the effect that each processor core can
 perform a different task, and execute it on a different set of data than any
 other core.
 
-So for this project to successfully meet the requirements, it has to implement
+For this project to successfully meet the requirements, it has to implement
 an architecture with multiple processing cores, where each core can work on any
 set of data with any set of instructions independently of any other core.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=150px]{figures/fpga/system_components_general_pipeline_without_programs.png}
+    \caption{A figure giving overview on how the different cores run
+different programs/transforms/effects in parallel on the FPGA processing cores.}
+    \label{fig:general_pipeline}
+\end{figure}
