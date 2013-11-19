@@ -8,14 +8,15 @@ implement.
 \subsubsection{Further optimize the floating point operations}
 
 If the floating point operations had been optimized further, the pipeline inside
-of the core could have run faster too. Thereby increasing the speed of
-\textit{ChaosM}, and consequently also being more energy efficient, since the
-programs can finish faster on the FPGA.
+of the core could have run faster, increaseing the speed of
+\textit{ChaosM}. This consequently makes \textit{ChaosM} more energy efficient as the operations on the FPGA finish faster.
 
-\subsubsection{Spend more efforts on timing simulations}
+\subsubsection{Spend more effort on timing simulations}
 
-Timing simulations differ critically from behavourial simulations. The key
-difference between is that timing simulations simulate how the system will work
+The system timing simulations differ from behavourial simulations. Though all behavioral 
+simulations worked as expected, their complementing timing simulations did 
+not always simulate properly.
+The key difference is that timing simulations simulate how the system will work
 on the FPGA with signal propagations, in addtion to accounting for the time it
 takes for signals to propagate through the logic circuits. This can reveal
 locations in the VHDL design where a signal might become undefined, or have the
@@ -25,7 +26,7 @@ these problems. This is discussed more in Section \ref{conclusion:pitfalls}.
 \subsection{I/O controller improvements}
 
 There are no functional improvements to the I/O controller which were not
-implemented into the project. But beyond functional improvements, there was a
+implemented into the project. Beyond functional improvements, there was a
 wish to write a program which would show real-time graphs of the the audio
 spectrums going into and out of the FPGA chip.
 
