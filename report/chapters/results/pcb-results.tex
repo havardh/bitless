@@ -17,7 +17,9 @@ although this component did not produce any smoke.
 Both of the above problems where solved by extra wiring. For the crystal, where
 pin 1 and 4 was suppose to be used, pin 1 and 2 were used instead. As pins 2 and
 3 were unconnected, a patch cable was soldered between pin 4 and 2.
-\missingfigure{picture with textual reference}
+
+\input{figures/results/pcb/lfxtal}
+
 
 The linear regulator was slightly more advanced as pin 1 and 5, and 2, 3 and 4,
 had been swapped. The solution was to solder six short patch cables on the pads
@@ -40,5 +42,6 @@ connected to the MCU and external RAM, not to the FPGA. Again, this was solved
 by patch cables between the external RAM's data pins and all available FPGA GPIO
 pins. The result was a fully functional bus as was originally intended, at the
 expense of all other I/O opportunities on the FPGA. All 12 GPIO pins were used,
-as well as two buttons and two LED's, adding up to 16 bits.\missingfigure{photo
-of the hack}
+as well as two buttons and two LED's, adding up to 16 bits.
+
+\input{figures/results/pcb/bus}
