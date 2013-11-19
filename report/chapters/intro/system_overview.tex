@@ -13,7 +13,7 @@ The MCU handles all I/O and is referred to as the I/O controller in much of the
 report, because it effectively acts as the link between the FPGA and the
 peripherals. Sound input is either gathered from a file on the SD-card or as a
 stream from the audio-in jack on the board, and then passed on to the FPGA. In
-addition, it is the unit controlling the FPGA, through writing the the
+addition, it is the unit controlling the FPGA through writing the the
 instructions memory each processing core contains. This, provides a simple way
 in which to change the FPGA behavior.
 
@@ -43,11 +43,12 @@ manipulation of the resulting samples in the frequency domain.
 
 \subsubsection{Memory}
 
-The MCU has an internal memory of 128KByte, which is not sufficient for working
-comfortably with audio files loaded from the SD-card, so the decision was made
-to add more memory onto the board. In addition, if something were to go wrong
+The MCU has an internal memory of 128KByte. This is not sufficient when working with audio files loaded from an SD-card, so the decision was made to add more memory 
+onto the board. In addition, if something were to go wrong
 with the audio-in channel and SD-card, having extra memory can work as a third
 option for storing input.
+
+
 
 \subsubsection{I/O}
 
