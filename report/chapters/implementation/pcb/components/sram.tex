@@ -3,12 +3,13 @@
 \subsubsection{SRAM}
 
 To extend the memory of the MCU, an external memory module was added to the
-board. During the evaluation of SRAM vs DRAM, SRAM came off as the chip of
-choice due to several reasons. While DRAM is cheaper than SRAM, it was possible
-to stay within the budget buying SRAM, and unlike DRAM, which is synchronous,
-SRAM is asynchronous, which means there is no need to worry about the
-propagation of signals and clock synchronization, making read/writes easier.
-This is the main reason why SRAM was chosen.
+board. There were two alternatives for external memory, Static Random Access
+Memory (SRAM), and Dynamic Access Memory (DRAM). During the evaluation of SRAM
+vs DRAM, SRAM came off as the chip of choice due to several reasons. While DRAM
+is cheaper than SRAM, it was possible to stay within the budget buying SRAM, and
+unlike DRAM. DRAM is also synchronous while SRAM is asynchronous, which means
+that with SRAM propagation of signals and clock synchronization is not a
+problem, making read/writes easier. This is the main reason why SRAM was chosen.
 
 As an added bonus, however, SRAM is more energy efficient since DRAM consumes
 energy on regular intervals when it refreshes the memory values, while SRAM does

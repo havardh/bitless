@@ -1,10 +1,12 @@
 %!TEX root = ../../../report.tex
 
 \subsection{Dataflow}
-When designing an energy efficient system, dataflow is of great importance. The
-software on the MCU has been designed to minimize the number of data -stores and
--movements. When possible, DMA is utilized to move the data while running the
-MCU in a low power mode. The dataflow consist of four phases, as shown in figure
+
+When designing an energy efficient system, dataflow is of great importance since
+data movement costs energy of some magnitude or other. The software on the MCU
+has been designed to minimize the number of data -stores and -movements. When
+possible, DMA is utilized to move the data while running the MCU in a low power
+mode. The dataflow consist of four phases, as shown in figure
 \ref{sw_transfer_phases}.
 
 In phase 1 the MCU acquires input samples from an input device. These samples
@@ -16,48 +18,53 @@ phases are executed concurrently to ensure a constant flow of samples.
 \input{figures/sw/transfer-phases}
 
 \subsubsection{Direct Memory Access}
-Drect Memory Access (DMA) provides the ability to move data
-without the intervention of the CPU. This is used extensively to move the
-dataflow while the MCU is running in a low energy mode. The CPU on the MCU is
-only used to configure and refresh the DMA channels in between transfers. The
-MCU provides 12 independent DMA channels which can move data between
-peripherals, Internal RAM, and devices connected to EBI, like the FPGA.
 
-The main flow of data goes from Internal RAM in the MCU to the buffers on
-the FPGA, and back to Internal RAM in the MCU. This dataflow path is illustrated in \todo{which figure??}figure.
+Drect Memory Access (DMA) provides the ability to move data without the
+intervention of the CPU. This is used extensively to move the dataflow while the
+MCU is running in a low energy mode. The CPU on the MCU is only used to
+configure and refresh the DMA channels in between transfers. The MCU provides 12
+independent DMA channels which can move data between peripherals, Internal RAM,
+and devices connected to EBI, like the FPGA.
+
+The main flow of data goes from Internal RAM in the MCU to the buffers on the
+FPGA, and back to Internal RAM in the MCU. This dataflow path is illustrated in
+\todo{which figure??}figure.
 
 % \input{figures/sw/ram-fpga-ram}
 
 \subsubsection{Deinterleaving the samples}
+
 When reading from both a WAV file or the ADC, samples from the stereo channels
 are interleaved. The FPGA handles each channel in a separate pipeline as shown
-in Figure \ref{fig_sw_main_dataflow}.
-When reading the samples they have to be deinterleaved. Deinterleaving is the
-process of splitting the samples for each channel into separate streams.
-The complementary operation of interleaving the samples is performed before the samples
-are moved to the output peripherals.
+in Figure \ref{fig_sw_main_dataflow}. When reading the samples they have to be
+deinterleaved. Deinterleaving is the process of splitting the samples for each
+channel into separate streams. The complementary operation of interleaving the
+samples is performed before the samples are moved to the output peripherals.
+
 \missingfigure{Figure showing deinterleaving and interleaving}
 
 The interleaving and deinterleaving operations are either done by the DMA for
-energy efficiency purposes, or the CPU. If the operation is performed
-by the CPU, the gains of speed and data-transfer analysis can be tested. Depending
-on the different types of input sources, the CPU is needed on some occasion, while
-on others a more energy efficient implementation through the use of DMA may be used.
+energy efficiency purposes, or the CPU. If the operation is performed by the
+CPU, the gains of speed and data-transfer analysis can be tested. Depending on
+the different types of input sources, the CPU might be needed, while on others a
+more energy efficient implementation through the use of DMA may be used.
 Comparisons of the two implementations are included in the results section.
 
-The samples are deinterleaved in the DMA implementation by letting two DMA channels read from the
-same source and write the correct channel into the the correct pipeline for the correct channel.
-The first DMA copies the samples for the left stereo channel, and starts without a offset. The
-second DMA copies the samples for the right stereo channel and starts with an
-offset of one sample. Both DMAs read every other sample and writes them
-continuously to the FPGA input buffers.
+The samples are deinterleaved in the DMA implementation by letting two DMA
+channels read from the same source and write the correct channel into the the
+correct pipeline for the correct channel. The first DMA copies the samples for
+the left stereo channel, and starts without a offset. The second DMA copies the
+samples for the right stereo channel and starts with an offset of one sample.
+Both DMAs read every other sample and writes them continuously to the FPGA input
+buffers.
 
-In the code, this is set up with the DMA interface in {\bf emlib}, by configuring the DMA Descriptor.
-\todo{Check out the figure in drive/Rapport/SW Diagrams/Interleaving of samples! Makes sense?}
-This is implemented with two version. One using only the CPU and one using DMA transfers
-while the CPU is sleeping. Comparisons of the two methods are included in the results section.
+In the code, this is set up with the DMA interface in {\bf emlib}, by
+configuring the DMA Descriptor. \todo{Check out the figure in drive/Rapport/SW
+Diagrams/Interleaving of samples! Makes sense?} This is implemented with two
+version. One using only the CPU and one using DMA transfers while the CPU is
+sleeping.
 
-\begin{lstlisting}
+\begin{lstlisting}[language=C, label=mcu:datapah1, caption=Håvard Fyll Inn]
   DMA_CfgDescr_TypeDef descrCfg = {
     .dstInc  = dmaDataInc2,
     .srcInc  = dmaDataInc4,
@@ -66,19 +73,21 @@ while the CPU is sleeping. Comparisons of the two methods are included in the re
   DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true,  &descrCfg );
   DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true,  &descrCfg );
 \end{lstlisting}
-To understand what this will result in, imagine two pointers, {\bf dst} and {\bf src}.
-At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}. After each
-iterations the {\bf src} pointer is incremented by {\bf srcInc} bytes and the {\bf dst}
-pointer is incremented by {\bf dstInc}.
+
+To understand what this will result in, imagine two pointers, {\bf dst} and {\bf
+src}. At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}.
+After each iterations the {\bf src} pointer is incremented by {\bf srcInc} bytes
+and the {\bf dst} pointer is incremented by {\bf dstInc}.
 
 After the DMA channel is configured with a descriptor, it can be started with a
-a source pointer, destination pointer, and the number of transfers to be executed.
-When the transfer has finished the CPU is interrupted and can start the next transfer.
+a source pointer, destination pointer, and the number of transfers to be
+executed. When the transfer has finished the CPU is interrupted and can start
+the next transfer.
 
-The interleaving process on the output side of the FPGA works in the same way. The DMA reading
-the audio pipeline containing the left stereo channel, writes the samples to even numbered
-addresses in the memory, while the DMA reading the right audio pipeline channel writes
-to odd numbered addresses.
+The interleaving process on the output side of the FPGA works in the same way.
+The DMA reading the audio pipeline containing the left stereo channel, writes
+the samples to even numbered addresses in the memory, while the DMA reading the
+right audio pipeline channel writes to odd numbered addresses.
 
 \todo[inline]{Need a better way than the ``paragraph'' command to split the
 above and below paragraphs.}
@@ -122,39 +131,43 @@ an arbitrary frequency when sampling from SDCard to SDCard. The clock signal is 
 the Peripheral Reflex System \todo{Refere to manual} (PRS) of the MCU and propagates
 through the system using the following scheme.
 
-%\newpage %re-insert if figure breaks across pages
-\begin{verbatim}
-                        | Audio in
-                        V
-+------+  +-----+    +------+   +-----+     +--------+
-|TIMER0|->| PRS |-+->| ADC0 |-->| DMA |---->| Buffer |
-+------+  +-----+ |  +------+   +-----+     +--------+
-                  |     .                      / \
-                  |     .                     /   \
-                  |     .                    V     V
-                  |     .              +-----+     +-----+
-                  |     +....irq......>| DMA |....>| DMA |
-                  |                    +-----+     +-----+
-                  |                       |           |
-                  |                       V           V
-                  |                   +------+    +-------+
-                  |                   | FPGA |    | FPGA  |
-                  |                   | Left |    | Right |
-                  |                   +------+    +-------+
-                  |                       |           |
-                  |                       V           V
-                  |                    +-----+     +-----+
-                  |     +....irq......>| DMA |....>| DMA |
-                  |     .              +-----+     +-----+
-                  |     .                    \     /
-                  |     .                     \   /
-                  |     .                       V
-                  |  +------+   +-----+     +--------+
-                  +->| DAC0 |<--| DMA |<----| Buffer |
-                     +------+   +-----+     +--------+
-                        |
-                        V Audio out
-\end{verbatim}
+\begin{figure}[H]
+  \begin{verbatim}
+                          | Audio in
+                          V
+  +------+  +-----+    +------+   +-----+     +--------+
+  |TIMER0|->| PRS |-+->| ADC0 |-->| DMA |---->| Buffer |
+  +------+  +-----+ |  +------+   +-----+     +--------+
+                    |     .                      / \
+                    |     .                     /   \
+                    |     .                    V     V
+                    |     .              +-----+     +-----+
+                    |     +....irq......>| DMA |....>| DMA |
+                    |                    +-----+     +-----+
+                    |                       |           |
+                    |                       V           V
+                    |                   +------+    +-------+
+                    |                   | FPGA |    | FPGA  |
+                    |                   | Left |    | Right |
+                    |                   +------+    +-------+
+                    |                       |           |
+                    |                       V           V
+                    |                    +-----+     +-----+
+                    |     +....irq......>| DMA |....>| DMA |
+                    |     .              +-----+     +-----+
+                    |     .                    \     /
+                    |     .                     \   /
+                    |     .                       V
+                    |  +------+   +-----+     +--------+
+                    +->| DAC0 |<--| DMA |<----| Buffer |
+                       +------+   +-----+     +--------+
+                          |
+                          V Audio out
+      \caption{DMA dataflow}
+  \end{verbatim}
+  \caption{Audio datasamples moved by the DMAs.}
+  \label{mcu:dma-dataflow}
+\end{figure}
 
 Here, both the DAC and ADC consumes the PRS signal originated from TIMER0. The
 DMA copying from the ADC to the RAM buffer, as well as the two DMAs performing the
