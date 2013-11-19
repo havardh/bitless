@@ -1,6 +1,8 @@
+% !TEX root = ../../report.tex
+
 \section{Original Assignment Text}\label{intro:original-text}
 
-\paragraph{Task: Construct a Multiple Program, Multiple Data Processor}
+\paragraph{Task: Construct a Multiple Instruction, Multiple Data Processor}
 The performance increase available from harvesting Instruction Level Parallelism
 (ILP) from the serial instruction stream is limited because we have reached the
 maximum power consumption that can be handled without expensive cooling
@@ -27,7 +29,7 @@ reports from both groups should include an evaluation of prototype performance
 and energy consumption.
 
 \paragraph{Additional Requirements}
-The unit must utilize an Energy Micro micro-controller and a Xilinx FPGA. The
+The unit must utilize a Silicon Labs microcontroller and a Xilinx FPGA. The
 budget is 10.000 NOK, which must cover components and PCB production. The unit
 design must adhere to the limits set by the course staff at any given time.
 Deadlines are given in a separate time schedule.
@@ -43,7 +45,7 @@ effort put into the project.
 \paragraph{Assignment Interpretation}\label{intro:our-assignment-interpretation}
 Our interpretation of the assignment is to design a hardware prototype system for a
 specific application domain with two main components. First, it must have a
-microcontroller. Second, it must have a \textit{Field Programmable Gate Array} (FPGA)
+\textit{microcontroller} (MCU). Second, it must have a \textit{Field Programmable Gate Array} (FPGA)
 implementing a MIMD architecture processor. The project design must fit on a custom
 made \textit{Printed Circuit Board} (PCB) developed for this project. On behalf of these
 requirements, this results in a convenient division of labour where the MCU manages
@@ -59,6 +61,13 @@ concepts and design a system with energy efficiency in mind.
 
 \missingfigure{A figure giving a ``20k feet view from above'' of the PCB, MCU,
 and FPGA.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=150px]{figures/intro/intro_audio_analog_digital.png}
+    \caption{An abstract view of the two audio processiong options.}
+    \label{fig:audio_path_overview}
+\end{figure}
+
 
 The above \todo{Insert reference}figure shows how the FPGA processor
 design can run different programs with a MIMD architecture.
