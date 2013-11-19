@@ -1,12 +1,10 @@
+% !TEX root = ../../../report.tex
+
 \subsection{Energy Efficient Software}
 
-The software layer provides the most potential for energy savings, since the
-best way to save power is to turn off the system completely. When this is done
-is decided by the algorithm the software runs. Even so, there exists some
-techniques which can ensure a level of energy saving, even while the system is
-running. The most commonly known technique is \textit{interrupts}, in contrast
-to busy waiting. {\it Sleep modes} are used for turning of parts of the system
-while still enabling some processing.
+The software layer provides the best potential for energy savings. This can be done by turning parts of the system off, allowing
+even a running system to achieve a level of energy saving. A well known technique is using \textit{interrupts}, in contrast
+to busy waiting. In addition, {\it sleep modes} lets the system power down while still retaining some functionality.
 
 The Giant Gecko provides 5 execution modes, where 4 of the modes correspond to different levels
 of sleep. For this project, sleep modes EM0, EM1, and EM3 was utilized.
@@ -23,5 +21,5 @@ by EBI.
 		Deepest sleep mode without reset required, used when Bitless is idle.
 \end{description}
 
-If the reader is interested in additional information, additional information
+If the reader is interested in additional information, it
 can be found in the Reference Manual\cite{efm32gg}.

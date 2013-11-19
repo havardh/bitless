@@ -3,38 +3,33 @@
 \subsection{Dataflow}
 
 When designing an energy efficient system, dataflow is of great importance since
-data movement costs energy of some magnitude or other. The software on the MCU
-has been designed to minimize the number of data -stores and -movements. When
+data movement can cost a lot of energy. The software on the MCU
+has been designed to minimize the number of data transfers. When
 possible, DMA is utilized to move the data while running the MCU in a low power
-mode. The dataflow consist of four phases, as shown in figure
-\ref{sw_transfer_phases}.
+mode. Dataflow is divided into four phases, as shown in figure
+\ref{fig:sw_transfer_phases}.
 
-In phase 1 the MCU acquires input samples from an input device. These samples
-are then transferred to the FPGA in phase 2. When the FPGA is finished
-processing the samples, they are transferred back to the MCU in phase 3. In the
-last phase, the MCU sends the filtered samples to an output device. All these
+In phase 1, the MCU retrieves samples from an input device. These samples
+are then transferred to the \textit{ChaosM} in phase 2. Processed samples are transferred back to the MCU in phase 3, and in the
+last phase, the MCU forwards the data to an output device. All these
 phases are executed concurrently to ensure a constant flow of samples.
 
 \input{figures/sw/transfer-phases}
 
 \subsubsection{Direct Memory Access}
 
-Drect Memory Access (DMA) provides the ability to move data without the
-intervention of the CPU. This is used extensively to move the dataflow while the
+Direct Memory Access (DMA) provides the ability to move data without
+intervention from the CPU. This is used extensively to move data while the
 MCU is running in a low energy mode. The CPU on the MCU is only used to
 configure and refresh the DMA channels in between transfers. The MCU provides 12
-independent DMA channels which can move data between peripherals, Internal RAM,
-and devices connected to EBI, like the FPGA.
-
-The main flow of data goes from Internal RAM in the MCU to the buffers on the
-FPGA, and back to Internal RAM in the MCU. This dataflow path is illustrated in
-\todo{which figure??}figure.
+independent DMA channels which can move data between peripherals, internal RAM,
+and devices connected to EBI like the FPGA.
 
 % \input{figures/sw/ram-fpga-ram}
 
 \subsubsection{Deinterleaving the samples}
 
-When reading from both a WAV file or the ADC, samples from the stereo channels
+When reading from either a WAV file or the ADC, samples from the stereo channels
 are interleaved. The FPGA handles each channel in a separate pipeline as shown
 in Figure \ref{fig_sw_main_dataflow}. When reading the samples they have to be
 deinterleaved. Deinterleaving is the process of splitting the samples for each
