@@ -9,7 +9,7 @@
 \end{figure}
 
 \textit{ChaosM} consists of several audio processing pipelines, as illustrated in
-figure \ref{fig:pipeline_architecture}. These contain several processing cores
+Figure \ref{fig:pipeline_architecture}. These contain several processing cores
 separated by data buffers. Each audio processing pipeline processes one channel
-of sound data.
-
+of sound data. Data input/output for the system is an audio sample for each pipeline. 
+The input/output frequency is directly tied to the sample rate of the input, which acts as a secondary clock input. The main system clock runs on the order of MHz, while this \textit{sample clk} is in the order of kHz and acts as a deadline for when new I/O is due.

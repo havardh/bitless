@@ -1,39 +1,65 @@
 \FloatBarrier
 \subsubsection{ALU}\label{subsec:fpga-alu}
 
-Which operations were implemented in the ALU was decided based on what
-was neccessary for the Fourier-transform, sound processing, and on whether the
-instruction set had room for the encoding of the operations.
+The set of supported ALU operations have been decided based on those required by
+ the application field. Most standard arithmetic operations have been
+ implemented, with the exception of shifting and division. These were left out
+ to make room for floating point instructions, but can be emulated with some overhead.
+%Which operations were implemented in the ALU was decided based on what
+%was neccessary for the Fourier-transform, sound processing, and on whether the
+%instruction set had room for the encoding of the operations.
 
-Division was not implemented in hardware in order for all instructions to be
-single-cycle. Instead, division can be done using floating point multiplication
-or by a regular long division algorithm in software.
-
-The ALU implementation receives two 16-bit registers as inputs, and outputs a
-32-bit signal. Only the lower 16-bits are currently used though
-the intention was for multiplication operations to output all 32-bits.
+%Division was not implemented in hardware in order for all instructions to be
+%single-cycle. Instead, division can be done using floating point multiplication
+%or by a regular long division algorithm in software.
 
 \paragraph{Floating-point Implementation Design Choices}
+The decision to implement floating point operations in the alu stemmed from the
+belief that fixed-point or integer valued Fourier Transforms would provide
+insufficient accuracy. Since the Xilinx IP Core generator tool can generate the
+various components needed, the gain from precision was considered to outweigh the
+performance cost.
 
-Some audio filters are performed in the time domain, others are performed in the
-frequency domain. To convert the audio samples from one domain to the other, a
-Fourier transform (FT) and its inverse is usually employed. A discrete FT is
-perfectly suited for the sample based nature of an audio processor. The FT we
-chose to utilize for our project is the
-sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:SDFT}.
+Ideas for further improvement upon the implementation was to run the floating
+point operations at a higher clock frequency, with internal control logic to
+perform complex multiplication in one cpu cycle. This option was deemed to
+complex for this project, and instead single-cycle multiply-and-accumulate was 
+included. This allows a complex multiplication to run in three cycles, utilizing
+ a lifting structure, see \cite{TODO: IntFFT}.
 
-Realizing an SDFT on a computing device requires floating point arithmetics.
-Therefore, to lower the algorithmic complexity required for the floating point
-calculations, a decision was made to lower the maximum size of the integers in
-the audio samples to 8 bits. The consequence of this is that the maximum sound
-frequency was reduced from the standard value of 44~KHz, down to approximately 11~KHz.
-This reduces the amount of samples the processor core has to process.
+%Some audio filters are performed in the time domain, others are performed in the
+%frequency domain. To convert the audio samples from one domain to the other, a
+%fourier transform (FT) and its inverse is usually employed. A discrete FT is
+%perfectly suited for the sample based nature of an audio processor. The FT we
+%chose to utilize for our project is the
+%sliding discrete fourier transform (SDFT), detailed in appendix \ref{appendix:SDFT}.
+%
+%With the goal of having a real-time sound processing system, the algorithmic
+%complexity of the SDFT would make it one of the more algorithmically
+%time-complex operations a processor core would have to complete within the
+%time window between two sample inputs.
+%
+%Realizing an SDFT on a computing device requires floating point arithmetics.
+%Therefore, to lower the algorithmic complexity required for the floating point
+%calculations, a decision was made to lower the maximum size of the integers in
+%the audio samples to 8 bits. The consequence of this is that the maximum sound
+%frequency was reduced from the standard value of 44~KHz, down to approximately 11~KHz.
+%This reduces the amount of samples the processor core can process.
 
-\paragraph{Internal ALU Memory}
+\paragraph{ALU constant registers}
+A limitation of 16-bit instructions is that it permits only two registers to be
+addressed at a time. The multiply and accumulate class of instructions require
+three values, $A += B*C$, and as such one of them needs to be addressed
+implicitly.\\
+Since these instructions were implemented to provide support for
+complex multiplication, a solution to this problem was to store the current Fourier
+Coefficients in the ALU itself. They are loaded from constant memory using a
+specific load instruction, and lets the different MAC operations access each of
+the constants.
 
-Since the instruction words can only address two registers at the time, the ALU
-unit can store the values previously loaded from constant memory internally.
-``Multiply and accumulate'' is the longest critical path, and is used
-during the SD-FT \ref{appendix:SDFT}. This instruction needs the constant value
-previously loaded into the ALU with the ``Load from constant memory''
-instruction, which is why the ALU can store a constant memory value internally.
+%Since the instruction words can only address two registers at the time, the ALU
+%unit can store the values previously loaded from constant memory internally.
+%``Multiply and accumulate'' is the longest critical path, and is used
+%during the SD-FT \ref{appendix:SDFT}. This instruction needs the constant value
+%previously loaded into the ALU with the ``Load from constant memory''
+%instruction, which is why the ALU can store a constant memory value internally.
