@@ -4,11 +4,10 @@
 \section{ChaosM}\label{chapter:fpga}
 
 \textit{ChaosM} consists of two audio processing pipelines, each containing four
-homogeneous processor cores. The processor cores are Turing complete processing
-units connected to constant memory, an input buffer, an output buffer, and
-instruction memory. Each core exchanges data through the input/output buffers.
-Data from the I/O controller is written into the input buffer of the first core,
-and read back from the output buffer of the last core.
+homogeneous processor cores. Each processor core has access to separate input, output, and constant\footnote{A memory containing constants} memory modules, in addition to instruction memory, see Figure~\ref{fig:pipeline_architecture}. Each core exchanges data
+through the input/output buffers. Data from the I/O controller is written into
+the input buffer of the first core, and read back from the output buffer of the
+last core.
 
 With this design, each pipeline of cores can run a set of filters, for instance
 a Fourier transform, a frequency filter, an inverse Fourier transform, and an
