@@ -14,7 +14,7 @@ on each developers own laptop.
 \subsection{Demo Programs}
 
 While developing the software library interfacing with the hardware using emlib
-and CMSIS, small demo programs where written. These programs verify two things;
+and CMSIS, small demo programs were written. These programs verify two things;
 that the software runs correcly, and that the underlying hardware devices are
 connected according to the specifications. This was acccomplished by running the
 program on both the PCB and the development kits available at the lab.
@@ -22,29 +22,30 @@ program on both the PCB and the development kits available at the lab.
 \subsubsection{Transfer from ADC to DAC with DMA}
 \paragraph{Testfile: sw/modules/adc/demo/ADD.c}
 
-This test verifies that this pipeline is set up correctly. It confirms that the minijacks
-are connected the correct GPIO ports. As the ports are the same on the development kit \ref{}
-and the project's PCB, this test has been used to verify the PCB design and implementation.
+This test verifies that this pipeline is set up correctly. It confirms that the
+minijacks are connected the correct GPIO ports. As the ports are the same on the
+development kit \ref{} and the project's PCB, this test has been used to verify
+the PCB design and implementation.
 
-This demo program sets up the ADC as sample source and DAC as the sample output. DMA is
-used to copy from the ADC to an input buffer in the Internal RAM on the MCU. After 64 samples,
-the CPU is interrupted and transfers the samples to the output buffer. A second DMA channel
-copies from the output buffer to the DAC.
+This demo program sets up the ADC as sample source and DAC as the sample output.
+DMA is used to copy from the ADC to an input buffer in the Internal RAM on the
+MCU. After 64 samples, the CPU is interrupted and transfers the samples to the
+output buffer. A second DMA channel copies from the output buffer to the DAC.
 
-\todo{Remove?}Sets up a simple path from ADC to DAC.
-Verifies that ADC, DAC are setup correctly.
+\todo{Remove?}Sets up a simple path from ADC to DAC. Verifies that ADC, DAC are
+setup correctly.
 
 \subsubsection{Transfer from ADC to DAC Through FPGA Mock}
 \paragraph{Testfile: sw/modules/fpga/demo/fpga.c}
-This demo is a copy of the previous test with the addition of deinterleaving and interleaving
 
-
-Verifies that deinterleaving and interleaving works.
+This demo is a copy of the previous test with the addition of deinterleaving and
+interleaving to confirm that these operations run correctly.
 
 \subsubsection{copy-file.c}
-Sets up MicroSD and copies the file sweet1.wav to sweet2.wav.
-Verifies that SDCard is setup correctly.
+Sets up MicroSD and copies the file sweet1.wav to sweet2.wav. Verifies that
+SDCard is setup correctly.
 
 \subsubsection{wavplayer.c}
-Sets up the MicroSD, FPGA mock, DAC and DMA.
-Verifies that audio can be played from SDCard to DAC.
+Sets up the MicroSD, FPGA mock, DAC and DMA. Verifies that audio can be played
+from SDCard to DAC.
+
