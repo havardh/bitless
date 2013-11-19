@@ -18,8 +18,6 @@ the second operand is an immediate value. The format of the
 instructions are illustrated in figure \ref{fig:regbased_instrs_format}. The
 implemented functions can be found in table \ref{tab:regbased_instrs}.
 
-\todo{Fiks instruksjonstabellen}
-
 \input{figures/fpga/isa-regbased-format}
 \FloatBarrier
 \input{figures/fpga/isa-regbased-instructions}
@@ -37,8 +35,7 @@ register. The format of the instruction can be found in figure
 The branch instruction checks condition flags and jumps accordingly. By
 checking for various combinations of the condition flags, many different
 conditions can be checked for. The format of the instruction is illustrated
-in figure \ref{fig:new_branch_format}. List for the encoding of the flags field
-is coming later.
+in figure \ref{fig:new_branch_format}. 
 
 \input{figures/fpga/isa-branch-format}
 \FloatBarrier
@@ -51,7 +48,6 @@ load constant instructions do not specify any registers, only an immediate
 offset constant.
 
 The list of defined special registers can be found in table \ref{tab:specregs}.
-The register number for these registers have not yet been determined.
 
 \input{figures/fpga/isa-special-registers}
 \FloatBarrier

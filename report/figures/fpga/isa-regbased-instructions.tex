@@ -21,8 +21,7 @@
 		& \texttt{0b10} & \texttt{fmla \$ra, \$rb} & Multiply-and-accumulate (FP) & $\$ra \leftarrow \$ra + \$rb * \$rc$ \\
 		& \texttt{0b11} & \texttt{fmls \$ra, \$rb} & Multiply-and-subtract (FP) & $\$ra \leftarrow \$ra - \$rb * \$rc$ \\
 	\multirow{4}{*}{\texttt{0b11}}
-		& \texttt{0b00} & \texttt{halt} & Stop processor &  \\
-		& \texttt{0b01} & \texttt{halt} & Stop processor & \\
+		& \texttt{0b0x} & \texttt{halt} & Stop processor &  \\
 		& \texttt{0b10} & \texttt{fmla \$ra, \$rb} & Multiply-and-accumulate (FP) & $\$ra \leftarrow \$ra + \$rb * \$rd$ \\
 		& \texttt{0b11} & \texttt{fmls \$ra, \$rb} & Multiply-and-subtract (FP) & $\$ra \leftarrow \$ra - \$rb * \$rd$ \\
 	\hline
