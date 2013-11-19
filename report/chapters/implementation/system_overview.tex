@@ -7,6 +7,8 @@ At the same time, processed audio is routed back from the accelerator and to the
 output minijack.
 
 \subsection{System Components}
+Following all the physical components for the system are introduced.
+
 \subsubsection{MCU}\label{intro:system-components-mcu}
 
 The MCU handles all I/O and is referred to as the I/O controller in much of the
@@ -21,34 +23,32 @@ in which to change the FPGA behavior.
 
 The FPGA is programmed with a MIMD architecture design, with the purpose of
 enabling task parallelism. While this improves performance, it comes at the cost
-of a more complex process architecture, which in turn increases the size of each
-core. This limits the number of cores available on the FPGA, but we were able to
-comfortably fit 8 cores, which is enough to implement the sound-manipulating
-filters we want.
+of a more complex processor architecture, which in turn increases the size of
+each core. This limits the number of cores available on the FPGA, but we were
+able to comfortably fit 8 cores, which is enough to implement the sound
+manipulating filters we want.
 
-
-Since sound processing often requires fourier transforms, several solutions were
+Since sound processing often requires Fourier Transforms, several solutions were
 considered for how to implement hardware support for this.
 
-Designing a core specifically for doing the fourier transform and its inverse
+Designing a core specifically for doing the Fourier transform and its inverse
 was considered, but would cause increased complexity when designing the audio
 processing pipelines. A variant of this idea was to equip the first and the last
 core of each audio pipeline with instructions accelerating the most computing
-intensive parts of the fourier transforms, but this would cause the processors
+intensive parts of the Fourier Transforms, but this would cause the processors
 to not be homogenous.
 
 In the end, implementing a simple floating point unit in each of the cores
-would not only allow acceleration of the fourier transforms, but also
+would not only allow acceleration of the Fourier Transforms, but also
 manipulation of the resulting samples in the frequency domain.
 
 \subsubsection{Memory}
 
-The MCU has an internal memory of 128KByte. This is not sufficient when working with audio files loaded from an SD-card, so the decision was made to add more memory 
-onto the board. In addition, if something were to go wrong
-with the audio-in channel and SD-card, having extra memory can work as a third
-option for storing input.
-
-
+The MCU has an internal memory of 128KByte. This is not sufficient when working
+with audio files loaded from an SD-card, so the decision was made to add more
+memory onto the board. In addition, if something were to go wrong with the
+audio-in channel and SD-card, having extra memory can work as a third option for
+storing input.
 
 \subsubsection{I/O}
 
@@ -81,6 +81,6 @@ goes for output.
 
 The buttons and LEDs were added for ease of controlling/reading what is
 happening on the PCB. We have two reset buttons for the FPGA and USB, and five
-general purpose ones which the I/O controller handles. There's also eight LEDs, where
-three are for status indications, and five are general purpose for the MCU to
-control.
+general purpose ones which the I/O controller handles. There's also eight LEDs,
+where three are for status indications, and five are general purpose for the MCU
+to control.

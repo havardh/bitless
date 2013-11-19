@@ -42,6 +42,9 @@ effort put into the project.
 
 \section{Assignment}
 
+Next follows some requirements and thoughts the group has considered, which will follow throughout the report.
+
+
 \paragraph{Assignment Interpretation}\label{intro:our-assignment-interpretation}
 Our interpretation of the assignment is to design a hardware prototype system
 for a specific application domain with two main components. First, it must have
@@ -55,8 +58,9 @@ as a hardware accelerator, i.e. to speed up execution of programs.
 
 The application chosen for this project is audio processing.
 Figure~\ref{fig:audio_path_overview} shows how the system works as a whole. By
-the use of analog to digital -, and digital to analog converters, input is
-processed by running it through the audio processor.
+the use of \textit{Analog to Digital Converters} (ADC), and \textit{Digital to
+Analog Converters}, input is processed by running it through the audio
+processor.
 
 \begin{figure}[H]
     \centering
@@ -120,6 +124,11 @@ other core.
 For this project to successfully meet the requirements, it has to implement
 an architecture with multiple processing cores, where each core can work on any
 set of data with any set of instructions independently of any other core.
+
+\paragraph{Our implementation of MIMD}
+By realizing \textit{ChaosM}'s architecture written in VHDL, and put on the
+FPGA, as shown in Figure \ref{fig:general_pipeline}, this project completes the
+MIMD requirement.
 
 \begin{figure}[H]
     \centering
