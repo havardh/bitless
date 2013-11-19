@@ -43,49 +43,46 @@ effort put into the project.
 \section{Assignment}
 
 \paragraph{Assignment Interpretation}\label{intro:our-assignment-interpretation}
-Our interpretation of the assignment is to design a hardware prototype system for a
-specific application domain with two main components. First, it must have a
-\textit{microcontroller} (MCU). Second, it must have a \textit{Field Programmable Gate Array} (FPGA)
-implementing a MIMD architecture processor. The project design must fit on a custom
-made \textit{Printed Circuit Board} (PCB) developed for this project. On behalf of these
-requirements, this results in a convenient division of labour where the MCU manages
-the peripherals and drives the system, while the FPGA is being used as a hardware
-accelerator, i.e. to speed up execution of programs.
+Our interpretation of the assignment is to design a hardware prototype system
+for a specific application domain with two main components. First, it must have
+a \textit{microcontroller} (MCU). Second, it must have a \textit{Field
+Programmable Gate Array} (FPGA) implementing a MIMD architecture processor. The
+project design is realized as a complete computer placed on a custom made
+\textit{Printed Circuit Board} (PCB) developed for this project. On behalf of
+these requirements, this results in a convenient division of labour where the
+MCU manages the peripherals and drives the system, while the FPGA is being used
+as a hardware accelerator, i.e. to speed up execution of programs.
+
+The application chosen for this project is audio processing.
+Figure~\ref{fig:audio_path_overview} shows how the system works as a whole. By
+the use of analog to digital -, and digital to analog converters, input is
+processed by running it through the audio processor.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{figures/intro/intro_audio_analog_digital.png}
+    \caption{An abstract view of the audio processing}
+    \label{fig:audio_path_overview}
+\end{figure}
+
+It is the MCU, acting as the I/O controller, that transfers audio samples from a
+source on the PCB to the audio processor, which is realized by the FPGA. The
+audio processor will then process the samples and return the result to the I/O
+controller. The audio processor may run different filters, transforms, and
+effects in parallel on the audio samples.
+
+For the rest of this report, the audio processing unit, which is really the
+processor design written in VHDL and implemented on the FPGA, is hereafter
+referred to as the \textit{Concurrent Homogenous Audio Optimized Streaming
+Microprocessor} (ChaosM).
 
 Another design requirement given from the assignment description is energy
 efficiency. The hardware configuration with a general processor and a
 specialized set of processors has become increasingly popular since power
 consumption became an issue, and is ubiquitous in today's computing systems.
-Being on the energy efficiency group motivates us to leverage such energy aware
-concepts and design a system with energy efficiency in mind.
-
-\missingfigure{A figure giving a ``20k feet view from above'' of the PCB, MCU,
-and FPGA.}
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\textwidth]{figures/intro/intro_audio_analog_digital.png}
-    \caption{An abstract view of the audio processing options.}
-    \label{fig:audio_path_overview}
-\end{figure}
-
-
-The above \todo{Insert reference}figure shows how the FPGA processor
-design can run different programs with a MIMD architecture.
-
-The application chosen for this project is audio processing. The MCU will
-provide audio samples from a source on the PCB to the FPGA, which in turn will
-process the samples and return the result. As the FPGA contains multiple cores,
-the FPGA may run different filters, transforms, and effects in parallel on the
-audio samples. For the rest of this report, the Giant Gecko microcontroller unit
-from Silicon Labs is hereafter referred to as the MCU, and the Spartan-6 Xilinx
-FPGA chip will hereafter be referred to as the FPGA. The processor design
-written in VHDL and implemented on the FPGA is hereafter referred to as
-Concurrent Homogenous Audio Optimized Streaming Microprocessor (\textit{ChaosM}).
+This has motivated us to leverage such energy aware concepts into our design.
 
 \subsection{Energy Efficiency}
-Since this project belongs to the energy efficiency group of the TDT4295 course,
-an important focus during the planning, implementation, and testing of this system
-has been energy efficiency.
 
 While a Xilinx Spartan-6\cite{fpga-chip} processing core does not have much
 potential for energy efficiency, the aim is to program the design and simulate
@@ -93,17 +90,17 @@ energy efficiency through \textit{ChaosM} on the FPGA, as well as in the
 programming on the MCU, and in the design of the PCB.
 
 The MCU is branded as an ``energy friendly microprocessor'', with many features
-which when implemented correctly can hold immense potential for energy savings
+which, when implemented correctly, can hold immense potential for energy savings
 compared to most other microprocessor units on the market.
 
 The PCBs in previous TDT4295 projects have often been the culprit at the root of
-energy inefficiency. Thus, in this project there has been a lot of focus on making
-the source of all the energy work as energy efficiently as possible, as well as
-utilizing components in an energy efficient manner.
+energy inefficiency. Thus, in this project there has been a lot of focus on
+making the source of all the energy work as energy efficiently as possible, as
+well as utilizing components in an energy efficient manner.
 
-More details on how the different parts of the system utilizes energy efficient
-implementations for this project, can be found in their respective sub-sections
-of chapter \ref{chapter:implementation}.
+Details on how the different parts of the system utilizes energy efficient
+implementations can be found in their respective sub-sections of
+chapter~\ref{chapter:implementation}.
 
 \subsection{Multiple Instruction, Multiple Data}
 
@@ -112,7 +109,7 @@ assignment is to implement a processor design on the FPGA based on a MIMD
 architecture. MIMD architecture is an extension of the Single Instruction,
 Multiple Data (SIMD) architecture. In a SIMD architecture, each processor core
 shares instruction memory, so in effect, all the processor cores in the
-processor run the same program, but on different sets of data. Like for example
+processor run the same program, but on different sets of data. Like, for example,
 in a graphics pipeline.
 
 A MIMD architecture however differs from the SIMD in that each processor core
