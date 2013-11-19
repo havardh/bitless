@@ -1,15 +1,17 @@
+% !TEX root = ../../report.tex
+
 \FloatBarrier
 \section{FPGA}\label{chapter:fpga}
 
 \textit{ChaosM} consists of two audio processing pipelines, each containing four
-homogenous processor cores. The processor cores are Turing complete processing
+homogeneous processor cores. The processor cores are Turing complete processing
 units connected to constant memory, an input buffer, an output buffer, and
 instruction memory. Each core exchanges data through the input/output buffers.
 Data from the I/O controller is written into the input buffer of the first core, and read
 back from the output buffer of the last core.
 
 With this design, each pipeline of cores can run a set of filters, for instance
-a fourier transform, a frequency filter, an inverse fourier transform, and an
+a Fourier transform, a frequency filter, an inverse Fourier transform, and an
 effect on the audio data stream running through the audio pipelines of \textit{ChaosM}.
 
 \input{chapters/implementation/fpga/pipelines}

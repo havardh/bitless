@@ -1,3 +1,5 @@
+% !TEX root = ../../report.tex
+
 \section{System Overview}
 
 The system is built around an I/O control unit that organizes all data movement
@@ -7,7 +9,7 @@ At the same time, processed audio is routed back from the accelerator and to the
 output minijack.
 
 \subsection{System Components}
-Following all the physical components for the system are introduced.
+This section describes the logical components of the system.
 
 \subsubsection{MCU}\label{intro:system-components-mcu}
 
@@ -36,7 +38,7 @@ was considered, but would cause increased complexity when designing the audio
 processing pipelines. A variant of this idea was to equip the first and the last
 core of each audio pipeline with instructions accelerating the most computing
 intensive parts of the Fourier Transforms, but this would cause the processors
-to not be homogenous.
+to not be homogeneous.
 
 In the end, implementing a simple floating point unit in each of the cores
 would not only allow acceleration of the Fourier Transforms, but also
@@ -44,7 +46,7 @@ manipulation of the resulting samples in the frequency domain.
 
 \subsubsection{Memory}
 
-The MCU has an internal memory of 128KByte. This is not sufficient when working
+The MCU has an internal memory of 128KB. This is not sufficient when working
 with audio files loaded from an SD-card, so the decision was made to add more
 memory onto the board. In addition, if something were to go wrong with the
 audio-in channel and SD-card, having extra memory can work as a third option for
