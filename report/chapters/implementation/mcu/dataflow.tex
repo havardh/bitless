@@ -30,13 +30,14 @@ and devices connected to EBI like the FPGA.
 \subsubsection{Deinterleaving the samples}
 
 When reading from either a WAV file or the ADC, samples from the stereo channels
-are interleaved. The FPGA handles each channel in a separate pipeline as shown
-in Figure \ref{fig_sw_main_dataflow}. When reading the samples they have to be
+are interleaved. The \textit{ChaosM} handles each channel in a separate pipeline as shown
+in Figure \ref{fig:pipeline_architecture}. When reading the samples they have to be
 deinterleaved. Deinterleaving is the process of splitting the samples for each
 channel into separate streams. The complementary operation of interleaving the
-samples is performed before the samples are moved to the output peripherals.
+samples is performed before the samples are moved to the output peripherals. This is
+illustrated in Figure~\ref{}
 
-\missingfigure{Figure showing deinterleaving and interleaving}
+\missingfigure{Figure showing deinterleaving and interleaving. Remember reference once inserted.}
 
 The interleaving and deinterleaving operations are either done by the DMA for
 energy efficiency purposes, or the CPU. If the operation is performed by the
@@ -59,7 +60,7 @@ Diagrams/Interleaving of samples! Makes sense?} This is implemented with two
 version. One using only the CPU and one using DMA transfers while the CPU is
 sleeping.
 
-\begin{lstlisting}[language=C, label=mcu:datapah1, caption=Håvard Fyll Inn]
+\begin{lstlisting}[language=C, label=mcu:datapah1, caption=DMA Configuration Descriptor initialization]
   DMA_CfgDescr_TypeDef descrCfg = {
     .dstInc  = dmaDataInc2,
     .srcInc  = dmaDataInc4,
@@ -68,6 +69,8 @@ sleeping.
   DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true,  &descrCfg );
   DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true,  &descrCfg );
 \end{lstlisting}
+
+\todo{review caption, insert reference}
 
 To understand what this will result in, imagine two pointers, {\bf dst} and {\bf
 src}. At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}.
@@ -83,9 +86,6 @@ The interleaving process on the output side of the FPGA works in the same way.
 The DMA reading the audio pipeline containing the left stereo channel, writes
 the samples to even numbered addresses in the memory, while the DMA reading the
 right audio pipeline channel writes to odd numbered addresses.
-
-\todo[inline]{Need a better way than the ``paragraph'' command to split the
-above and below paragraphs.}
 
 Additionally, a DMA is assigned for each ADC and DAC whenever they are used as
 input and output. When a SDCard is used, the contents of the files are read and
@@ -109,8 +109,8 @@ mapped on the MCU. Communicating with the FPGA is done by reading and writing to
 
 \subsubsection{Serial Peripheral Interface}
 The SPI bus is a general bus interface used in many embedded applications. It is used
-for communicating between the MCU and a MicroSD memory card connected to the slot
-on the PCB \ref{} \todo{Har vi bilde av bitless?}.
+for communicating between the MCU and the microSD memory card connected to the slot
+on the PCB.
 
 \subsubsection{General Purpose Input/Output}
 To capture an audio stream from the input minijack, one GPIO pin is connected to an

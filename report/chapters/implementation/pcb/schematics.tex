@@ -19,6 +19,11 @@ respectively. Component datasheets have also influenced much of the design,
 since they provide a recipe for everything needed for the relevant component.
 
 Another thing that has been prioritized is adding backup solutions and debugging
-options in case something would fail due to PCB errors. \todo{add more about
-being able to fall back on other protocols should one fail, and the mapping of
-unused pins..}
+options in case something would fail due to PCB errors. The following was implemented for redundancy:
+
+\begin{itemize}
+ \item I/O - USB, microSD, UART, and minijacks
+ \item Power - headers for the various power planes
+ \item Memory - microSD and SRAM
+ \item GPIO-pins - 12 for FPGA, 10 for MCU; used for any desired signals
+\end{itemize}
