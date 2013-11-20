@@ -8,10 +8,10 @@ implement.
 
 The processor core could be improved by predicting branch taken on every branch
 instruction. This would reduce the number of no operation instructions to zero,
-when the branch prediction is correct. A drawback would be increased complexitiy
+when the branch prediction is correct. A drawback would be increased complexity
 in core, since it would require flushing three instructions when the prediction
 is wrong. Since looping is a part of critical in audio processing programs;
-branch predcition would be a vast improvment to the speed of the programs.
+branch prediction would be a vast improvement to the speed of the programs.
 \subsubsection{Further optimize the floating point operations}
 
 If the floating point operations had been optimized further, the pipeline inside
@@ -20,14 +20,14 @@ consequently makes \textit{ChaosM} more energy efficient as the operations on
 the FPGA finish faster.
 
 \subsubsection{Timing simulations}
-The system timing simulations differ from behavourial simulations. Though all
+The system timing simulations differ from behavioral simulations. Though all
 behavioral simulations worked as expected, their complementing timing
 simulations did not always simulate properly. The key difference is that timing
 simulations simulate how the system will work on the FPGA with signal
 propagations, in addition to accounting for the time it takes for signals to
 propagate through the logic circuits. This can reveal locations in the VHDL
 design where a signal might become undefined, or have the wrong value at the
-right time, where a behavourial simulation would not reveal these problems.
+right time, where a behavioral simulation would not reveal these problems.
 
 \subsection{I/O Controller Improvements}
 There are no functional improvements to the I/O controller which were not
@@ -41,3 +41,7 @@ special holes which adds expenses in production. Other than that, a reset
 button, or just a simple power switch, would have been nice. Also, as an added
 safety, being able to disconnect the power supply from the power planes would
 have been nice to avoid frying any components should something go wrong.
+
+There is a lot of static noise on the various signal lines. This affects sound
+quality of the audio output. The audio lines
+should probably have been shielded in order to avoid interference. 
