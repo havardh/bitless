@@ -1,5 +1,14 @@
 \subsubsection{Power comparision using energy profiling}
 
+An important feature included with Simplicity Studio and Silicon Labs microcontrollers
+is the possibility to easily monitor the power consumption on the running system.
+This allows for easier development of energy efficient code, and can help
+with finding and tracing down bugs. 
+This is a feature called \textit{energyAware Profiler}, and it is thoroughly 
+described in Silicon Labs application note \cite{energydbg}.
+
+Most of the code used in this project is already based on highly optimized 
+examples with respect to energy efficiency.
 The example provided by Silicon Labs named {\bf preamp} is comparable to the main
 DMA dataflow, as their net work is similar. Both program uses DMA and moves samples 
 from ADC to DAC. The difference is that the non-example code includes deinterleaving

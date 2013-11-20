@@ -1,15 +1,23 @@
 \section{Testing the MCU Implementation}
 
-This section describes the test written in software, and the energy measurements
-done with Silicon Lab's \textit{energyAware Profiler}. The software tests can be
+This section describes the tests written in software, and the energy measurements
+done with Silicon Labs' \textit{energyAware Profiler}. The software tests can be
 divided into to groups, Unit tests and Demo programs.
 
 \subsection{Unit tests}
 
 Unit tests were developed for the non-hardware dependent code. These are
 utility components which executes correctly independently of the underlying
-platform. The tests were written in the CppUTest framework \ref{} and executed
+platform. The tests were written in the CppUTest framework \ref{cpputest} and executed
 on each developers own laptop.
+
+\subsubsection{Testing the controller for ChaosM}
+The controller for the \textit{ChaosM} included functions for reading and writing
+to its input buffers and controlling it through the different control registers.
+Integrating with the \textit{ChaosM} and its address space could prove to be a
+difficult task. Thus, the processor was mocked and unit tests created during 
+development of both the processor and the controller.
+This made for easy changes of the controller during the ChaosM development.
 
 \subsection{Demo Programs}
 
@@ -47,5 +55,3 @@ is working.
 \subsubsection{wavplayer.c}
 The wavplayer demo verifies that a stream from a file on the SD card can be sent to the
 DAC output source. 
-
-
