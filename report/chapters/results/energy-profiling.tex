@@ -1,0 +1,13 @@
+\subsubsection{Power comparision using energy profiling}
+
+The example provided by Silicon Labs named {\bf preamp} is comparable to the main
+DMA dataflow, as their net work is similar. Both program uses DMA and moves samples 
+from ADC to DAC. The difference is that the non-example code includes deinterleaving
+and interleaving of the audio channels. Refere to section \ref{} for details. Figures \ref{fig:fpga} and \ref{fig:preamp}
+shows the energy consumption by the Microprocessor when running each program.
+
+\input{figures/sw/fpga}
+
+\input{figures/sw/preamp}
+
+As the figures suggests the energy consumption for each program are practically equal.
