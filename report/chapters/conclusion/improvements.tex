@@ -4,7 +4,7 @@ There have been several improvements we have considered for this project, and
 below we will detail on the most prominent improvements that we were unable to
 implement.
 
-\subsection{ChaosM improvements}
+\subsection{ChaosM Improvements}
 
 The processor core could be improved by predicting branch taken on every branch
 instruction. This would reduce the number of no operation instructions to zero,
@@ -19,20 +19,17 @@ of the core could have run faster, increasing the speed of \textit{ChaosM}. This
 consequently makes \textit{ChaosM} more energy efficient as the operations on
 the FPGA finish faster.
 
-\subsubsection{Spend more effort on timing simulations}
+\subsubsection{Timing simulations}
+The system timing simulations differ from behavourial simulations. Though all
+behavioral simulations worked as expected, their complementing timing
+simulations did not always simulate properly. The key difference is that timing
+simulations simulate how the system will work on the FPGA with signal
+propagations, in addition to accounting for the time it takes for signals to
+propagate through the logic circuits. This can reveal locations in the VHDL
+design where a signal might become undefined, or have the wrong value at the
+right time, where a behavourial simulation would not reveal these problems.
 
-The system timing simulations differ from behavourial simulations. Though all behavioral
-simulations worked as expected, their complementing timing simulations did
-not always simulate properly.
-The key difference is that timing simulations simulate how the system will work
-on the FPGA with signal propagations, in addition to accounting for the time it
-takes for signals to propagate through the logic circuits. This can reveal
-locations in the VHDL design where a signal might become undefined, or have the
-wrong value at the right time, where a behavourial simulation would not reveal
-these problems.
-
-\subsection{I/O controller improvements}
-
+\subsection{I/O Controller Improvements}
 There are no functional improvements to the I/O controller which were not
 implemented into the project. Beyond functional improvements, there was a
 wish to write a program which would show real-time graphs of the the audio
@@ -40,7 +37,7 @@ spectrums going into and out of the FPGA chip.
 
 \subsection{PCB improvements}
 The PCB cost can be reduced by only using drill holes, as the DC plug uses
-special holes which adds expenses in production.  Other than that, a reset
+special holes which adds expenses in production. Other than that, a reset
 button, or just a simple power switch, would have been nice. Also, as an added
 safety, being able to disconnect the power supply from the power planes would
 have been nice to avoid frying any components should something go wrong.
