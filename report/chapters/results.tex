@@ -22,7 +22,12 @@ these two components.
 
 \clearpage
 \section{Test Results}
-Following are the results of the FRTs. Due to \textit{ChaosM} not being successfully implemented, some of the FRTs have not been tested.
+Following are the test results of the FR tests, the simulation tests of
+\textit{ChaosM}, and finally the power measurement test.
+
+\subsection{FR test results}
+Following are the results of the FRs. Due to \textit{ChaosM} not being
+successfully implemented, some of the FRTs have not been tested.
 
 \paragraph{Functional requirement 1}
 \textit{The audio pipelines must receive and execute different data and instruction streams.}\\
@@ -43,24 +48,24 @@ This functional requirement was successfully achieved. With current sensors on t
 \paragraph{Functional requirement 8}
 \textit{The audio system should perform real time filtering on two distinct
 channels, with an audio quality of 8-bits and a frequency 44.1kHz.}\\
-This FTR was not achieved. For the same reasons as FTRs 1, 3, 6.
+This FR was not achieved. For the same reasons as FRs 1, 3, 6.
 
 \paragraph{Functional requirement 9}
 \textit{The microcontroller and the audio processor should communicate via ARMs
 External Bus Interface.}\\
-Besides the fact that the PCB did not connect the EBI bus' data lines for the FPGA, this FTR was achieved with the documented fix described in Section \ref{fixes}.
+Besides the fact that the PCB did not connect the EBI bus' data lines for the FPGA, this FR was achieved with the documented fix described in Section \ref{fixes}.
 
 \paragraph{Functional requirement 11}
 \textit{The MCU must have an SD card interface and a UART serial port.}\\
-This FTR was successfully achieved. The I/O controller successfully interfaced with the SD card and the UART serial port.
+This FR was successfully achieved. The I/O controller successfully interfaced with the SD card and the UART serial port.
 
 \paragraph{Functional requirement 12}
 \textit{The board should have buttons and LEDs.}\\
-With the I/O controller, this FTR was tested and successfully achieved.
+With the I/O controller, this FR was tested and successfully achieved.
 
 \paragraph{Functional requirement 13}
 \textit{The system should be able to process both digital and analog signals.}\\
-This FTR was partially achieved. While \textit{ChaosM} was as previously mentioned never implemented successfully on the system, the I/O controller successfully implemented demonstration programs that were able to receive and process data from both analog input, the minijacks, and the digital input, the SD card.
+This FR was partially achieved. While \textit{ChaosM} was as previously mentioned never implemented successfully on the system, the I/O controller successfully implemented demonstration programs that were able to receive and process data from both analog input, the minijacks, and the digital input, the SD card.
 In essence, the requirement of being able to utilize both analog and digital sources, was successfully achieved through the use of the ADC and the DAC. This was not achieved on the fully implemented system though.
 
 %The below input is a subsection of the above section
@@ -69,5 +74,5 @@ In essence, the requirement of being able to utilize both analog and digital sou
 \clearpage
 \input{chapters/results/power-measurements}
 
-\clearpage
+%The below input is a subsection of the previous section
 \input{chapters/results/energy-profiling}

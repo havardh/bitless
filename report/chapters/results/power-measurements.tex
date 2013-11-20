@@ -1,14 +1,18 @@
 % !TEX root = ../../report.tex
 \section{Power Measurements}\label{power_measurements}
 
-All components of the
-system have been chosen with energy efficiency in mind. In order to measure
-the efficiency of the design decisions, a set of power measurements were
-performed. This section outlines the results of those measurements.
+All components of the system have been chosen with energy efficiency in mind. In
+order to measure the efficiency of the design decisions, a set of power
+measurements were performed. This section outlines the results of those
+measurements.
+
+\subsection{System}
+Since this project has a energy efficient perspective, Table \ref{tab:results/power-measurement}
+shows how the system performs during different states.
 
 \begin{table}[H]
     \begin{tabular}{lllll}
-	State & FPGA                         & Audio source & Sense3v3 & Sense1v8 \\
+	System State & FPGA                         & Audio source & Sense3v3 & Sense1v8 \\
 	\hline \\
 	A     & Idle                         & -            & 140mA    & 75mA \\
 	B     & Computational simple filters & ADC          & -        & - \\
@@ -17,7 +21,10 @@ performed. This section outlines the results of those measurements.
         E     & Computational heavy filters  & SD-card      & -        & -
     \end{tabular}
     \label{tab:results/power-measurement}
-    \caption{FILL OUT CAPTION}
+    \caption{System load power measurements}
 \end{table}
 
-\todo{Preliminary results, will be fleshed out once we have a running system}
+\paragraph*{}
+
+As Table \ref{tab:results/power-measurement} reflects, the system was never
+fully implemented, thus states B through E were not possible to test.
