@@ -1,0 +1,16 @@
+% !TEX root = ../../report.tex
+
+\section{Pitfalls}
+
+We made a lot of experiences during the process of this project and have listed the most prominent ones in this section.
+
+\begin{description}
+   \item[PCB Schematics] \hfill \\
+   Double check custom footprints and make sure the pads are correct according to the datasheet.
+
+Triple check all signal connections going to and from any SMD processors, and look especially out for typos. If you lose a signal (or a bus), there is no way of getting access to the pins on the chip. This proved to be a major time sink for us.
+   \item[VHDL Implementation and Simulation] \hfill \\
+   Start testing and synthesizing the design early. Bugs introduced early on can have major ripple effects on a completed design if they are not detected early in the process.
+
+Timing simulation is a very manhour intensive process of the VHDL development. It is advantageous to learn how the timing simulation works early on in the project.
+\end{description}
