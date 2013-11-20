@@ -13,14 +13,15 @@ store the program that is run by a processor core.
 \subsubsection{Audio Pipeline Buffers}
 The audio pipeline buffers are used for passing data through the audio pipeline.
 Each core has an input buffer and an output buffer, with the latter also serving
-as working memory for the core. While a core has write access to all of the 
+as working memory for the core. While a core has write access to all of the
 output buffer, the suggested programming model is to only operate on half the
 address space, to ensure that the receiving core can safely read the other half.
 The buffers have two different modes of operation, switching mode and ring mode:
 
 In ring mode the base pointers for both cores are incremented at each sample
 clock tick. This is done to make addressing data samples by their age simple,
-which is a useful support for transform \footnote{For the SDFT this mode implements the sliding window in hardware.} and effect algorithms.
+which is a useful support for SDFT \ref{appendix:SDFT}, implementing a sliding
+window in hardware.
 
 In switching mode the base address pointers for the writing and reading core are
 updated at every sample clock tick. For programs operating on data in the
@@ -35,6 +36,6 @@ respect to sample age, or the address of a frequency value.
 The constant memory is used to store constants needed for computations, mainly
 the Fourier coefficients needed for the SDFT. Each audio pipeline contains one
 constant memory which is shared between a two select processors in the
-pipeline. This limitation is due to the block RAM on the FPGA used, which only 
+pipeline. This limitation is due to the block RAM on the FPGA used, which only
 has two available read ports per module.
 
