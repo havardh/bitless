@@ -4,19 +4,17 @@
 The processor was designed in a top-down fashion, starting with the instruction
 set. The MIPS ISA used in the \textit{Computer
 Design}\cite{tdt4255} course was a good starting point for the ISA used in this
-project. In order to support as many different filters
-and effects as possible, the processor supports all normal arithmetic
-operations. Due to the requirements of doing Fourier transforms on the
-processor, support for some floating point instructions was also included.
+project. In order to make the instruction set as general as possible, the 
+processor supports most common arithmetic operations. In addition the ISA was
+optimized for the target application, especially operations supporting the SDFT.
 
 To make the decoding of instructions as easy as possible, instructions
 were divided into three different instruction groups.
 
 \subsubsection{Register-based Instructions}
 
-The register-based instructions are instructions were both operands are
-primarily registers. The group also includes a few instructions where
-the second operand is an immediate value. The format of the
+The register-based instructions are instructions operating on registers. With a
+few exceptions the instructions follow the format $A = A op B$. The format of the
 instructions are illustrated in Figure \ref{fig:regbased_instrs_format}. The
 implemented functions can be found in Table \ref{tab:regbased_instrs}.
 
@@ -44,7 +42,7 @@ in Figure \ref{fig:new_branch_format}.
 
 \paragraph{Special Registers}
 
-Due to the limited space in instruction words, only two registers at most can be
+Due to the limited space in instruction words, at most two registers can be
 specified in an instruction. Some instructions, such as the load immediate and
 load constant instructions do not specify any registers, only an immediate
 offset constant.

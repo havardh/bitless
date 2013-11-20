@@ -32,9 +32,6 @@ DMA is used to copy from the ADC to an input buffer in the Internal RAM on the
 MCU. After 64 samples, the CPU is interrupted and transfers the samples to the
 output buffer. A second DMA channel copies from the output buffer to the DAC.
 
-\todo{Remove?}Sets up a simple path from ADC to DAC. Verifies that ADC, DAC are
-setup correctly.
-
 \subsubsection{Transfer from ADC to DAC Through FPGA Mock}
 \paragraph{Testfile: sw/modules/fpga/demo/fpga.c}
 
@@ -42,10 +39,13 @@ This demo is a copy of the previous test with the addition of deinterleaving and
 interleaving to confirm that these operations run correctly.
 
 \subsubsection{copy-file.c}
-Sets up MicroSD and copies the file sweet1.wav to sweet2.wav. Verifies that
-SDCard is setup correctly.
+The copy file demo sets up the MCU to read samples a wav file on a SDCard and to write
+them back to the same card in a different file. It verifies that the FatFS file system
+and MicroSD libraries are set up correctly and that the SD slot on the circuit board
+is working.
 
 \subsubsection{wavplayer.c}
-Sets up the MicroSD, FPGA mock, DAC and DMA. Verifies that audio can be played
-from SDCard to DAC.
+The wavplayer demo verifies that a stream from a file on the SD card can be sent to the
+DAC output source. 
+
 

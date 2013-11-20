@@ -2,14 +2,9 @@
 
 \subsection{Memory Types}\label{subsec:fpga-memory}
 
-The internal block RAMs in the FPGA were used to implement the different kinds
-of memories inside the processor. Even though this limits the amount of
-memory available, it guarantees equal access time for all the different
-of memories. It also precludes having to use external RAM, which would not be as
-fast, nor energy-efficient.
-
-All of the following memory types are implemented on the FPGA chip, and
-therefore they all share the access time the block RAMs on the FPGA chip have.
+All \textit{ChaosM} working memory was implemented in FPGA block RAM to reduce complexity
+and improve energy efficiency by reducing data movement. External RAM could
+provide a significantly larger working memory, but at the cost of a long access time.
 
 \subsubsection{Instruction Memory}
 Each processor core has a separate instruction memory. This memory is used to
@@ -17,26 +12,29 @@ store the program that is run by a processor core.
 
 \subsubsection{Audio Pipeline Buffers}
 The audio pipeline buffers are used for passing data through the audio pipeline.
-Each core has an input buffer and an output buffer, which stores the samples
-that are processesed by the core and the result respectively. The processors
-have read-only access to their input buffers and read-write access to their
-output buffers.
+Each core has an input buffer and an output buffer, with the latter also serving
+as working memory for the core. While a core has write access to all of the 
+output buffer, the suggested programming model is to only operate on half the
+address space, to ensure that the receiving core can safely read the other half.
+The buffers have two different modes of operation, switching mode and ring mode:
 
-The buffers have two different modes of operation. In the switching mode,
-the buffers are divided into two partitions. One partition is available
-as output buffer for a core, and the other partition is available as the
-input buffer for the next core. When the sample clock
-changes, the buffer partitions are switched, thus passing data from the
-output of one core to the input of the next.
+In ring mode the base pointers for both cores are incremented at each sample
+clock tick. This is done to make addressing data samples by their age simple,
+which is a useful support for transform \footnote{For the SDFT this mode implements the sliding window in hardware.} and effect algorithms.
 
-When the ringbuffer mode is used, two sliding windows is used to partition
-the buffer. Each core has access to their own window. On each sample clock
-edge vthe window is advanced by a predefined number
-of samples.
+In switching mode the base address pointers for the writing and reading core are
+updated at every sample clock tick. For programs operating on data in the
+frequency domain, it is important to make all values avaliable to the reading core.
+
+A core supplies an offset from it's base address, the sum representing the
+actual memory address. This lets the cores view the address map as static with
+respect to sample age, or the address of a frequency value.
+
 
 \subsubsection{Constant Memory}
-The constant memory is used to store constants needed for computations. Each
-audio pipeline contains one constant memory which is shared between two
-configurable processors in the pipeline. This limitation is due to the block
-RAM on the FPGA used, which has only two available read ports.
+The constant memory is used to store constants needed for computations, mainly
+the Fourier coefficients needed for the SDFT. Each audio pipeline contains one
+constant memory which is shared between a two select processors in the
+pipeline. This limitation is due to the block RAM on the FPGA used, which only 
+has two available read ports per module.
 

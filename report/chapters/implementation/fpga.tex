@@ -3,7 +3,7 @@
 \FloatBarrier
 \section{ChaosM}\label{chapter:fpga}
 
-\textit{ChaosM} consists of two audio processing pipelines, each containing four
+The \textit{ChaosM} architecture consists of two audio processing pipelines, each containing four
 homogeneous processor cores. Each processor core has access to separate input, output, and constant\footnote{A memory containing constants} memory modules, in addition to instruction memory, see Figure~\ref{fig:pipeline_architecture}. Each core exchanges data
 through the input/output buffers. Data from the I/O controller is written into
 the input buffer of the first core, and read back from the output buffer of the

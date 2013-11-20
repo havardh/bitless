@@ -9,7 +9,7 @@ This subsection describes the design considerations and the implementation of th
 \subsubsection{Design Considerations}
 
 The processor core in \textit{ChaosM} is designed to be able to perform audio processing in real-time, as well as being as power efficient as possible.
-Since the FPGAs power usage is close to constant, the best way to save power is to reduce the time the whole board is active.
+Since an FPGA's power usage is close to constant, the best way to save power is to reduce the time the whole board is active.
 The best way for the core to contribute to this is, to execute the programs as fast as possible.
 Thus, the processor core has been designed with the two following principles in mind:
 
@@ -17,6 +17,14 @@ Thus, the processor core has been designed with the two following principles in 
 	\item As high throughput as possible.
 	\item Support the instructions needed to perform the audio processing.
 \end{itemize}
+The resulting core design is shown in figure \ref{fig:core_schematic} below:
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/fpga/core_schematic}
+	\caption{A simplified schematic of the processor core design.}
+	\label{fig:core_schematic}
+\end{figure}
 
 \subsubsection{Implementation}
 
@@ -32,11 +40,11 @@ stages:
 	\item Write back \label{stage:wb}
 \end{enumerate}
 
-A change from the classic pipelined processor designs, is that the memory stage comes before the execution stage.
+A change from the classic pipelined processor designs is that the memory stage comes before the execution stage.
 This is because the load and store instructions does not need the ALU to calculate the memory address.
 Thus the processor is able to prevent \textit{all} data dependecies by forwarding data from the different stages.
 
 For simplicity, the core does not have a hazard control unit implemented for branching.
-\todo{Confirm this in the final edition of the code}Instead it relies on the programmer to add two no-operations after a branch.
+Instead it relies on the programmer to add two no-operations after a branch.
 
 \input{chapters/implementation/fpga/alu}

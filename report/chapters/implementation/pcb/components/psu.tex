@@ -21,7 +21,7 @@ below.
 \paragraph{Voltage Regulators}
 
 The design is based on a switch-mode regulator that transforms DC input into
-3.3V~\cite{ds:sr10s3v3}, and a linear regulator\todo{linreg reference}
+3.3V~\cite{ds:sr10s3v3}, and a linear regulator \cite{ds:linreg}
 that transforms 3.3V into 1.2V and 1.8V, see power\_supply schematics in Appendix~\ref{apx:schematics}. The switch-mode gets an input voltage between 4.75V
 and 18V which, as mentioned, is transformed into 3.3V and kept stable by
 capacitors. This in turn supplies the 3.3V input for the linear voltage
@@ -44,9 +44,7 @@ placed on the 3.3V power plane, while the other sits just before the linear
 regulator. This way, it is possible to separate the 3.3V plane from the 1.2V and
 1.8V, which enables analysis of MCU and FPGA power consumption in comparison
 with the peripherals. In addition, the entire board consumption can be measured
-at the PWR\_SRC pins located right after the DC input connector, see
-see power\_supply schematics in Appendix~\ref{apx:schematics}.\todo{Refer to measurements section once it is
-completed for more details.}
+at the PWR\_SRC pins located right after the DC input connector, see power\_supply schematics in Appendix~\ref{apx:schematics} and measurements in Section \ref{power_measurements}.
 
 The output from the current sensors have each been connected to an ADC on the
 MCU, which makes it possible to perform live measurements on-chip. However, by
@@ -59,8 +57,7 @@ development board, making for more accurate readings.
 
 An extra feature that was added was the ability to power the board from USB. The
 USB 1.x and 2.0 standard specifies that a constant power draw of 500mA at 5.0V
-$\pm$ 5\% can be provided\footnote{
-http://www.usb.org/developers/docs/usb\_20\_070113.zip}. This should suffice for
+$\pm$ 5\% can be provided \cite{usb}. This should suffice for
 normal operation. USB chargers will in most cases provide support for current
 draws in the 1500mA to 2000mA range, so using one of these should be able to
 supply sufficient power through the USB port.
