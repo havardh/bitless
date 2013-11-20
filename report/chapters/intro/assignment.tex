@@ -60,7 +60,7 @@ as a hardware accelerator, i.e. to speed up execution of programs.
 The application chosen for this project is audio processing.
 Figure~\ref{fig:audio_path_overview} shows how the system works as a whole. By
 the use of \textit{Analog to Digital Converters} (ADC), and \textit{Digital to
-Analog Converters}, input is processed by running it through the audio
+Analog Converters} (DAC), input is processed by running it through the audio
 processor.
 
 \begin{figure}[H]
@@ -70,7 +70,7 @@ processor.
     \label{fig:audio_path_overview}
 \end{figure}
 
-It is the MCU, acting as the I/O controller, that transfers audio samples from a
+It is the \textit{Micro Controller Unit} (MCU), acting as the I/O controller, that transfers audio samples from a
 source on the PCB to the audio processor, which is realized by the FPGA. The
 audio processor will then process the samples and return the result to the I/O
 controller. The audio processor may run different filters, transforms, and

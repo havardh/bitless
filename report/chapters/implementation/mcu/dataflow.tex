@@ -65,9 +65,11 @@ versions, one using only the CPU and one using DMA transfers while the CPU is
 sleeping.
 
 To understand what this will result in, imagine two pointers, {\bf dst} and {\bf
-src}. At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}.
-After each iterations the {\bf src} pointer is incremented by {\bf srcInc} bytes
-and the {\bf dst} pointer is incremented by {\bf dstInc}.
+src}. At each iteration size bytes are copied from {\bf src} to {\bf dst}. After
+each iterations the {\bf src} pointer is incremented by enough bytes so that the
+pointer points at the next packet of samples, and the {\bf dst} pointer is
+incremented by its equivalent so that it also points at the next packet of
+samples.
 
 After the DMA channel is configured with a descriptor, it can be started with a
 a source pointer, destination pointer, and the number of transfers to be
@@ -97,7 +99,7 @@ bus. Lastly the FPGA is connected to the MCU with the EBI.
 The MCU is connected to the FPGA and External SRAM through the EBI. The EBI bus
 is initialized by the {\it emlib} software library. Utilizing
 the EBI leads to a simple interface with these units since the bus is memory
-mapped on the MCU. Communicating with the FPGA is done by reading and writing to 
+mapped on the MCU. Communicating with the FPGA is done by reading and writing to
 directly to the memory.
 
 \subsubsection{Serial Peripheral Interface}
@@ -107,7 +109,7 @@ on the PCB.
 
 \subsubsection{General Purpose Input/Output}
 To capture an audio stream from the input minijack, one GPIO pin is connected to an
-ADC on the MCU. The ADC measures the the difference between the current on the pin 
+ADC on the MCU. The ADC measures the the difference between the current on the pin
 and a reference voltage, usually Vdd or Ground.
 
 \subsubsection{Triggering Transfers}

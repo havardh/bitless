@@ -4,7 +4,7 @@
 The processor was designed in a top-down fashion, starting with the instruction
 set. The MIPS ISA used in the \textit{Computer
 Design}\cite{tdt4255} course was a good starting point for the ISA used in this
-project. In order to make the instruction set as general as possible, the 
+project. In order to make the instruction set as general as possible, the
 processor supports most common arithmetic operations. In addition the ISA was
 optimized for the target application, especially operations supporting the SDFT.
 
@@ -15,12 +15,10 @@ were divided into three different instruction groups.
 
 The register-based instructions are instructions operating on registers. With a
 few exceptions the instructions follow the format $A = A op B$. The format of the
-instructions are illustrated in Figure \ref{fig:regbased_instrs_format}. The
-implemented functions can be found in Table \ref{tab:regbased_instrs}.
+instructions are illustrated in Figure \ref{fig:regbased_instrs_format}. All of the
+implemented functions can be found in the Appendix \ref{tab:regbased_instrs}.
 
 \input{figures/fpga/isa-regbased-format}
-\FloatBarrier
-\input{figures/fpga/isa-regbased-instructions}
 \FloatBarrier
 
 \subsubsection{Load Immediate Instruction}

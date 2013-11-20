@@ -2,7 +2,7 @@
 
 \section{System Overview}
 
-The system is built around an I/O control unit that organizes all data movement
+The system is built around an I/O control unit implemented on the MCU, that organizes all data movement
 on board. Analog audio signals enter the system through a minijack and gets
 routed to the hardware accelerator by the I/O controller for audio manipulation.
 At the same time, processed audio is routed back from the accelerator and to the
@@ -16,7 +16,7 @@ This section describes the physical components of the system.
 The MCU handles all I/O, and communication with the \textit{ChaosM}.
 Sound input is either gathered from a WAV file on the SD-card or as
 a stream from the minijack on the board, and then passed on to the
-\textit{ChaosM}. Integrated ADCs and DACs are used in conjunction with the
+\textit{ChaosM}. Integrated ADCs and DACs enable the utilization of the
 minijacks. In addition, it programs the \textit{ChaosM}. This provides a simple way to
 change the \textit{ChaosM} behavior.
 

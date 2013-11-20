@@ -5,7 +5,7 @@
 
 \textit{ChaosM} on the FPGA communicates with the I/O controller using the EBI. Inside \textit{ChaosM}, an EBI controller is responsible
 for servicing requests from the I/O controller and driving the internal bus, which
-is used for transferring data to and from modules in the \textit{ChaosM}.
+is used for transferring data to and from modules within the \textit{ChaosM}.
 
 \subsubsection{The EBI Bus}
 The EBI\cite{efm_ebi} is a parallel bus with a separate data and address bus, in
@@ -22,7 +22,7 @@ before the read enable signal is asserted, see Figure \ref{fig:ebi_read}.
 \input{figures/fpga/communication-ebi-write}
 \input{figures/fpga/communication-ebi-read}
 
-All data transfers are initiated by the I/O controller, which works as bus
+All data transfers are initiated by the I/O controller, which acts as bus
 master for the EBI bus. The EBI controller facilitates communication between
 the EBI bus and the internal bus.
 
