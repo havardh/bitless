@@ -6,15 +6,18 @@ implement.
 
 \subsection{ChaosM improvements}
 
-The processor core could be improved by predicting branch taken on every branch instruction. This would reduce
-the number of no operation instructions to zero, when the branch prediction is correct. A drawback would be increased
-complexitiy in core, since it would require flushing three instructions when the prediction is wrong. Since looping is
-a part of critical in audio processing programs; branch predcition would be a vast improvment to the speed of the programs.
+The processor core could be improved by predicting branch taken on every branch
+instruction. This would reduce the number of no operation instructions to zero,
+when the branch prediction is correct. A drawback would be increased complexitiy
+in core, since it would require flushing three instructions when the prediction
+is wrong. Since looping is a part of critical in audio processing programs;
+branch predcition would be a vast improvment to the speed of the programs.
 \subsubsection{Further optimize the floating point operations}
 
 If the floating point operations had been optimized further, the pipeline inside
-of the core could have run faster, increasing the speed of system.
-\textit{ChaosM}. This consequently makes \textit{ChaosM} more energy efficient as the operations on the FPGA finish faster.
+of the core could have run faster, increasing the speed of \textit{ChaosM}. This
+consequently makes \textit{ChaosM} more energy efficient as the operations on
+the FPGA finish faster.
 
 \subsubsection{Spend more effort on timing simulations}
 
@@ -36,5 +39,8 @@ wish to write a program which would show real-time graphs of the the audio
 spectrums going into and out of the FPGA chip.
 
 \subsection{PCB improvements}
-The PCB cost can be reduced by only using drill holes, as the DC plug uses special holes which adds expenses in production.
-Other than that, a reset button, or just a simple power switch, would have been nice. Also, as an added safety, being able to disconnect the power supply from the power planes would have been nice to avoid frying any components should something go wrong.
+The PCB cost can be reduced by only using drill holes, as the DC plug uses
+special holes which adds expenses in production.  Other than that, a reset
+button, or just a simple power switch, would have been nice. Also, as an added
+safety, being able to disconnect the power supply from the power planes would
+have been nice to avoid frying any components should something go wrong.
