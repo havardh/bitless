@@ -5,10 +5,15 @@ below we will detail on the most prominent improvements that we were unable to
 implement.
 
 \subsection{ChaosM improvements}
+
+The processor core could be improved by predicting branch taken on every branch instruction. This would reduce 
+the number of no operation instructions to zero, when the branch prediction is correct. A drawback would be increased 
+complexitiy in core, since it would require flushing three instructions when the prediction is wrong. Since looping is
+a part of critical in audio processing programs; branch predcition would be a vast improvment to the speed of the programs. 
 \subsubsection{Further optimize the floating point operations}
 
 If the floating point operations had been optimized further, the pipeline inside
-of the core could have run faster, increaseing the speed of
+of the core could have run faster, increasing the speed of system.
 \textit{ChaosM}. This consequently makes \textit{ChaosM} more energy efficient as the operations on the FPGA finish faster.
 
 \subsubsection{Spend more effort on timing simulations}
@@ -21,7 +26,7 @@ on the FPGA with signal propagations, in addtion to accounting for the time it
 takes for signals to propagate through the logic circuits. This can reveal
 locations in the VHDL design where a signal might become undefined, or have the
 wrong value at the right time, where a behavourial simulation would not reveal
-these problems. This is discussed more in Section \ref{conclusion:pitfalls}.
+these problems. 
 
 \subsection{I/O controller improvements}
 
