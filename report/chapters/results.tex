@@ -11,7 +11,6 @@ also details whether the system as a whole has satisfied the project assignment.
 %The below input is a subsection of the above section
 \input{chapters/results/fpga-simulation-results}
 
-
 \clearpage
 \input{chapters/results/power-measurements}
 
@@ -21,9 +20,16 @@ also details whether the system as a whole has satisfied the project assignment.
 \clearpage
 \section{Assignment results}
 
-\todo[inline]{This is where we discuss the ``final'' state of the whole project.
-Saying how it looks like, and what it can do beyond what was discussed in the
-previous chapter.}
+While \textit{ChaosM} was able to fully function with one pipeline in
+simulation, there was insufficient time to successfully integrate it on the FPGA
+chip on the system. Therefore, the actual audio processing was never
+successfully tested on the system. Consequently many of the Functional
+Requirement Tests (FRTs) were not tested. However, the I/O controller was
+successfully tested against both the SRAM and the FPGA chip when configured as
+RAM. The PCB was also thoroughly tested. Following are the testing results of
+these two components.
 
+%The below input is a subsection of the above section
+\input{chapters/results/mcu-results}
 %The below input is a subsection of the above section
 \input{chapters/results/pcb-results}

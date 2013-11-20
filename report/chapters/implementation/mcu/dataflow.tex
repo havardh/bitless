@@ -1,6 +1,6 @@
 %!TEX root = ../../../report.tex
 
-\subsection{Dataflow}
+\subsection{Dataflow}\label{sec:dataflow}
 
 When designing an energy efficient system, dataflow is of great importance since
 data movement can cost a lot of energy. The software on the MCU
@@ -35,9 +35,14 @@ in Figure \ref{fig:pipeline_architecture}. When reading the samples they have to
 deinterleaved. Deinterleaving is the process of splitting the samples for each
 channel into separate streams. The complementary operation of interleaving the
 samples is performed before the samples are moved to the output peripherals. This is
-illustrated in Figure~\ref{}
+illustrated in Figure~\ref{fig:interleaving}
 
-\missingfigure{Figure showing deinterleaving and interleaving. Remember reference once inserted.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/sw/interleaving-of-samples.png}
+    \caption{Interleaving and deinterleaving of samples}
+    \label{fig:interleaving}
+\end{figure}
 
 The interleaving and deinterleaving operations are either done by the DMA for
 energy efficiency purposes, or the CPU. If the operation is performed by the
@@ -55,22 +60,9 @@ Both DMAs read every other sample and writes them continuously to the FPGA input
 buffers.
 
 In the code, this is set up with the DMA interface in {\bf emlib}, by
-configuring the DMA Descriptor. \todo{Check out the figure in drive/Rapport/SW
-Diagrams/Interleaving of samples! Makes sense?} This is implemented with two
+configuring the DMA Descriptor. This is implemented with two
 version. One using only the CPU and one using DMA transfers while the CPU is
 sleeping.
-
-\begin{lstlisting}[language=C, label=mcu:datapah1, caption=DMA Configuration Descriptor initialization]
-  DMA_CfgDescr_TypeDef descrCfg = {
-    .dstInc  = dmaDataInc2,
-    .srcInc  = dmaDataInc4,
-    .size    = dmaDataSize2
-  };
-  DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true,  &descrCfg );
-  DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true,  &descrCfg );
-\end{lstlisting}
-
-\todo{review caption, insert reference}
 
 To understand what this will result in, imagine two pointers, {\bf dst} and {\bf
 src}. At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}.
@@ -124,44 +116,14 @@ and a reference voltage, usualy Vdd or Ground.
 All the DMA transfers are triggered by the use of one clock, the sample clock.
 This clock is run at the sample speed 11 kilohertz when using the DAC or ADC. Or
 an arbitrary frequency when sampling from SDCard to SDCard. The clock signal is fed into
-the Peripheral Reflex System \todo{Refere to manual} (PRS) of the MCU and propagates
+the Peripheral Reflex System \cite{prs} of the MCU and propagates
 through the system using the following scheme.
 
 \begin{figure}[H]
-  \begin{verbatim}
-                          | Audio in
-                          V
-  +------+  +-----+    +------+   +-----+     +--------+
-  |TIMER0|->| PRS |-+->| ADC0 |-->| DMA |---->| Buffer |
-  +------+  +-----+ |  +------+   +-----+     +--------+
-                    |     .                      / \
-                    |     .                     /   \
-                    |     .                    V     V
-                    |     .              +-----+     +-----+
-                    |     +....irq......>| DMA |....>| DMA |
-                    |                    +-----+     +-----+
-                    |                       |           |
-                    |                       V           V
-                    |                   +------+    +-------+
-                    |                   | FPGA |    | FPGA  |
-                    |                   | Left |    | Right |
-                    |                   +------+    +-------+
-                    |                       |           |
-                    |                       V           V
-                    |                    +-----+     +-----+
-                    |     +....irq......>| DMA |....>| DMA |
-                    |     .              +-----+     +-----+
-                    |     .                    \     /
-                    |     .                     \   /
-                    |     .                       V
-                    |  +------+   +-----+     +--------+
-                    +->| DAC0 |<--| DMA |<----| Buffer |
-                       +------+   +-----+     +--------+
-                          |
-                          V Audio out
-  \end{verbatim}
-  \caption{Audio datasamples moved by the DMAs.}
-  \label{mcu:dma-dataflow}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/sw/dma-paths.png}
+    \caption{IRQ-triggering of DMA transfers}
+    \label{fig:software-stack}
 \end{figure}
 
 Here, both the DAC and ADC consumes the PRS signal originated from TIMER0. The
