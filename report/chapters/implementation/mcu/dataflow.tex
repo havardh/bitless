@@ -44,24 +44,24 @@ illustrated in Figure~\ref{fig:interleaving}
     \label{fig:interleaving}
 \end{figure}
 
-The interleaving and deinterleaving operations are either done by the DMA for
-energy efficiency purposes, or the CPU. If the operation is performed by the
+The interleaving and deinterleaving operations are either done by the DMA in order
+to be energy efficient, or by the CPU. If the operation is performed by the
 CPU, the gains of speed and data-transfer analysis can be tested. Depending on
-the different types of input sources, the CPU might be needed, while on others a
+the different types of input sources, the CPU might be needed, otherwise a
 more energy efficient implementation through the use of DMA may be used.
 Comparisons of the two implementations are included in the results section.
 
 The samples are deinterleaved in the DMA implementation by letting two DMA
-channels read from the same source and write the correct channel into the the
-correct pipeline for the correct channel. The first DMA copies the samples for
-the left stereo channel, and starts without a offset. The second DMA copies the
+channels read from the same source and write the correct channel, into the
+right pipeline. The first DMA copies the samples from
+the left stereo channel, and starts without an offset. The second DMA copies the
 samples for the right stereo channel and starts with an offset of one sample.
 Both DMAs read every other sample and writes them continuously to the FPGA input
 buffers.
 
 In the code, this is set up with the DMA interface in {\bf emlib}, by
 configuring the DMA Descriptor. This is implemented with two
-version. One using only the CPU and one using DMA transfers while the CPU is
+versions, one using only the CPU and one using DMA transfers while the CPU is
 sleeping.
 
 To understand what this will result in, imagine two pointers, {\bf dst} and {\bf
@@ -91,30 +91,29 @@ Figure \ref{fig:sw_sample_flow} show all the peripherals included in the flow of
 The ADC and DAC are connected to the minijack audio ports on the circuit board and directly
 linked to GPIO ports on the MCU. The SDCard
 is mounted on the PCB and connected to the MCU through the Serial Peripheral Interface (SPI)
-bus. Lastly the FPGA is connected to the MCU on the EBI.
+bus. Lastly the FPGA is connected to the MCU with the EBI.
 
 \subsubsection{External Bus Interface}
 The MCU is connected to the FPGA and External SRAM through the EBI. The EBI bus
 is initialized by the {\it emlib} software library. Utilizing
 the EBI leads to a simple interface with these units since the bus is memory
-mapped on the MCU. Communicating with the FPGA is done by reading and writing to memory.
+mapped on the MCU. Communicating with the FPGA is done by reading and writing to 
+directly to the memory.
 
 \subsubsection{Serial Peripheral Interface}
 The SPI bus is a general bus interface used in many embedded applications. It is used
 for communicating between the MCU and the microSD memory card connected to the slot
-
 on the PCB.
 
 \subsubsection{General Purpose Input/Output}
 To capture an audio stream from the input minijack, one GPIO pin is connected to an
 ADC on the MCU. The ADC measures the the difference between the current on the pin 
-and a reference voltage, usualy Vdd or Ground. 
-
+and a reference voltage, usually Vdd or Ground. 
 
 \subsubsection{Triggering Transfers}
 
 All the DMA transfers are triggered by the use of one clock, the sample clock.
-This clock is run at the sample speed 11 kilohertz when using the DAC or ADC. Or
+This clock runs at the sample speed of 11 kilohertz when using the DAC or ADC. Or
 an arbitrary frequency when sampling from SDCard to SDCard. The clock signal is fed into
 the Peripheral Reflex System \cite{prs} of the MCU and propagates
 through the system using the following scheme.
@@ -126,11 +125,12 @@ through the system using the following scheme.
     \label{fig:irq-triggering}
 \end{figure}
 
-Figure \ref{fig:irq-triggering} shows that both the DAC and ADC consumes the PRS signal originated from TIMER0. The
+Figure \ref{fig:irq-triggering} shows that both the DAC and ADC consumes the PRS signal
+that has its origin from a predefined and configured timer. The
 DMA copying from the ADC to the RAM buffer, as well as the two DMAs performing the
 deinterleaving of the input samples, both receive a pulse each time the ADC has
 buffered $N$ samples. They then perform a sequence of copy actions on the input
-samples so that these end up inside the pipeline bufferrs of the FPGA. On the
+samples so that these end up inside the pipeline buffers of the FPGA. On the
 other side, the DAC sends a pulse to the DMA that feeds it samples in conjunction
 with the two DMAs performing the interleaving of the samples returned from the
-FPGA pipelines.
+audio pipelines.
