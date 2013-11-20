@@ -4,17 +4,17 @@ One of the initial goals was to be able to perform a Fourier Transform on the
 audio stream and perform frequency domain filtering. A number of variations of
 the DFT were considered and espescially the Fast Fourier Transform, Integer Fast
 Fourier Transform and Sliding Discrete Fourier Transform algorithms were of
-interest, see Appendix \ref{appendix:FT_in_DSP}.\\
+interest, see Appendix \ref{appendix:FT_in_DSP}.
 
 The FFT was first considered, being the most well known and documented approach,
 and had the advantage of being avaliable in the Xilinx ISE suite. Due to the
 complexity of the algorithm, both the generated circuit's resource usage and the
-algorithm run time were unsatisfactory.\\
+algorithm run time were unsatisfactory.
 
 An optimization of the FFT called the IntFFT \cite{oraintara}, was also
 considered, having many desirable properties. Documentation of the algorithm was
 deemed inadequate for implementation, since the overall complexity of the
-algorithm remained the same.\\
+algorithm remained the same.
 
 The choice fell upon the SDFT\cite{jacobsen03}, being well suited for real-time
 or streaming applications. A more in-depth comparison is given in Appendix
