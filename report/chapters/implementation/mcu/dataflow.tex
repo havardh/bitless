@@ -44,8 +44,6 @@ illustrated in Figure~\ref{fig:interleaving}
     \label{fig:interleaving}
 \end{figure}
 
-\missingfigure{Figure showing deinterleaving and interleaving. Remember reference once inserted.}
-
 The interleaving and deinterleaving operations are either done by the DMA for
 energy efficiency purposes, or the CPU. If the operation is performed by the
 CPU, the gains of speed and data-transfer analysis can be tested. Depending on
@@ -62,22 +60,9 @@ Both DMAs read every other sample and writes them continuously to the FPGA input
 buffers.
 
 In the code, this is set up with the DMA interface in {\bf emlib}, by
-configuring the DMA Descriptor. \todo{Check out the figure in drive/Rapport/SW
-Diagrams/Interleaving of samples! Makes sense?} This is implemented with two
+configuring the DMA Descriptor. This is implemented with two
 version. One using only the CPU and one using DMA transfers while the CPU is
 sleeping.
-
-\begin{lstlisting}[language=C, label=mcu:datapah1, caption=DMA Configuration Descriptor initialization]
-  DMA_CfgDescr_TypeDef descrCfg = {
-    .dstInc  = dmaDataInc2,
-    .srcInc  = dmaDataInc4,
-    .size    = dmaDataSize2
-  };
-  DMA_CfgDescr( DMA_FPGA_IN_LEFT,  true,  &descrCfg );
-  DMA_CfgDescr( DMA_FPGA_IN_RIGHT, true,  &descrCfg );
-\end{lstlisting}
-
-\todo{review caption, insert reference}
 
 To understand what this will result in, imagine two pointers, {\bf dst} and {\bf
 src}. At each iteration {\bf size} bytes are copied from {\bf src} to {\bf dst}.
@@ -131,12 +116,12 @@ and a reference voltage, usualy Vdd or Ground.
 All the DMA transfers are triggered by the use of one clock, the sample clock.
 This clock is run at the sample speed 11 kilohertz when using the DAC or ADC. Or
 an arbitrary frequency when sampling from SDCard to SDCard. The clock signal is fed into
-the Peripheral Reflex System \todo{Refere to manual} (PRS) of the MCU and propagates
+the Peripheral Reflex System \cite{prs} of the MCU and propagates
 through the system using the following scheme.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=1\textwidth]{figures/sw/dma-paths.png}
+    \includegraphics[width=1\textwidth]{figures/sw/dma-paths.png}
     \caption{IRQ-triggering of DMA transfers}
     \label{fig:software-stack}
 \end{figure}

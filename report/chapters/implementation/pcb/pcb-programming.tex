@@ -1,11 +1,11 @@
-% !TEX root = ../../report.tex
+% !TEX root = ../../../report.tex
 
-\section{Programming Interfaces}
+\subsection{Programming Interfaces}
 
 There are two programmable devices in this system, the FPGA and the MCU.
-Following comes how both components ability to be programmed was tested.
+The following describes how both components were programmed.
 
-\subsection{FPGA Programming}
+\subsubsection{FPGA Programming}
 The FPGA can be programmed in numerous configurations, all of which have
 distinct features and capabilities described in the
 Spartan-6 FPGA Configuration User Guide\cite{fpga:config-user-guide}. To avoid ruining the programmability, a
@@ -22,7 +22,7 @@ simultaneously, and unlike the FPGA the flash will retain the program when
 powered down. When powered up again the FPGA will look to the flash for its
 initial program.
 
-\subsection{MCU Programming}
+\subsubsection{MCU Programming}
 Placing programming headers for the MCU on the PCB is a much simpler procedure.
 The 20-pin ARM debug pinout is well documented in application notes and is
 simple to set up.
