@@ -3,20 +3,6 @@
 This chapter details the results from all the tests in the previous chapter. It
 also details whether the system as a whole has satisfied the project assignment.
 
-\todo{Results of all functional tests, following the functional requirements have to be mentioned here}
-
-\clearpage
-\section{Test Results}
-
-%The below input is a subsection of the above section
-\input{chapters/results/fpga-simulation-results}
-
-\clearpage
-\input{chapters/results/power-measurements}
-
-\clearpage
-\input{chapters/results/energy-profiling}
-
 \clearpage
 \section{Assignment results}
 
@@ -33,3 +19,55 @@ these two components.
 \input{chapters/results/mcu-results}
 %The below input is a subsection of the above section
 \input{chapters/results/pcb-results}
+
+\clearpage
+\section{Test Results}
+Following are the results of the FRTs. Due to \textit{ChaosM} not being successfully implemented, some of the FRTs have not been tested.
+
+\paragraph{Functional requirement 1}
+\textit{The audio pipelines must receive and execute different data and instruction streams.}\\
+This test was not successfully tested due to the lack of an implemented \textit{ChaosM} on the FPGA chip.
+
+\paragraph{Functional requirement 3}
+\textit{The audio processor must consist of at least two audio channels.}\\
+One audio pipeline, e.g. an audio channel, was successfully achieved in simulation. Again, this was not confirmed on the system due to \textit{ChaosM}'s lack of successful implementation the system.
+
+\paragraph{Functional requirement 6}
+\textit{The cores in the audio pipelines should share data with each other through a ring buffer.}\\
+Again, as the above FRT, this was achieved in simulation. It was not tested on the system, and can therefore not be claimed to be achieved.
+
+\paragraph{Functional requirement 7}
+\textit{It must be possible to observe power consumption over certain components.}\\
+This functional requirement was successfully achieved. With current sensors on the power supply to the MCU and FPGA chips, the results these sensors produced were as expected.
+
+\paragraph{Functional requirement 8}
+\textit{The audio system should perform real time filtering on two distinct
+channels, with an audio quality of 8-bits and a frequency 44.1kHz.}\\
+This FTR was not achieved. For the same reasons as FTRs 1, 3, 6.
+
+\paragraph{Functional requirement 9}
+\textit{The microcontroller and the audio processor should communicate via ARMs
+External Bus Interface.}\\
+Besides the fact that the PCB did not connect the EBI bus' data lines for the FPGA, this FTR was achieved with the documented fix described in Section \ref{fixes}.
+
+\paragraph{Functional requirement 11}
+\textit{The MCU must have an SD card interface and a UART serial port.}\\
+This FTR was successfully achieved. The I/O controller successfully interfaced with the SD card and the UART serial port.
+
+\paragraph{Functional requirement 12}
+\textit{The board should have buttons and LEDs.}\\
+With the I/O controller, this FTR was tested and successfully achieved.
+
+\paragraph{Functional requirement 13}
+\textit{The system should be able to process both digital and analog signals.}\\
+This FTR was partially achieved. While \textit{ChaosM} was as previously mentioned never implemented successfully on the system, the I/O controller successfully implemented demonstration programs that were able to receive and process data from both analog input, the minijacks, and the digital input, the SD card.
+In essence, the requirement of being able to utilize both analog and digital sources was successfully achieved through the use of the ADC and the DAC, but this was not achieved on a fully implemented system.
+
+%The below input is a subsection of the above section
+\input{chapters/results/fpga-simulation-results}
+
+\clearpage
+\input{chapters/results/power-measurements}
+
+\clearpage
+\input{chapters/results/energy-profiling}
