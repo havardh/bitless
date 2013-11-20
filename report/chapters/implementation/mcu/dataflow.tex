@@ -35,7 +35,14 @@ in Figure \ref{fig:pipeline_architecture}. When reading the samples they have to
 deinterleaved. Deinterleaving is the process of splitting the samples for each
 channel into separate streams. The complementary operation of interleaving the
 samples is performed before the samples are moved to the output peripherals. This is
-illustrated in Figure~\ref{}
+illustrated in Figure~\ref{fig:interleaving}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/sw/interleaving-of-samples.png}
+    \caption{Interleaving and deinterleaving of samples}
+    \label{fig:interleaving}
+\end{figure}
 
 \missingfigure{Figure showing deinterleaving and interleaving. Remember reference once inserted.}
 
@@ -128,40 +135,10 @@ the Peripheral Reflex System \todo{Refere to manual} (PRS) of the MCU and propag
 through the system using the following scheme.
 
 \begin{figure}[H]
-  \begin{verbatim}
-                          | Audio in
-                          V
-  +------+  +-----+    +------+   +-----+     +--------+
-  |TIMER0|->| PRS |-+->| ADC0 |-->| DMA |---->| Buffer |
-  +------+  +-----+ |  +------+   +-----+     +--------+
-                    |     .                      / \
-                    |     .                     /   \
-                    |     .                    V     V
-                    |     .              +-----+     +-----+
-                    |     +....irq......>| DMA |....>| DMA |
-                    |                    +-----+     +-----+
-                    |                       |           |
-                    |                       V           V
-                    |                   +------+    +-------+
-                    |                   | FPGA |    | FPGA  |
-                    |                   | Left |    | Right |
-                    |                   +------+    +-------+
-                    |                       |           |
-                    |                       V           V
-                    |                    +-----+     +-----+
-                    |     +....irq......>| DMA |....>| DMA |
-                    |     .              +-----+     +-----+
-                    |     .                    \     /
-                    |     .                     \   /
-                    |     .                       V
-                    |  +------+   +-----+     +--------+
-                    +->| DAC0 |<--| DMA |<----| Buffer |
-                       +------+   +-----+     +--------+
-                          |
-                          V Audio out
-  \end{verbatim}
-  \caption{Audio datasamples moved by the DMAs.}
-  \label{mcu:dma-dataflow}
+    \centering
+    \includegraphics[height=1\textwidth]{figures/sw/dma-paths.png}
+    \caption{IRQ-triggering of DMA transfers}
+    \label{fig:software-stack}
 \end{figure}
 
 Here, both the DAC and ADC consumes the PRS signal originated from TIMER0. The
